@@ -1,2 +1,2 @@
 # Storehouse
-A minecraft mod that is simular to in functionality and expands upon the popular mod Applied Energistics 2
+A minecraft mod that allows you to do all things related to storage and manipulations of items
