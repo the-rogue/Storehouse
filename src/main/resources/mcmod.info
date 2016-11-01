@@ -1,0 +1,20 @@
+[
+	{
+		"modid": "storehouse",
+		"name": "Storehouse",
+		"version": "${version}",
+		"mcversion": "${mcversion}",
+		"description": "A minecraft mod that allows you to do all things related to storage and manipulations of items",
+		"credits": "Created by TheRogue",
+		"logoFile": "assets/storehouse/logo.png",
+		"url": "TODO",
+		"updateJSON": "",
+		"authorList": [ "TheRogue" ],
+		"parent":"",
+		"screenshots": [],
+		"useDependencyInformation": true,
+		"dependencies": [
+   			"mod_MinecraftForge"
+   		]
+	}
+]
