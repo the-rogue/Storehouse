@@ -1,9 +1,11 @@
 package therogue.storehouse;
 
+import therogue.storehouse.proxy.IProxy;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -19,6 +21,9 @@ public class storehouse
     
     @Instance
     public static storehouse instance;
+    
+    @SidedProxy(clientSide = "therogue.storehouse.proxy.ClientProxy", serverSide = "therogue.storehouse.proxy.ServerProxy")
+    public static IProxy proxy;
     
     @EventHandler
     public void preinit(FMLPreInitializationEvent event)
