@@ -14,9 +14,3 @@
  * You should have received a copy of the GNU General Public License
  * along with Storehouse.  If not, see <http://www.gnu.org/licenses/gpl>.
  */
-
-package therogue.storehouse.proxy;
-
-public class ServerProxy extends CommonProxy {
-
-}
