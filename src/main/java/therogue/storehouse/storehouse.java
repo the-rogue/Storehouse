@@ -17,6 +17,7 @@
 
 package therogue.storehouse;
 
+import therogue.storehouse.config.ConfigHandler;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
 import net.minecraftforge.fml.common.Mod;
@@ -34,13 +35,13 @@ public class storehouse
     @Instance
     public static storehouse instance;
     
-    @SidedProxy(clientSide = therogue.storehouse.reference.General.CLIENT_PROXY_CLASS, serverSide = therogue.storehouse.reference.General.SERVER_PROXY_CLASS)
+    @SidedProxy(clientSide = General.CLIENT_PROXY_CLASS, serverSide = General.SERVER_PROXY_CLASS)
     public static IProxy proxy;
     
     @EventHandler
     public void preinit(FMLPreInitializationEvent event)
     {
-    	
+    	ConfigHandler.init(event.getSuggestedConfigurationFile());
     }
     
     @EventHandler
