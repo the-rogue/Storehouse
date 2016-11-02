@@ -1,7 +1,7 @@
 # Storehouse
 A minecraft mod that allows you to do all things related to storage and manipulations of items.
 
-Please note THIS MOD IS STILL UNDER DEVELOPMENT DO NOT SUBMIT ANY BUG REPORTS AS THERE IS NOT A RELEASE OUT YET!
+Please note **THIS MOD IS STILL UNDER DEVELOPMENT DO NOT SUBMIT ANY BUG REPORTS AS THERE IS NOT A RELEASE OUT YET!**
 DISCLAIMER:
 Copyright (c) 2016, TheRogue, All rights reserved.
 
