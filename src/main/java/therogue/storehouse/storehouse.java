@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 
-@Mod(modid = General.MODID, name = General.NAME, version = General.VERSION, acceptedMinecraftVersions = General.MCVERSIONS, useMetadata = true, guiFactory = General.GUIFACTORY, updateJSON = General.UPDATEJSON)
+@Mod(modid = General.MODID, name = General.NAME, version = General.VERSION, acceptedMinecraftVersions = General.MCVERSIONS, useMetadata = true, guiFactory = General.GUIFACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc%20Files/update.json")
 public class storehouse
 {
 	@Instance
