@@ -20,4 +20,5 @@ public class General
 	public static final String SERVER_PROXY_CLASS = "therogue.storehouse.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "therogue.storehouse.proxy.ClientProxy";
 	public static final String GUIFACTORY = "therogue.storehouse.client.gui.config.StorehouseGuiFactory";
+	public static final String UPDATEJSON = "https://github.com/the-rogue/Storehouse-Expansion/blob/master/Misc%20Files/update.json";
 }
