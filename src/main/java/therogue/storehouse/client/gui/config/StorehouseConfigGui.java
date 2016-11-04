@@ -15,6 +15,7 @@ import java.util.List;
 
 import therogue.storehouse.handlers.ConfigHandler;
 import therogue.storehouse.reference.General;
+import therogue.storehouse.util.loghelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
@@ -26,17 +27,17 @@ public class StorehouseConfigGui extends GuiConfig
 {
 	public StorehouseConfigGui(GuiScreen parent)
 	{
-		super(parent, getConfigElements(), General.MODID, false, false, GuiConfig.getAbridgedConfigPath(ConfigHandler.getConfiguration().toString()));
+		super(parent, getConfigElements(), General.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(ConfigHandler.getConfiguration().toString()));
+		loghelper.log("trace", "Config GUI Finished (Successfully!)");
 	}
 
 	/** Compiles a list of config elements */
 	private static List<IConfigElement> getConfigElements()
 	{
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
-
+		loghelper.log("trace", "Adding Config Elements to Config GUI: ");
 		// Add categories to config GUI
 		list.add(new ConfigElement(ConfigHandler.getConfiguration().getCategory(Configuration.CATEGORY_GENERAL)));
-
 		return list;
 	}
 }

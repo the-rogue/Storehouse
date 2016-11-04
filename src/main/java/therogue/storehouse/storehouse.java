@@ -11,8 +11,11 @@
 package therogue.storehouse;
 
 import therogue.storehouse.handlers.ConfigHandler;
+import therogue.storehouse.init.ModItems;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
+import therogue.storehouse.util.loghelper;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -22,7 +25,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 
-@Mod(modid = General.MODID, name = General.NAME, version = General.VERSION, acceptedMinecraftVersions = General.MCVERSIONS, useMetadata = true, guiFactory = General.GUIFACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc%20Files/update.json")
+@Mod(modid = General.MOD_ID, name = General.MOD_NAME, version = General.VERSION, acceptedMinecraftVersions = General.MC_VERSIONS, useMetadata = true, guiFactory = General.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc%20Files/update.json")
 public class storehouse
 {
 	@Instance
@@ -35,15 +38,19 @@ public class storehouse
 	public void preinit(FMLPreInitializationEvent event)
 	{
 		ConfigHandler.init(event.getSuggestedConfigurationFile());
+		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
+		loghelper.log("info", "Pre Initialization Finished");
 	}
 
 	@EventHandler
 	public void postinit(FMLPostInitializationEvent event)
 	{
+		loghelper.log("info", "Initialization Finished");
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		loghelper.log("info", "Post Initialization Finished");
 	}
 }

@@ -14,8 +14,10 @@ import java.io.File;
 
 import therogue.storehouse.reference.ConfigValues;
 import therogue.storehouse.reference.General;
+import therogue.storehouse.util.loghelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
 public class ConfigHandler
@@ -35,6 +37,7 @@ public class ConfigHandler
 
 	public static void init(File suggestedconfigFile)
 	{
+		loghelper.log("trace", "Initialization of configuration");
 		// Makes sure we have not already created a config object and initialises a new config object
 		if (configuration == null)
 		{
@@ -44,11 +47,12 @@ public class ConfigHandler
 		// Load Config and get Config parameters
 		loadConfig();
 	}
-
-	public static void ConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+	@SubscribeEvent
+	public void ConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
-		if (event.getModID().equalsIgnoreCase(General.MODID))
+		if (event.getModID().equalsIgnoreCase(General.MOD_ID))
 		{
+			loghelper.log("debug", "Config Params Changed");
 			// Load Config and get Config parameters
 			loadConfig();
 		}
@@ -56,6 +60,7 @@ public class ConfigHandler
 
 	public static void loadConfig()
 	{
+		loghelper.log("trace", "Loading Config");
 		try
 		{
 			// Load the configuration file
@@ -67,6 +72,7 @@ public class ConfigHandler
 		{
 			// Log the exception
 			e.printStackTrace();
+			loghelper.log("warn", "Configuration Failed to load or read values");
 		}
 		finally
 		{

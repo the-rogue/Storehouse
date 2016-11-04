@@ -12,6 +12,7 @@ package therogue.storehouse.reference;
 
 import net.minecraftforge.common.config.Configuration;
 import therogue.storehouse.handlers.ConfigHandler;
+import therogue.storehouse.util.loghelper;
 
 
 public class ConfigValues
@@ -21,14 +22,15 @@ public class ConfigValues
 	// Categories
 
 	// General Category (Values)
-	private static boolean debuglogging = false;
+	public static boolean debuglogging = false;
+	public static boolean debugloggingdefault = false;
 
 	public static void readConfigValues()
 	{
 		configuration = ConfigHandler.getConfiguration();
-
+		loghelper.log("trace", "Reading Config Values");
 		// Reads The values from the Config
 		// Example: Value = configuration.get("Category under", "Property to find", default value, "Comment on the property").getTypethepropertyshouldbe(default value);
-		debuglogging = configuration.get(Configuration.CATEGORY_GENERAL, "DebugLogging", debuglogging, "Whether or not to print out lots of debug info to the console").getBoolean();
+		debuglogging = configuration.get(Configuration.CATEGORY_GENERAL, "DebugLogging", debugloggingdefault, "Whether or not to print out lots of debug info to the console").getBoolean();
 	}
 }
