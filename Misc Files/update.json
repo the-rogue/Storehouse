@@ -1,0 +1,16 @@
+{
+  "homepage": "https://minecraft.curseforge.com/projects/storehouse-expansion",
+  "<mcversion>": {
+    "1.10.2-0.1.0": "First Release of the mod", 
+    // List all versions of your mod for the given Minecraft version, along with their changelogs
+    ...
+  },
+  ...
+  "promos": {
+    "1.10.2-latest": "1.10.2-0.1.0",
+    // Declare the latest "bleeding-edge" version of your mod for the given Minecraft version
+    "1.10.2-recommended": "1.10.2-0.1.0",
+    // Declare the latest "stable" version of your mod for the given Minecraft version
+    ...
+  }
+}
