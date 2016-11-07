@@ -8,19 +8,24 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.proxy;
+package therogue.storehouse.client.render.blocks;
 
-import therogue.storehouse.client.render.blocks.BlockRender;
-import therogue.storehouse.client.render.items.ItemRender;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import therogue.storehouse.block.StorehouseBaseBlock;
+import therogue.storehouse.init.ModBlocks;
 
 
-public class ClientProxy extends CommonProxy
+public class BlockRender
 {
-	@Override
-	public void init()
+	public static void registertextures()
 	{
-		super.init();
-		ItemRender.registertextures();
-		BlockRender.registertextures();
+		blockTexture(ModBlocks.azuritedustblock);
+	}
+
+	private static void blockTexture(StorehouseBaseBlock block)
+	{
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getUnlocalizedName().substring(5), "inventory"));
 	}
 }
