@@ -30,7 +30,7 @@ public class storehouse
 {
 	@Instance
 	public static storehouse instance;
-	
+
 	@SidedProxy(clientSide = General.CLIENT_PROXY_CLASS, serverSide = General.SERVER_PROXY_CLASS)
 	public static IProxy proxy;
 
@@ -44,14 +44,14 @@ public class storehouse
 	}
 
 	@EventHandler
-	public void postinit(FMLPostInitializationEvent event)
-	{
-		loghelper.log("info", "Initialization Finished");
-	}
-
-	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
 		loghelper.log("info", "Post Initialization Finished");
+	}
+
+	@EventHandler
+	public void postinit(FMLPostInitializationEvent event)
+	{
+		loghelper.log("info", "Initialization Finished");
 	}
 }
