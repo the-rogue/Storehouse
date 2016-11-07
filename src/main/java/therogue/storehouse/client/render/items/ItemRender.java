@@ -18,7 +18,7 @@ import therogue.storehouse.item.StorehouseBaseItem;
 
 public class ItemRender
 {
-	public static void registeritemtextures()
+	public static void registertextures()
 	{
 		itemTexture(ModItems.azuritedust);
 	}
