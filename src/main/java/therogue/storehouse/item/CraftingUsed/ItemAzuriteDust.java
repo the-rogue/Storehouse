@@ -8,9 +8,10 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.items.CraftingUsed;
+package therogue.storehouse.item.CraftingUsed;
 
-import therogue.storehouse.items.StorehouseBaseItem;
+import net.minecraft.creativetab.CreativeTabs;
+import therogue.storehouse.item.StorehouseBaseItem;
 
 
 public class ItemAzuriteDust extends StorehouseBaseItem
@@ -19,5 +20,6 @@ public class ItemAzuriteDust extends StorehouseBaseItem
 	{
 		super();
 		setUnlocalizedName("azuritedust");
+		setCreativeTab(CreativeTabs.MATERIALS);
 	}
 }

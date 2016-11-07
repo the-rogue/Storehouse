@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.items;
+package therogue.storehouse.item;
 
 import therogue.storehouse.reference.Resources;
 import net.minecraft.item.Item;
