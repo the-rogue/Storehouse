@@ -48,6 +48,7 @@ public class storehouse
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		proxy.init();
 		loghelper.log("info", "Post Initialization Finished");
 	}
 

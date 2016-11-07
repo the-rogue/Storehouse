@@ -8,20 +8,16 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.init;
+package therogue.storehouse.client.render.items;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.item.StorehouseBaseItem;
-import therogue.storehouse.item.CraftingUsed.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 
-
-public class ModItems
+public class ItemRenderRegister
 {
-	public static final StorehouseBaseItem azuritedust = new ItemAzuriteDust();
-
-	@SuppressWarnings("deprecation")
-	public static void init()
+	public static void registerTexture(StorehouseBaseItem item)
 	{
-		GameRegistry.registerItem(azuritedust, "azuritedust");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(item.getUnlocalizedName().substring(5), "inventory"));
 	}
 }
