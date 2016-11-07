@@ -11,6 +11,7 @@
 package therogue.storehouse;
 
 import therogue.storehouse.handlers.ConfigHandler;
+import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
@@ -40,6 +41,7 @@ public class storehouse
 		ConfigHandler.init(event.getSuggestedConfigurationFile());
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
 		ModItems.init();
+		ModBlocks.init();
 		loghelper.log("info", "Pre Initialization Finished");
 	}
 
