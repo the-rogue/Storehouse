@@ -12,7 +12,7 @@ package therogue.storehouse.init;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.item.StorehouseBaseItem;
-import therogue.storehouse.item.CraftingUsed.*;
+import therogue.storehouse.item.CraftingUsed.ItemAzuriteDust;
 
 
 public class ModItems

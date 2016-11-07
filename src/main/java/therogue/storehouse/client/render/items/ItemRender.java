@@ -10,13 +10,20 @@
 
 package therogue.storehouse.client.render.items;
 
-import therogue.storehouse.item.StorehouseBaseItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import therogue.storehouse.init.ModItems;
+import therogue.storehouse.item.StorehouseBaseItem;
 
-public class ItemRenderRegister
+
+public class ItemRender
 {
-	public static void registerTexture(StorehouseBaseItem item)
+	public static void registeritemtextures()
+	{
+		itemTexture(ModItems.azuritedust);
+	}
+
+	private static void itemTexture(StorehouseBaseItem item)
 	{
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(item.getUnlocalizedName().substring(5), "inventory"));
 	}

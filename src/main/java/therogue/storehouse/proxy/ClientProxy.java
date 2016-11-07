@@ -10,14 +10,15 @@
 
 package therogue.storehouse.proxy;
 
-import therogue.storehouse.client.render.items.ItemRenderRegister;
-import therogue.storehouse.init.ModItems;
+import therogue.storehouse.client.render.items.ItemRender;
+
 
 public class ClientProxy extends CommonProxy
 {
 	@Override
-	public void init(){
+	public void init()
+	{
 		super.init();
-		ItemRenderRegister.registerTexture(ModItems.azuritedust);
+		ItemRender.registeritemtextures();
 	}
 }
