@@ -10,17 +10,28 @@
 
 package therogue.storehouse.init;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import java.util.ArrayList;
+
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseDecorativeBlock;
 
+
 public class ModBlocks
 {
-	
-	@SuppressWarnings("deprecation")
+	public static ArrayList<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
+
 	public static final IStorehouseBaseBlock azurite_dust_block = new StorehouseBaseDecorativeBlock("azurite_dust_block");
+
+	static
+	{
+		blocklist.add(azurite_dust_block);
+	}
+
 	public static void preinit()
 	{
-		GameRegistry.registerBlock(azuritedustblock, "azuritedustblock");
+		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
+		{
+			ModInitHelper.registerblock(block);
+		}
 	}
 }

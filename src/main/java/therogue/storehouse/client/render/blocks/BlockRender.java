@@ -10,10 +10,11 @@
 
 package therogue.storehouse.client.render.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.block.Block;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.init.ModBlocks;
 
 
@@ -21,7 +22,10 @@ public class BlockRender
 {
 	public static void registertextures()
 	{
-		blockTexture(ModBlocks.azuritedustblock);
+		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
+		{
+			block.registertexture();
+		}
 	}
 
 	public static void blockTexture(Block block)

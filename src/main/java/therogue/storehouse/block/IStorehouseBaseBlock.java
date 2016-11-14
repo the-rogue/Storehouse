@@ -8,31 +8,20 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.init;
+package therogue.storehouse.block;
 
-import java.util.ArrayList;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import therogue.storehouse.item.IStorehouseBaseItem;
-import therogue.storehouse.item.StorehouseBaseItem;
-import therogue.storehouse.item.CraftingUsed.ItemStorehouseBaseMaterial;
 
-
-public class ModItems
+public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 {
-	public static ArrayList<IStorehouseBaseItem> itemlist = new ArrayList<IStorehouseBaseItem>();
-
-	public static final StorehouseBaseItem azurite_dust = new ItemStorehouseBaseMaterial("azurite_dust");
-
-	static
-	{
-		itemlist.add(azurite_dust);
-	}
-
-	public static void init()
-	{
-		for (IStorehouseBaseItem item : ModItems.itemlist)
-		{
-			ModInitHelper.registeritem(item);
-		}
-	}
+	@SideOnly(Side.CLIENT)
+	public void registertexture();
+	public IBlockState getDefaultState();
+	public String getName();
+	public StorehouseBlockType getType();
 }

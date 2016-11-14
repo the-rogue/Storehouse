@@ -8,31 +8,9 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.init;
+package therogue.storehouse.item;
 
-import java.util.ArrayList;
-
-import therogue.storehouse.item.IStorehouseBaseItem;
-import therogue.storehouse.item.StorehouseBaseItem;
-import therogue.storehouse.item.CraftingUsed.ItemStorehouseBaseMaterial;
-
-
-public class ModItems
+public interface IStorehouseBaseItem
 {
-	public static ArrayList<IStorehouseBaseItem> itemlist = new ArrayList<IStorehouseBaseItem>();
-
-	public static final StorehouseBaseItem azurite_dust = new ItemStorehouseBaseMaterial("azurite_dust");
-
-	static
-	{
-		itemlist.add(azurite_dust);
-	}
-
-	public static void init()
-	{
-		for (IStorehouseBaseItem item : ModItems.itemlist)
-		{
-			ModInitHelper.registeritem(item);
-		}
-	}
+	public StorehouseItemType getType();
 }

@@ -12,11 +12,17 @@ package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import therogue.storehouse.client.render.blocks.BlockRender;
+import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
 
 
-public class StorehouseBaseBlock extends Block
+public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 {
+	public static final StorehouseBlockType TYPE = StorehouseBlockType.StorehouseBaseBlock;
+
 	public StorehouseBaseBlock(String name)
 	{
 		this(name, Material.ROCK);
@@ -26,6 +32,7 @@ public class StorehouseBaseBlock extends Block
 	{
 		super(material);
 		this.setUnlocalizedName(name);
+		this.setRegistryName(General.MOD_ID, name);
 	}
 
 	@Override
@@ -44,4 +51,14 @@ public class StorehouseBaseBlock extends Block
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void registertexture()
+	{
+		BlockRender.blockTexture(this);
+	}
+
+	public StorehouseBlockType getType()
+	{
+		return TYPE;
+	}
 }

@@ -12,15 +12,19 @@ package therogue.storehouse.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
 
 
-public class StorehouseBaseItem extends Item
+public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 {
+	public static final StorehouseItemType TYPE = StorehouseItemType.StorehouseBaseItem;
+
 	public StorehouseBaseItem(String name)
 	{
 		super();
 		setUnlocalizedName(name);
+		this.setRegistryName(General.MOD_ID, name);
 	}
 
 	@Override
@@ -38,5 +42,10 @@ public class StorehouseBaseItem extends Item
 	private String getUnwrappedUnlocalizedName(String unlocalizedName)
 	{
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+	}
+
+	public StorehouseItemType getType()
+	{
+		return TYPE;
 	}
 }
