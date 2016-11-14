@@ -144,11 +144,6 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		return Variant.DEFAULT;
 	}
 
-	public StorehouseBaseSlab.Half getHalfslab()
-	{
-		return halfslab;
-	}
-
 	public static class Double extends StorehouseBaseSlab
 	{
 		public Double(IStorehouseBaseBlock blocktype, StorehouseBaseSlab.Half halfslab)
