@@ -13,4 +13,5 @@ package therogue.storehouse.item;
 public interface IStorehouseBaseItem
 {
 	public void registeritem();
+	public void registertexture();
 }

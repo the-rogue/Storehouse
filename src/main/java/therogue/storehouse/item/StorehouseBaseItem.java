@@ -13,6 +13,7 @@ package therogue.storehouse.item;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import therogue.storehouse.client.render.items.ItemRender;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
 
@@ -46,5 +47,11 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 	public void registeritem()
 	{
 		GameRegistry.register(this);
+	}
+
+	@Override
+	public void registertexture()
+	{
+		ItemRender.itemTexture(this);
 	}
 }
