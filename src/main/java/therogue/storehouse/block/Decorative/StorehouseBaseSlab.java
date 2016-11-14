@@ -45,9 +45,11 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	/**
 	 * Registers the normal stuff and then sets the default properties depending on whether it is a double slab or not
 	 */
-	public StorehouseBaseSlab()
+	public StorehouseBaseSlab(IStorehouseBaseBlock blocktype)
 	{
-		super(Material.ROCK);
+		super(blocktype.getblockMaterial());
+		this.setHardness(blocktype.getblockHardness());
+		this.setResistance(blocktype.getblockResistance());
 
 		IBlockState iblockstate = this.blockState.getBaseState();
 
@@ -171,6 +173,33 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	}
 
 	/**
+	 * Getter for blockHardness
+	 */
+	@Override
+	public float getblockHardness()
+	{
+		return blockHardness;
+	}
+
+	/**
+	 * Getter for blockResistance
+	 */
+	@Override
+	public float getblockResistance()
+	{
+		return blockResistance;
+	}
+
+	/**
+	 * Getter for blockMaterial
+	 */
+	@Override
+	public Material getblockMaterial()
+	{
+		return blockMaterial;
+	}
+
+	/**
 	 * Double Slab Class
 	 */
 	public static class Double extends StorehouseBaseSlab
@@ -180,7 +209,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		 */
 		public Double(IStorehouseBaseBlock blocktype, StorehouseBaseSlab.Half halfslab)
 		{
-			super();
+			super(blocktype);
 			loghelper.log("trace", "Creating new StorehouseBaseSlab.Double: " + blocktype.getName() + "_double_slab");
 			this.halfslab = halfslab;
 			super.setUnlocalizedName(blocktype.getName() + "_double_slab");
@@ -235,7 +264,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		 */
 		public Half(IStorehouseBaseBlock blocktype)
 		{
-			super();
+			super(blocktype);
 			loghelper.log("trace", "Creating new StorehouseBaseSlab.Half: " + blocktype.getName() + "_slab");
 			super.setUnlocalizedName(blocktype.getName() + "_slab");
 			this.setRegistryName(General.MOD_ID, blocktype.getName() + "_slab");

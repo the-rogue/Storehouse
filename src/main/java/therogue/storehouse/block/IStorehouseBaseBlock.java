@@ -11,6 +11,7 @@
 package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,4 +32,10 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 	public String getName();
 
 	public void registerblock();
+
+	public float getblockHardness();
+
+	public float getblockResistance();
+
+	public Material getblockMaterial();
 }

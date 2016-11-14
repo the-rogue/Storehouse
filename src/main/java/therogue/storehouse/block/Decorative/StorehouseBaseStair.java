@@ -11,6 +11,7 @@
 package therogue.storehouse.block.Decorative;
 
 import net.minecraft.block.BlockStairs;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -81,5 +82,32 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	{
 		loghelper.log("trace", "Registering StorehouseBaseStair Texture: " + getName());
 		BlockRender.blockTexture(this);
+	}
+
+	/**
+	 * Getter for blockHardness
+	 */
+	@Override
+	public float getblockHardness()
+	{
+		return blockHardness;
+	}
+
+	/**
+	 * Getter for blockResistance
+	 */
+	@Override
+	public float getblockResistance()
+	{
+		return blockResistance;
+	}
+
+	/**
+	 * Getter for blockMaterial
+	 */
+	@Override
+	public Material getblockMaterial()
+	{
+		return blockMaterial;
 	}
 }

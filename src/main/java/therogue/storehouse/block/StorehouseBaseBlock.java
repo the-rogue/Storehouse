@@ -25,22 +25,51 @@ import therogue.storehouse.util.loghelper;
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 {
 	/**
-	 * Initiates the block with a default material
+	 * Declares defaults
+	 */
+	private static Material default_material = Material.ROCK;
+	private static float default_hardness = 3.0F;
+	private static float default_resistance = 10.0F;
+
+	/**
+	 * Initiates the block with various defaults
 	 */
 	public StorehouseBaseBlock(String name)
 	{
-		this(name, Material.ROCK);
+		this(name, default_material);
+	}
+
+	public StorehouseBaseBlock(String name, Material material)
+	{
+		this(name, material, default_hardness);
+	}
+
+	public StorehouseBaseBlock(String name, float hardness)
+	{
+		this(name, hardness, default_resistance);
+	}
+
+	public StorehouseBaseBlock(String name, Material material, float hardness)
+	{
+		this(name, material, hardness, default_resistance);
+	}
+
+	public StorehouseBaseBlock(String name, float hardness, float resistance)
+	{
+		this(name, default_material, hardness, resistance);
 	}
 
 	/**
-	 * Initiates the block using a specified material and the name
+	 * Initiates the block using the specified properties
 	 */
-	public StorehouseBaseBlock(String name, Material material)
+	public StorehouseBaseBlock(String name, Material material, float hardness, float resistance)
 	{
 		super(material);
 		loghelper.log("trace", "Creating new StorehouseBaseBlock: " + name);
 		this.setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
+		this.setHardness(hardness);
+		this.setResistance(resistance);
 	}
 
 	/**
@@ -86,5 +115,32 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	{
 		loghelper.log("trace", "Registering StorehouseBaseBlock Texture: " + getName());
 		BlockRender.blockTexture(this);
+	}
+
+	/**
+	 * Getter for blockHardness
+	 */
+	@Override
+	public float getblockHardness()
+	{
+		return blockHardness;
+	}
+
+	/**
+	 * Getter for blockResistance
+	 */
+	@Override
+	public float getblockResistance()
+	{
+		return blockResistance;
+	}
+
+	/**
+	 * Getter for blockMaterial
+	 */
+	@Override
+	public Material getblockMaterial()
+	{
+		return blockMaterial;
 	}
 }
