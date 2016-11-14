@@ -14,4 +14,5 @@ public interface IStorehouseBaseItem
 {
 	public void registeritem();
 	public void registertexture();
+	public String getName();
 }

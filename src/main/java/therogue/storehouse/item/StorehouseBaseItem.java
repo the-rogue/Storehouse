@@ -44,6 +44,10 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
 
+	public String getName()
+	{
+		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
+	}
 	public void registeritem()
 	{
 		GameRegistry.register(this);
