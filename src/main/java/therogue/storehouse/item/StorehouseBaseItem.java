@@ -12,14 +12,13 @@ package therogue.storehouse.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
 
 
 public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 {
-	public static final StorehouseItemType TYPE = StorehouseItemType.StorehouseBaseItem;
-
 	public StorehouseBaseItem(String name)
 	{
 		super();
@@ -44,8 +43,8 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
 
-	public StorehouseItemType getType()
+	public void registeritem()
 	{
-		return TYPE;
+		GameRegistry.register(this);
 	}
 }

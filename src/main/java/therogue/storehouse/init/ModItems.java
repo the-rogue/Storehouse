@@ -32,7 +32,7 @@ public class ModItems
 	{
 		for (IStorehouseBaseItem item : ModItems.itemlist)
 		{
-			ModInitHelper.registeritem(item);
+			item.registeritem();
 		}
 	}
 }

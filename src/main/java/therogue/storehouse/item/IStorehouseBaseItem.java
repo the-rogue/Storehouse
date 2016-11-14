@@ -12,5 +12,5 @@ package therogue.storehouse.item;
 
 public interface IStorehouseBaseItem
 {
-	public StorehouseItemType getType();
+	public void registeritem();
 }

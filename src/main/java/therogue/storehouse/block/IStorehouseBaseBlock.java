@@ -21,7 +21,10 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 {
 	@SideOnly(Side.CLIENT)
 	public void registertexture();
+
 	public IBlockState getDefaultState();
+
 	public String getName();
-	public StorehouseBlockType getType();
+
+	public void registerblock();
 }

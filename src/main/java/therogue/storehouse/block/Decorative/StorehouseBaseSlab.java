@@ -26,14 +26,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.block.StorehouseBlockType;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
+import therogue.storehouse.item.ItemStorehouseBaseSlab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
-import therogue.storehouse.util.loghelper;
 
 
 public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehouseBaseBlock
@@ -144,22 +144,17 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		return Variant.DEFAULT;
 	}
 
+	public StorehouseBaseSlab.Half getHalfslab()
+	{
+		return halfslab;
+	}
+
 	public static class Double extends StorehouseBaseSlab
 	{
-		public static final StorehouseBlockType TYPE = StorehouseBlockType.StorehouseBaseSlabDouble;
-
-		public Double(IStorehouseBaseBlock blocktype, IStorehouseBaseBlock halfslab)
+		public Double(IStorehouseBaseBlock blocktype, StorehouseBaseSlab.Half halfslab)
 		{
 			super();
-			if (halfslab.getType() == StorehouseBlockType.StorehouseBaseSlabHalf)
-			{
-				this.halfslab = (StorehouseBaseSlab.Half) halfslab;
-			}
-			else
-			{
-				loghelper.log("error", "Halfslab in class StorehouseBaseSlab.Double is not of type StorehouseBaseSlabHalf");
-			}
-
+			this.halfslab = halfslab;
 			super.setUnlocalizedName(blocktype.getName() + "_double_slab");
 			this.setRegistryName(General.MOD_ID, blocktype.getName() + "_double_slab");
 		}
@@ -182,16 +177,15 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		}
 
 		@Override
-		public StorehouseBlockType getType()
+		public void registerblock()
 		{
-			return TYPE;
+			GameRegistry.register(this);
+			GameRegistry.register(new ItemStorehouseBaseSlab(halfslab, this));
 		}
 	}
 
 	public static class Half extends StorehouseBaseSlab
 	{
-		public static final StorehouseBlockType TYPE = StorehouseBlockType.StorehouseBaseSlabHalf;
-
 		public Half(IStorehouseBaseBlock blocktype)
 		{
 			super();
@@ -205,9 +199,9 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		}
 
 		@Override
-		public StorehouseBlockType getType()
+		public void registerblock()
 		{
-			return TYPE;
+			GameRegistry.register(this);
 		}
 
 	}

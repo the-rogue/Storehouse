@@ -13,6 +13,7 @@ package therogue.storehouse.init;
 import java.util.ArrayList;
 
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseDecorativeBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
 import therogue.storehouse.block.Decorative.StorehouseBaseStair;
@@ -22,10 +23,10 @@ public class ModBlocks
 {
 	public static ArrayList<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
 
-	public static final IStorehouseBaseBlock azurite_dust_block = new StorehouseBaseDecorativeBlock("azurite_dust_block");
-	public static final IStorehouseBaseBlock azurite_dust_block_stair = new StorehouseBaseStair(azurite_dust_block);
-	public static final IStorehouseBaseBlock azurite_dust_block_half_slab = new StorehouseBaseSlab.Half(azurite_dust_block);
-	public static final IStorehouseBaseBlock azurite_dust_block_double_slab = new StorehouseBaseSlab.Double(azurite_dust_block, azurite_dust_block_half_slab);
+	public static final StorehouseBaseBlock azurite_dust_block = new StorehouseBaseDecorativeBlock("azurite_dust_block");
+	public static final StorehouseBaseStair azurite_dust_block_stair = new StorehouseBaseStair(azurite_dust_block);
+	public static final StorehouseBaseSlab.Half azurite_dust_block_half_slab = new StorehouseBaseSlab.Half(azurite_dust_block);
+	public static final StorehouseBaseSlab.Double azurite_dust_block_double_slab = new StorehouseBaseSlab.Double(azurite_dust_block, azurite_dust_block_half_slab);
 
 	static
 	{
@@ -39,7 +40,7 @@ public class ModBlocks
 	{
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
-			ModInitHelper.registerblock(block);
+			block.registerblock();
 		}
 	}
 }

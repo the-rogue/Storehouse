@@ -12,9 +12,10 @@ package therogue.storehouse.block.Decorative;
 
 import net.minecraft.block.BlockStairs;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.block.StorehouseBlockType;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.reference.General;
@@ -23,7 +24,6 @@ import therogue.storehouse.reference.Resources;
 
 public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock
 {
-	public static final StorehouseBlockType TYPE = StorehouseBlockType.StorehouseBaseStair;
 	public StorehouseBaseStair(IStorehouseBaseBlock block)
 	{
 		super(block.getDefaultState());
@@ -55,8 +55,9 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	}
 
 	@Override
-	public StorehouseBlockType getType()
+	public void registerblock()
 	{
-		return TYPE;
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
 }

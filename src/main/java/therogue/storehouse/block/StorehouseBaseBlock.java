@@ -12,6 +12,8 @@ package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.client.render.blocks.BlockRender;
@@ -21,8 +23,6 @@ import therogue.storehouse.reference.Resources;
 
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 {
-	public static final StorehouseBlockType TYPE = StorehouseBlockType.StorehouseBaseBlock;
-
 	public StorehouseBaseBlock(String name)
 	{
 		this(name, Material.ROCK);
@@ -51,14 +51,15 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
 
+	public void registerblock()
+	{
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
+	}
+
 	@SideOnly(Side.CLIENT)
 	public void registertexture()
 	{
 		BlockRender.blockTexture(this);
-	}
-
-	public StorehouseBlockType getType()
-	{
-		return TYPE;
 	}
 }
