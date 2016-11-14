@@ -41,7 +41,7 @@ public class storehouse
 		ConfigHandler.init(event.getSuggestedConfigurationFile());
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
 		ModItems.init();
-		ModBlocks.init();
+		ModBlocks.preinit();
 		loghelper.log("info", "Pre Initialization Finished");
 	}
 
