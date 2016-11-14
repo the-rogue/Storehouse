@@ -14,12 +14,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import therogue.storehouse.item.StorehouseBaseItem;
 
 
-public class ItemAzuriteDust extends StorehouseBaseItem
+public class ItemStorehouseBaseMaterial extends StorehouseBaseItem
 {
-	public ItemAzuriteDust()
+	public ItemStorehouseBaseMaterial(String name)
 	{
-		super();
-		setUnlocalizedName("azuritedust");
+		super(name);
 		setCreativeTab(CreativeTabs.MATERIALS);
 	}
 }

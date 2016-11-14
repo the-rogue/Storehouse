@@ -13,11 +13,12 @@ package therogue.storehouse.block.Decorative;
 import net.minecraft.creativetab.CreativeTabs;
 import therogue.storehouse.block.StorehouseBaseBlock;
 
-public class BlockofAzuriteDust extends StorehouseBaseBlock
+
+public class StorehouseBaseDecorativeBlock extends StorehouseBaseBlock
 {
-	public BlockofAzuriteDust(){
-		super();
-		this.setUnlocalizedName("azuritedustblock");
+	public StorehouseBaseDecorativeBlock(String name)
+	{
+		super(name);
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 	}
 }

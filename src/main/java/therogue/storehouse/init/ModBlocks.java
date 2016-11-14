@@ -11,15 +11,15 @@
 package therogue.storehouse.init;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.block.StorehouseBaseBlock;
-import therogue.storehouse.block.Decorative.BlockofAzuriteDust;
+import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.block.Decorative.StorehouseBaseDecorativeBlock;
 
 public class ModBlocks
 {
-	public static final StorehouseBaseBlock azuritedustblock = new BlockofAzuriteDust();
 	
 	@SuppressWarnings("deprecation")
-	public static void init()
+	public static final IStorehouseBaseBlock azurite_dust_block = new StorehouseBaseDecorativeBlock("azurite_dust_block");
+	public static void preinit()
 	{
 		GameRegistry.registerBlock(azuritedustblock, "azuritedustblock");
 	}

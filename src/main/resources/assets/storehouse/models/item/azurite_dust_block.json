@@ -1,5 +1,5 @@
 {
-    "parent":"storehouse:block/azuritedustblock",
+    "parent":"storehouse:block/azurite_dust_block",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

@@ -10,16 +10,17 @@
 
 package therogue.storehouse.item;
 
-import therogue.storehouse.reference.Resources;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import therogue.storehouse.reference.Resources;
 
 
 public class StorehouseBaseItem extends Item
 {
-	public StorehouseBaseItem()
+	public StorehouseBaseItem(String name)
 	{
 		super();
+		setUnlocalizedName(name);
 	}
 
 	@Override

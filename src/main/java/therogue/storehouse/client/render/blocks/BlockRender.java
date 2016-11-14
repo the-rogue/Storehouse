@@ -13,7 +13,7 @@ package therogue.storehouse.client.render.blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import therogue.storehouse.block.StorehouseBaseBlock;
+import net.minecraft.block.Block;
 import therogue.storehouse.init.ModBlocks;
 
 
@@ -24,7 +24,7 @@ public class BlockRender
 		blockTexture(ModBlocks.azuritedustblock);
 	}
 
-	private static void blockTexture(StorehouseBaseBlock block)
+	public static void blockTexture(Block block)
 	{
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getUnlocalizedName().substring(5), "inventory"));
 	}

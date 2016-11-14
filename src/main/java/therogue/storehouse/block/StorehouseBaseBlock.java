@@ -17,14 +17,15 @@ import therogue.storehouse.reference.Resources;
 
 public class StorehouseBaseBlock extends Block
 {
-	public StorehouseBaseBlock()
+	public StorehouseBaseBlock(String name)
 	{
-		super(Material.ROCK);
+		this(name, Material.ROCK);
 	}
 
-	public StorehouseBaseBlock(Material material)
+	public StorehouseBaseBlock(String name, Material material)
 	{
 		super(material);
+		this.setUnlocalizedName(name);
 	}
 
 	@Override
@@ -37,4 +38,10 @@ public class StorehouseBaseBlock extends Block
 	{
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
+
+	public String getName()
+	{
+		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
+	}
+
 }

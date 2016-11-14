@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "storehouse:items/azuritedust"
+        "layer0": "storehouse:items/azurite_dust"
     },
     "display": {
         "thirdperson": {

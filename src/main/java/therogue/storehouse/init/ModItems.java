@@ -12,12 +12,12 @@ package therogue.storehouse.init;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.item.StorehouseBaseItem;
-import therogue.storehouse.item.CraftingUsed.ItemAzuriteDust;
+import therogue.storehouse.item.CraftingUsed.ItemStorehouseBaseMaterial;
 
 
 public class ModItems
 {
-	public static final StorehouseBaseItem azuritedust = new ItemAzuriteDust();
+	public static final StorehouseBaseItem azurite_dust = new ItemStorehouseBaseMaterial("azurite_dust");
 
 	@SuppressWarnings("deprecation")
 	public static void init()
