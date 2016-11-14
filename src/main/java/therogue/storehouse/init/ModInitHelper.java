@@ -14,7 +14,10 @@ import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
+import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
+import therogue.storehouse.block.Decorative.StorehouseBaseStair;
 import therogue.storehouse.item.IStorehouseBaseItem;
+import therogue.storehouse.item.ItemStorehouseBaseSlab;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.util.loghelper;
 
@@ -28,6 +31,15 @@ public class ModInitHelper
 		case StorehouseBaseBlock:
 			registerblock((StorehouseBaseBlock) block);
 			break;
+		case StorehouseBaseSlabDouble:
+			registerblock((StorehouseBaseSlab.Double) block);
+			break;
+		case StorehouseBaseSlabHalf:
+			registerblock((StorehouseBaseSlab.Half) block);
+			break;
+		case StorehouseBaseStair:
+			registerblock((StorehouseBaseStair) block);
+			break;
 		default:
 			loghelper.log("warn", "Failed to register block, doesnt have a Block Type" + block.toString());
 			break;
@@ -38,6 +50,23 @@ public class ModInitHelper
 	{
 		GameRegistry.register(block);
 		GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+	}
+
+	private static void registerblock(StorehouseBaseSlab.Half slab)
+	{
+		GameRegistry.register(slab);
+	}
+
+	private static void registerblock(StorehouseBaseSlab.Double slab)
+	{
+		GameRegistry.register(slab);
+		GameRegistry.register(new ItemStorehouseBaseSlab(slab.halfslab, slab));
+	}
+
+	private static void registerblock(StorehouseBaseStair stair)
+	{
+		GameRegistry.register(stair);
+		GameRegistry.register(new ItemBlock(stair).setRegistryName(stair.getRegistryName()));
 	}
 
 	public static void registeritem(IStorehouseBaseItem item)

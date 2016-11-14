@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseDecorativeBlock;
+import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
+import therogue.storehouse.block.Decorative.StorehouseBaseStair;
 
 
 public class ModBlocks
@@ -21,10 +23,16 @@ public class ModBlocks
 	public static ArrayList<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
 
 	public static final IStorehouseBaseBlock azurite_dust_block = new StorehouseBaseDecorativeBlock("azurite_dust_block");
+	public static final IStorehouseBaseBlock azurite_dust_block_stair = new StorehouseBaseStair(azurite_dust_block);
+	public static final IStorehouseBaseBlock azurite_dust_block_half_slab = new StorehouseBaseSlab.Half(azurite_dust_block);
+	public static final IStorehouseBaseBlock azurite_dust_block_double_slab = new StorehouseBaseSlab.Double(azurite_dust_block, azurite_dust_block_half_slab);
 
 	static
 	{
 		blocklist.add(azurite_dust_block);
+		blocklist.add(azurite_dust_block_stair);
+		blocklist.add(azurite_dust_block_half_slab);
+		blocklist.add(azurite_dust_block_double_slab);
 	}
 
 	public static void preinit()

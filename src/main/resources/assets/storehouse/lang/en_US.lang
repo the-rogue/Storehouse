@@ -1,2 +1,4 @@
 item.storehouse:azurite_dust.name=Azurite Dust
 tile.storehouse:azurite_dust_block.name=Block of Azurite Dust
+tile.storehouse:azurite_dust_block_stair.name=Block of Azurite Dust Stairs
+tile.storehouse:azurite_dust_block_slab.name=Block of Azurite Dust Slab
