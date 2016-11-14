@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.client.render.items.ItemRender;
+import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
 import therogue.storehouse.util.loghelper;
@@ -30,6 +31,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 		loghelper.log("trace", "Creating new StorehouseBaseItem: " + name);
 		setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
+		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 	}
 
 	/**

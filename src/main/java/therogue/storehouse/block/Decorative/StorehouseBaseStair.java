@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
+import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
 import therogue.storehouse.util.loghelper;
@@ -36,6 +37,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 		this.setUnlocalizedName(block.getName() + "_stair");
 		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 	}
 
 	/**

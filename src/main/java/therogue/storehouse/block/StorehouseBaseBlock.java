@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.client.render.blocks.BlockRender;
+import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
 import therogue.storehouse.util.loghelper;
@@ -70,6 +71,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 		this.setRegistryName(General.MOD_ID, name);
 		this.setHardness(hardness);
 		this.setResistance(resistance);
+		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 	}
 
 	/**

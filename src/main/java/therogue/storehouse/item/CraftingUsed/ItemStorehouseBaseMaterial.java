@@ -10,7 +10,6 @@
 
 package therogue.storehouse.item.CraftingUsed;
 
-import net.minecraft.creativetab.CreativeTabs;
 import therogue.storehouse.item.StorehouseBaseItem;
 
 
@@ -22,6 +21,5 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem
 	public ItemStorehouseBaseMaterial(String name)
 	{
 		super(name);
-		setCreativeTab(CreativeTabs.MATERIALS);
 	}
 }

@@ -20,7 +20,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
@@ -31,6 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
+import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.item.ItemStorehouseBaseSlab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
@@ -56,7 +56,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		if (!this.isDouble())
 		{
 			iblockstate = iblockstate.withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM);
-			this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+			this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 		}
 		this.setDefaultState(iblockstate.withProperty(VARIANT, Variant.DEFAULT));
 	}

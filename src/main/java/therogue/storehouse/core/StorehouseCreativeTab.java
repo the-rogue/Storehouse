@@ -8,19 +8,28 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.reference;
+package therogue.storehouse.core;
 
-public class General
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import therogue.storehouse.init.ModItems;
+import therogue.storehouse.reference.General;
+
+
+public class StorehouseCreativeTab
 {
-	/**
-	 * Stores all general values for the mod
-	 */
-	public static final String MOD_ID = "storehouse";
-	public static final String MOD_NAME = "Storehouse Expansion";
-	public static final String VERSION = "1.10.2-0.1.0";
-	public static final String MC_VERSIONS = "[1.10.2]";
-	public static final String FINGERPRINT = "";
-	public static final String SERVER_PROXY_CLASS = "therogue.storehouse.proxy.ServerProxy";
-	public static final String CLIENT_PROXY_CLASS = "therogue.storehouse.proxy.ClientProxy";
-	public static final String GUI_FACTORY = "therogue.storehouse.client.gui.config.StorehouseGuiFactory";
+	public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(General.MOD_ID) {
+
+		@Override
+		public Item getTabIconItem()
+		{
+			return ModItems.azurite_dust;
+		}
+
+		@Override
+		public String getTranslatedTabLabel()
+		{
+			return General.MOD_NAME;
+		}
+	};
 }
