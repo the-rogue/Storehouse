@@ -16,6 +16,9 @@ import therogue.storehouse.block.StorehouseBaseBlock;
 
 public class StorehouseBaseDecorativeBlock extends StorehouseBaseBlock
 {
+	/**
+	 * Constructs a generic decorative block
+	 */
 	public StorehouseBaseDecorativeBlock(String name)
 	{
 		super(name);

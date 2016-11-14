@@ -17,20 +17,32 @@ import therogue.storehouse.util.loghelper;
 
 public class ConfigValues
 {
+	/**
+	 * Defines a new configuration object to make referencing it easier
+	 */
 	private static Configuration configuration;
 
-	// Categories
+	/**
+	 * Creates any configuration categories needed
+	 */
 
-	// General Category (Values)
+	/**
+	 * Defines all values and their defaults for the GENERAL category
+	 */
 	public static boolean debuglogging = false;
-	public static boolean debugloggingdefault = false;
+	public static final boolean debugloggingdefault = false;
 
+	/**
+	 * Reads all configuration values in (easiest to do that here since all values are in this file already)
+	 */
 	public static void readConfigValues()
 	{
+		loghelper.log("trace", "Getting Configuration from ConfigHandler");
 		configuration = ConfigHandler.getConfiguration();
-		loghelper.log("trace", "Reading Config Values");
-		// Reads The values from the Config
-		// Example: Value = configuration.get("Category under", "Property to find", default value, "Comment on the property").getTypethepropertyshouldbe(default value);
+		loghelper.log("trace", "Started Reading Config Values");
+
+		// Reads Values from the config
 		debuglogging = configuration.get(Configuration.CATEGORY_GENERAL, "DebugLogging", debugloggingdefault, "Whether or not to print out lots of debug info to the console").getBoolean();
+		loghelper.log("trace", "Finished Reading Config Values");
 	}
 }

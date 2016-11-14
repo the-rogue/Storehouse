@@ -15,21 +15,36 @@ import java.util.ArrayList;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.CraftingUsed.ItemStorehouseBaseMaterial;
+import therogue.storehouse.util.loghelper;
 
 
 public class ModItems
 {
+	/**
+	 * Initialises a new array to hold all the items
+	 */
 	public static ArrayList<IStorehouseBaseItem> itemlist = new ArrayList<IStorehouseBaseItem>();
 
+	/**
+	 * Initialises all the items
+	 */
 	public static final StorehouseBaseItem azurite_dust = new ItemStorehouseBaseMaterial("azurite_dust");
 
+	/**
+	 * Adds all the items to the array
+	 */
 	static
 	{
+		loghelper.log("debug", "Adding Items");
 		itemlist.add(azurite_dust);
 	}
 
+	/**
+	 * Registers all the items
+	 */
 	public static void init()
 	{
+		loghelper.log("debug", "Registering Items");
 		for (IStorehouseBaseItem item : ModItems.itemlist)
 		{
 			item.registeritem();

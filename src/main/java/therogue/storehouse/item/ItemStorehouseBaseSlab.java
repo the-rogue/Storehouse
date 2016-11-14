@@ -13,14 +13,18 @@ package therogue.storehouse.item;
 import net.minecraft.item.ItemSlab;
 import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
 import therogue.storehouse.reference.General;
+import therogue.storehouse.util.loghelper;
 
 
 public class ItemStorehouseBaseSlab extends ItemSlab
 {
-
+	/**
+	 * Creates a new ItemSlab with the appropriate parameters for my Mod
+	 */
 	public ItemStorehouseBaseSlab(StorehouseBaseSlab.Half singleSlab, StorehouseBaseSlab.Double doubleSlab)
 	{
 		super(singleSlab, singleSlab, doubleSlab);
+		loghelper.log("trace", "Creating new ItemStorehouseBaseSlab: " + singleSlab.getName());
 		this.setRegistryName(General.MOD_ID, singleSlab.getName());
 	}
 }

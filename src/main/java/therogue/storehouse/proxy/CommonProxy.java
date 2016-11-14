@@ -10,9 +10,17 @@
 
 package therogue.storehouse.proxy;
 
+import therogue.storehouse.util.loghelper;
+
+
 public abstract class CommonProxy implements IProxy
 {
-	public void init(){
-		
+	/**
+	 * Will Initialise all methods that are common, however not used at the moment as they are run in the Mod class
+	 */
+	public void init()
+	{
+		loghelper.log("debug", "Common Proxy Started Initialisation");
+		loghelper.log("debug", "Common Proxy Finished Initialisation");
 	}
 }

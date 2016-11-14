@@ -12,19 +12,25 @@ package therogue.storehouse.client.gui.config;
 
 import java.util.Set;
 
-import therogue.storehouse.util.loghelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
+import therogue.storehouse.util.loghelper;
 
 
 public class StorehouseGuiFactory implements IModGuiFactory
 {
+	/**
+	 * Unused Implemented Method
+	 */
 	@Override
 	public void initialize(Minecraft minecraftInstance)
 	{
 	}
 
+	/**
+	 * Implemented Method, which returns the Configuration GUI class
+	 */
 	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass()
 	{
@@ -32,12 +38,18 @@ public class StorehouseGuiFactory implements IModGuiFactory
 		return StorehouseConfigGui.class;
 	}
 
+	/**
+	 * Unused Implemented Method
+	 */
 	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories()
 	{
 		return null;
 	}
 
+	/**
+	 * Unused Implemented Method
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element)

@@ -20,44 +20,66 @@ import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
+import therogue.storehouse.util.loghelper;
 
 
 public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock
 {
+	/**
+	 * Does all the normal registering of stuff that the base block does
+	 */
 	public StorehouseBaseStair(IStorehouseBaseBlock block)
 	{
 		super(block.getDefaultState());
+		loghelper.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
 		this.setUnlocalizedName(block.getName() + "_stair");
 		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 	}
 
+	/**
+	 * Returns the Properly Formatted Unlocalised Name
+	 */
 	@Override
 	public String getUnlocalizedName()
 	{
 		return String.format("tile.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
+	/**
+	 * Useful method to make the code easier to read
+	 */
 	private String getUnwrappedUnlocalizedName(String unlocalizedName)
 	{
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
 
+	/**
+	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseBlock.
+	 */
 	public String getName()
 	{
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registertexture()
-	{
-		BlockRender.blockTexture(this);
-	}
-
+	/**
+	 * Registers this block easily
+	 */
 	@Override
 	public void registerblock()
 	{
+		loghelper.log("trace", "Registering StorehouseBaseStair: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
+	}
+
+	/**
+	 * Registers the texture for this block easily
+	 */
+	@SideOnly(Side.CLIENT)
+	public void registertexture()
+	{
+		loghelper.log("trace", "Registering StorehouseBaseStair Texture: " + getName());
+		BlockRender.blockTexture(this);
 	}
 }

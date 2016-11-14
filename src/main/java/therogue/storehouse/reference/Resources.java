@@ -12,5 +12,8 @@ package therogue.storehouse.reference;
 
 public class Resources
 {
+	/**
+	 * Stores all values relating to resources for the mod
+	 */
 	public static final String RESOURCENAMEPREFIX = General.MOD_ID + ":";
 }

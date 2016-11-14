@@ -10,11 +10,18 @@
 
 package therogue.storehouse.proxy;
 
+import therogue.storehouse.util.loghelper;
+
+
 public class ServerProxy extends CommonProxy
 {
-
+	/**
+	 * Will Initialise all methods the server needs to run, however not used at the moment as there are no server only methods
+	 */
 	public void init()
 	{
 		super.init();
+		loghelper.log("debug", "Server Proxy Started Initialisation");
+		loghelper.log("debug", "Server Proxy Finished Initialisation");
 	}
 }

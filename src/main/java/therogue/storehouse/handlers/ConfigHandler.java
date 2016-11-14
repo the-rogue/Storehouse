@@ -12,32 +12,44 @@ package therogue.storehouse.handlers;
 
 import java.io.File;
 
-import therogue.storehouse.reference.ConfigValues;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.util.loghelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import therogue.storehouse.reference.ConfigValues;
+import therogue.storehouse.reference.General;
+import therogue.storehouse.util.loghelper;
 
 
 public class ConfigHandler
 {
+	/**
+	 * Creates required Variables
+	 */
 	private static Configuration configuration;
 	private static File configFile;
 
+	/**
+	 * Gets configuration
+	 */
 	public static Configuration getConfiguration()
 	{
 		return configuration;
 	}
 
+	/**
+	 * Gets configFile
+	 */
 	public static File getConfigFile()
 	{
 		return configFile;
 	}
 
+	/**
+	 * Initialises a new configuration if it has not already been done and then loads the variables
+	 */
 	public static void init(File suggestedconfigFile)
 	{
-		loghelper.log("trace", "Initialization of configuration");
+		loghelper.log("debug", "Initialization of configuration");
 		// Makes sure we have not already created a config object and initialises a new config object
 		if (configuration == null)
 		{
@@ -47,6 +59,10 @@ public class ConfigHandler
 		// Load Config and get Config parameters
 		loadConfig();
 	}
+
+	/**
+	 * Required for the Configuration GUI system, reloads the configuration if anything has changed in it
+	 */
 	@SubscribeEvent
 	public void ConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
@@ -58,6 +74,9 @@ public class ConfigHandler
 		}
 	}
 
+	/**
+	 * Tries to load the config and read the values, logs any exceptions and then saves the config file if it has changed
+	 */
 	public static void loadConfig()
 	{
 		loghelper.log("trace", "Loading Config");
@@ -76,6 +95,7 @@ public class ConfigHandler
 		}
 		finally
 		{
+			loghelper.log("trace", "Saving Config");
 			// Save the configuration file
 			if (configuration.hasChanged())
 			{

@@ -12,7 +12,14 @@ package therogue.storehouse.item;
 
 public interface IStorehouseBaseItem
 {
+	/**
+	 * Defines Methods that i need when referencing my item classes elsewhere
+	 */
+	// Convenient because not all items may extend StorehouseBaseItem in the future,
+	// see IStorehouseBaseBlock for an example of this being used properly
 	public void registeritem();
+
 	public void registertexture();
+
 	public String getName();
 }

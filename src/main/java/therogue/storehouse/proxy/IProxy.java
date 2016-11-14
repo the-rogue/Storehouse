@@ -12,5 +12,8 @@ package therogue.storehouse.proxy;
 
 public interface IProxy
 {
+	/**
+	 * Useful to ensure that i implement all nessasary methods
+	 */
 	public void init();
 }

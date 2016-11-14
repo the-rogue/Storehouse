@@ -16,6 +16,9 @@ import therogue.storehouse.item.StorehouseBaseItem;
 
 public class ItemStorehouseBaseMaterial extends StorehouseBaseItem
 {
+	/**
+	 * Constructs a generic item used in crafting
+	 */
 	public ItemStorehouseBaseMaterial(String name)
 	{
 		super(name);

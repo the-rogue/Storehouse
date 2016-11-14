@@ -20,6 +20,9 @@ import therogue.storehouse.reference.General;
 
 public class loghelper
 {
+	/**
+	 * Log Method to make logging easier
+	 */
 	public static void log(String logLevel, Object object)
 	{
 		if (logLevel.equals("all"))
@@ -46,16 +49,19 @@ public class loghelper
 		{
 			FMLLog.log(General.MOD_NAME, Level.INFO, String.valueOf(object));
 		}
+		// Since FML doesn't print these to the console by default this is a good way to print debug/trace information when a config option is selected
 		else if (logLevel.equals("debug"))
 		{
-			if (ConfigValues.debuglogging){
-				FMLLog.log(General.MOD_NAME, Level.INFO,"DEBUG: " + String.valueOf(object));
+			if (ConfigValues.debuglogging)
+			{
+				FMLLog.log(General.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(object));
 			}
 		}
 		else if (logLevel.equals("trace"))
 		{
-			if (ConfigValues.debuglogging){
-				FMLLog.log(General.MOD_NAME, Level.INFO,"TRACE: " + String.valueOf(object));
+			if (ConfigValues.debuglogging)
+			{
+				FMLLog.log(General.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(object));
 			}
 		}
 

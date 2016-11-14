@@ -16,46 +16,72 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.client.render.items.ItemRender;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.Resources;
+import therogue.storehouse.util.loghelper;
 
 
 public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 {
+	/**
+	 * Initiates the item using the specified name
+	 */
 	public StorehouseBaseItem(String name)
 	{
 		super();
+		loghelper.log("trace", "Creating new StorehouseBaseItem: " + name);
 		setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
 	}
 
+	/**
+	 * Returns the Properly Formatted Unlocalised Name
+	 */
 	@Override
 	public String getUnlocalizedName()
 	{
 		return String.format("item.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
+	/**
+	 * Returns the Properly Formatted Unlocalised Name
+	 */
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		return String.format("item.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
+	/**
+	 * Useful method to make the code easier to read
+	 */
 	private String getUnwrappedUnlocalizedName(String unlocalizedName)
 	{
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
 
+	/**
+	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseItem.
+	 */
 	public String getName()
 	{
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
+
+	/**
+	 * Registers this item easily
+	 */
 	public void registeritem()
 	{
+		loghelper.log("trace", "Registering StorehouseBaseItem: " + getName());
 		GameRegistry.register(this);
 	}
 
+	/**
+	 * Registers the texture for this item easily
+	 */
 	@Override
 	public void registertexture()
 	{
+		loghelper.log("trace", "Registering StorehouseBaseItem Texture: " + getName());
 		ItemRender.itemTexture(this);
 	}
 }

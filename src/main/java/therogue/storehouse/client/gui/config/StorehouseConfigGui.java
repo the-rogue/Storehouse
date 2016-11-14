@@ -13,25 +13,30 @@ package therogue.storehouse.client.gui.config;
 import java.util.ArrayList;
 import java.util.List;
 
-import therogue.storehouse.handlers.ConfigHandler;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.util.loghelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
+import therogue.storehouse.handlers.ConfigHandler;
+import therogue.storehouse.reference.General;
+import therogue.storehouse.util.loghelper;
 
 
 public class StorehouseConfigGui extends GuiConfig
 {
+	/**
+	 * Creates a new Configuration GUI
+	 */
 	public StorehouseConfigGui(GuiScreen parent)
 	{
 		super(parent, getConfigElements(), General.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(ConfigHandler.getConfiguration().toString()));
 		loghelper.log("trace", "Config GUI Finished (Successfully!)");
 	}
 
-	/** Compiles a list of config elements */
+	/**
+	 * Compiles a list of Configuration elements to add to the screen if i want to separate different categories out into different screens
+	 */
 	private static List<IConfigElement> getConfigElements()
 	{
 		List<IConfigElement> list = new ArrayList<IConfigElement>();

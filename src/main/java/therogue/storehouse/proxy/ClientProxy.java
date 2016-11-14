@@ -12,15 +12,21 @@ package therogue.storehouse.proxy;
 
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.client.render.items.ItemRender;
+import therogue.storehouse.util.loghelper;
 
 
 public class ClientProxy extends CommonProxy
 {
+	/**
+	 * Initialises all methods the client needs to run, and all common methods by calling super() to common proxy
+	 */
 	@Override
 	public void init()
 	{
 		super.init();
+		loghelper.log("debug", "Client Proxy Started Initialisation");
 		ItemRender.registertextures();
 		BlockRender.registertextures();
+		loghelper.log("debug", "Client Proxy Finished Initialisation");
 	}
 }

@@ -12,7 +12,9 @@ package therogue.storehouse.reference;
 
 public class General
 {
-
+	/**
+	 * Stores all general values for the mod
+	 */
 	public static final String MOD_ID = "storehouse";
 	public static final String MOD_NAME = "Storehouse";
 	public static final String VERSION = "1.10.2-0.1.0";
