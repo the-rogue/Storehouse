@@ -12,14 +12,17 @@ package therogue.storehouse.init;
 
 import java.util.ArrayList;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseDecorativeBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
 import therogue.storehouse.block.Decorative.StorehouseBaseStair;
+import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
 
 
+@GameRegistry.ObjectHolder(General.MOD_ID)
 public class ModBlocks
 {
 	/**

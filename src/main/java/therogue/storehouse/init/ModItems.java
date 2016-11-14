@@ -12,12 +12,15 @@ package therogue.storehouse.init;
 
 import java.util.ArrayList;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.CraftingUsed.ItemStorehouseBaseMaterial;
+import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
 
 
+@GameRegistry.ObjectHolder(General.MOD_ID)
 public class ModItems
 {
 	/**
