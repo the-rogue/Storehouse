@@ -10,12 +10,14 @@
 
 package therogue.storehouse.block.Decorative;
 
-import net.minecraft.block.BlockStairs;
+
+import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
@@ -24,18 +26,21 @@ import therogue.storehouse.reference.Resources;
 import therogue.storehouse.util.loghelper;
 
 
-public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock
+public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock
 {
+
 	/**
 	 * Does all the normal registering of stuff that the base block does
 	 */
-	public StorehouseBaseStair(IStorehouseBaseBlock block)
+	public StorehouseBaseRotatedBlock(IStorehouseBaseBlock blocktype, String namesuffix)
 	{
-		super(block.getDefaultState());
-		loghelper.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
-		this.setUnlocalizedName(block.getName() + "_stair");
-		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
+		super(blocktype.getblockMaterial());
+		loghelper.log("trace", "Creating new StorehouseBaseRotatedBlock: " + blocktype.getName() + "_" + namesuffix);
+		this.setUnlocalizedName(blocktype.getName() + "_" + namesuffix);
+		this.setRegistryName(General.MOD_ID, blocktype.getName() + "_" + namesuffix);
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
+		this.setHardness(blocktype.getblockHardness());
+		this.setResistance(blocktype.getblockResistance());
 	}
 
 	/**
@@ -58,6 +63,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	/**
 	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseBlock.
 	 */
+	@Override
 	public String getName()
 	{
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
@@ -69,7 +75,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	@Override
 	public void registerblock()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseStair: " + getName());
+		loghelper.log("trace", "Registering StorehouseBaseRotatedBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
@@ -78,9 +84,10 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	 * Registers the texture for this block easily
 	 */
 	@SideOnly(Side.CLIENT)
+	@Override
 	public void registertexture()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseStair Texture: " + getName());
+		loghelper.log("trace", "Registering StorehouseBaseRotatedBlock Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
 
@@ -110,4 +117,3 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	{
 		return blockMaterial;
 	}
-}

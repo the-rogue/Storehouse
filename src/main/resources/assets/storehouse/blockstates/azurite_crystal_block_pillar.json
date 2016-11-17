@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "axis=y":  { "model": "storehouse:azurite_crystal_block_pillar" },
+        "axis=z":   { "model": "storehouse:azurite_crystal_block_pillar", "x": 90 },
+        "axis=x":   { "model": "storehouse:azurite_crystal_block_pillar", "x": 90, "y": 90 }
+    }
+}

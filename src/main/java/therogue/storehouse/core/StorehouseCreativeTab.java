@@ -18,6 +18,9 @@ import therogue.storehouse.reference.General;
 
 public class StorehouseCreativeTab
 {
+	/**
+	 * This mod's creative tab
+	 */
 	public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(General.MOD_ID) {
 
 		@Override

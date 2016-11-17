@@ -32,6 +32,7 @@ public class ModItems
 	 * Initialises all the items
 	 */
 	public static final StorehouseBaseItem azurite_dust = new ItemStorehouseBaseMaterial("azurite_dust");
+	public static final StorehouseBaseItem azurite_crystal = new ItemStorehouseBaseMaterial("azurite_crystal");
 
 	/**
 	 * Adds all the items to the array
@@ -40,6 +41,7 @@ public class ModItems
 	{
 		loghelper.log("debug", "Adding Items");
 		itemlist.add(azurite_dust);
+		itemlist.add(azurite_crystal);
 	}
 
 	/**
@@ -48,7 +50,7 @@ public class ModItems
 	public static void init()
 	{
 		loghelper.log("debug", "Registering Items");
-		for (IStorehouseBaseItem item : ModItems.itemlist)
+		for (IStorehouseBaseItem item : itemlist)
 		{
 			item.registeritem();
 		}

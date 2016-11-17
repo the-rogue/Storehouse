@@ -1,4 +1,10 @@
 item.storehouse:azurite_dust.name=Azurite Dust
-tile.storehouse:azurite_dust_block.name=Block of Azurite Dust
-tile.storehouse:azurite_dust_block_stair.name=Block of Azurite Dust Stairs
-tile.storehouse:azurite_dust_block_slab.name=Block of Azurite Dust Slab
+item.storehouse:azurite_crystal.name=Azurite Crystal
+tile.storehouse:azurite_dust_block.name=Azurite Dust Block
+tile.storehouse:azurite_dust_block_stair.name=Azurite Dust Block Stairs
+tile.storehouse:azurite_dust_block_slab.name=Azurite Dust Block Slab
+tile.storehouse:azurite_crystal_block.name=Crystalised Azurite Block
+tile.storehouse:azurite_crystal_block_stair.name=Crystalised Azurite Block Stairs
+tile.storehouse:azurite_crystal_block_slab.name=Crystalised Azurite Block Slab
+tile.storehouse:azurite_crystal_block_chiseled.name=Chiseled Crystalised Azurite Block
+tile.storehouse:azurite_crystal_block_pillar.name=Pillar Crystalised Azurite Block
