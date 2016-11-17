@@ -10,6 +10,7 @@
 
 package therogue.storehouse.block.Decorative;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -28,6 +29,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
@@ -41,6 +44,8 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 {
 	public static final PropertyEnum<StorehouseBaseSlab.Variant> VARIANT = PropertyEnum.<StorehouseBaseSlab.Variant> create("variant", StorehouseBaseSlab.Variant.class);
 	protected StorehouseBaseSlab.Half halfslab;
+	public final IStorehouseBaseBlock blocktype;
+	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 
 	/**
 	 * Registers the normal stuff and then sets the default properties depending on whether it is a double slab or not
@@ -48,6 +53,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	public StorehouseBaseSlab(IStorehouseBaseBlock blocktype)
 	{
 		super(blocktype.getblockMaterial());
+		this.blocktype = blocktype;
 		this.setHardness(blocktype.getblockHardness());
 		this.setResistance(blocktype.getblockResistance());
 
@@ -197,6 +203,56 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	public Material getblockMaterial()
 	{
 		return blockMaterial;
+	}
+
+	/**
+	 * Gets the Ore Dictionary names this block is registered as
+	 */
+	public ArrayList<String> getOredictEntrys()
+	{
+		return OredictEntrys;
+	}
+
+	/**
+	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
+	 */
+	public void setOredictEntry(String oredictEntry)
+	{
+		OreDictionary.registerOre(oredictEntry, halfslab);
+		OredictEntrys.add(oredictEntry);
+	}
+
+	/**
+	 * Sets Generic Recipes for the Block Type
+	 */
+	@Override
+	public void setDefaultRecipes()
+	{
+		if (!isDouble())
+		{
+			if (blocktype.getOredictEntrys().equals(new ArrayList<String>()))
+			{
+				setrecipes(blocktype);
+			}
+			else
+			{
+				for (String s : blocktype.getOredictEntrys())
+				{
+					setrecipes(s);
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Helper method to make code look cleaner
+	 */
+	private void setrecipes(Object s)
+	{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "ddd", "   ", "   ", 'd', s));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "ddd", "   ", 'd', s));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "   ", "ddd", 'd', s));
 	}
 
 	/**

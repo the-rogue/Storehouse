@@ -10,12 +10,17 @@
 
 package therogue.storehouse.block.Decorative;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
@@ -26,6 +31,9 @@ import therogue.storehouse.util.loghelper;
 
 public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock
 {
+	public final IStorehouseBaseBlock blocktype;
+	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
+
 	/**
 	 * Does all the normal registering of stuff that the base block does
 	 */
@@ -33,6 +41,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	{
 		super(block.getDefaultState());
 		loghelper.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
+		this.blocktype = block;
 		this.setUnlocalizedName(block.getName() + "_stair");
 		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
@@ -109,5 +118,49 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	public Material getblockMaterial()
 	{
 		return blockMaterial;
+	}
+
+	/**
+	 * Sets Generic Recipes for the Block Type
+	 */
+	public void setDefaultRecipes()
+	{
+		if (blocktype.getOredictEntrys().equals(new ArrayList<String>()))
+		{
+			setrecipes(blocktype);
+		}
+		else
+		{
+			for (String s : blocktype.getOredictEntrys())
+			{
+				setrecipes(s);
+			}
+		}
+	}
+
+	/**
+	 * Helper method to make code look cleaner
+	 */
+	private void setrecipes(Object s)
+	{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 4), "  d", " dd", "ddd", 'd', s));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 4), "d  ", "dd ", "ddd", 'd', s));
+	}
+
+	/**
+	 * Gets the Ore Dictionary names this block is registered as
+	 */
+	public ArrayList<String> getOredictEntrys()
+	{
+		return OredictEntrys;
+	}
+
+	/**
+	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
+	 */
+	public void setOredictEntry(String oredictEntry)
+	{
+		OreDictionary.registerOre(oredictEntry, this);
+		OredictEntrys.add(oredictEntry);
 	}
 }

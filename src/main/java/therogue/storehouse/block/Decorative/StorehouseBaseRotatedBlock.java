@@ -10,6 +10,7 @@
 
 package therogue.storehouse.block.Decorative;
 
+import java.util.ArrayList;
 
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.material.Material;
@@ -28,6 +29,7 @@ import therogue.storehouse.util.loghelper;
 
 public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock
 {
+	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 
 	/**
 	 * Does all the normal registering of stuff that the base block does
@@ -117,3 +119,30 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	{
 		return blockMaterial;
 	}
+
+	/**
+	 * Sets Generic Recipes for the Block Type
+	 */
+	@Override
+	public void setDefaultRecipes()
+	{
+
+	}
+
+	/**
+	 * Gets the Ore Dictionary names this block is registered as
+	 */
+	public ArrayList<String> getOredictEntrys()
+	{
+		return OredictEntrys;
+	}
+
+	/**
+	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
+	 */
+	public void setOredictEntry(String oredictEntry)
+	{
+		OreDictionary.registerOre(oredictEntry, this);
+		OredictEntrys.add(oredictEntry);
+	}
+}

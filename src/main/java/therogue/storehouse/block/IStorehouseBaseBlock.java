@@ -10,6 +10,8 @@
 
 package therogue.storehouse.block;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -38,4 +40,10 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 	public float getblockResistance();
 
 	public Material getblockMaterial();
+	
+	public void setDefaultRecipes();
+	
+	public ArrayList<String> getOredictEntrys();
+	
+	public void setOredictEntry(String oredictEntry);
 }

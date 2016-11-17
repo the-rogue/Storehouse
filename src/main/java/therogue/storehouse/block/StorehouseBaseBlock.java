@@ -10,12 +10,15 @@
 
 package therogue.storehouse.block;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
@@ -25,6 +28,7 @@ import therogue.storehouse.util.loghelper;
 
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 {
+	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 	/**
 	 * Declares defaults
 	 */
@@ -144,5 +148,31 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	public Material getblockMaterial()
 	{
 		return blockMaterial;
+	}
+
+	/**
+	 * Sets Generic Recipes for the Block Type
+	 */
+	@Override
+	public void setDefaultRecipes()
+	{
+
+	}
+
+	/**
+	 * Gets the Ore Dictionary names this block is registered as
+	 */
+	public ArrayList<String> getOredictEntrys()
+	{
+		return OredictEntrys;
+	}
+
+	/**
+	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
+	 */
+	public void setOredictEntry(String oredictEntry)
+	{
+		OreDictionary.registerOre(oredictEntry, this);
+		OredictEntrys.add(oredictEntry);
 	}
 }

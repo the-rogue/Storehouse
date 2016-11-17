@@ -21,6 +21,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import therogue.storehouse.handlers.ConfigHandler;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
+import therogue.storehouse.init.Recipes;
+import therogue.storehouse.init.RegOreDictionary;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
@@ -63,6 +65,8 @@ public class storehouse
 	{
 		loghelper.log("debug", "Initialization Started");
 		proxy.init();
+		RegOreDictionary.init();
+		Recipes.init();
 		loghelper.log("info", "Initialization Finished");
 	}
 
