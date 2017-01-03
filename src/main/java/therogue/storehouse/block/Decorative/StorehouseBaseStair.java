@@ -12,6 +12,7 @@ package therogue.storehouse.block.Decorative;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
@@ -39,7 +40,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	 */
 	public StorehouseBaseStair(IStorehouseBaseBlock block)
 	{
-		super(block.getDefaultState());
+		super(block.getBlock().getDefaultState());
 		loghelper.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
 		this.blocktype = block;
 		this.setUnlocalizedName(block.getName() + "_stair");
@@ -162,5 +163,11 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	{
 		OreDictionary.registerOre(oredictEntry, this);
 		OredictEntrys.add(oredictEntry);
+	}
+
+	@Override
+	public Block getBlock()
+	{
+		return this;
 	}
 }

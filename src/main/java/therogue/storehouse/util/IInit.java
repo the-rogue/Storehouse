@@ -8,20 +8,16 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.proxy;
+package therogue.storehouse.util;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-	/**
-	 * Useful to ensure that I implement all nessasary methods
-	 */
-public interface IProxy
+/**
+ * Static Initialiser for almost anything
+ */
+public interface IInit
 {
-
-	public void preInit(FMLPreInitializationEvent event);
+	public void preInit();
 	
-	public void init(FMLInitializationEvent event);
+	public void Init();
 	
-	public void postInit(FMLPostInitializationEvent event);
+	public void postInit();
 }

@@ -10,18 +10,44 @@
 
 package therogue.storehouse.proxy;
 
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import therogue.storehouse.util.loghelper;
 
 
 public class ServerProxy extends CommonProxy
-{
+{	
 	/**
-	 * Will Initialise all methods the server needs to run, however not used at the moment as there are no server only methods
+	 * PreInitialises all methods the Server needs to run, and all common methods by calling super() to common proxy
 	 */
-	public void init()
+	@Override
+	public void preInit(FMLPreInitializationEvent event)
 	{
-		super.init();
+		super.preInit(event);
+		loghelper.log("debug", "Server Proxy Started PreInitialisation");
+		loghelper.log("debug", "Server Proxy Finished PreInitialisation");
+	}
+	
+	/**
+	 * Initialises all methods the Server needs to run, and all common methods by calling super() to common proxy
+	 */
+	@Override
+	public void init(FMLInitializationEvent event)
+	{
+		super.init(event);
 		loghelper.log("debug", "Server Proxy Started Initialisation");
 		loghelper.log("debug", "Server Proxy Finished Initialisation");
+	}
+
+	/**
+	 * PostInitialises all methods the Server needs to run, and all common methods by calling super() to common proxy
+	 */
+	@Override
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		super.postInit(event);
+		loghelper.log("debug", "Server Proxy Started PostInitialisation");
+		loghelper.log("debug", "Server Proxy Finished PostInitialisation");
 	}
 }

@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "normal": { "model": "storehouse:azurite_ore_block" }
+    }
+}

@@ -47,7 +47,7 @@ public class ModItems
 	/**
 	 * Registers all the items
 	 */
-	public static void init()
+	public static void preInit()
 	{
 		loghelper.log("debug", "Registering Items");
 		for (IStorehouseBaseItem item : itemlist)

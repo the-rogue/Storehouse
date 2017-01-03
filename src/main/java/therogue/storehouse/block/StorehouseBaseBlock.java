@@ -175,4 +175,10 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 		OreDictionary.registerOre(oredictEntry, this);
 		OredictEntrys.add(oredictEntry);
 	}
+
+	@Override
+	public Block getBlock()
+	{
+		return this;
+	}
 }

@@ -19,10 +19,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import therogue.storehouse.handlers.ConfigHandler;
-import therogue.storehouse.init.ModBlocks;
-import therogue.storehouse.init.ModItems;
-import therogue.storehouse.init.Recipes;
-import therogue.storehouse.init.RegOreDictionary;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
@@ -50,10 +46,8 @@ public class storehouse
 	public void preinit(FMLPreInitializationEvent event)
 	{
 		loghelper.log("debug", "Pre Initialization Started");
-		ConfigHandler.init(event.getSuggestedConfigurationFile());
+		proxy.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
-		ModItems.init();
-		ModBlocks.preinit();
 		loghelper.log("info", "Pre Initialization Finished");
 	}
 
@@ -64,9 +58,7 @@ public class storehouse
 	public void init(FMLInitializationEvent event)
 	{
 		loghelper.log("debug", "Initialization Started");
-		proxy.init();
-		RegOreDictionary.init();
-		Recipes.init();
+		proxy.init(event);
 		loghelper.log("info", "Initialization Finished");
 	}
 
@@ -77,6 +69,7 @@ public class storehouse
 	public void postinit(FMLPostInitializationEvent event)
 	{
 		loghelper.log("debug", "Post Initialization Started");
+		proxy.postInit(event);
 		loghelper.log("info", "Post Initialization Finished");
 	}
 }

@@ -10,17 +10,54 @@
 
 package therogue.storehouse.proxy;
 
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import therogue.storehouse.handlers.ConfigHandler;
+import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.ModItems;
+import therogue.storehouse.init.Recipes;
+import therogue.storehouse.init.RegOreDictionary;
 import therogue.storehouse.util.loghelper;
+import therogue.storehouse.world.StorehouseWorldGen;
 
 
 public abstract class CommonProxy implements IProxy
 {
+	
 	/**
-	 * Will Initialise all methods that are common, however not used at the moment as they are run in the Mod class
+	 * Will PreInitialise all methods that are common
 	 */
-	public void init()
+	@Override
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		loghelper.log("debug", "Common Proxy Started PreInitialisation");
+		ModItems.preInit();
+		ModBlocks.preInit();
+		ConfigHandler.preInit(event.getSuggestedConfigurationFile());
+		loghelper.log("debug", "Common Proxy Finished PreInitialisation");
+	}
+	
+	/**
+	 * Will Initialise all methods that are common
+	 */
+	@Override
+	public void init(FMLInitializationEvent event)
 	{
 		loghelper.log("debug", "Common Proxy Started Initialisation");
+		RegOreDictionary.init();
+		Recipes.init();
+		StorehouseWorldGen.init();
 		loghelper.log("debug", "Common Proxy Finished Initialisation");
+	}
+
+	/**
+	 * Will PostInitialise all methods that are common
+	 */
+	@Override
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		loghelper.log("debug", "Common Proxy Started PostInitialisation");
+		loghelper.log("debug", "Common Proxy Finished PostInitialisation");
 	}
 }

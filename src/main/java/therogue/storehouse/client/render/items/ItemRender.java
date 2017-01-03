@@ -23,7 +23,7 @@ public class ItemRender
 	/**
 	 * Goes through the list of blocks and calls the method within them to register their texture
 	 */
-	public static void registertextures()
+	public static void Init()
 	{
 		loghelper.log("debug", "Registering Item Textures");
 		for (IStorehouseBaseItem item : ModItems.itemlist)

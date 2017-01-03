@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,7 +28,7 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 	@SideOnly(Side.CLIENT)
 	public void registertexture();
 
-	public IBlockState getDefaultState();
+	public Block getBlock();
 
 	public String getName();
 

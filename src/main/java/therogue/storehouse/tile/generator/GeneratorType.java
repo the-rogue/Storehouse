@@ -8,20 +8,28 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.proxy;
+package therogue.storehouse.tile.generator;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-	/**
-	 * Useful to ensure that I implement all nessasary methods
-	 */
-public interface IProxy
+import therogue.storehouse.energy.EnergyStorageAdv;
+
+public enum GeneratorType
 {
-
-	public void preInit(FMLPreInitializationEvent event);
+	basic(0),
+	advanced(1),
+	infused(2),
+	ender(3),
+	ultimate(4);
 	
-	public void init(FMLInitializationEvent event);
+	private int baseModifier;
+	private int modifier;
 	
-	public void postInit(FMLPostInitializationEvent event);
+	private GeneratorType(int baseModifier) {
+		this.baseModifier = baseModifier;
+		this.modifier = (int)Math.pow(9, baseModifier);
+	}
+	
+	public EnergyStorageAdv getAppropriateEnergyStored(int baseCapacity, int baseRecieve, int baseExtract) {
+		
+		return new EnergyStorageAdv(baseCapacity * modifier + baseCapacity * baseModifier, baseRecieve * modifier + baseRecieve * baseModifier, baseExtract * modifier + baseExtract * baseModifier);
+	}
 }

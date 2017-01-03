@@ -15,6 +15,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -253,6 +254,11 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "ddd", "   ", "   ", 'd', s));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "ddd", "   ", 'd', s));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "   ", "ddd", 'd', s));
+	}
+	
+	@Override
+	public Block getBlock() {
+		return this;
 	}
 
 	/**

@@ -8,20 +8,24 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.proxy;
+package therogue.storehouse.tile.generator;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-	/**
-	 * Useful to ensure that I implement all nessasary methods
-	 */
-public interface IProxy
+import net.minecraft.util.EnumFacing;
+import therogue.storehouse.energy.EnergyStorageAdv;
+import therogue.storehouse.tile.StorehouseBasePoweredTileEntity;
+
+public class StorehouseTileBaseGenerator extends StorehouseBasePoweredTileEntity
 {
-
-	public void preInit(FMLPreInitializationEvent event);
+	protected GeneratorType type;
 	
-	public void init(FMLInitializationEvent event);
+	public StorehouseTileBaseGenerator(GeneratorType type, EnergyStorageAdv energyStorage) {
+		super(energyStorage);
+		this.type = type;
+	}
 	
-	public void postInit(FMLPostInitializationEvent event);
+	@Override
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate)
+	{
+		return 0;
+	}
 }

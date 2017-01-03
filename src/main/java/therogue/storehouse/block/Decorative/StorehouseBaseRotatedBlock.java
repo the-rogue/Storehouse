@@ -12,6 +12,7 @@ package therogue.storehouse.block.Decorative;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
@@ -144,5 +145,11 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	{
 		OreDictionary.registerOre(oredictEntry, this);
 		OredictEntrys.add(oredictEntry);
+	}
+
+	@Override
+	public Block getBlock()
+	{
+		return this;
 	}
 }

@@ -29,7 +29,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 	{
 		super();
 		loghelper.log("trace", "Creating new StorehouseBaseItem: " + name);
-		setUnlocalizedName(name);
+		this.setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 	}

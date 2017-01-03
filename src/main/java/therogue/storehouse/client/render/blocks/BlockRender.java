@@ -24,7 +24,7 @@ public class BlockRender
 	/**
 	 * Goes through the list of blocks and calls the method within them to register their texture
 	 */
-	public static void registertextures()
+	public static void Init()
 	{
 		loghelper.log("debug", "Registering Block Textures");
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)

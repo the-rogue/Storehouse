@@ -8,20 +8,14 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.proxy;
+package therogue.storehouse.api;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-	/**
-	 * Useful to ensure that I implement all nessasary methods
-	 */
-public interface IProxy
+public class StorehouseAPIInfo
 {
-
-	public void preInit(FMLPreInitializationEvent event);
-	
-	public void init(FMLInitializationEvent event);
-	
-	public void postInit(FMLPostInitializationEvent event);
+	private StorehouseAPIInfo()
+	{
+	}
+	public static final String APIVERSION = "1.10.2-0.1.0";
+	public static final String MODID = "storehouse";
+	public static final String BASEPROVISION = "storehouse|API";
 }

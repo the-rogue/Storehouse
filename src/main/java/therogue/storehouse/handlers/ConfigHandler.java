@@ -47,7 +47,7 @@ public class ConfigHandler
 	/**
 	 * Initialises a new configuration if it has not already been done and then loads the variables
 	 */
-	public static void init(File suggestedconfigFile)
+	public static void preInit(File suggestedconfigFile)
 	{
 		loghelper.log("debug", "Initialization of configuration");
 		// Makes sure we have not already created a config object and initialises a new config object

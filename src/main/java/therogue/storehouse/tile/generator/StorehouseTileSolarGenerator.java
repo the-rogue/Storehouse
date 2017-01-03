@@ -8,20 +8,22 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.proxy;
+package therogue.storehouse.tile.generator;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-	/**
-	 * Useful to ensure that I implement all nessasary methods
-	 */
-public interface IProxy
+import net.minecraft.util.ITickable;
+
+public class StorehouseTileSolarGenerator extends StorehouseTileBaseGenerator implements ITickable
 {
-
-	public void preInit(FMLPreInitializationEvent event);
 	
-	public void init(FMLInitializationEvent event);
-	
-	public void postInit(FMLPostInitializationEvent event);
+	public StorehouseTileSolarGenerator(GeneratorType type)
+	{
+		super(type, type.getAppropriateEnergyStored(18000, 5, 45));
+	}
+	@Override
+	public void update()
+	{
+		if (this.worldObj.canBlockSeeSky(this.pos) && this.worldObj.isDaytime()) {
+			energyStorage.increase();
+		}
+	}
 }

@@ -8,20 +8,21 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.proxy;
+package therogue.storehouse.energy;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-	/**
-	 * Useful to ensure that I implement all nessasary methods
-	 */
-public interface IProxy
+import net.minecraftforge.energy.EnergyStorage;
+
+public class EnergyStorageAdv extends EnergyStorage
 {
 
-	public void preInit(FMLPreInitializationEvent event);
+	public EnergyStorageAdv(int capacity) { super(capacity); }
+
+	public EnergyStorageAdv(int capacity, int maxTransfer) { super(capacity, maxTransfer); }
+
+	public EnergyStorageAdv(int capacity, int maxReceive, int maxExtract) { super(capacity, maxReceive, maxExtract); }
 	
-	public void init(FMLInitializationEvent event);
-	
-	public void postInit(FMLPostInitializationEvent event);
+	public void increase() {
+		this.receiveEnergy(maxReceive, false);
+	}
+
 }

@@ -12,8 +12,8 @@ package therogue.storehouse.init;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.util.RecipeHelper;
 import therogue.storehouse.util.loghelper;
 
 
@@ -26,8 +26,8 @@ public class Recipes
 	{
 		loghelper.log("debug", "Registering default Recipes");
 		setDefaultRecipes();
-		loghelper.log("debug", "Registering Ore Dictionary Recipes");
-		setOreRecipes();
+		loghelper.log("debug", "Registering Multi Recipes");
+		setMultipleRecipes();
 		loghelper.log("debug", "Registering Shaped Recipes");
 		setShapedRecipes();
 		loghelper.log("debug", "Registering Shapeless Recipes");
@@ -48,9 +48,10 @@ public class Recipes
 	/**
 	 * Adds all Recipes Involving the Ore Dictionary
 	 */
-	private static void setOreRecipes()
+	private static void setMultipleRecipes()
 	{
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.azurite_crystal, 9), RegOreDictionary.oreDictEntries.get(0)));
+		RecipeHelper.registerTwoWayBlockRecipe(ModBlocks.azurite_crystal_block, ModItems.azurite_crystal, RegOreDictionary.oreDictEntries.get(0), null);
+		RecipeHelper.registerTwoWayBlockRecipe(ModBlocks.azurite_dust_block, ModItems.azurite_dust, null, null);
 	}
 
 	/**
@@ -58,8 +59,6 @@ public class Recipes
 	 */
 	private static void setShapedRecipes()
 	{
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.azurite_crystal_block), "ddd", "ddd", "ddd", 'd', ModItems.azurite_crystal);
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.azurite_dust_block), "ddd", "ddd", "ddd", 'd', ModItems.azurite_dust);
 	}
 
 	/**
@@ -67,7 +66,6 @@ public class Recipes
 	 */
 	private static void setShapelessRecipes()
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.azurite_dust, 9), ModBlocks.azurite_dust_block);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.azurite_crystal_block_chiseled), ModBlocks.azurite_crystal_block_half_slab, ModBlocks.azurite_crystal_block_half_slab);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.azurite_crystal_block_pillar), ModBlocks.azurite_crystal_block, ModBlocks.azurite_crystal_block);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.azurite_dust_block), ModBlocks.azurite_dust_block_half_slab, ModBlocks.azurite_dust_block_half_slab);

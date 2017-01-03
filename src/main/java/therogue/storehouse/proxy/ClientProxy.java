@@ -10,6 +10,9 @@
 
 package therogue.storehouse.proxy;
 
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.client.render.items.ItemRender;
 import therogue.storehouse.util.loghelper;
@@ -17,16 +20,39 @@ import therogue.storehouse.util.loghelper;
 
 public class ClientProxy extends CommonProxy
 {
+	
+	/**
+	 * PreInitialises all methods the client needs to run, and all common methods by calling super() to common proxy
+	 */
+	@Override
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		super.preInit(event);
+		loghelper.log("debug", "Client Proxy Started PreInitialisation");
+		loghelper.log("debug", "Client Proxy Finished PreInitialisation");
+	}
+	
 	/**
 	 * Initialises all methods the client needs to run, and all common methods by calling super() to common proxy
 	 */
 	@Override
-	public void init()
+	public void init(FMLInitializationEvent event)
 	{
-		super.init();
+		super.init(event);
 		loghelper.log("debug", "Client Proxy Started Initialisation");
-		ItemRender.registertextures();
-		BlockRender.registertextures();
+		ItemRender.Init();
+		BlockRender.Init();
 		loghelper.log("debug", "Client Proxy Finished Initialisation");
+	}
+	
+	/**
+	 * PostInitialises all methods the client needs to run, and all common methods by calling super() to common proxy
+	 */
+	@Override
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		super.postInit(event);
+		loghelper.log("debug", "Client Proxy Started PostInitialisation");
+		loghelper.log("debug", "Client Proxy Finished PostInitialisation");
 	}
 }
