@@ -25,13 +25,13 @@ import therogue.storehouse.util.loghelper;
 
 
 @Mod(modid = General.MOD_ID, name = General.MOD_NAME, version = General.VERSION, acceptedMinecraftVersions = General.MC_VERSIONS, useMetadata = true, guiFactory = General.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json")
-public class storehouse
+public class Storehouse
 {
 	/**
 	 * Creates an instance of Storehouse so I can reference it later
 	 */
 	@Instance
-	public static storehouse instance;
+	public static Storehouse instance;
 
 	/**
 	 * Initiates a Proxy
