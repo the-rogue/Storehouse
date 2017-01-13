@@ -1,5 +1,8 @@
+//Items
 item.storehouse:azurite_dust.name=Azurite Dust
 item.storehouse:azurite_crystal.name=Azurite Crystal
+
+//Decorative Blocks
 tile.storehouse:azurite_dust_block.name=Azurite Dust Block
 tile.storehouse:azurite_dust_block_stair.name=Azurite Dust Block Stairs
 tile.storehouse:azurite_dust_block_slab.name=Azurite Dust Block Slab
@@ -8,3 +11,13 @@ tile.storehouse:azurite_crystal_block_stair.name=Crystalised Azurite Block Stair
 tile.storehouse:azurite_crystal_block_slab.name=Crystalised Azurite Block Slab
 tile.storehouse:azurite_crystal_block_chiseled.name=Chiseled Crystalised Azurite Block
 tile.storehouse:azurite_crystal_block_pillar.name=Pillar Crystalised Azurite Block
+
+//Generators
+tile.storehouse:solar_generator_basic.name=Basic Solar Panel
+tile.storehouse:solar_generator_advanced.name=Advanced Solar Panel
+tile.storehouse:solar_generator_infused.name=Infused Solar Panel
+tile.storehouse:solar_generator_ender.name=Ender Solar Panel
+tile.storehouse:solar_generator_ultimate.name=Ultimate Solar Panel
+
+//Machines
+tile.storehouse:thermal_press.name=Thermal Press

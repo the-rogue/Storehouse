@@ -1,5 +1,5 @@
 {
     "variants": {
-        "variant=default": { "model": "storehouse:azurite_dust_block" }
+        "variant=default": { "model": "storehouse:decorative/azurite_dust_block" }
     }
 }

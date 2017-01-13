@@ -10,13 +10,45 @@
 
 package therogue.storehouse.tile.generator;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import therogue.storehouse.block.state.GeneratorType;
+import therogue.storehouse.reference.MachineStats;
 
-public class TileSolidGenerator extends StorehouseTileBaseGenerator
+
+public class TileSolidGenerator extends TileBaseGenerator
 {
+	
+	public TileSolidGenerator(GeneratorType type) {
+		super(type, type.getAppropriateEnergyStored(MachineStats.SOLIDGENCAPACITY, 0, MachineStats.SOLIDGENSEND), MachineStats.SOLIDGENPERTICK);
+	}
 
-	public TileSolidGenerator(GeneratorType type)
+	@Override
+	public boolean isRunning()
 	{
-		super(type, type.getAppropriateEnergyStored(18000, 5, 45));
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getDefaultName()
+	{
+		return "container.solid_generator_" + type.getName();
+	}
+
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getGuiID()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

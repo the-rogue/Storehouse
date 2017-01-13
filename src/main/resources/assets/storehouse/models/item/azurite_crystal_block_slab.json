@@ -1,5 +1,5 @@
 {
-    "parent":"storehouse:block/azurite_crystal_block_half_slab",
+    "parent":"storehouse:block/decorative/azurite_crystal_block_half_slab",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

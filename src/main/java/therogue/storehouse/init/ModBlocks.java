@@ -20,7 +20,8 @@ import therogue.storehouse.block.Decorative.StorehouseBaseDecorativeBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
 import therogue.storehouse.block.Decorative.StorehouseBaseStair;
-import therogue.storehouse.block.tile.generator.BlockSolarGenerator;
+import therogue.storehouse.block.machine.crafting.BlockThermalPress;
+import therogue.storehouse.block.machine.generator.BlockSolarGenerator;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
 
@@ -47,7 +48,8 @@ public class ModBlocks
 	public static final StorehouseBaseSlab.Half azurite_crystal_block_half_slab = new StorehouseBaseSlab.Half(azurite_crystal_block);
 	public static final StorehouseBaseSlab.Double azurite_crystal_block_double_slab = new StorehouseBaseSlab.Double(azurite_crystal_block, azurite_crystal_block_half_slab);
 	public static final StorehouseBaseBlock azurite_ore_block = new StorehouseBaseOre("azurite_ore_block", ModItems.azurite_dust, 3, 6);
-	public static final StorehouseBaseBlock solar_generator = new BlockSolarGenerator();
+	public static final StorehouseBaseBlock solar_generator = new BlockSolarGenerator("solar_generator");
+	public static final StorehouseBaseBlock thermal_press = new BlockThermalPress("thermal_press");
 
 	/**
 	 * Adds all the blocks to the array
@@ -69,6 +71,7 @@ public class ModBlocks
 		blocklist.add(azurite_crystal_block_double_slab);
 		blocklist.add(azurite_ore_block);
 		blocklist.add(solar_generator);
+		blocklist.add(thermal_press);
 	}
 
 	/**

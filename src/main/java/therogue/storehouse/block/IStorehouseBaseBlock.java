@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 {
 	/**
-	 * Defines Methods that i need when referencing my block classes elsewhere
+	 * Defines Methods that I need when referencing my block classes elsewhere
 	 */
 	// Convenient because not all blocks extend StorehouseBaseBlock, e.g. Stairs and Slabs
 	@SideOnly(Side.CLIENT)
@@ -45,4 +45,5 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 	public ArrayList<String> getOredictEntrys();
 	
 	public void setOredictEntry(String oredictEntry);
+
 }

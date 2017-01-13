@@ -1,0 +1,9 @@
+{
+    "parent": "storehouse:block/generator/solar/base",
+    "textures": {
+        "top": "storehouse:blocks/machine/generator/solar/infused",
+        "bottom": "storehouse:blocks/machine/storehouse_iron",
+        "side": "storehouse:blocks/machine/storehouse_iron"
+        
+    }
+}

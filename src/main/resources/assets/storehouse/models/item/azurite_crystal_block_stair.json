@@ -1,5 +1,5 @@
 {
-    "parent":"storehouse:block/azurite_crystal_block_stair",
+    "parent":"storehouse:block/decorative/azurite_crystal_block_stair",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

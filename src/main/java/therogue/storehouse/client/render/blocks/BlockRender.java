@@ -15,12 +15,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.util.loghelper;
 
 
 public class BlockRender
 {
+	public static void preInit()
+	{
+		loghelper.log("debug", "Registering Block Variants");
+		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
+		{
+			if (block instanceof IStorehouseVariantBlock) {
+				((IStorehouseVariantBlock)block).registervariants();
+			}
+		}
+	}
 	/**
 	 * Goes through the list of blocks and calls the method within them to register their texture
 	 */
@@ -34,7 +45,7 @@ public class BlockRender
 	}
 
 	/**
-	 * Useful Helper method to register the texture for each block, that all the blocks use
+	 * Useful Helper method to register the texture for each block, that most blocks use
 	 */
 	public static void blockTexture(Block block)
 	{

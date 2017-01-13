@@ -23,6 +23,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
@@ -35,9 +36,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
-import therogue.storehouse.item.ItemStorehouseBaseSlab;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.Resources;
+import therogue.storehouse.reference.Identification;
 import therogue.storehouse.util.loghelper;
 
 
@@ -125,7 +125,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	 */
 	public String getUnlocalizedName(int meta)
 	{
-		return String.format("tile.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Identification.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	/**
@@ -133,7 +133,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	 */
 	public String getUnlocalizedName()
 	{
-		return String.format("tile.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Identification.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	/**
@@ -312,7 +312,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		{
 			loghelper.log("trace", "Registering StorehouseBaseSlab.Double: " + getName());
 			GameRegistry.register(this);
-			GameRegistry.register(new ItemStorehouseBaseSlab(halfslab, this));
+			GameRegistry.register(new ItemSlab(halfslab, halfslab, this).setRegistryName(General.MOD_ID, halfslab.getName()));
 		}
 	}
 

@@ -29,6 +29,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit(event);
 		loghelper.log("debug", "Client Proxy Started PreInitialisation");
+		BlockRender.preInit();
 		loghelper.log("debug", "Client Proxy Finished PreInitialisation");
 	}
 	

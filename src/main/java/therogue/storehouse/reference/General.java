@@ -10,6 +10,8 @@
 
 package therogue.storehouse.reference;
 
+import net.minecraft.util.text.TextFormatting;
+
 public class General
 {
 	/**
@@ -23,4 +25,6 @@ public class General
 	public static final String SERVER_PROXY_CLASS = "therogue.storehouse.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "therogue.storehouse.proxy.ClientProxy";
 	public static final String GUI_FACTORY = "therogue.storehouse.client.gui.config.StorehouseGuiFactory";
+	
+	public static final String SHIFTINFO = TextFormatting.WHITE + "" + TextFormatting.ITALIC + "Hold Shift For More Info";
 }

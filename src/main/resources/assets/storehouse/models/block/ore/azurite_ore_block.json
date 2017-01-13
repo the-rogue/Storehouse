@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "storehouse:blocks/ore/azurite_ore_block"
+    }
+}

@@ -1,8 +1,0 @@
-{
-    "parent": "block/upper_slab",
-    "textures": {
-        "bottom": "storehouse:blocks/azurite_dust_block",
-        "top": "storehouse:blocks/azurite_dust_block",
-        "side": "storehouse:blocks/azurite_dust_block"
-    }
-}

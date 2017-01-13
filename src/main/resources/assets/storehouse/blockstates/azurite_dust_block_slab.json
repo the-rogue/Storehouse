@@ -1,6 +1,6 @@
 {
     "variants": {
-        "half=bottom,variant=default": { "model": "storehouse:azurite_dust_block_half_slab" },
-        "half=top,variant=default": { "model": "storehouse:azurite_dust_block_upper_slab" }
+        "half=bottom,variant=default": { "model": "storehouse:decorative/azurite_dust_block_half_slab" },
+        "half=top,variant=default": { "model": "storehouse:decorative/azurite_dust_block_upper_slab" }
     }
 }

@@ -1,0 +1,9 @@
+{
+    "parent": "storehouse:block/generator/solar/base",
+    "textures": {
+        "top": "storehouse:blocks/machine/generator/solar/ultimate",
+        "bottom": "storehouse:blocks/machine/storehouse_titanium",
+        "side": "storehouse:blocks/machine/storehouse_titanium"
+        
+    }
+}

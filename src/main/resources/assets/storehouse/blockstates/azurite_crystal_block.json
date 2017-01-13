@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "storehouse:azurite_crystal_block" }
+        "normal": { "model": "storehouse:decorative/azurite_crystal_block" }
     }
 }

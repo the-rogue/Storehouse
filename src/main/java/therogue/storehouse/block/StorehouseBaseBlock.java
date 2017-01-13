@@ -22,7 +22,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.Resources;
+import therogue.storehouse.reference.Identification;
 import therogue.storehouse.util.loghelper;
 
 
@@ -84,7 +84,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	@Override
 	public String getUnlocalizedName()
 	{
-		return String.format("tile.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Identification.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	/**
@@ -98,6 +98,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	/**
 	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseBlock.
 	 */
+	@Override
 	public String getName()
 	{
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
@@ -122,7 +123,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 		loghelper.log("trace", "Registering StorehouseBaseBlock Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
-
+	
 	/**
 	 * Getter for blockHardness
 	 */
@@ -181,4 +182,6 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	{
 		return this;
 	}
+
+
 }

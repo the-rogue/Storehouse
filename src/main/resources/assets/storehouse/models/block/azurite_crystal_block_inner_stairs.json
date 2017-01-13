@@ -1,8 +1,0 @@
-{
-    "parent": "block/inner_stairs",
-    "textures": {
-        "bottom": "storehouse:blocks/azurite_crystal_block",
-        "top": "storehouse:blocks/azurite_crystal_block",
-        "side": "storehouse:blocks/azurite_crystal_block"
-    }
-}

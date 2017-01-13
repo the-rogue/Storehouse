@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.client.render.items.ItemRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.Resources;
+import therogue.storehouse.reference.Identification;
 import therogue.storehouse.util.loghelper;
 
 
@@ -40,7 +40,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 	@Override
 	public String getUnlocalizedName()
 	{
-		return String.format("item.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", Identification.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return String.format("item.%s%s", Resources.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", Identification.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	/**

@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "side": "storehouse:blocks/decorative/azurite_crystal_block_pillar_side",
+        "end": "storehouse:blocks/decorative/azurite_crystal_block_pillar_end"
+    }
+}

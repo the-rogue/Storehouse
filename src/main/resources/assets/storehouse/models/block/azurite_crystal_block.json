@@ -1,6 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "storehouse:blocks/azurite_crystal_block"
-    }
-}

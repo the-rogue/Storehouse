@@ -10,13 +10,64 @@
 
 package therogue.storehouse.tile;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IWorldNameable;
 
-public class StorehouseBaseTileEntity extends TileEntity
+
+public abstract class StorehouseBaseTileEntity extends TileEntity implements IWorldNameable
 {
+	private String customName;
 
-	public StorehouseBaseTileEntity()
+	@Nullable
+	public ITextComponent getDisplayName()
 	{
+		return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
 	}
 
+	@Override
+	public boolean hasCustomName()
+	{
+		return this.customName != null && !this.customName.isEmpty();
+	}
+
+	@Override
+	public String getName()
+	{
+		return hasCustomName() ? customName : getDefaultName();
+	}
+	
+	public abstract String getDefaultName();
+
+	public void setCustomName(String customName)
+	{
+		this.customName = customName;
+	}
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+	    if (this.hasCustomName()) {
+	        nbt.setString("CustomName", this.getName());
+	    }
+	    if (this instanceof IDefaultSidedInventory){
+	    	((IDefaultSidedInventory)this).getInventoryManager().writeToNBT(nbt);
+	    }
+	    
+	    return nbt;
+	}
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+	    super.readFromNBT(nbt);
+	    if (nbt.hasKey("CustomName", 8)) {
+	        this.setCustomName(nbt.getString("CustomName"));
+	    }
+	    if (this instanceof IDefaultSidedInventory){
+	    	((IDefaultSidedInventory)this).getInventoryManager().readFromNBT(nbt);
+	    }
+	}
 }

@@ -10,16 +10,22 @@
 
 package therogue.storehouse.tile.generator;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import therogue.storehouse.block.state.GeneratorType;
+import therogue.storehouse.reference.MachineStats;
 
-public class TileLiquidGenerator extends StorehouseTileBaseGenerator implements IFluidHandler
+
+public class TileLiquidGenerator extends TileBaseGenerator implements IFluidHandler
 {
 
 	public TileLiquidGenerator(GeneratorType type)
 	{
-		super(type, type.getAppropriateEnergyStored(18000, 5, 45));
+		super(type, type.getAppropriateEnergyStored(MachineStats.LIQUIDGENCAPACITY, 0, MachineStats.LIQUIDGENSEND), MachineStats.LIQUIDGENPERTICK);
 	}
 
 	@Override
@@ -45,6 +51,33 @@ public class TileLiquidGenerator extends StorehouseTileBaseGenerator implements 
 
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isRunning()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getDefaultName()
+	{
+		return "container.fluid_generator_" + type.getName();
+	}
+
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getGuiID()
 	{
 		// TODO Auto-generated method stub
 		return null;

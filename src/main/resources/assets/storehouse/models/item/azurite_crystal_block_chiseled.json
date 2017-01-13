@@ -1,5 +1,5 @@
 {
-    "parent":"storehouse:block/azurite_crystal_block_chiseled",
+    "parent":"storehouse:block/decorative/azurite_crystal_block_chiseled",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],
