@@ -16,14 +16,16 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyStorageAdv;
 
 public abstract class StorehouseBaseEnergyStorageTE extends StorehouseBaseTileEntity implements ITickable, IEnergyStorage
 {
 	protected EnergyStorageAdv energyStorage;
 
-	public StorehouseBaseEnergyStorageTE(EnergyStorageAdv energyStorage)
+	public StorehouseBaseEnergyStorageTE(IStorehouseBaseBlock block, EnergyStorageAdv energyStorage)
 	{
+		super(block);
 		this.energyStorage = energyStorage;
 	}
 	

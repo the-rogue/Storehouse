@@ -10,21 +10,28 @@
 
 package therogue.storehouse.tile;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorldNameable;
+import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.inventory.IDefaultSidedInventory;
 
-
+/*
+ * FIELDS 
+ */
 public abstract class StorehouseBaseTileEntity extends TileEntity implements IWorldNameable
 {
 	private String customName;
+	protected IStorehouseBaseBlock block;
 
-	@Nullable
+	public StorehouseBaseTileEntity(IStorehouseBaseBlock block) {
+		this.block = block;
+	}
+	
+	@Override
 	public ITextComponent getDisplayName()
 	{
 		return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
@@ -39,10 +46,8 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 	@Override
 	public String getName()
 	{
-		return hasCustomName() ? customName : getDefaultName();
+		return hasCustomName() ? customName : "container.storehouse:" + block.getName();
 	}
-	
-	public abstract String getDefaultName();
 
 	public void setCustomName(String customName)
 	{

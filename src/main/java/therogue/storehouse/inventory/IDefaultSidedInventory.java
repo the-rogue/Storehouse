@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.tile;
+package therogue.storehouse.inventory;
 
 import javax.annotation.Nullable;
 
@@ -17,7 +17,6 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import therogue.storehouse.inventory.InventoryManager;
 
 public interface IDefaultSidedInventory extends ISidedInventory
 {
@@ -77,14 +76,6 @@ public interface IDefaultSidedInventory extends ISidedInventory
     }
 
     /**
-     * For tile entities, ensures the chunk containing the tile entity is saved to disk later - the game won't think it
-     * hasn't changed and skip it.
-     */
-    default void markDirty(){
-    	getInventoryManager().markDirty();
-    }
-
-    /**
      * Don't rename this method to canInteractWith due to conflicts with Container
      */
     default boolean isUseableByPlayer(EntityPlayer player){
@@ -105,18 +96,6 @@ public interface IDefaultSidedInventory extends ISidedInventory
      */
     default boolean isItemValidForSlot(int index, ItemStack stack){
     	return getInventoryManager().isItemValidForSlot(index, stack);
-    }
-
-    default int getField(int id){
-    	return getInventoryManager().getField(id);
-    }
-
-    default void setField(int id, int value){
-    	getInventoryManager().setField(id, value);
-    }
-
-    default int getFieldCount(){
-    	return getInventoryManager().getFieldCount();
     }
 
     default void clear(){

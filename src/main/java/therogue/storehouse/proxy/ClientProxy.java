@@ -10,11 +10,13 @@
 
 package therogue.storehouse.proxy;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.client.render.items.ItemRender;
+import therogue.storehouse.handlers.EventHandlerClient;
 import therogue.storehouse.util.loghelper;
 
 
@@ -29,6 +31,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit(event);
 		loghelper.log("debug", "Client Proxy Started PreInitialisation");
+		MinecraftForge.EVENT_BUS.register(EventHandlerClient.INSTANCE);
 		BlockRender.preInit();
 		loghelper.log("debug", "Client Proxy Finished PreInitialisation");
 	}

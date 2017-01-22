@@ -14,9 +14,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyStorageAdv;
+import therogue.storehouse.inventory.IDefaultSidedInventory;
 import therogue.storehouse.inventory.InventoryManager;
-import therogue.storehouse.tile.IDefaultSidedInventory;
 import therogue.storehouse.tile.StorehouseBaseEnergyStorageTE;
 import cofh.api.energy.IEnergyReceiver;
 
@@ -25,9 +26,9 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseEnergyStorageT
 {
 	protected InventoryManager inventory;
 
-	public StorehouseBaseMachine()
+	public StorehouseBaseMachine(IStorehouseBaseBlock block)
 	{
-		super(new EnergyStorageAdv(8000, 100, 0));
+		super(block, new EnergyStorageAdv(8000, 100, 0));
 	}
 
 	@Override
@@ -79,6 +80,31 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseEnergyStorageT
 			throw new NullPointerException("inventory is null for machine: " + getName());
 		}
 		return inventory;
+	}
+	
+	@Override
+	public int getField(int id)
+	{
+		switch (id)
+		{
+		default:
+			return 0;
+		}
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+		switch (id)
+		{
+
+		}
+	}
+
+	@Override
+	public int getFieldCount()
+	{
+		return 1;
 	}
 	
     @Override

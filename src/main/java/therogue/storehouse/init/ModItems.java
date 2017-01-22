@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.CraftingUsed.ItemStorehouseBaseMaterial;
+import therogue.storehouse.item.tool.NetworkInspector;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
 
@@ -33,6 +34,7 @@ public class ModItems
 	 */
 	public static final StorehouseBaseItem azurite_dust = new ItemStorehouseBaseMaterial("azurite_dust");
 	public static final StorehouseBaseItem azurite_crystal = new ItemStorehouseBaseMaterial("azurite_crystal");
+	public static final StorehouseBaseItem network_Inspector = new NetworkInspector("network_inspector");
 
 	/**
 	 * Adds all the items to the array
@@ -42,6 +44,7 @@ public class ModItems
 		loghelper.log("debug", "Adding Items");
 		itemlist.add(azurite_dust);
 		itemlist.add(azurite_crystal);
+		itemlist.add(network_Inspector);
 	}
 
 	/**

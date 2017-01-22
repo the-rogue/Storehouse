@@ -13,6 +13,7 @@ package therogue.storehouse.tile.generator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.reference.MachineStats;
 
@@ -20,8 +21,8 @@ import therogue.storehouse.reference.MachineStats;
 public class TileSolidGenerator extends TileBaseGenerator
 {
 	
-	public TileSolidGenerator(GeneratorType type) {
-		super(type, type.getAppropriateEnergyStored(MachineStats.SOLIDGENCAPACITY, 0, MachineStats.SOLIDGENSEND), MachineStats.SOLIDGENPERTICK);
+	public TileSolidGenerator(IStorehouseBaseBlock block, GeneratorType type) {
+		super(block, type, type.getAppropriateEnergyStored(MachineStats.SOLIDGENCAPACITY, 0, MachineStats.SOLIDGENSEND), MachineStats.SOLIDGENPERTICK);
 	}
 
 	@Override
@@ -30,11 +31,9 @@ public class TileSolidGenerator extends TileBaseGenerator
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public String getDefaultName()
-	{
-		return "container.solid_generator_" + type.getName();
+	
+	protected void tick(){
+		// TODO Auto-generated method stub
 	}
 
 	@Override

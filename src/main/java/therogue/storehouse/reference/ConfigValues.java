@@ -25,13 +25,19 @@ public class ConfigValues
 	/**
 	 * Creates any configuration categories needed
 	 */
+	public static final String CATEGORY_ENERGY_VALUES = "energy values";
 
 	/**
 	 * Defines all values and their defaults for the GENERAL category
 	 */
 	public static boolean debuglogging = false;
-	public static final boolean debugloggingdefault = false;
 
+	/**
+	 * Defines all values and their defaults for the ENERGY_VALUES category
+	 */
+	public static int networkInspectorCapacity = 5000;
+	public static int networkInspectorRecieveRate = 50;
+	
 	/**
 	 * Reads all configuration values in (easiest to do that here since all values are in this file already)
 	 */
@@ -42,7 +48,11 @@ public class ConfigValues
 		loghelper.log("trace", "Started Reading Config Values");
 
 		// Reads Values from the config
-		debuglogging = configuration.get(Configuration.CATEGORY_GENERAL, "DebugLogging", debugloggingdefault, "Whether or not to print out lots of debug info to the console").getBoolean();
+		//General
+		debuglogging = configuration.get(Configuration.CATEGORY_GENERAL, "DebugLogging", debuglogging, "Whether or not to print out lots of debug info to the console").getBoolean();
+		//Energy Values
+		networkInspectorCapacity = configuration.get(CATEGORY_ENERGY_VALUES, "NetworkInspectorCapacity", networkInspectorCapacity).getInt();
+		networkInspectorRecieveRate = configuration.get(CATEGORY_ENERGY_VALUES, "NetworkInspectorRecieveRate", networkInspectorRecieveRate).getInt();
 		loghelper.log("trace", "Finished Reading Config Values");
 	}
 }

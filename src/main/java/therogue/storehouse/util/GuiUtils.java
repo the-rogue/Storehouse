@@ -10,7 +10,28 @@
 
 package therogue.storehouse.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.client.gui.element.ElementBase;
+
 public class GuiUtils
 {
-
+	public static void bindTexture(ResourceLocation texture){
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+	}
+	public static void bindTexture(GuiScreen gui, ResourceLocation texture){
+		gui.mc.getTextureManager().bindTexture(texture);
+	}
+	public static void bindTexture(ElementBase element, String texture){
+		element.gui.mc.getTextureManager().bindTexture(new ResourceLocation(texture));
+	}
+	public static void bindTexture(ElementBase element, ResourceLocation texture){
+		element.gui.mc.getTextureManager().bindTexture(texture);
+	}
+	public static void bindTexture(ElementBase element, TextureAtlasSprite texture){
+		ResourceLocation location = new ResourceLocation(texture.getIconName());
+		element.gui.mc.getTextureManager().bindTexture(new ResourceLocation(location.getResourceDomain(), "textures/" + location.getResourcePath() + ".png"));
+	}
 }

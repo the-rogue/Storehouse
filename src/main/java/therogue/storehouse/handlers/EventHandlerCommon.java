@@ -8,17 +8,11 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.init;
+package therogue.storehouse.handlers;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.reference.IDs;
-import therogue.storehouse.tile.generator.TileSolarGenerator;
 
-public class ModTileEntities
+public class EventHandlerCommon
 {
-	public static void preInit() {
-		GameRegistry.registerTileEntity(TileSolarGenerator.class, IDs.RESOURCENAMEPREFIX + "solar_generator");
-		GameRegistry.registerTileEntity(TileSolarGenerator.class, IDs.RESOURCENAMEPREFIX + "thermal_press");
-	}
-
+	public static final EventHandlerCommon INSTANCE = new EventHandlerCommon();
+	
 }

@@ -10,8 +10,11 @@
 
 package therogue.storehouse.inventory;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public class SlotAdv extends Slot
 {
@@ -21,4 +24,11 @@ public class SlotAdv extends Slot
 		super(inventoryIn, index, xPosition, yPosition);
 	}
 
+    /**
+     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
+     */
+    public boolean isItemValid(@Nullable ItemStack stack)
+    {
+        return inventory.isItemValidForSlot(getSlotIndex(), stack);
+    }
 }

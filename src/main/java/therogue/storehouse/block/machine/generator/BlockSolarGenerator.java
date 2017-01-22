@@ -46,7 +46,7 @@ import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.Identification;
+import therogue.storehouse.reference.IDs;
 import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.generator.TileSolarGenerator;
 import therogue.storehouse.util.loghelper;
@@ -172,13 +172,13 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return new TileSolarGenerator(GeneratorType.getTypeFromMeta(meta));
+		return new TileSolarGenerator(this, GeneratorType.getTypeFromMeta(meta));
 	}
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(Storehouse.instance, Identification.SOLARGENERATORGUI, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(Storehouse.instance, IDs.SOLARGENERATORGUI, world, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
     }

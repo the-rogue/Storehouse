@@ -10,7 +10,7 @@
 
 package therogue.storehouse.reference;
 
-public class Identification
+public class IDs
 {
 	/**
 	 * Stores all values relating to IDs for the mod except the ModID

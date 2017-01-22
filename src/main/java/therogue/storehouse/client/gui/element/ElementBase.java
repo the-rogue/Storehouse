@@ -8,17 +8,27 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.init;
+package therogue.storehouse.client.gui.element;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.reference.IDs;
-import therogue.storehouse.tile.generator.TileSolarGenerator;
+import therogue.storehouse.client.gui.GuiBase;
 
-public class ModTileEntities
+
+public abstract class ElementBase
 {
-	public static void preInit() {
-		GameRegistry.registerTileEntity(TileSolarGenerator.class, IDs.RESOURCENAMEPREFIX + "solar_generator");
-		GameRegistry.registerTileEntity(TileSolarGenerator.class, IDs.RESOURCENAMEPREFIX + "thermal_press");
+	public final GuiBase gui;
+
+	public ElementBase(GuiBase gui)
+	{
+		this.gui = gui;
 	}
+
+	public boolean isVisible()
+	{
+		return true;
+	}
+
+	public abstract void drawElementForegroundLayer(int mouseX, int mouseY);
+
+	public abstract void drawElementBackgroundLayer(float partialTicks, int mouseX, int mouseY);
 
 }

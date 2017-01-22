@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import therogue.storehouse.client.gui.machine.generator.GuiSolarGenerator;
 import therogue.storehouse.container.machine.generator.ContainerSolarGenerator;
-import therogue.storehouse.reference.Identification;
+import therogue.storehouse.reference.IDs;
 import therogue.storehouse.tile.generator.TileSolarGenerator;
 
 public class GuiHandler implements IGuiHandler
@@ -27,7 +27,7 @@ public class GuiHandler implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		switch (ID) {
-		case Identification.SOLARGENERATORGUI:
+		case IDs.SOLARGENERATORGUI:
 			return new ContainerSolarGenerator(player.inventory, (TileSolarGenerator) world.getTileEntity(new BlockPos(x, y, z)));
 		default:
 			return null;
@@ -38,8 +38,9 @@ public class GuiHandler implements IGuiHandler
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		switch (ID) {
-		case Identification.SOLARGENERATORGUI:
-			return new GuiSolarGenerator(new ContainerSolarGenerator(player.inventory, (TileSolarGenerator) world.getTileEntity(new BlockPos(x, y, z))));
+		case IDs.SOLARGENERATORGUI:
+			TileSolarGenerator gen = (TileSolarGenerator) world.getTileEntity(new BlockPos(x, y, z));
+			return new GuiSolarGenerator(new ContainerSolarGenerator(player.inventory, gen), gen);
 		default:
 			return null;
 		}

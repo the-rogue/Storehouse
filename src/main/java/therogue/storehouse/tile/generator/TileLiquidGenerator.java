@@ -16,6 +16,7 @@ import net.minecraft.inventory.Container;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.reference.MachineStats;
 
@@ -23,9 +24,9 @@ import therogue.storehouse.reference.MachineStats;
 public class TileLiquidGenerator extends TileBaseGenerator implements IFluidHandler
 {
 
-	public TileLiquidGenerator(GeneratorType type)
+	public TileLiquidGenerator(IStorehouseBaseBlock block, GeneratorType type)
 	{
-		super(type, type.getAppropriateEnergyStored(MachineStats.LIQUIDGENCAPACITY, 0, MachineStats.LIQUIDGENSEND), MachineStats.LIQUIDGENPERTICK);
+		super(block, type, type.getAppropriateEnergyStored(MachineStats.LIQUIDGENCAPACITY, 0, MachineStats.LIQUIDGENSEND), MachineStats.LIQUIDGENPERTICK);
 	}
 
 	@Override
@@ -62,11 +63,9 @@ public class TileLiquidGenerator extends TileBaseGenerator implements IFluidHand
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public String getDefaultName()
-	{
-		return "container.fluid_generator_" + type.getName();
+	
+	protected void tick(){
+		// TODO Auto-generated method stub
 	}
 
 	@Override

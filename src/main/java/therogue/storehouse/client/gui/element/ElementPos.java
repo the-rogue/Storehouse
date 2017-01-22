@@ -8,34 +8,25 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.client.gui;
+package therogue.storehouse.client.gui.element;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-
-
-public class GuiContainerBase extends GuiContainer
+public class ElementPos
 {
+	public final int x;
+	public final int y;
+	public final int textureX;
+	public final int textureY;
+	public final int width;
+	public final int height;
 
-	public GuiContainerBase(Container inventorySlotsIn)
+	public ElementPos(int x, int y, int textureX, int textureY, int width, int height)
 	{
-		super(inventorySlotsIn);
-
-		this.xSize = 176;
-		this.ySize = 166;
+		this.x = x;
+		this.y = y;
+		this.textureX = textureX;
+		this.textureY = textureY;
+		this.width = width;
+		this.height = height;
 	}
 
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		// TODO Auto-generated method stub
-
-	}
 }

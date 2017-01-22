@@ -26,7 +26,7 @@ import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.Identification;
+import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.loghelper;
 
 
@@ -54,7 +54,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	@Override
 	public String getUnlocalizedName()
 	{
-		return String.format("tile.%s%s", Identification.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	/**

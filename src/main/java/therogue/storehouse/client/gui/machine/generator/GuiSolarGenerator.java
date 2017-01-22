@@ -11,14 +11,22 @@
 package therogue.storehouse.client.gui.machine.generator;
 
 import net.minecraft.inventory.Container;
-import therogue.storehouse.client.gui.GuiContainerBase;
+import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.element.ElementActiveIcon;
+import therogue.storehouse.client.gui.element.ElementChargingBar;
+import therogue.storehouse.client.render.icons.StorehouseIcons;
+import therogue.storehouse.tile.generator.TileSolarGenerator;
 
-public class GuiSolarGenerator extends GuiContainerBase
+public class GuiSolarGenerator extends GuiBase
 {
+	public static final ResourceLocation TEXTURE = new ResourceLocation("storehouse", "textures/gui/solar_generator_basic.png");
 
-	public GuiSolarGenerator(Container inventorySlotsIn)
+	public GuiSolarGenerator(Container inventorySlotsIn, TileSolarGenerator inventory)
 	{
-		super(inventorySlotsIn);
+		super(TEXTURE, inventorySlotsIn, inventory);
+		addElement(new ElementActiveIcon(this, 90, 23, StorehouseIcons.SolarGenOn, inventory, 1));
+		addElement(new ElementChargingBar(this, 33, 35, StorehouseIcons.EnergyBar, inventory, 2, 3));
 	}
 
 }

@@ -13,18 +13,15 @@ package therogue.storehouse.inventory;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import therogue.storehouse.tile.IDefaultSidedInventory;
 
 
-public class InventoryManager implements ISidedInventory
+public class InventoryManager
 {
 	private IDefaultSidedInventory owner;
 	private InvWrapper inventoryWrapper;
@@ -36,22 +33,23 @@ public class InventoryManager implements ISidedInventory
 	{
 		this.owner = owner;
 		inventory = new ItemStack[size];
-		
-		inventoryWrapper = new InvWrapper(this) {
+
+		inventoryWrapper = new InvWrapper(owner) {
 			@Override
-		    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-				if (!canInsertItem(slot, stack, null))
-					return null;
+			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
+			{
+				if (!canInsertItem(slot, stack, null)) return null;
 				return super.insertItem(slot, stack, simulate);
 			}
+
 			@Override
-		    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-				if (!canExtractItem(slot, null, null))
-					return null;
+			public ItemStack extractItem(int slot, int amount, boolean simulate)
+			{
+				if (!canExtractItem(slot, null, null)) return null;
 				return super.extractItem(slot, amount, simulate);
 			}
 		};
-		
+
 		if (extractable_slots == null)
 		{
 			this.extractable_slots = new int[size];
@@ -83,13 +81,11 @@ public class InventoryManager implements ISidedInventory
 		return inventoryWrapper;
 	}
 
-	@Override
 	public int getSizeInventory()
 	{
 		return inventory.length;
 	}
 
-	@Override
 	public ItemStack getStackInSlot(int index)
 	{
 		if (checkIndex(index))
@@ -99,19 +95,16 @@ public class InventoryManager implements ISidedInventory
 		return null;
 	}
 
-	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
 		return ItemStackHelper.getAndSplit(this.inventory, index, count);
 	}
 
-	@Override
 	public ItemStack removeStackFromSlot(int index)
 	{
 		return ItemStackHelper.getAndRemove(this.inventory, index);
 	}
 
-	@Override
 	public void setInventorySlotContents(int index, ItemStack stack)
 	{
 		if (checkIndex(index))
@@ -124,37 +117,25 @@ public class InventoryManager implements ISidedInventory
 		}
 	}
 
-	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
 
-	@Override
-	public void markDirty()
-	{
-		owner.getTileEntity().markDirty();
-
-	}
-
-	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
 		return this.owner.getTileEntity().getWorld().getTileEntity(this.owner.getTileEntity().getPos()) != this.owner ? false : player.getDistanceSq((double) this.owner.getTileEntity().getPos().getX() + 0.5D, (double) this.owner.getTileEntity().getPos().getY() + 0.5D, (double) this.owner
 				.getTileEntity().getPos().getZ() + 0.5D) <= 64.0D;
 	}
 
-	@Override
 	public void openInventory(EntityPlayer player)
 	{
 	}
 
-	@Override
 	public void closeInventory(EntityPlayer player)
 	{
 	}
 
-	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
 		for (int i : insertable_slots)
@@ -167,32 +148,6 @@ public class InventoryManager implements ISidedInventory
 		return false;
 	}
 
-	@Override
-	public int getField(int id)
-	{
-		switch (id)
-		{
-		default:
-			return 0;
-		}
-	}
-
-	@Override
-	public void setField(int id, int value)
-	{
-		switch (id)
-		{
-
-		}
-	}
-
-	@Override
-	public int getFieldCount()
-	{
-		return 0;
-	}
-
-	@Override
 	public void clear()
 	{
 		for (int i = 0; i < this.inventory.length; ++i)
@@ -201,25 +156,6 @@ public class InventoryManager implements ISidedInventory
 		}
 	}
 
-	@Override
-	public String getName()
-	{
-		return owner.getName();
-	}
-
-	@Override
-	public boolean hasCustomName()
-	{
-		return owner.hasCustomName();
-	}
-
-	@Override
-	public ITextComponent getDisplayName()
-	{
-		return owner.getDisplayName();
-	}
-
-	@Override
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		int[] ret = new int[inventory.length];
@@ -230,7 +166,6 @@ public class InventoryManager implements ISidedInventory
 		return ret;
 	}
 
-	@Override
 	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
 	{
 		if (isItemValidForSlot(index, itemStackIn))
@@ -240,7 +175,6 @@ public class InventoryManager implements ISidedInventory
 		return false;
 	}
 
-	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
 	{
 		for (int i : extractable_slots)

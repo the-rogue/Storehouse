@@ -10,12 +10,14 @@
 
 package therogue.storehouse.proxy;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.handlers.ConfigHandler;
+import therogue.storehouse.handlers.EventHandlerCommon;
 import therogue.storehouse.handlers.GuiHandler;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
@@ -36,6 +38,7 @@ public abstract class CommonProxy implements IProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		loghelper.log("debug", "Common Proxy Started PreInitialisation");
+		MinecraftForge.EVENT_BUS.register(EventHandlerCommon.INSTANCE);
 		ModItems.preInit();
 		ModBlocks.preInit();
 		ModTileEntities.preInit();
