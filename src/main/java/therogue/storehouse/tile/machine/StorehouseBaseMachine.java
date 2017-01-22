@@ -10,6 +10,7 @@
 
 package therogue.storehouse.tile.machine;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -105,6 +106,19 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseEnergyStorageT
 	public int getFieldCount()
 	{
 		return 1;
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		getInventoryManager().writeToNBT(nbt);
+		return nbt;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+	    super.readFromNBT(nbt);
+	    getInventoryManager().readFromNBT(nbt);
 	}
 	
     @Override

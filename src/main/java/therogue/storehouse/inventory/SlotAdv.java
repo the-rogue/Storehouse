@@ -12,16 +12,17 @@ package therogue.storehouse.inventory;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class SlotAdv extends Slot
 {
+	protected final InventoryManager manager;
 
-	public SlotAdv(IInventory inventoryIn, int index, int xPosition, int yPosition)
+	public SlotAdv(InventoryManager inventoryIn, int index, int xPosition, int yPosition)
 	{
-		super(inventoryIn, index, xPosition, yPosition);
+		super(inventoryIn.getOwner(), index, xPosition, yPosition);
+		manager = inventoryIn;
 	}
 
     /**
@@ -30,5 +31,13 @@ public class SlotAdv extends Slot
     public boolean isItemValid(@Nullable ItemStack stack)
     {
         return inventory.isItemValidForSlot(getSlotIndex(), stack);
+    }
+    /**
+     * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the case
+     * of armor slots)
+     */
+    public int getSlotStackLimit()
+    {
+        return this.manager.getInventoryStackLimit(getSlotIndex());
     }
 }

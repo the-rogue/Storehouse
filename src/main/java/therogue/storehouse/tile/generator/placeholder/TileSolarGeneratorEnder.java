@@ -8,11 +8,16 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.reference;
+package therogue.storehouse.tile.generator.placeholder;
 
-public class MachineStats
+import therogue.storehouse.block.state.GeneratorType;
+import therogue.storehouse.tile.generator.TileSolarGenerator;
+
+public class TileSolarGeneratorEnder extends TileSolarGenerator
 {
-	public static final int SOLARGENPERTICK = 5;
-	public static final int SOLIDGENPERTICK = 5;
-	public static final int LIQUIDGENPERTICK = 5;
+
+	public TileSolarGeneratorEnder()
+	{
+		super(GeneratorType.ender);
+	}
 }

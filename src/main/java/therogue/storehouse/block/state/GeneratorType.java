@@ -33,8 +33,11 @@ public enum GeneratorType implements IStringSerializable
 		this.modifier = (int)Math.pow(9, baseModifier);
 	}
 	
-	public EnergyStorageAdv getAppropriateEnergyStored(int baseCapacity, int baseRecieve, int baseExtract) 
+	public EnergyStorageAdv getAppropriateEnergyStored(int baseGeneration, boolean allowInsert) 
 	{
+		int baseCapacity = baseGeneration * 3600; // 3 Minutes Worth of capacity
+		int baseExtract = baseCapacity / 400; // 20 Seconds to clear buffer
+		int baseRecieve = allowInsert ? baseGeneration : 0;
 		
 		return new EnergyStorageAdv(baseCapacity * modifier + baseCapacity * baseModifier, baseRecieve * modifier + baseRecieve * baseModifier, baseExtract * modifier + baseExtract * baseModifier);
 	}

@@ -26,7 +26,7 @@ public class BlockThermalPress extends StorehouseBaseTileBlock
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		TileThermalPress tile = new TileThermalPress(this);
+		TileThermalPress tile = new TileThermalPress();
 		tile.setWorldObj(worldIn);
 		return tile;
 	}

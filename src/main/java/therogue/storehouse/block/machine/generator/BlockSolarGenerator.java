@@ -48,7 +48,11 @@ import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.reference.MachineStats;
-import therogue.storehouse.tile.generator.TileSolarGenerator;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorAdvanced;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorBasic;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorEnder;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
 import therogue.storehouse.util.loghelper;
 
 public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock
@@ -172,7 +176,21 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return new TileSolarGenerator(this, GeneratorType.getTypeFromMeta(meta));
+    	GeneratorType type = GeneratorType.getTypeFromMeta(meta);
+    	switch(type){
+		case advanced:
+			return new TileSolarGeneratorAdvanced();
+		case basic:
+			return new TileSolarGeneratorBasic();
+		case ender:
+			return new TileSolarGeneratorEnder();
+		case infused:
+			return new TileSolarGeneratorInfused();
+		case ultimate:
+			return new TileSolarGeneratorUltimate();
+		default:
+			throw new IllegalArgumentException("Meta Out of Range");
+    	}
 	}
 
     @Override

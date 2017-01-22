@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 
@@ -38,8 +39,26 @@ public class InventoryManager
 			@Override
 			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 			{
-				if (!canInsertItem(slot, stack, null)) return null;
-				return super.insertItem(slot, stack, simulate);
+				if (!canInsertItem(slot, stack, null)) return stack;
+		        if (stack == null)
+		            return null;
+
+		        if (!isItemValidForSlot(slot, stack))
+		            return stack;
+
+		        ItemStack stackInSlot = getStackInSlot(slot);
+		        
+		        boolean flag = stackInSlot != null;
+		        if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
+		        	return stack;
+		        
+		        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.stackSize : 0);
+		        
+		        ItemStack toInsert = stack.splitStack(m);
+		        toInsert.stackSize += (flag ? stackInSlot.stackSize : 0);
+		        setInventorySlotContents(slot, toInsert);
+		        owner.markDirty();
+		        return stack.stackSize <= 0 ? null : stack;
 			}
 
 			@Override
@@ -104,6 +123,29 @@ public class InventoryManager
 	{
 		return ItemStackHelper.getAndRemove(this.inventory, index);
 	}
+	
+    public ItemStack pushItems(int slot, ItemStack stack)
+    {
+        if (stack == null)
+            return null;
+
+        if (!isItemValidForSlotChecks(slot, stack))
+            return stack;
+
+        ItemStack stackInSlot = getStackInSlot(slot);
+        
+        boolean flag = stackInSlot != null;
+        if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
+        	return stack;
+        
+        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.stackSize : 0);
+        
+        ItemStack toInsert = stack.splitStack(m);
+        toInsert.stackSize += (flag ? stackInSlot.stackSize : 0);
+        setInventorySlotContents(slot, toInsert);
+        owner.markDirty();
+        return stack.stackSize <= 0 ? null : stack;
+    }
 
 	public void setInventorySlotContents(int index, ItemStack stack)
 	{
@@ -120,6 +162,13 @@ public class InventoryManager
 	public int getInventoryStackLimit()
 	{
 		return 64;
+	}
+	public int getInventoryStackLimit(int slot)
+	{
+		switch (slot) {
+		default:
+			return 64;
+		}
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer player)
@@ -138,14 +187,22 @@ public class InventoryManager
 
 	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
-		for (int i : insertable_slots)
+		if (isItemValidForSlotChecks(index, stack))
 		{
-			if (i == index)
+			for (int i : insertable_slots)
 			{
-				return true;
+				if (i == index)
+				{
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+
+	protected boolean isItemValidForSlotChecks(int index, ItemStack stack)
+	{
+		return true;
 	}
 
 	public void clear()
@@ -221,6 +278,9 @@ public class InventoryManager
 			int slot = stackTag.getByte("Slot") & 255;
 			this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
 		}
+	}
+	public IDefaultSidedInventory getOwner(){
+		return owner;
 	}
 
 }

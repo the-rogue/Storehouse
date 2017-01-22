@@ -18,7 +18,6 @@ public class ModTileEntities
 {
 	public static void preInit() {
 		GameRegistry.registerTileEntity(TileSolarGenerator.class, IDs.RESOURCENAMEPREFIX + "solar_generator");
-		GameRegistry.registerTileEntity(TileSolarGenerator.class, IDs.RESOURCENAMEPREFIX + "thermal_press");
 	}
 
 }

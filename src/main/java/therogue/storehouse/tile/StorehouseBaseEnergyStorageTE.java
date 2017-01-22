@@ -19,6 +19,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyStorageAdv;
 
+
 public abstract class StorehouseBaseEnergyStorageTE extends StorehouseBaseTileEntity implements ITickable, IEnergyStorage
 {
 	protected EnergyStorageAdv energyStorage;
@@ -30,34 +31,40 @@ public abstract class StorehouseBaseEnergyStorageTE extends StorehouseBaseTileEn
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	{
 		super.writeToNBT(nbt);
 		energyStorage.writeToNBT(nbt);
 		return nbt;
 	}
-	
+
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-	    super.readFromNBT(nbt);
-	    energyStorage.readFromNBT(nbt);
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		energyStorage.readFromNBT(nbt);
 	}
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return (T) energyStorage;
-        }
-        return super.getCapability(capability, facing);
-    }
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		if (capability == CapabilityEnergy.ENERGY)
+		{
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if (capability == CapabilityEnergy.ENERGY)
+		{
+			return (T) energyStorage;
+		}
+		return super.getCapability(capability, facing);
+	}
 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate)

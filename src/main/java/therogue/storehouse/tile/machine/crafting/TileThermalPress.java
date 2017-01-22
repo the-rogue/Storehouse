@@ -10,16 +10,16 @@
 
 package therogue.storehouse.tile.machine.crafting;
 
-import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.machine.StorehouseBaseMachine;
 
 
 public class TileThermalPress extends StorehouseBaseMachine
 {
 
-	public TileThermalPress(IStorehouseBaseBlock block)
+	public TileThermalPress()
 	{
-		super(block);
+		super(ModBlocks.thermal_press);
 	}
 
 	@Override

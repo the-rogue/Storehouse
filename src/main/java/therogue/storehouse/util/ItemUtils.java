@@ -8,11 +8,16 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.reference;
+package therogue.storehouse.util;
 
-public class MachineStats
+import net.minecraft.item.ItemStack;
+
+
+
+public class ItemUtils
 {
-	public static final int SOLARGENPERTICK = 5;
-	public static final int SOLIDGENPERTICK = 5;
-	public static final int LIQUIDGENPERTICK = 5;
+    public static boolean areItemStacksEqual(ItemStack stackA, ItemStack stackB)
+    {
+        return stackB.getItem() == stackA.getItem() && (!stackA.getHasSubtypes() || stackA.getMetadata() == stackB.getMetadata()) && ItemStack.areItemStackTagsEqual(stackA, stackB);
+    }
 }

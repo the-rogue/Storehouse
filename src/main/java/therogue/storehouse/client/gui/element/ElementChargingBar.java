@@ -14,6 +14,7 @@ import net.minecraft.inventory.IInventory;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.render.icons.Icon;
 
+
 public class ElementChargingBar extends ElementProgressBar
 {
 
@@ -31,7 +32,7 @@ public class ElementChargingBar extends ElementProgressBar
 	@Override
 	public float getMinV(float progress)
 	{
-		return (icon.getMaxV() - icon.getMinV()) * (1 - progress) + icon.getMinV();
+		return (icon.getMaxV() - icon.getMinV()) * (1 - ((float) getHeight(progress) / (float) icon.getIconHeight())) + icon.getMinV();
 	}
 
 	@Override
@@ -55,6 +56,6 @@ public class ElementChargingBar extends ElementProgressBar
 	@Override
 	public int getHeight(float progress)
 	{
-		return (int)(icon.getIconHeight() * progress);
+		return Math.round(icon.getIconHeight() * progress);
 	}
 }

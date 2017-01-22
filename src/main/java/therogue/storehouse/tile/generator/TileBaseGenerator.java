@@ -19,7 +19,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.state.GeneratorType;
-import therogue.storehouse.energy.EnergyStorageAdv;
 import therogue.storehouse.inventory.IDefaultSidedInventory;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseEnergyStorageTE;
@@ -35,9 +34,9 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 	protected GeneratorType type;
 	protected int RFPerTick;
 
-	public TileBaseGenerator(IStorehouseBaseBlock block, GeneratorType type, EnergyStorageAdv energy, int baseGeneration)
+	public TileBaseGenerator(IStorehouseBaseBlock block, GeneratorType type, int baseGeneration, boolean allowInsert)
 	{
-		super(block, energy);
+		super(block, type.getAppropriateEnergyStored(baseGeneration, allowInsert));
 		this.type = type;
 		this.RFPerTick = type.getRecieve(baseGeneration);
 	}
@@ -73,10 +72,17 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 	{
 		for (EnumFacing facing : EnumFacing.values())
 		{
-			if (energyStorage.getEnergyStored() <= 0) break;
+			if (energyStorage.getEnergyStored() <= 0) return;
 			int sentRF = EnergyUtils.sendEnergy(worldObj, getPos(), facing, energyStorage.extractEnergy(energyStorage.getMaxExtract(), true));
 			energyStorage.extractEnergy(sentRF, false);
 		}
+	}
+
+	protected void sendEnergyToItems(int slot)
+	{
+		if (energyStorage.getEnergyStored() <= 0) return;
+		int sentRF = EnergyUtils.sendItemEnergy(inventory.getStackInSlot(slot), energyStorage.extractEnergy(energyStorage.getMaxExtract() / 4, true));
+		energyStorage.extractEnergy(sentRF, false);
 	}
 
 	@Override
@@ -86,12 +92,15 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 		{
 			if (isRunning())
 			{
-				tick();
-				energyStorage.receiveEnergy(RFPerTick, false);
+				doRunTick();
+				energyStorage.modifyEnergyStored(RFPerTick);
 			}
+			tick();
 			this.sendEnergyToNeighbours();
 		}
 	}
+
+	protected abstract void doRunTick();
 
 	protected abstract void tick();
 
@@ -109,21 +118,29 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 			stack = inventory.getStackInSlot(0);
 			if (stack != null && stack.getItem() instanceof IEnergyContainerItem)
 			{
-				return ((IEnergyContainerItem)stack.getItem()).getEnergyStored(stack);
+				return ((IEnergyContainerItem) stack.getItem()).getEnergyStored(stack);
 			}
 			else if (stack != null && stack.hasCapability(CapabilityEnergy.ENERGY, null))
 			{
 				return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
 			}
+			else
+			{
+				return 0;
+			}
 		case 3:
 			stack = inventory.getStackInSlot(0);
 			if (stack != null && stack.getItem() instanceof IEnergyContainerItem)
 			{
-				return ((IEnergyContainerItem)stack.getItem()).getMaxEnergyStored(stack);
+				return ((IEnergyContainerItem) stack.getItem()).getMaxEnergyStored(stack);
 			}
 			else if (stack != null && stack.hasCapability(CapabilityEnergy.ENERGY, null))
 			{
 				return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
+			}
+			else
+			{
+				return 0;
 			}
 		default:
 			return 0;
