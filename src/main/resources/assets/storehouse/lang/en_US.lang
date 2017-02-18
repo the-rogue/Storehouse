@@ -1,6 +1,11 @@
+//Commands
+command.storehouse:rlogger.usage=Command that allows debug logging - Useless for most users
+
 //Items
 item.storehouse:azurite_dust.name=Azurite Dust
 item.storehouse:azurite_crystal.name=Azurite Crystal
+item.storehouse:network_inspector.name=Network Inspector
+item.storehouse:storehouse_guide.name=Storehouse Guide
 
 //Decorative Blocks
 tile.storehouse:azurite_dust_block.name=Azurite Dust Block

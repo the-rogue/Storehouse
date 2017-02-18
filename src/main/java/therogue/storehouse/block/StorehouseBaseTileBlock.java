@@ -76,6 +76,7 @@ public abstract class StorehouseBaseTileBlock extends StorehouseBaseBlock implem
 	{
 		return shiftInfo;
 	}
+	
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         if (stack.hasDisplayName()) {

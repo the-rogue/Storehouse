@@ -31,4 +31,9 @@ public abstract class ElementBase
 
 	public abstract void drawElementBackgroundLayer(float partialTicks, int mouseX, int mouseY);
 
+	public void drawTopLayer(int mouseX, int mouseY)
+	{
+
+	}
+
 }

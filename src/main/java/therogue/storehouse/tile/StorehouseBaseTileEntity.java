@@ -10,19 +10,20 @@
 
 package therogue.storehouse.tile;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IWorldNameable;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.network.packets.GuiUpdateTEPacket;
 
 
 /*
  * FIELDS
  */
-public abstract class StorehouseBaseTileEntity extends TileEntity implements IWorldNameable
+public abstract class StorehouseBaseTileEntity extends TileEntity implements IInventory
 {
 	private String customName;
 	protected IStorehouseBaseBlock block;
@@ -53,6 +54,14 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 	public void setCustomName(String customName)
 	{
 		this.customName = customName;
+	}
+	
+	public GuiUpdateTEPacket getGUIPacket(){
+		return new GuiUpdateTEPacket(this.getPos(), new NBTTagCompound());
+	}
+	
+	public void processGUIPacket(GuiUpdateTEPacket packet){
+		
 	}
 
 	@Override

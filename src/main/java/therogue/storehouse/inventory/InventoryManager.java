@@ -12,6 +12,7 @@ package therogue.storehouse.inventory;
 
 import javax.annotation.Nullable;
 
+import therogue.storehouse.util.BlockUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -173,8 +174,7 @@ public class InventoryManager
 
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
-		return this.owner.getTileEntity().getWorld().getTileEntity(this.owner.getTileEntity().getPos()) != this.owner ? false : player.getDistanceSq((double) this.owner.getTileEntity().getPos().getX() + 0.5D, (double) this.owner.getTileEntity().getPos().getY() + 0.5D, (double) this.owner
-				.getTileEntity().getPos().getZ() + 0.5D) <= 64.0D;
+		return BlockUtils.isUsableByPlayer(this.owner.getTileEntity(), player);
 	}
 
 	public void openInventory(EntityPlayer player)

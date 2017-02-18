@@ -43,6 +43,8 @@ import org.lwjgl.input.Keyboard;
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
 import therogue.storehouse.block.state.GeneratorType;
+import therogue.storehouse.client.gui.multisystem.BlockEntry;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
@@ -200,4 +202,10 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
         }
         return true;
     }
+    
+	@Override
+	public IEntry getEntry()
+	{
+		return new BlockEntry();
+	}
 }

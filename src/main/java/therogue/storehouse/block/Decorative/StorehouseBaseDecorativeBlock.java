@@ -11,6 +11,8 @@
 package therogue.storehouse.block.Decorative;
 
 import therogue.storehouse.block.StorehouseBaseBlock;
+import therogue.storehouse.client.gui.multisystem.BlockEntry;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 
 
 public class StorehouseBaseDecorativeBlock extends StorehouseBaseBlock
@@ -21,5 +23,11 @@ public class StorehouseBaseDecorativeBlock extends StorehouseBaseBlock
 	public StorehouseBaseDecorativeBlock(String name)
 	{
 		super(name);
+	}
+	
+	@Override
+	public IEntry getEntry()
+	{
+		return new BlockEntry();
 	}
 }

@@ -20,17 +20,22 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
+import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.ItemEntry;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
-import therogue.storehouse.item.StorehouseBaseItem;
+import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.ConfigValues;
 import cofh.api.energy.IEnergyContainerItem;
 
-public class NetworkInspector extends StorehouseBaseItem implements IEnergyContainerItem
+public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem
 {
 
 	public NetworkInspector(String name)
 	{
 		super(name);
+		this.setMaxStackSize(1);
+		this.addShiftInfo("Allows you to see Information about your Storehouse System,");
+		this.addShiftInfo("Right Click on a Storehouse Block to find out.");
 	}
 	
 	@Override
@@ -66,5 +71,11 @@ public class NetworkInspector extends StorehouseBaseItem implements IEnergyConta
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand){
 		player.addChatComponentMessage(new TextComponentString("Energy Stored: " + itemStack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored()));
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
+	}
+	
+	@Override
+	public IEntry getEntry()
+	{
+		return new ItemEntry();
 	}
 }

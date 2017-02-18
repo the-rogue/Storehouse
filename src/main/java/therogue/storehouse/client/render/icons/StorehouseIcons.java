@@ -10,38 +10,23 @@
 
 package therogue.storehouse.client.render.icons;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.reference.Texture;
-import therogue.storehouse.util.loghelper;
 
-public enum StorehouseIcons implements Icon
+
+public enum StorehouseIcons
 {
-	EnergyBar("gui/icons/EnergyBar"),
-	SolarGenOn("gui/icons/SolarGenOn");
-	
+	EnergyIndicator("textures/gui/icons/EnergyIndicator.png"), SolarGenOn("textures/gui/icons/SolarGenOn.png"), EnergyBar("textures/gui/icons/EnergyBar.png");
+
 	private String location;
-	
-	private StorehouseIcons (String location) {
+
+	private StorehouseIcons(String location)
+	{
 		this.location = IDs.RESOURCENAMEPREFIX + location;
 	}
-	
-	@Override
-	public TextureAtlasSprite getIcon(){
-		return Texture.getTexture(name());
-	}
-	
-	@Override
-	public ResourceLocation getLocation() {
-		return new ResourceLocation(getIcon().getIconName());
-	}
-	
-	public static void registerIcons(TextureMap map){
-		loghelper.log("info", "Registering Icons...");
-		for (StorehouseIcons icon : values()) {
-			Texture.register(icon.name(), icon.location, map);
-		}
+
+	public ResourceLocation getLocation()
+	{
+		return new ResourceLocation(location);
 	}
 }

@@ -10,6 +10,9 @@
 
 package therogue.storehouse.util;
 
+import java.util.HashMap;
+import java.util.Set;
+
 import net.minecraftforge.fml.common.FMLLog;
 
 import org.apache.logging.log4j.Level;
@@ -20,6 +23,8 @@ import therogue.storehouse.reference.General;
 
 public class loghelper
 {
+	private static final HashMap<String, Integer> SETTIMES = new HashMap<String, Integer>();
+
 	/**
 	 * Log Method to make logging easier
 	 */
@@ -64,6 +69,35 @@ public class loghelper
 				FMLLog.log(General.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(object));
 			}
 		}
+	}
 
+	public static void logSetTimes(String key, int startvalue, Object object)
+	{
+		if (SETTIMES.get(key) == null) {
+			SETTIMES.put(key, startvalue);
+		}
+		if (SETTIMES.get(key) != 0)
+		{
+			log("info", object);
+			if (SETTIMES.get(key) != null && SETTIMES.get(key) != -1 && SETTIMES.get(key) != 0)
+			{
+				SETTIMES.put(key, SETTIMES.get(key) - 1);
+			}
+		}
+	}
+	public static void logSetTimes(String key, Object object) {
+		logSetTimes(key, -1, object);
+	}
+
+	public static void updateSetTimes(String key, int times)
+	{
+		if (times >= -1)
+		{
+			SETTIMES.put(key, times);
+		}
+	}
+	
+	public static Set<String> getkeys(){
+		return SETTIMES.keySet();
 	}
 }

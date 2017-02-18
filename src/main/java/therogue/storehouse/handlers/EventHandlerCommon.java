@@ -10,9 +10,15 @@
 
 package therogue.storehouse.handlers;
 
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EventHandlerCommon
 {
 	public static final EventHandlerCommon INSTANCE = new EventHandlerCommon();
 	
+	@SubscribeEvent
+	public void onPlayerJoinWorldEvent(EntityJoinWorldEvent event)
+	{
+	}
 }

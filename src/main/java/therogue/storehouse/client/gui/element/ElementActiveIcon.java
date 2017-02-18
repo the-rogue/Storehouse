@@ -10,26 +10,29 @@
 
 package therogue.storehouse.client.gui.element;
 
+import java.awt.image.BufferedImage;
+
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.render.icons.Icon;
 import therogue.storehouse.util.GuiUtils;
+import therogue.storehouse.util.TextureHelper;
 
 public class ElementActiveIcon extends ElementBase
 {
-	public final TextureAtlasSprite icon;
+	public final ResourceLocation iconLocation;
+	public final BufferedImage icon;
 	public final int x;
 	public final int y;
 	public final IInventory stateChanger;
 	public final int activeField;
 
-	public ElementActiveIcon(GuiBase gui, int x, int y, Icon icon, IInventory stateChanger, int activeField)
+	public ElementActiveIcon(GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int activeField)
 	{
 		super(gui);
-		this.icon = icon.getIcon();
+		this.iconLocation = iconLocation;
+		this.icon = TextureHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
 		this.stateChanger = stateChanger;
@@ -39,10 +42,15 @@ public class ElementActiveIcon extends ElementBase
 	@Override
 	public void drawElementForegroundLayer(int mouseX, int mouseY)
 	{
-		if (stateChanger.getField(activeField) == 1) {
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			GuiUtils.bindTexture(this, TextureMap.LOCATION_BLOCKS_TEXTURE);
-			gui.drawTexturedModalRect(x, y, icon, icon.getIconWidth(), icon.getIconHeight());
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		if (icon != null){
+			if (stateChanger.getField(activeField) == 1) {
+				GuiUtils.bindTexture(this, iconLocation);
+				gui.drawTexturedModalRect(x, y, 0.0F, 0.0F, 0.5F, 1.0F, icon.getWidth()/2, icon.getHeight());//0.941176471F, 0.956862745F, 0.976470588F,
+			} else {
+				GuiUtils.bindTexture(this, iconLocation);
+				gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth()/2, icon.getHeight(), 255, 255, 255, 35);
+			}
 		}
 	}
 

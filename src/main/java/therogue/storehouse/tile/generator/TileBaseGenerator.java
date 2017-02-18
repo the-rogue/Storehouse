@@ -19,6 +19,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.state.GeneratorType;
+import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.IDefaultSidedInventory;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseEnergyStorageTE;
@@ -97,6 +98,9 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 			}
 			tick();
 			this.sendEnergyToNeighbours();
+			if(worldObj != null) {
+				this.worldObj.notifyBlockUpdate(this.getPos(), ModBlocks.azurite_dust_block.getDefaultState(), ModBlocks.azurite_dust_block.getDefaultState(), 0);
+			}
 		}
 	}
 
@@ -142,6 +146,10 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 			{
 				return 0;
 			}
+		case 4:
+			return energyStorage.getEnergyStored();
+		case 5:
+			return energyStorage.getMaxEnergyStored();
 		default:
 			return 0;
 		}
@@ -159,7 +167,7 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 	@Override
 	public int getFieldCount()
 	{
-		return 3;
+		return 5;
 	}
 
 	@Override

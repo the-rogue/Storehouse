@@ -17,6 +17,7 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 
 
 public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
@@ -45,5 +46,7 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
 	public ArrayList<String> getOredictEntrys();
 	
 	public void setOredictEntry(String oredictEntry);
+	
+	public IEntry getEntry();
 
 }

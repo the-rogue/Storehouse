@@ -14,6 +14,8 @@ import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import therogue.storehouse.client.gui.multisystem.BlockEntry;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 
 public class StorehouseBaseOre extends StorehouseBaseBlock
 {
@@ -41,6 +43,11 @@ public class StorehouseBaseOre extends StorehouseBaseBlock
 	    if (this.min_quantity >= this.max_quantity)
 	        return this.min_quantity;
 	    return this.min_quantity + random.nextInt(this.max_quantity - this.min_quantity + fortune + 1);
+	}
+	@Override
+	public IEntry getEntry()
+	{
+		return new BlockEntry();
 	}
 
 }

@@ -11,7 +11,9 @@
 package therogue.storehouse.util;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -27,5 +29,8 @@ public class BlockUtils
 			}
 		}
 		return true;
+	}
+	public static boolean isUsableByPlayer(TileEntity te, EntityPlayer player){
+		return te.getWorld().getTileEntity(te.getPos()) != te ? false : player.getDistanceSq((double) te.getPos().getX() + 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 64.0D;
 	}
 }

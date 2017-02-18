@@ -8,14 +8,12 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.client.render.icons;
+package therogue.storehouse.client.gui.multisystem;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-
-public interface Icon
+public interface ICategory extends IGuiItem
 {
-	public TextureAtlasSprite getIcon();
+	public String getName();
 	
-	public ResourceLocation getLocation();
+	public void addEntry(IEntry entry);
+
 }

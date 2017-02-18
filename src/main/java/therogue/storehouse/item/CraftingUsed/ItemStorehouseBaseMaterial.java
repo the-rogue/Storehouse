@@ -10,6 +10,8 @@
 
 package therogue.storehouse.item.CraftingUsed;
 
+import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.ItemEntry;
 import therogue.storehouse.item.StorehouseBaseItem;
 
 
@@ -21,5 +23,11 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem
 	public ItemStorehouseBaseMaterial(String name)
 	{
 		super(name);
+	}
+	
+	@Override
+	public IEntry getEntry()
+	{
+		return new ItemEntry();
 	}
 }

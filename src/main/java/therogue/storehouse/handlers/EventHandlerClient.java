@@ -10,19 +10,7 @@
 
 package therogue.storehouse.handlers;
 
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.client.render.icons.StorehouseIcons;
-
 public class EventHandlerClient
 {
 	public static final EventHandlerClient INSTANCE = new EventHandlerClient();
-	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void onTextureStitchEventPre(TextureStitchEvent.Pre event) {
-		StorehouseIcons.registerIcons(event.getMap());
-	}
 }

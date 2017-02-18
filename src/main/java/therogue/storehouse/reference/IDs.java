@@ -19,6 +19,7 @@ public class IDs
 	
 	public static final int NULLGUI = -1;
 	public static final int SOLARGENERATORGUI = 0;
+	public static final int STOREHOUSEGUIDEGUI = 1;
 	
 	
 }

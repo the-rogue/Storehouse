@@ -18,6 +18,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyStorageAdv;
+import therogue.storehouse.network.packets.GuiUpdateTEPacket;
 
 
 public abstract class StorehouseBaseEnergyStorageTE extends StorehouseBaseTileEntity implements ITickable, IEnergyStorage
@@ -88,5 +89,16 @@ public abstract class StorehouseBaseEnergyStorageTE extends StorehouseBaseTileEn
 	public int getMaxEnergyStored()
 	{
 		return energyStorage.getMaxEnergyStored();
+	}
+	
+	public GuiUpdateTEPacket getGUIPacket(){
+		GuiUpdateTEPacket packet = super.getGUIPacket();
+		packet.getNbt().setInteger("EnergyStored", energyStorage.getEnergyStored());
+		return packet;
+	}
+	
+	public void processGUIPacket(GuiUpdateTEPacket packet){
+		super.processGUIPacket(packet);
+		energyStorage.setEnergyStored(packet.getNbt().getInteger("EnergyStored"));
 	}
 }

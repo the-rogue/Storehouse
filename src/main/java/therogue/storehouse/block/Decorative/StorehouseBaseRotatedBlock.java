@@ -21,6 +21,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.client.gui.multisystem.BlockEntry;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
@@ -151,6 +153,12 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	public Block getBlock()
 	{
 		return this;
+	}
+	
+	@Override
+	public IEntry getEntry()
+	{
+		return new BlockEntry();
 	}
 
 

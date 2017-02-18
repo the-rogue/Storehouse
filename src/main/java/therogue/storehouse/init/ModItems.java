@@ -13,6 +13,7 @@ package therogue.storehouse.init;
 import java.util.ArrayList;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import therogue.storehouse.guide.StorehouseGuideItem;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.CraftingUsed.ItemStorehouseBaseMaterial;
@@ -35,6 +36,7 @@ public class ModItems
 	public static final StorehouseBaseItem azurite_dust = new ItemStorehouseBaseMaterial("azurite_dust");
 	public static final StorehouseBaseItem azurite_crystal = new ItemStorehouseBaseMaterial("azurite_crystal");
 	public static final StorehouseBaseItem network_Inspector = new NetworkInspector("network_inspector");
+	public static final StorehouseGuideItem storehouse_guide = new StorehouseGuideItem("storehouse_guide");
 
 	/**
 	 * Adds all the items to the array
@@ -45,6 +47,7 @@ public class ModItems
 		itemlist.add(azurite_dust);
 		itemlist.add(azurite_crystal);
 		itemlist.add(network_Inspector);
+		itemlist.add(storehouse_guide);
 	}
 
 	/**

@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import therogue.storehouse.command.DebugResetLogger;
 import therogue.storehouse.handlers.ConfigHandler;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
@@ -72,6 +74,11 @@ public class Storehouse
 		proxy.postInit(event);
 		loghelper.log("info", "Post Initialization Finished");
 	}
-	
-	
+
+	@EventHandler
+	public void startServer(FMLServerStartingEvent event)
+	{
+		event.registerServerCommand(DebugResetLogger.INSTANCE);
+	}
+
 }

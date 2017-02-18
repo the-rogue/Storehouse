@@ -11,18 +11,22 @@
 package therogue.storehouse.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import therogue.storehouse.network.StorehousePacketHandler;
+import therogue.storehouse.tile.StorehouseBaseTileEntity;
 import therogue.storehouse.util.ItemUtils;
 
 public class ContainerBase extends Container
 {
-	private IInventory teInv;
+	private StorehouseBaseTileEntity teInv;
 	
 
-	public ContainerBase(IInventory playerInv, IInventory teInv)
+	public ContainerBase(IInventory playerInv, StorehouseBaseTileEntity teInv)
 	{
 		this.teInv = teInv;
 		
@@ -38,6 +42,17 @@ public class ContainerBase extends Container
 	        }
 	    }
 
+	}
+	
+	@Override
+	public void detectAndSendChanges()
+	{
+		super.detectAndSendChanges();
+		for (IContainerListener listener : this.listeners){
+			if (listener instanceof EntityPlayerMP) {
+				StorehousePacketHandler.INSTANCE.sendTo(teInv.getGUIPacket(), (EntityPlayerMP)listener);
+			}
+		}
 	}
 
 	@Override

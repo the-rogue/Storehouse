@@ -12,7 +12,7 @@ package therogue.storehouse.reference;
 
 public class MachineStats
 {
-	public static final int SOLARGENPERTICK = 5;
+	public static final int SOLARGENPERTICK = 1;
 	public static final int SOLIDGENPERTICK = 5;
 	public static final int LIQUIDGENPERTICK = 5;
 }

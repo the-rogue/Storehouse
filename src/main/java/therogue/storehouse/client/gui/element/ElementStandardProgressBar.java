@@ -11,15 +11,16 @@
 package therogue.storehouse.client.gui.element;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.render.icons.Icon;
+import therogue.storehouse.util.TextureHelper;
 
 public class ElementStandardProgressBar extends ElementProgressBar
 {
 
-	public ElementStandardProgressBar(GuiBase gui, int x, int y, Icon icon, IInventory stateChanger, int progressField, int maxProgressField)
+	public ElementStandardProgressBar(GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField)
 	{
-		super(gui, x, y, icon, stateChanger, progressField, maxProgressField);
+		super(gui, x, y, iconLocation, stateChanger, progressField, maxProgressField);
 	}
 
 	@Override
@@ -37,25 +38,25 @@ public class ElementStandardProgressBar extends ElementProgressBar
 	@Override
 	public float getMaxU(float progress)
 	{
-		return (int)(icon.getIconWidth() * progress);
+		return TextureHelper.scalePercentageToLength(getHeight(progress), progress);
 	}
 
 	@Override
 	public float getMaxV(float progress)
 	{
-		return icon.getIconHeight();
+		return 1;
 	}
 
 	@Override
 	public int getWidth(float progress)
 	{
-		return (int)(icon.getIconWidth() * progress);
+		return (int)(icon.getWidth() * progress);
 	}
 
 	@Override
 	public int getHeight(float progress)
 	{
-		return icon.getIconHeight();
+		return icon.getHeight();
 	}
 
 }

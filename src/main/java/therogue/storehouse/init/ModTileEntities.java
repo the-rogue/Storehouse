@@ -12,12 +12,20 @@ package therogue.storehouse.init;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.tile.generator.TileSolarGenerator;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorAdvanced;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorBasic;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorEnder;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
+import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
 
 public class ModTileEntities
 {
 	public static void preInit() {
-		GameRegistry.registerTileEntity(TileSolarGenerator.class, IDs.RESOURCENAMEPREFIX + "solar_generator");
+		GameRegistry.registerTileEntity(TileSolarGeneratorBasic.class, IDs.RESOURCENAMEPREFIX + "solar_generator_basic");
+		GameRegistry.registerTileEntity(TileSolarGeneratorAdvanced.class, IDs.RESOURCENAMEPREFIX + "solar_generator_advanced");
+		GameRegistry.registerTileEntity(TileSolarGeneratorInfused.class, IDs.RESOURCENAMEPREFIX + "solar_generator_infused");
+		GameRegistry.registerTileEntity(TileSolarGeneratorEnder.class, IDs.RESOURCENAMEPREFIX + "solar_generator_ender");
+		GameRegistry.registerTileEntity(TileSolarGeneratorUltimate.class, IDs.RESOURCENAMEPREFIX + "solar_generator_ultimate");
 	}
 
 }

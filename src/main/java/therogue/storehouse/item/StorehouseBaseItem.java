@@ -20,7 +20,7 @@ import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.loghelper;
 
 
-public class StorehouseBaseItem extends Item implements IStorehouseBaseItem
+public abstract class StorehouseBaseItem extends Item implements IStorehouseBaseItem
 {
 	/**
 	 * Initiates the item using the specified name

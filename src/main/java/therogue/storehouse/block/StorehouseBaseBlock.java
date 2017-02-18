@@ -26,7 +26,7 @@ import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.loghelper;
 
 
-public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
+public abstract class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 {
 	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 	/**

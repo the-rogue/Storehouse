@@ -10,6 +10,8 @@
 
 package therogue.storehouse.item;
 
+import therogue.storehouse.client.gui.multisystem.IEntry;
+
 public interface IStorehouseBaseItem
 {
 	/**
@@ -22,4 +24,6 @@ public interface IStorehouseBaseItem
 	public void registertexture();
 
 	public String getName();
+	
+	public IEntry getEntry();
 }
