@@ -16,11 +16,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.CapabilityEnergy;
-import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.container.machine.generator.ContainerSolarGenerator;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.reference.MachineStats;
+import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.util.BlockUtils;
 import therogue.storehouse.util.EnergyUtils;
 import cofh.api.energy.IEnergyContainerItem;
@@ -28,7 +28,7 @@ import cofh.api.energy.IEnergyContainerItem;
 
 public class TileSolarGenerator extends TileBaseGenerator implements ITickable
 {
-	public TileSolarGenerator(GeneratorType type)
+	public TileSolarGenerator(MachineTier type)
 	{
 		super(ModBlocks.solar_generator, type, MachineStats.SOLARGENPERTICK, false);
 		inventory = new InventoryManager(this, 2, new int[] { 0 }, new int[] { 1 }) {

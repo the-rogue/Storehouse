@@ -16,14 +16,14 @@ import net.minecraft.inventory.Container;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.reference.MachineStats;
+import therogue.storehouse.tile.MachineTier;
 
 
 public class TileLiquidGenerator extends TileBaseGenerator implements IFluidHandler
 {
 
-	public TileLiquidGenerator(GeneratorType type)
+	public TileLiquidGenerator(MachineTier type)
 	{
 		super(null, type, MachineStats.LIQUIDGENPERTICK, false);
 	}

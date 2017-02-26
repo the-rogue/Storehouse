@@ -16,7 +16,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.util.GuiUtils;
+import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
 
@@ -43,13 +44,15 @@ public abstract class ElementProgressBar extends ElementBase
 	}
 
 	@Override
-	public void drawElementForegroundLayer(int mouseX, int mouseY)
+	public void drawElement(int mouseX, int mouseY)
 	{
 		if (icon == null) return;
 		float progress = (float) stateChanger.getField(progressField) / (float) stateChanger.getField(maxProgressField);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		GuiUtils.bindTexture(this, iconLocation);
-		gui.drawTintedTexturedModalRect(x + icon.getWidth() - getWidth(progress), y + icon.getHeight() - getHeight(progress), getMinU(progress), getMinV(progress), getMaxU(progress), getMaxV(progress), getWidth(progress), getHeight(progress), 255, 255, 255, 35);
+		TextureHelper.bindTexture(this, iconLocation);
+		gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth()/2, icon.getHeight(), GuiHelper.getColor(MachineTier.values()[stateChanger.getField(1)]));
+		TextureHelper.bindTexture(this, iconLocation);
+		gui.drawTexturedModalRect(x + (icon.getWidth() - getWidth(progress))/2, y + icon.getHeight() - getHeight(progress), getMinU(progress)/2, getMinV(progress), getMaxU(progress)/2, getMaxV(progress), getWidth(progress)/2, getHeight(progress));
 	}
 
 	public abstract float getMinU(float progress);
@@ -63,10 +66,4 @@ public abstract class ElementProgressBar extends ElementBase
 	public abstract int getWidth(float progress);
 
 	public abstract int getHeight(float progress);
-
-	@Override
-	public void drawElementBackgroundLayer(float partialTicks, int mouseX, int mouseY)
-	{
-
-	}
 }

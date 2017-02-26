@@ -15,11 +15,15 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
 import org.apache.commons.io.IOUtils;
+
+import therogue.storehouse.client.gui.element.ElementBase;
 
 public class TextureHelper
 {
@@ -56,5 +60,37 @@ public class TextureHelper
 			IOUtils.closeQuietly((Closeable) iresource);
 		}
 		return bufferedimage;
+	}
+	
+	public static void bindTexture(ResourceLocation texture)
+	{
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+	}
+	
+	public static void bindTexture(GuiScreen gui, ResourceLocation texture)
+	{
+		gui.mc.getTextureManager().bindTexture(texture);
+	}
+	
+	public static void bindTexture(ElementBase element, String texture)
+	{
+		element.gui.mc.getTextureManager().bindTexture(new ResourceLocation(texture));
+	}
+	
+	public static void bindTexture(ElementBase element, ResourceLocation texture)
+	{
+		element.gui.mc.getTextureManager().bindTexture(texture);
+	}
+	
+	public static void bindTexture(ElementBase element, TextureAtlasSprite texture)
+	{
+		ResourceLocation location = new ResourceLocation(texture.getIconName());
+		element.gui.mc.getTextureManager().bindTexture(new ResourceLocation(location.getResourceDomain(), "textures/" + location.getResourcePath() + ".png"));
+	}
+	
+	public static ResourceLocation convertSpritetoLocation(TextureAtlasSprite icon)
+	{
+		ResourceLocation original = new ResourceLocation(icon.getIconName());
+		return new ResourceLocation(original.getResourceDomain(), "textures/" + original.getResourcePath() + ".png");
 	}
 }

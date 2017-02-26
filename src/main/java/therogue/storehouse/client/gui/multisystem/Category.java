@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.util.GuiUtils;
+import therogue.storehouse.util.TextureHelper;
 
 public class Category implements ICategory
 {
@@ -38,7 +38,7 @@ public class Category implements ICategory
 	public Category(String name, TextureAtlasSprite sprite)
 	{
 		this.name = name;
-		this.icon = GuiUtils.convertSpritetoLocation(sprite);
+		this.icon = TextureHelper.convertSpritetoLocation(sprite);
 		this.icon_type = 0;
 	}
 	
@@ -55,7 +55,7 @@ public class Category implements ICategory
 		switch (icon_type)
 		{
 			case 0:
-				GuiUtils.bindTexture(icon);
+				TextureHelper.bindTexture(icon);
 				gui.drawTexturedModalRect(x, y, width, height);
 			case 1:
 				Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(itemstack, x, y);

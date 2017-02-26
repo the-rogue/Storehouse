@@ -42,7 +42,6 @@ import org.lwjgl.input.Keyboard;
 
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
-import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.client.gui.multisystem.BlockEntry;
 import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.core.Storehouse;
@@ -50,6 +49,8 @@ import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.reference.MachineStats;
+import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.tile.generator.GeneratorUtils;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorAdvanced;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorBasic;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorEnder;
@@ -60,19 +61,19 @@ import therogue.storehouse.util.loghelper;
 public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock
 {
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D);
-    public static final PropertyEnum<GeneratorType> TYPE = PropertyEnum.create("type", GeneratorType.class);
+    public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
 
 	public BlockSolarGenerator(String name)
 	{
 		super(name);
-		this.setDefaultState(this.getBlockState().getBaseState().withProperty(TYPE, GeneratorType.basic));
+		this.setDefaultState(this.getBlockState().getBaseState().withProperty(TYPE, MachineTier.basic));
 		
 		this.addShiftInfo(TextFormatting.WHITE + "from sunlight. It must have a clear view of the sky and it only works during the day!");
 	}
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean debug) {
     	if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-    		list.add(TextFormatting.WHITE + "This machine generates " + GeneratorType.getTypeFromMeta(itemStack.getMetadata()).getRecieve(MachineStats.SOLARGENPERTICK) + " RF/t");
+    		list.add(TextFormatting.WHITE + "This machine generates " + GeneratorUtils.getRecieve(itemStack.getMetadata(), MachineStats.SOLARGENPERTICK) + " RF/t");
     		for (String s : getShiftInfo()) {
     			list.add(s);
     		}
@@ -88,19 +89,19 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
 	
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return state.getValue(TYPE).getMeta();
+		return GeneratorUtils.getMeta(state.getValue(TYPE));
 	}
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(TYPE, GeneratorType.getTypeFromMeta(meta));
+		return this.getDefaultState().withProperty(TYPE, GeneratorUtils.getTypeFromMeta(meta));
 	}
 	
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
 
-		for (GeneratorType g : GeneratorType.values()) {
-			list.add(new ItemStack(item, 1, g.getMeta()));
+		for (MachineTier g : MachineTier.values()) {
+			list.add(new ItemStack(item, 1, GeneratorUtils.getMeta(g)));
 		}
 	}
 	@Override
@@ -120,7 +121,7 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return super.getUnlocalizedName()+ "_" + GeneratorType.getTypeFromMeta(stack.getMetadata()).toString();
+		return super.getUnlocalizedName()+ "_" + GeneratorUtils.getTypeFromMeta(stack.getMetadata()).toString();
 	}
 	
 	/**
@@ -130,7 +131,7 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
 	{
 		loghelper.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
-		GameRegistry.register(new StorehouseBaseVariantItemBlock(GeneratorType.values().length, this).setRegistryName(getRegistryName()));
+		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
 	}
 	
 	/**
@@ -139,15 +140,15 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
 	@Override
 	public void registervariants()
 	{
-		for (GeneratorType g : GeneratorType.values()){
+		for (MachineTier g : MachineTier.values()){
 			ModelBakery.registerItemVariants(ItemBlock.getItemFromBlock(this), new ResourceLocation(getUnlocalizedName().substring(5) + "_" + g.getName()));
 		}
 	}
 	
 	@Override
 	public void registertexture() {
-		for (GeneratorType g : GeneratorType.values()){
-			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), g.getMeta(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + g.toString(), "inventory"));
+		for (MachineTier g : MachineTier.values()){
+			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), GeneratorUtils.getMeta(g), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + g.toString(), "inventory"));
 		}
 	}
 
@@ -178,7 +179,7 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-    	GeneratorType type = GeneratorType.getTypeFromMeta(meta);
+    	MachineTier type = GeneratorUtils.getTypeFromMeta(meta);
     	switch(type){
 		case advanced:
 			return new TileSolarGeneratorAdvanced();

@@ -18,54 +18,53 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.IDefaultSidedInventory;
 import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.StorehouseBaseEnergyStorageTE;
 import therogue.storehouse.util.EnergyUtils;
 import therogue.storehouse.util.GeneralUtils;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyProvider;
 
-
 public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE implements IEnergyProvider, IDefaultSidedInventory, IInteractionObject
 {
 	protected InventoryManager inventory;
-	protected GeneratorType type;
+	protected MachineTier type;
 	protected int RFPerTick;
-
-	public TileBaseGenerator(IStorehouseBaseBlock block, GeneratorType type, int baseGeneration, boolean allowInsert)
+	
+	public TileBaseGenerator(IStorehouseBaseBlock block, MachineTier type, int baseGeneration, boolean allowInsert)
 	{
-		super(block, type.getAppropriateEnergyStored(baseGeneration, allowInsert));
+		super(block, GeneratorUtils.getAppropriateEnergyStored(type, baseGeneration, allowInsert), type);
 		this.type = type;
-		this.RFPerTick = type.getRecieve(baseGeneration);
+		this.RFPerTick = GeneratorUtils.getRecieve(type, baseGeneration);
 	}
-
+	
 	@Override
 	public int getEnergyStored(EnumFacing from)
 	{
 		return energyStorage.getEnergyStored();
 	}
-
+	
 	@Override
 	public int getMaxEnergyStored(EnumFacing from)
 	{
 		return energyStorage.getMaxEnergyStored();
 	}
-
+	
 	@Override
 	public boolean canConnectEnergy(EnumFacing from)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate)
 	{
 		return energyStorage.extractEnergy(maxExtract, simulate);
 	}
-
+	
 	/**
 	 * Sends energy to neighbouring energy blocks
 	 */
@@ -78,14 +77,14 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 			energyStorage.extractEnergy(sentRF, false);
 		}
 	}
-
+	
 	protected void sendEnergyToItems(int slot)
 	{
 		if (energyStorage.getEnergyStored() <= 0) return;
 		int sentRF = EnergyUtils.sendItemEnergy(inventory.getStackInSlot(slot), energyStorage.extractEnergy(energyStorage.getMaxExtract() / 4, true));
 		energyStorage.extractEnergy(sentRF, false);
 	}
-
+	
 	@Override
 	public void update()
 	{
@@ -98,131 +97,123 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 			}
 			tick();
 			this.sendEnergyToNeighbours();
-			if(worldObj != null) {
+			if (worldObj != null)
+			{
 				this.worldObj.notifyBlockUpdate(this.getPos(), ModBlocks.azurite_dust_block.getDefaultState(), ModBlocks.azurite_dust_block.getDefaultState(), 0);
 			}
 		}
 	}
-
+	
 	protected abstract void doRunTick();
-
+	
 	protected abstract void tick();
-
+	
 	public abstract boolean isRunning();
-
+	
 	@Override
 	public int getField(int id)
 	{
 		ItemStack stack;
 		switch (id)
 		{
-		case 1:
-			return isRunning() ? 1 : 0;
-		case 2:
-			stack = inventory.getStackInSlot(0);
-			if (stack != null && stack.getItem() instanceof IEnergyContainerItem)
-			{
-				return ((IEnergyContainerItem) stack.getItem()).getEnergyStored(stack);
-			}
-			else if (stack != null && stack.hasCapability(CapabilityEnergy.ENERGY, null))
-			{
-				return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
-			}
-			else
-			{
+			case 1:
+				return tier.ordinal();
+			case 2:
+				return isRunning() ? 1 : 0;
+			case 3:
+				stack = inventory.getStackInSlot(0);
+				if (stack != null && stack.getItem() instanceof IEnergyContainerItem)
+				{
+					return ((IEnergyContainerItem) stack.getItem()).getEnergyStored(stack);
+				}
+				else if (stack != null && stack.hasCapability(CapabilityEnergy.ENERGY, null))
+				{
+					return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
+				}
+				else
+				{
+					return 0;
+				}
+			case 4:
+				stack = inventory.getStackInSlot(0);
+				if (stack != null && stack.getItem() instanceof IEnergyContainerItem)
+				{
+					return ((IEnergyContainerItem) stack.getItem()).getMaxEnergyStored(stack);
+				}
+				else if (stack != null && stack.hasCapability(CapabilityEnergy.ENERGY, null))
+				{
+					return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
+				}
+				else
+				{
+					return 0;
+				}
+			case 5:
+				return energyStorage.getEnergyStored();
+			case 6:
+				return energyStorage.getMaxEnergyStored();
+			default:
 				return 0;
-			}
-		case 3:
-			stack = inventory.getStackInSlot(0);
-			if (stack != null && stack.getItem() instanceof IEnergyContainerItem)
-			{
-				return ((IEnergyContainerItem) stack.getItem()).getMaxEnergyStored(stack);
-			}
-			else if (stack != null && stack.hasCapability(CapabilityEnergy.ENERGY, null))
-			{
-				return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
-			}
-			else
-			{
-				return 0;
-			}
-		case 4:
-			return energyStorage.getEnergyStored();
-		case 5:
-			return energyStorage.getMaxEnergyStored();
-		default:
-			return 0;
 		}
 	}
-
+	
 	@Override
 	public void setField(int id, int value)
 	{
 		switch (id)
 		{
-
 		}
 	}
-
+	
 	@Override
 	public int getFieldCount()
 	{
-		return 5;
+		return 6;
 	}
-
+	
 	@Override
 	public boolean canExtract()
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean canReceive()
 	{
 		return false;
 	}
-
+	
 	@Override
 	public TileEntity getTileEntity()
 	{
 		return this;
 	}
-
+	
 	@Override
 	public String getName()
 	{
 		return super.getName() + "_" + type.getName();
 	}
-
+	
 	@Override
 	public InventoryManager getInventoryManager()
 	{
-		if (inventory == null)
-		{
-			throw new NullPointerException("inventory is null for generator: " + getName());
-		}
+		if (inventory == null) { throw new NullPointerException("inventory is null for generator: " + getName()); }
 		return inventory;
 	}
-
+	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-		{
-			return true;
-		}
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return true; }
 		return super.hasCapability(capability, facing);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-		{
-			return (T) inventory.getWrapper();
-		}
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return (T) inventory.getWrapper(); }
 		return super.getCapability(capability, facing);
 	}
-
 }

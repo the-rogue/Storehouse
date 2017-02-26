@@ -32,12 +32,7 @@ public class ElementGuiItem extends ElementBase
 	}
 	
 	@Override
-	public void drawElementForegroundLayer(int mouseX, int mouseY)
-	{
-	}
-	
-	@Override
-	public void drawElementBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+	public void drawElement(int mouseX, int mouseY)
 	{
 		element.renderIcon(gui, x, y, height, height);
 		element.renderText(gui, x, y, width - height);

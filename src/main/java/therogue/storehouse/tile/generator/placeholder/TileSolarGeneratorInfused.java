@@ -10,14 +10,13 @@
 
 package therogue.storehouse.tile.generator.placeholder;
 
-import therogue.storehouse.block.state.GeneratorType;
+import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.generator.TileSolarGenerator;
 
 public class TileSolarGeneratorInfused extends TileSolarGenerator
 {
-
 	public TileSolarGeneratorInfused()
 	{
-		super(GeneratorType.infused);
+		super(MachineTier.infused);
 	}
 }

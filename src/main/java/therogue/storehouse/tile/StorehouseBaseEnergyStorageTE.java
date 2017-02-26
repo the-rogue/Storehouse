@@ -24,11 +24,13 @@ import therogue.storehouse.network.packets.GuiUpdateTEPacket;
 public abstract class StorehouseBaseEnergyStorageTE extends StorehouseBaseTileEntity implements ITickable, IEnergyStorage
 {
 	protected EnergyStorageAdv energyStorage;
+	public final MachineTier tier;
 
-	public StorehouseBaseEnergyStorageTE(IStorehouseBaseBlock block, EnergyStorageAdv energyStorage)
+	public StorehouseBaseEnergyStorageTE(IStorehouseBaseBlock block, EnergyStorageAdv energyStorage, MachineTier tier)
 	{
 		super(block);
 		this.energyStorage = energyStorage;
+		this.tier = tier;
 	}
 	
 	@Override

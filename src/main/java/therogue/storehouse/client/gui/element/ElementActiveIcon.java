@@ -16,7 +16,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.util.GuiUtils;
+import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
 public class ElementActiveIcon extends ElementBase
@@ -40,23 +41,18 @@ public class ElementActiveIcon extends ElementBase
 	}
 
 	@Override
-	public void drawElementForegroundLayer(int mouseX, int mouseY)
+	public void drawElement(int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		if (icon != null){
+			TextureHelper.bindTexture(this, iconLocation);
+			gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth()/2, icon.getHeight(), GuiHelper.getColor(MachineTier.values()[stateChanger.getField(1)]));
+			
 			if (stateChanger.getField(activeField) == 1) {
-				GuiUtils.bindTexture(this, iconLocation);
+				TextureHelper.bindTexture(this, iconLocation);
 				gui.drawTexturedModalRect(x, y, 0.0F, 0.0F, 0.5F, 1.0F, icon.getWidth()/2, icon.getHeight());//0.941176471F, 0.956862745F, 0.976470588F,
-			} else {
-				GuiUtils.bindTexture(this, iconLocation);
-				gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth()/2, icon.getHeight(), 255, 255, 255, 35);
 			}
 		}
-	}
-
-	@Override
-	public void drawElementBackgroundLayer(float partialTicks, int mouseX, int mouseY)
-	{
 	}
 
 }

@@ -13,14 +13,14 @@ package therogue.storehouse.tile.generator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import therogue.storehouse.block.state.GeneratorType;
 import therogue.storehouse.reference.MachineStats;
+import therogue.storehouse.tile.MachineTier;
 
 
 public class TileSolidGenerator extends TileBaseGenerator
 {
 
-	public TileSolidGenerator(GeneratorType type)
+	public TileSolidGenerator(MachineTier type)
 	{
 		super(null, type, MachineStats.SOLIDGENPERTICK, false);
 	}

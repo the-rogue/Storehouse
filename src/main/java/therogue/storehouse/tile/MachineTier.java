@@ -8,15 +8,28 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.tile.generator.placeholder;
+package therogue.storehouse.tile;
 
-import therogue.storehouse.tile.MachineTier;
-import therogue.storehouse.tile.generator.TileSolarGenerator;
+import net.minecraft.util.IStringSerializable;
 
-public class TileSolarGeneratorUltimate extends TileSolarGenerator
+
+public enum MachineTier implements IStringSerializable
 {
-	public TileSolarGeneratorUltimate()
+	basic,
+	advanced,
+	infused,
+	ender,
+	ultimate;
+
+	@Override
+	public String getName()
 	{
-		super(MachineTier.ultimate);
+		return this.name();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return getName();
 	}
 }

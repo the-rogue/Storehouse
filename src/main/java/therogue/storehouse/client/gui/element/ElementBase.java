@@ -27,9 +27,7 @@ public abstract class ElementBase
 		return true;
 	}
 
-	public abstract void drawElementForegroundLayer(int mouseX, int mouseY);
-
-	public abstract void drawElementBackgroundLayer(float partialTicks, int mouseX, int mouseY);
+	public abstract void drawElement(int mouseX, int mouseY);
 
 	public void drawTopLayer(int mouseX, int mouseY)
 	{

@@ -17,6 +17,7 @@ import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorBasic;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorEnder;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
+import therogue.storehouse.tile.machine.crafting.TileThermalPress;
 
 public class ModTileEntities
 {
@@ -26,6 +27,7 @@ public class ModTileEntities
 		GameRegistry.registerTileEntity(TileSolarGeneratorInfused.class, IDs.RESOURCENAMEPREFIX + "solar_generator_infused");
 		GameRegistry.registerTileEntity(TileSolarGeneratorEnder.class, IDs.RESOURCENAMEPREFIX + "solar_generator_ender");
 		GameRegistry.registerTileEntity(TileSolarGeneratorUltimate.class, IDs.RESOURCENAMEPREFIX + "solar_generator_ultimate");
+		GameRegistry.registerTileEntity(TileThermalPress.class, IDs.RESOURCENAMEPREFIX + "thermal_press");
 	}
 
 }
