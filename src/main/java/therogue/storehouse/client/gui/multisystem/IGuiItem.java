@@ -12,9 +12,13 @@ package therogue.storehouse.client.gui.multisystem;
 
 import therogue.storehouse.client.gui.GuiBase;
 
+
+
 public interface IGuiItem
 {
-	public void renderIcon(GuiBase gui, int x, int y, int width, int height);
+	public String getName();
 	
-	public void renderText(GuiBase gui, int x, int y, int maxWidth);
+	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height);
+	
+	public IPage[] buildPage(GuiBase gui, int width, int height);
 }

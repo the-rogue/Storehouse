@@ -10,7 +10,9 @@
 
 package therogue.storehouse.item.CraftingUsed;
 
+import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IPage;
 import therogue.storehouse.client.gui.multisystem.ItemEntry;
 import therogue.storehouse.item.StorehouseBaseItem;
 
@@ -28,6 +30,15 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem
 	@Override
 	public IEntry getEntry()
 	{
-		return new ItemEntry();
+		return new ItemEntry(){
+
+			@Override
+			public IPage[] buildPage(GuiBase gui, int width, int height)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 }

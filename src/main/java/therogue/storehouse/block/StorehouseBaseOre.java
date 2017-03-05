@@ -14,8 +14,10 @@ import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.BlockEntry;
 import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IPage;
 
 public class StorehouseBaseOre extends StorehouseBaseBlock
 {
@@ -47,7 +49,16 @@ public class StorehouseBaseOre extends StorehouseBaseBlock
 	@Override
 	public IEntry getEntry()
 	{
-		return new BlockEntry();
+		return new BlockEntry(){
+
+			@Override
+			public IPage[] buildPage(GuiBase gui, int width, int height)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 
 }

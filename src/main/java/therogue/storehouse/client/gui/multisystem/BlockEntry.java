@@ -12,10 +12,10 @@ package therogue.storehouse.client.gui.multisystem;
 
 
 
-public class BlockEntry extends Entry
+public abstract class BlockEntry extends Entry
 {
 	@Override
-	public String getCategory()
+	public ICategory getCategory()
 	{
 		// TODO Auto-generated method stub
 		return null;

@@ -19,7 +19,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IPage;
 import therogue.storehouse.client.gui.multisystem.ItemEntry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
@@ -61,6 +63,15 @@ public class StorehouseGuideItem extends StorehouseBaseActiveItem
 	@Override
 	public IEntry getEntry()
 	{
-		return new ItemEntry();
+		return new ItemEntry(){
+
+			@Override
+			public IPage[] buildPage(GuiBase gui, int width, int height)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 }

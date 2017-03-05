@@ -12,7 +12,24 @@ package therogue.storehouse.client.gui.multisystem;
 
 import java.util.HashMap;
 
+import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.ModItems;
+import therogue.storehouse.item.IStorehouseBaseItem;
+
 public class SystemManager
 {
 	public static final HashMap<String, ICategory> categories = new HashMap<String, ICategory>();
+	
+	public static void build()
+	{
+		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
+		{
+			SystemManager.categories.get(block.getEntry().getCategory()).addEntry(block.getEntry());
+		}
+		for (IStorehouseBaseItem item : ModItems.itemlist)
+		{
+			SystemManager.categories.get(item.getEntry().getCategory()).addEntry(item.getEntry());
+		}
+	}
 }

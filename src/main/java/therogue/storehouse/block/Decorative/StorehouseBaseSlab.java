@@ -34,8 +34,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.BlockEntry;
 import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IPage;
 import therogue.storehouse.client.render.blocks.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
@@ -266,7 +268,16 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	@Override
 	public IEntry getEntry()
 	{
-		return new BlockEntry();
+		return new BlockEntry(){
+
+			@Override
+			public IPage[] buildPage(GuiBase gui, int width, int height)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 
 	/**

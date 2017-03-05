@@ -21,9 +21,9 @@ import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.util.TextureHelper;
 
-public class Category implements ICategory
+public class SuperCategory implements ISuperCategory
 {
-	private final List<IEntry> entries = new ArrayList<IEntry>();
+	private final List<ICategory> categories = new ArrayList<ICategory>();
 	private final String name;
 	private int icon_type;
 	private ItemStack itemstack;
@@ -31,21 +31,21 @@ public class Category implements ICategory
 	private boolean changeOccured = false;
 	private IPage[] page = null;
 	
-	public Category(String name, ItemStack stack)
+	public SuperCategory(String name, ItemStack stack)
 	{
 		this.name = name;
 		this.itemstack = stack;
 		this.icon_type = 1;
 	}
 	
-	public Category(String name, TextureAtlasSprite sprite)
+	public SuperCategory(String name, TextureAtlasSprite sprite)
 	{
 		this.name = name;
 		this.icon = TextureHelper.convertSpritetoLocation(sprite);
 		this.icon_type = 0;
 	}
 	
-	public Category(String name, ResourceLocation icon)
+	public SuperCategory(String name, ResourceLocation icon)
 	{
 		this.name = name;
 		this.icon = icon;
@@ -94,10 +94,10 @@ public class Category implements ICategory
 		if (this.page == null || changeOccured == true)
 		{
 			IPage page = new Page();
-			int widthHeight = (int) Math.ceil(Math.sqrt(entries.size())), width = pageWidth / widthHeight, height = pageHeight / widthHeight, x = 0, y = 0;
-			for (IEntry e : entries)
+			int widthHeight = (int) Math.ceil(Math.sqrt(categories.size())), width = pageWidth / widthHeight, height = pageHeight / widthHeight, x = 0, y = 0;
+			for (ICategory c : categories)
 			{
-				page.addToDrawQueue(e.addTitle(gui, x, y, width, height));
+				page.addToDrawQueue(c.addTitle(gui, x, y, width, height));
 				if (x == width * widthHeight)
 				{
 					x = 0;
@@ -114,9 +114,9 @@ public class Category implements ICategory
 	}
 	
 	@Override
-	public void addEntry(IEntry entry)
+	public void addCategory(ICategory category)
 	{
-		entries.add(entry);
+		categories.add(category);
 		changeOccured = true;
 	}
 	

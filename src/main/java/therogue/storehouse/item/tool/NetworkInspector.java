@@ -20,7 +20,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
+import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IPage;
 import therogue.storehouse.client.gui.multisystem.ItemEntry;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
@@ -76,6 +78,15 @@ public class NetworkInspector extends StorehouseBaseActiveItem implements IEnerg
 	@Override
 	public IEntry getEntry()
 	{
-		return new ItemEntry();
+		return new ItemEntry(){
+
+			@Override
+			public IPage[] buildPage(GuiBase gui, int width, int height)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 }

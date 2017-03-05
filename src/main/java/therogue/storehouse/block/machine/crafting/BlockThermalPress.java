@@ -13,8 +13,10 @@ package therogue.storehouse.block.machine.crafting;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
+import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.BlockEntry;
 import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IPage;
 import therogue.storehouse.tile.machine.crafting.TileThermalPress;
 
 public class BlockThermalPress extends StorehouseBaseTileBlock
@@ -36,7 +38,16 @@ public class BlockThermalPress extends StorehouseBaseTileBlock
 	@Override
 	public IEntry getEntry()
 	{
-		return new BlockEntry();
+		return new BlockEntry(){
+
+			@Override
+			public IPage[] buildPage(GuiBase gui, int width, int height)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 
 }

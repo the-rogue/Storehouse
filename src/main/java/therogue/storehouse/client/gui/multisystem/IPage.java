@@ -10,7 +10,16 @@
 
 package therogue.storehouse.client.gui.multisystem;
 
+import therogue.storehouse.client.gui.element.ElementBase;
+
+
 public interface IPage
 {
-
+	public void addToDrawQueue(Runnable drawing);
+	
+	public void addToElementList(ElementBase element);
+	
+	public void drawPage(int mouseX, int mouseY);
+	
+	public IPage copy();
 }

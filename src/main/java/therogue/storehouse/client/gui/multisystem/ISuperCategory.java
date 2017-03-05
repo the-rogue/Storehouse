@@ -8,33 +8,9 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.client.gui.element;
+package therogue.storehouse.client.gui.multisystem;
 
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.IGuiItem;
-
-public class ElementGuiItem extends ElementBase
+public interface ISuperCategory extends IGuiItem
 {
-	private IGuiItem element;
-	public final int x;
-	public final int y;
-	public final int width;
-	public final int height;
-	
-	public ElementGuiItem(GuiBase gui, int x, int y, int width, int height, IGuiItem element)
-	{
-		super(gui);
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.element = element;
-	}
-	
-	@Override
-	public void drawElement(int mouseX, int mouseY)
-	{
-		element.renderIcon(gui, x, y, height, height);
-		element.renderText(gui, x, y, width - height);
-	}
+	public void addCategory(ICategory category);
 }

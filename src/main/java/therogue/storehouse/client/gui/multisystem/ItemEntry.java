@@ -10,11 +10,11 @@
 
 package therogue.storehouse.client.gui.multisystem;
 
-public class ItemEntry extends Entry
+public abstract class ItemEntry extends Entry
 {
 
 	@Override
-	public String getCategory()
+	public ICategory getCategory()
 	{
 		// TODO Auto-generated method stub
 		return null;

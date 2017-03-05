@@ -12,21 +12,24 @@ package therogue.storehouse.client.gui.multisystem;
 
 import therogue.storehouse.client.gui.GuiBase;
 
+
+
 public abstract class Entry implements IEntry
 {
 
 	@Override
-	public void renderIcon(GuiBase gui, int x, int y, int width, int height)
+	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height)
 	{
+		return null;
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
-	public void renderText(GuiBase gui, int x, int y, int maxWidth)
+	public String getName()
 	{
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 	
 }

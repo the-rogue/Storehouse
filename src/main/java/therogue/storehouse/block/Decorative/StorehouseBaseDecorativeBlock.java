@@ -11,8 +11,10 @@
 package therogue.storehouse.block.Decorative;
 
 import therogue.storehouse.block.StorehouseBaseBlock;
+import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.BlockEntry;
 import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IPage;
 
 
 public class StorehouseBaseDecorativeBlock extends StorehouseBaseBlock
@@ -28,6 +30,15 @@ public class StorehouseBaseDecorativeBlock extends StorehouseBaseBlock
 	@Override
 	public IEntry getEntry()
 	{
-		return new BlockEntry();
+		return new BlockEntry(){
+
+			@Override
+			public IPage[] buildPage(GuiBase gui, int width, int height)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 }
