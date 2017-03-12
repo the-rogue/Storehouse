@@ -12,6 +12,7 @@ package therogue.storehouse.client.gui.multisystem;
 
 import java.util.HashMap;
 
+import net.minecraft.item.ItemStack;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
@@ -19,17 +20,31 @@ import therogue.storehouse.item.IStorehouseBaseItem;
 
 public class SystemManager
 {
+	private static final Category BOOK = new Category("book", new ItemStack(ModItems.storehouse_guide, 1, 0));
 	public static final HashMap<String, ICategory> categories = new HashMap<String, ICategory>();
+	public static final HashMap<String, IGuiItem> entries = new HashMap<String, IGuiItem>();
 	
 	public static void build()
 	{
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
-			SystemManager.categories.get(block.getEntry().getCategory()).addEntry(block.getEntry());
+			if (block instanceof IInfoSupplier) {
+				SystemManager.categories.get(((IInfoSupplier)block).getEntry().getCategory()).addEntry(((IInfoSupplier)block).getEntry());
+			}
 		}
 		for (IStorehouseBaseItem item : ModItems.itemlist)
 		{
-			SystemManager.categories.get(item.getEntry().getCategory()).addEntry(item.getEntry());
+			if (item instanceof IInfoSupplier) {
+				SystemManager.categories.get(((IInfoSupplier)item).getEntry().getCategory()).addEntry(((IInfoSupplier)item).getEntry());
+			}
 		}
+	}
+
+	/**
+	 * @return the book
+	 */
+	public static ICategory getBook()
+	{
+		return BOOK;
 	}
 }

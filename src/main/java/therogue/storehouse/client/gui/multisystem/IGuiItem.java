@@ -21,4 +21,8 @@ public interface IGuiItem
 	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height);
 	
 	public IPage[] buildPage(GuiBase gui, int width, int height);
+	
+	public void setSuperCategory(ICategory category);
+	
+	public ICategory getCategory();
 }

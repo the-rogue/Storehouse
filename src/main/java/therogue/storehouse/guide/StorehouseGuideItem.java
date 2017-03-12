@@ -19,10 +19,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.IEntry;
-import therogue.storehouse.client.gui.multisystem.IPage;
-import therogue.storehouse.client.gui.multisystem.ItemEntry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.IDs;
@@ -58,20 +54,5 @@ public class StorehouseGuideItem extends StorehouseBaseActiveItem
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
 	{
 		return slotChanged;
-	}
-	
-	@Override
-	public IEntry getEntry()
-	{
-		return new ItemEntry(){
-
-			@Override
-			public IPage[] buildPage(GuiBase gui, int width, int height)
-			{
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-		};
 	}
 }

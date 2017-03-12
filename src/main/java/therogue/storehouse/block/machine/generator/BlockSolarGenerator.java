@@ -10,6 +10,7 @@
 
 package therogue.storehouse.block.machine.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -43,9 +44,11 @@ import org.lwjgl.input.Keyboard;
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.BlockEntry;
-import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IGuiItem;
+import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
 import therogue.storehouse.client.gui.multisystem.IPage;
+import therogue.storehouse.client.gui.multisystem.Page;
+import therogue.storehouse.client.gui.multisystem.impl.Entry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
@@ -60,7 +63,7 @@ import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
 import therogue.storehouse.util.loghelper;
 
-public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock
+public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock, IInfoSupplier
 {
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D);
     public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
@@ -207,15 +210,24 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
     }
     
 	@Override
-	public IEntry getEntry()
+	public IGuiItem getEntry()
 	{
-		return new BlockEntry(){
+		return new Entry("Solar Generator"){
 
 			@Override
 			public IPage[] buildPage(GuiBase gui, int width, int height)
 			{
-				// TODO Auto-generated method stub
-				return null;
+				ArrayList<Page> pages = new ArrayList<Page>();
+				Page page1 = new Page();
+				page1.addToDrawQueue(new Runnable(){
+					@Override
+					public void run()
+					{
+						gui.drawCenteredString(gui.getFontRenderer(), "This is some text", 15, 15, 0);
+					}
+				});
+				pages.add(page1);
+				return (Page[])pages.toArray();
 			}
 			
 		};

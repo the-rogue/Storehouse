@@ -10,14 +10,7 @@
 
 package therogue.storehouse.client.gui.multisystem;
 
-public abstract class ItemEntry extends Entry
+public interface IInfoSupplier
 {
-
-	@Override
-	public ICategory getCategory()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	public IGuiItem getEntry();
 }

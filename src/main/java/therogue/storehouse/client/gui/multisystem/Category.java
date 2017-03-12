@@ -23,13 +23,14 @@ import therogue.storehouse.util.TextureHelper;
 
 public class Category implements ICategory
 {
-	private final List<IEntry> entries = new ArrayList<IEntry>();
+	private final List<IGuiItem> entries = new ArrayList<IGuiItem>();
 	private final String name;
 	private int icon_type;
 	private ItemStack itemstack;
 	private ResourceLocation icon;
 	private boolean changeOccured = false;
 	private IPage[] page = null;
+	private ICategory superCategory = null;
 	
 	public Category(String name, ItemStack stack)
 	{
@@ -94,18 +95,20 @@ public class Category implements ICategory
 		if (this.page == null || changeOccured == true)
 		{
 			IPage page = new Page();
-			int widthHeight = (int) Math.ceil(Math.sqrt(entries.size())), width = pageWidth / widthHeight, height = pageHeight / widthHeight, x = 0, y = 0;
-			for (IEntry e : entries)
-			{
-				page.addToDrawQueue(e.addTitle(gui, x, y, width, height));
-				if (x == width * widthHeight)
+			if (this.entries.size() != 0) {			
+				int widthHeight = (int) Math.ceil(Math.sqrt(entries.size())), width = pageWidth / widthHeight, height = pageHeight / widthHeight, x = 0, y = 0;
+				for (IGuiItem e : entries)
 				{
-					x = 0;
-					y += height;
-				}
-				else
-				{
-					x += width;
+					page.addToDrawQueue(e.addTitle(gui, x, y, width, height));
+					if (x == width * widthHeight)
+					{
+						x = 0;
+						y += height;
+					}
+					else
+					{
+						x += width;
+					}
 				}
 			}
 			this.page = new IPage[] { page };
@@ -114,9 +117,15 @@ public class Category implements ICategory
 	}
 	
 	@Override
-	public void addEntry(IEntry entry)
+	public void addEntry(IGuiItem entry)
 	{
 		entries.add(entry);
+		entry.setSuperCategory(this);
+		if (entry instanceof ICategory) {
+			SystemManager.categories.put(entry.getName(), (ICategory)entry);
+		} else {
+			SystemManager.entries.put(entry.getName(), entry);
+		}
 		changeOccured = true;
 	}
 	
@@ -124,5 +133,17 @@ public class Category implements ICategory
 	public String getName()
 	{
 		return name;
+	}
+
+	@Override
+	public void setSuperCategory(ICategory category)
+	{
+		this.superCategory = category;
+	}
+	
+	@Override
+	public ICategory getCategory()
+	{
+		return superCategory;
 	}
 }

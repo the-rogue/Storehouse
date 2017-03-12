@@ -37,7 +37,7 @@ public enum CategoryEnum
 	{
 		for (CategoryEnum c : values())
 		{
-			SystemManager.categories.put(c.category.getName(), c.category);
+			SystemManager.getBook().addEntry(c.category);
 		}
 	}
 }

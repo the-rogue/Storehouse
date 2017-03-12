@@ -13,6 +13,8 @@ package therogue.storehouse.client.gui.guide;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.element.ElementIGuiItem;
+import therogue.storehouse.client.gui.multisystem.SystemManager;
 import therogue.storehouse.reference.General;
 
 public class GuideGui extends GuiBase
@@ -23,6 +25,7 @@ public class GuideGui extends GuiBase
 	public GuideGui(Container inventorySlotsIn)
 	{
 		super(TEXTURE, inventorySlotsIn);
+		this.addElement(new ElementIGuiItem(this, SystemManager.getBook()));
 		this.xSize =146;
 		this.ySize = 180;
 	}

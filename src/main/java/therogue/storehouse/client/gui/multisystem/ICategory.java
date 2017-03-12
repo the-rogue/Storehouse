@@ -12,5 +12,5 @@ package therogue.storehouse.client.gui.multisystem;
 
 public interface ICategory extends IGuiItem
 {
-	public void addEntry(IEntry entry);
+	public void addEntry(IGuiItem entry);
 }

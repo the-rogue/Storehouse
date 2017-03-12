@@ -8,28 +8,43 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.client.gui.multisystem;
+package therogue.storehouse.client.gui.multisystem.impl;
 
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.multisystem.ICategory;
+import therogue.storehouse.client.gui.multisystem.IGuiItem;
 
-
-
-public abstract class Entry implements IEntry
+public abstract class Entry implements IGuiItem
 {
-
-	@Override
-	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height)
-	{
-		return null;
-		// TODO Auto-generated method stub
-
+	protected String name;
+	protected ICategory superCategory;
+	
+	public Entry(String name) {
+		this.name = name;
 	}
 	
 	@Override
 	public String getName()
 	{
+		return name;
+	}
+	
+	@Override
+	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	@Override
+	public void setSuperCategory(ICategory category)
+	{
+		this.superCategory = category;
+	}
+	
+	@Override
+	public ICategory getCategory()
+	{
+		return this.superCategory;
+	}
 }

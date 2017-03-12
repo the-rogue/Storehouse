@@ -21,15 +21,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.IGuiItem;
+import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
 import therogue.storehouse.client.gui.multisystem.IPage;
-import therogue.storehouse.client.gui.multisystem.ItemEntry;
+import therogue.storehouse.client.gui.multisystem.impl.Entry;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.ConfigValues;
 import cofh.api.energy.IEnergyContainerItem;
 
-public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem
+public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem, IInfoSupplier
 {
 
 	public NetworkInspector(String name)
@@ -76,9 +77,9 @@ public class NetworkInspector extends StorehouseBaseActiveItem implements IEnerg
 	}
 	
 	@Override
-	public IEntry getEntry()
+	public IGuiItem getEntry()
 	{
-		return new ItemEntry(){
+		return new Entry("Network Inspector"){
 
 			@Override
 			public IPage[] buildPage(GuiBase gui, int width, int height)
