@@ -13,137 +13,69 @@ package therogue.storehouse.client.gui.multisystem;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.element.ElementIcon;
+import therogue.storehouse.reference.General;
 import therogue.storehouse.util.TextureHelper;
 
-public class Category implements ICategory
-{
-	private final List<IGuiItem> entries = new ArrayList<IGuiItem>();
-	private final String name;
+public class Category {
+	
+	private final List<IEntry> entries = new ArrayList<IEntry>();
 	private int icon_type;
 	private ItemStack itemstack;
 	private ResourceLocation icon;
-	private boolean changeOccured = false;
-	private IPage[] page = null;
-	private ICategory superCategory = null;
 	
-	public Category(String name, ItemStack stack)
-	{
-		this.name = name;
+	public Category (ItemStack stack) {
 		this.itemstack = stack;
 		this.icon_type = 1;
 	}
 	
-	public Category(String name, TextureAtlasSprite sprite)
-	{
-		this.name = name;
+	public Category (TextureAtlasSprite sprite) {
 		this.icon = TextureHelper.convertSpritetoLocation(sprite);
 		this.icon_type = 0;
 	}
 	
-	public Category(String name, ResourceLocation icon)
-	{
-		this.name = name;
+	public Category (ResourceLocation icon) {
 		this.icon = icon;
 		this.icon_type = 0;
 	}
 	
-	@Override
-	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height)
-	{
-		int length = width < height ? width : height;
-		switch (icon_type)
-		{
+	public ElementIcon addTitle (GuiBase gui, int x, int y, int width, int height) {
+		switch (icon_type) {
 			case 0:
-				return new Runnable() {
-					@Override
-					public void run()
-					{
-						TextureHelper.bindTexture(icon);
-						gui.drawTexturedModalRect(x, y, length, length);
-					}
-				};
+				return new ElementIcon(gui, icon, x, y, width, height);
 			case 1:
-				return new Runnable() {
-					@Override
-					public void run()
-					{
-						GlStateManager.pushMatrix();
-						GlStateManager.scale(length / 16.0F, length / 16.0F, 1.0F);
-						Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(itemstack, x, y);
-						GlStateManager.popMatrix();
-					}
-				};
+				return new ElementIcon(gui, itemstack, x, y, width, height);
 			default:
-				return new Runnable() {
-					@Override
-					public void run()
-					{
-					}
-				};
+				return new ElementIcon(gui, new ResourceLocation(General.MOD_ID, "textures/gui/icons/CategoryGeneric.png"), x, y, width, height);
 		}
 	}
 	
-	@Override
-	public IPage[] buildPage(GuiBase gui, int pageWidth, int pageHeight)
-	{
-		if (this.page == null || changeOccured == true)
+	public Runnable addHovering (int mouseX, int mouseY) {
+		return null;
+	}
+	
+	public Page buildPage (GuiBase gui, int xStart, int yStart, int pageWidth, int pageHeight) {
+		Page page = new Page(1);
+		if (this.entries.size() != 0)
 		{
-			IPage page = new Page();
-			if (this.entries.size() != 0) {			
-				int widthHeight = (int) Math.ceil(Math.sqrt(entries.size())), width = pageWidth / widthHeight, height = pageHeight / widthHeight, x = 0, y = 0;
-				for (IGuiItem e : entries)
+			int entriesPerPage = (int) Math.floor(((float) pageHeight) / 8.0), x = xStart, y = yStart;
+			for (IEntry e : entries)
+			{
+				page.addElement(1, e.getTitleBar(x, y, pageWidth, pageHeight));
+				if (y - yStart + 8 <= 8 * entriesPerPage)
 				{
-					page.addToDrawQueue(e.addTitle(gui, x, y, width, height));
-					if (x == width * widthHeight)
-					{
-						x = 0;
-						y += height;
-					}
-					else
-					{
-						x += width;
-					}
+					y += 8;
 				}
 			}
-			this.page = new IPage[] { page };
 		}
-		return this.page;
+		return page;
 	}
 	
-	@Override
-	public void addEntry(IGuiItem entry)
-	{
+	public void addEntry (IEntry entry) {
 		entries.add(entry);
-		entry.setSuperCategory(this);
-		if (entry instanceof ICategory) {
-			SystemManager.categories.put(entry.getName(), (ICategory)entry);
-		} else {
-			SystemManager.entries.put(entry.getName(), entry);
-		}
-		changeOccured = true;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-
-	@Override
-	public void setSuperCategory(ICategory category)
-	{
-		this.superCategory = category;
-	}
-	
-	@Override
-	public ICategory getCategory()
-	{
-		return superCategory;
 	}
 }

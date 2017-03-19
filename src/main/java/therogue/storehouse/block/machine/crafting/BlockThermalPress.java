@@ -13,42 +13,27 @@ package therogue.storehouse.block.machine.crafting;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.IGuiItem;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.IPage;
 import therogue.storehouse.client.gui.multisystem.impl.Entry;
 import therogue.storehouse.tile.machine.crafting.TileThermalPress;
 
-public class BlockThermalPress extends StorehouseBaseTileBlock implements IInfoSupplier
-{
-
-	public BlockThermalPress(String name)
-	{
+public class BlockThermalPress extends StorehouseBaseTileBlock implements IInfoSupplier {
+	
+	public BlockThermalPress (String name) {
 		super(name);
 	}
-
+	
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta)
-	{
+	public TileEntity createNewTileEntity (World worldIn, int meta) {
 		TileThermalPress tile = new TileThermalPress();
 		tile.setWorldObj(worldIn);
 		return tile;
 	}
 	
 	@Override
-	public IGuiItem getEntry()
-	{
-		return new Entry("Themal Press"){
-
-			@Override
-			public IPage[] buildPage(GuiBase gui, int width, int height)
-			{
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
+	public IEntry getEntry () {
+		return new Entry("machines") {
 		};
 	}
-
 }

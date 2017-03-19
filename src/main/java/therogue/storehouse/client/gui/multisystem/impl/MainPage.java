@@ -8,18 +8,18 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.client.gui.multisystem;
+package therogue.storehouse.client.gui.multisystem.impl;
 
 import therogue.storehouse.client.gui.element.ElementBase;
+import therogue.storehouse.client.gui.multisystem.Page;
 
-
-public interface IPage
-{
-	public void addToDrawQueue(Runnable drawing);
+public class MainPage extends Page {
 	
-	public void addToElementList(ElementBase element);
+	public MainPage () {
+		super(1);
+	}
 	
-	public void drawPage(int mouseX, int mouseY);
-	
-	public IPage copy();
+	public void addElement (ElementBase element) {
+		this.addElement(1, element);
+	}
 }

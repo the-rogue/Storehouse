@@ -10,7 +10,7 @@
 
 package therogue.storehouse.client.gui.multisystem;
 
-public interface IInfoSupplier
-{
-	public IGuiItem getEntry();
+public interface IInfoSupplier {
+	
+	public IEntry getEntry ();
 }

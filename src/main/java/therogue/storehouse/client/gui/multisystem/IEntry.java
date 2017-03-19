@@ -10,19 +10,13 @@
 
 package therogue.storehouse.client.gui.multisystem;
 
-import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.element.ElementEntryBar;
 
-
-
-public interface IGuiItem
-{
-	public String getName();
+public interface IEntry {
 	
-	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height);
+	public ElementEntryBar getTitleBar (int x, int y, int width, int height);
 	
-	public IPage[] buildPage(GuiBase gui, int width, int height);
+	public Page getPage ();
 	
-	public void setSuperCategory(ICategory category);
-	
-	public ICategory getCategory();
+	public String getCategory ();
 }

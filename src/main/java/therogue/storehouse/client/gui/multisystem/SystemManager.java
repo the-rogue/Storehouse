@@ -10,41 +10,30 @@
 
 package therogue.storehouse.client.gui.multisystem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.item.ItemStack;
-import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.init.ModBlocks;
-import therogue.storehouse.init.ModItems;
-import therogue.storehouse.item.IStorehouseBaseItem;
+import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.reference.General;
 
-public class SystemManager
-{
-	private static final Category BOOK = new Category("book", new ItemStack(ModItems.storehouse_guide, 1, 0));
-	public static final HashMap<String, ICategory> categories = new HashMap<String, ICategory>();
-	public static final HashMap<String, IGuiItem> entries = new HashMap<String, IGuiItem>();
+public class SystemManager {
 	
-	public static void build()
-	{
-		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
+	public static final HashMap<String, Category> categories = new HashMap<String, Category>();
+	public static final ArrayList<IEntry> entries = new ArrayList<IEntry>();
+	
+	public static void build () {
+		for (IEntry e : entries)
 		{
-			if (block instanceof IInfoSupplier) {
-				SystemManager.categories.get(((IInfoSupplier)block).getEntry().getCategory()).addEntry(((IInfoSupplier)block).getEntry());
+			if (categories.get(e.getCategory()) == null)
+			{
+				Category c = new Category(new ResourceLocation(General.MOD_ID, "textures/gui/icons/CategoryGeneric.png"));
+				categories.put(e.getCategory(), c);
+				c.addEntry(e);
+			}
+			else
+			{
+				categories.get(e.getCategory()).addEntry(e);
 			}
 		}
-		for (IStorehouseBaseItem item : ModItems.itemlist)
-		{
-			if (item instanceof IInfoSupplier) {
-				SystemManager.categories.get(((IInfoSupplier)item).getEntry().getCategory()).addEntry(((IInfoSupplier)item).getEntry());
-			}
-		}
-	}
-
-	/**
-	 * @return the book
-	 */
-	public static ICategory getBook()
-	{
-		return BOOK;
 	}
 }

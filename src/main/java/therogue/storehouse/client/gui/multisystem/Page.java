@@ -11,51 +11,64 @@
 package therogue.storehouse.client.gui.multisystem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import therogue.storehouse.client.gui.element.ElementBase;
+import therogue.storehouse.util.loghelper;
 
-public class Page implements IPage
-{
-	private ArrayList<Runnable> drawQueue = new ArrayList<Runnable>();
-	private ArrayList<ElementBase> elementList = new ArrayList<ElementBase>();
+public class Page {
 	
-	@Override
-	public void addToDrawQueue(Runnable drawing)
-	{
-		drawQueue.add(drawing);
+	private HashMap<Integer, ArrayList<ElementBase>> pages = new HashMap<Integer, ArrayList<ElementBase>>();
+	private int pageNumber;
+	
+	public Page (int number) {
+		for (int i = 1; i < number + 1; i++)
+		{
+			pages.put(i, new ArrayList<ElementBase>());
+		}
+		this.pageNumber = number;
 	}
 	
-	@Override
-	public void addToElementList(ElementBase element)
-	{
-		elementList.add(element);
+	public void addElement (int pageNumber, ElementBase element) {
+		ArrayList<ElementBase> list = pages.get(pageNumber);
+		if (list == null)
+		{
+			loghelper.log("warn", "Page: " + pageNumber + ", does not exist, when adding element ");
+			return;
+		}
+		list.add(element);
 	}
 	
-	@Override
-	public void drawPage(int mouseX, int mouseY)
-	{
-		for (ElementBase e : elementList) {
+	public void addPage () {
+		pages.put(++pageNumber, new ArrayList<ElementBase>());
+	}
+	
+	public int getNumberOfPages () {
+		return pageNumber;
+	}
+	
+	public void drawPage (int pageNumber, int mouseX, int mouseY) {
+		ArrayList<ElementBase> list = pages.get(pageNumber);
+		if (list == null)
+		{
+			loghelper.log("warn", "Page: " + pageNumber + ", does not exist, when drawing page");
+			return;
+		}
+		for (ElementBase e : list)
+		{
 			e.drawElement(mouseX, mouseY);
 		}
-		for (Runnable r : drawQueue) {
-			r.run();
-		}
-		for (ElementBase e : elementList) {
+		for (ElementBase e : list)
+		{
 			e.drawTopLayer(mouseX, mouseY);
 		}
 	}
-
-	@Override
-	public IPage copy()
-	{
-		IPage page = new Page();
-		for (Runnable r : drawQueue) {
-			page.addToDrawQueue(r);
+	
+	public void joinPages (Page endSet) {
+		for (int i = 1; i <= endSet.pages.size(); i++)
+		{
+			pages.put(pageNumber + i, endSet.pages.get(i));
 		}
-		for (ElementBase e : elementList) {
-			page.addToElementList(e);
-		}
-		return page;
+		pageNumber += endSet.pages.size();
 	}
-
 }

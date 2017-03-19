@@ -10,7 +10,6 @@
 
 package therogue.storehouse.block.machine.generator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -43,11 +42,8 @@ import org.lwjgl.input.Keyboard;
 
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.IGuiItem;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.IPage;
-import therogue.storehouse.client.gui.multisystem.Page;
 import therogue.storehouse.client.gui.multisystem.impl.Entry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
@@ -63,173 +59,153 @@ import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
 import therogue.storehouse.util.loghelper;
 
-public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock, IInfoSupplier
-{
-    protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D);
-    public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
-
-	public BlockSolarGenerator(String name)
-	{
+public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock, IInfoSupplier {
+	
+	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D);
+	public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
+	
+	public BlockSolarGenerator (String name) {
 		super(name);
 		this.setDefaultState(this.getBlockState().getBaseState().withProperty(TYPE, MachineTier.basic));
-		
 		this.addShiftInfo(TextFormatting.WHITE + "from sunlight. It must have a clear view of the sky and it only works during the day!");
 	}
-    @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean debug) {
-    	if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-    		list.add(TextFormatting.WHITE + "This machine generates " + GeneratorUtils.getRecieve(itemStack.getMetadata(), MachineStats.SOLARGENPERTICK) + " RF/t");
-    		for (String s : getShiftInfo()) {
-    			list.add(s);
-    		}
-    	} else {
-    		list.add(General.SHIFTINFO);
-    	}
-    }
 	
 	@Override
-	public BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {TYPE});
+	public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean debug) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		{
+			list.add(TextFormatting.WHITE + "This machine generates " + GeneratorUtils.getRecieve(itemStack.getMetadata(), MachineStats.SOLARGENPERTICK) + " RF/t");
+			for (String s : getShiftInfo())
+			{
+				list.add(s);
+			}
+		}
+		else
+		{
+			list.add(General.SHIFTINFO);
+		}
 	}
 	
 	@Override
-	public int getMetaFromState(IBlockState state) {
+	public BlockStateContainer createBlockState () {
+		return new BlockStateContainer(this, new IProperty[] { TYPE });
+	}
+	
+	@Override
+	public int getMetaFromState (IBlockState state) {
 		return GeneratorUtils.getMeta(state.getValue(TYPE));
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
+	public IBlockState getStateFromMeta (int meta) {
 		return this.getDefaultState().withProperty(TYPE, GeneratorUtils.getTypeFromMeta(meta));
 	}
 	
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
-
-		for (MachineTier g : MachineTier.values()) {
+	public void getSubBlocks (Item item, CreativeTabs tab, List<ItemStack> list) {
+		for (MachineTier g : MachineTier.values())
+		{
 			list.add(new ItemStack(item, 1, GeneratorUtils.getMeta(g)));
 		}
 	}
+	
 	@Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
-	    return new ItemStack(Item.getItemFromBlock(this), 1, this.getMetaFromState(state));
+	public ItemStack getPickBlock (IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+		return new ItemStack(Item.getItemFromBlock(this), 1, this.getMetaFromState(state));
 	}
 	
 	@Override
-	public int damageDropped(IBlockState state) {
-	    return getMetaFromState(state);
+	public int damageDropped (IBlockState state) {
+		return getMetaFromState(state);
 	}
 	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
-	{
-		return super.getUnlocalizedName()+ "_" + GeneratorUtils.getTypeFromMeta(stack.getMetadata()).toString();
+	public String getUnlocalizedName (ItemStack stack) {
+		return super.getUnlocalizedName() + "_" + GeneratorUtils.getTypeFromMeta(stack.getMetadata()).toString();
 	}
 	
 	/**
 	 * Registers this block easily
 	 */
-	public void registerblock()
-	{
+	public void registerblock () {
 		loghelper.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
 	}
 	
 	/**
-	 * Registers any Model variants 
+	 * Registers any Model variants
 	 */
 	@Override
-	public void registervariants()
-	{
-		for (MachineTier g : MachineTier.values()){
+	public void registervariants () {
+		for (MachineTier g : MachineTier.values())
+		{
 			ModelBakery.registerItemVariants(ItemBlock.getItemFromBlock(this), new ResourceLocation(getUnlocalizedName().substring(5) + "_" + g.getName()));
 		}
 	}
 	
 	@Override
-	public void registertexture() {
-		for (MachineTier g : MachineTier.values()){
+	public void registertexture () {
+		for (MachineTier g : MachineTier.values())
+		{
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), GeneratorUtils.getMeta(g), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + g.toString(), "inventory"));
 		}
 	}
-
-    @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-    {
-        return NULL_AABB;
-    }
-
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
-    public boolean isOpaqueCube(IBlockState state)
-    {
-    	return false;
-    }
-
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
-        return AABB;
-    }
-
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
-    
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-	{
-    	MachineTier type = GeneratorUtils.getTypeFromMeta(meta);
-    	switch(type){
-		case advanced:
-			return new TileSolarGeneratorAdvanced();
-		case basic:
-			return new TileSolarGeneratorBasic();
-		case ender:
-			return new TileSolarGeneratorEnder();
-		case infused:
-			return new TileSolarGeneratorInfused();
-		case ultimate:
-			return new TileSolarGeneratorUltimate();
-		default:
-			throw new IllegalArgumentException("Meta Out of Range");
-    	}
+	
+	@Nullable
+	public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, World worldIn, BlockPos pos) {
+		return NULL_AABB;
 	}
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            player.openGui(Storehouse.instance, IDs.SOLARGENERATORGUI, world, pos.getX(), pos.getY(), pos.getZ());
-        }
-        return true;
-    }
-    
+	
+	/**
+	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 */
+	public boolean isOpaqueCube (IBlockState state) {
+		return false;
+	}
+	
+	public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess source, BlockPos pos) {
+		return AABB;
+	}
+	
+	public boolean isFullCube (IBlockState state) {
+		return false;
+	}
+	
 	@Override
-	public IGuiItem getEntry()
-	{
-		return new Entry("Solar Generator"){
-
-			@Override
-			public IPage[] buildPage(GuiBase gui, int width, int height)
-			{
-				ArrayList<Page> pages = new ArrayList<Page>();
-				Page page1 = new Page();
-				page1.addToDrawQueue(new Runnable(){
-					@Override
-					public void run()
-					{
-						gui.drawCenteredString(gui.getFontRenderer(), "This is some text", 15, 15, 0);
-					}
-				});
-				pages.add(page1);
-				return (Page[])pages.toArray();
-			}
-			
+	public TileEntity createNewTileEntity (World worldIn, int meta) {
+		MachineTier type = GeneratorUtils.getTypeFromMeta(meta);
+		switch (type) {
+			case advanced:
+				return new TileSolarGeneratorAdvanced();
+			case basic:
+				return new TileSolarGeneratorBasic();
+			case ender:
+				return new TileSolarGeneratorEnder();
+			case infused:
+				return new TileSolarGeneratorInfused();
+			case ultimate:
+				return new TileSolarGeneratorUltimate();
+			default:
+				throw new IllegalArgumentException("Meta Out of Range");
+		}
+	}
+	
+	@Override
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote)
+		{
+			player.openGui(Storehouse.instance, IDs.SOLARGENERATORGUI, world, pos.getX(), pos.getY(), pos.getZ());
+		}
+		return true;
+	}
+	
+	@Override
+	public IEntry getEntry () {
+		return new Entry("generators") {
 		};
 	}
 }

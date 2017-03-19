@@ -10,41 +10,32 @@
 
 package therogue.storehouse.client.gui.multisystem.impl;
 
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.ICategory;
-import therogue.storehouse.client.gui.multisystem.IGuiItem;
+import therogue.storehouse.client.gui.element.ElementEntryBar;
+import therogue.storehouse.client.gui.multisystem.IEntry;
+import therogue.storehouse.client.gui.multisystem.Page;
 
-public abstract class Entry implements IGuiItem
-{
-	protected String name;
-	protected ICategory superCategory;
+public class Entry implements IEntry {
 	
-	public Entry(String name) {
-		this.name = name;
+	protected final String superCategory;
+	
+	public Entry (String superCategory) {
+		this.superCategory = superCategory;
 	}
 	
 	@Override
-	public String getName()
-	{
-		return name;
-	}
-	
-	@Override
-	public Runnable addTitle(GuiBase gui, int x, int y, int width, int height)
-	{
+	public ElementEntryBar getTitleBar (int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
-	public void setSuperCategory(ICategory category)
-	{
-		this.superCategory = category;
+	public String getCategory () {
+		return this.superCategory;
 	}
 	
 	@Override
-	public ICategory getCategory()
-	{
-		return this.superCategory;
+	public Page getPage () {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

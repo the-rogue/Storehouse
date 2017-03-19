@@ -11,21 +11,15 @@
 package therogue.storehouse.client.gui.element;
 
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.IGuiItem;
 
-public class ElementIGuiItem extends ElementBase
-{
-	public IGuiItem item;
+public class ElementEntryBar extends ElementBase {
 	
-	public ElementIGuiItem(GuiBase gui, IGuiItem item)
-	{
+	public ElementEntryBar (GuiBase gui) {
 		super(gui);
-		this.item = item;
 	}
-
+	
 	@Override
-	public void drawElement(int mouseX, int mouseY)
-	{
-		item.buildPage(gui, gui.width, gui.height)[0].drawPage(mouseX, mouseY);
+	public void drawElement (int mouseX, int mouseY) {
+		// TODO Auto-generated method stub
 	}
 }

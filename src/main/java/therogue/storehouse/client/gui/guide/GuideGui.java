@@ -13,21 +13,31 @@ package therogue.storehouse.client.gui.guide;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.element.ElementIGuiItem;
+import therogue.storehouse.client.gui.multisystem.Category;
 import therogue.storehouse.client.gui.multisystem.SystemManager;
 import therogue.storehouse.reference.General;
 
-public class GuideGui extends GuiBase
-{
+public class GuideGui extends GuiBase {
 	
 	public static final ResourceLocation TEXTURE = new ResourceLocation(General.MOD_ID, "textures/gui/StorehouseGuide.png");
-
-	public GuideGui(Container inventorySlotsIn)
-	{
+	
+	public GuideGui (Container inventorySlotsIn) {
 		super(TEXTURE, inventorySlotsIn);
-		this.addElement(new ElementIGuiItem(this, SystemManager.getBook()));
-		this.xSize =146;
+		int entriesPerPage = (int) Math.floor(((float) 120) / 8.0), x = 16, y = 32;
+		for (Category c : SystemManager.categories.values())
+		{
+			homePage.addElement(c.addTitle(this, x, y, 24, 24));
+			if (x - 16 + 24 >= 24 * entriesPerPage)
+			{
+				x = 16;
+				y += 24;
+			}
+			else
+			{
+				x += 24;
+			}
+		}
+		this.xSize = 146;
 		this.ySize = 180;
 	}
-
 }

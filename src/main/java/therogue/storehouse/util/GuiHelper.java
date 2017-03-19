@@ -14,10 +14,9 @@ import java.awt.Color;
 
 import therogue.storehouse.tile.MachineTier;
 
-
-public class GuiHelper
-{
-	public static Color getColor(MachineTier tier){
+public class GuiHelper {
+	
+	public static Color getColor (MachineTier tier) {
 		switch (tier) {
 			case basic:
 				return new Color(106, 78, 45);
@@ -32,5 +31,20 @@ public class GuiHelper
 			default:
 				return new Color(255, 255, 255);
 		}
+	}
+	
+	/**
+	 * @param mouseX - Position of the mouse on the x-axis
+	 * @param mouseY - Position of the mouse on the y-axis
+	 * @param x - Starting x for the rectangle
+	 * @param y - Starting y for the rectangle
+	 * @param width - Width of the rectangle
+	 * @param height - Height of the rectangle
+	 * @return whether or not the mouse is in the rectangle
+	 */
+	public static boolean isMouseInRectange (int mouseX, int mouseY, int x, int y, int width, int height) {
+		int xSize = x + width;
+		int ySize = y + height;
+		return (mouseX >= x && mouseX <= xSize && mouseY >= y && mouseY <= ySize);
 	}
 }

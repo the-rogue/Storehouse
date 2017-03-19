@@ -20,21 +20,17 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.multisystem.IGuiItem;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.IPage;
 import therogue.storehouse.client.gui.multisystem.impl.Entry;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.ConfigValues;
 import cofh.api.energy.IEnergyContainerItem;
 
-public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem, IInfoSupplier
-{
-
-	public NetworkInspector(String name)
-	{
+public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem, IInfoSupplier {
+	
+	public NetworkInspector (String name) {
 		super(name);
 		this.setMaxStackSize(1);
 		this.addShiftInfo("Allows you to see Information about your Storehouse System,");
@@ -42,52 +38,39 @@ public class NetworkInspector extends StorehouseBaseActiveItem implements IEnerg
 	}
 	
 	@Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-        return new ItemEnergyCapabilityProvider(stack, ConfigValues.networkInspectorCapacity, ConfigValues.networkInspectorRecieveRate, 0);
-    }
-
+	public ICapabilityProvider initCapabilities (ItemStack stack, NBTTagCompound nbt) {
+		return new ItemEnergyCapabilityProvider(stack, ConfigValues.networkInspectorCapacity, ConfigValues.networkInspectorRecieveRate, 0);
+	}
+	
 	@Override
-	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate)
-	{
+	public int receiveEnergy (ItemStack container, int maxReceive, boolean simulate) {
 		return container.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(maxReceive, simulate);
 	}
-
+	
 	@Override
-	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate)
-	{
+	public int extractEnergy (ItemStack container, int maxExtract, boolean simulate) {
 		return container.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(maxExtract, simulate);
 	}
-
+	
 	@Override
-	public int getEnergyStored(ItemStack container)
-	{
+	public int getEnergyStored (ItemStack container) {
 		return container.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
 	}
-
+	
 	@Override
-	public int getMaxEnergyStored(ItemStack container)
-	{
+	public int getMaxEnergyStored (ItemStack container) {
 		return container.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand){
+	public ActionResult<ItemStack> onItemRightClick (ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
 		player.addChatComponentMessage(new TextComponentString("Energy Stored: " + itemStack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored()));
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
 	}
 	
 	@Override
-	public IGuiItem getEntry()
-	{
-		return new Entry("Network Inspector"){
-
-			@Override
-			public IPage[] buildPage(GuiBase gui, int width, int height)
-			{
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
+	public IEntry getEntry () {
+		return new Entry("tools") {
 		};
 	}
 }

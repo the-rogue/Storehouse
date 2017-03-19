@@ -18,14 +18,12 @@ import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.render.icons.StorehouseIcons;
 import therogue.storehouse.tile.generator.TileSolarGenerator;
 
-public class GuiSolarGenerator extends GuiBase
-{
-	public GuiSolarGenerator(Container inventorySlotsIn, TileSolarGenerator inventory)
-	{
+public class GuiSolarGenerator extends GuiBase {
+	
+	public GuiSolarGenerator (Container inventorySlotsIn, TileSolarGenerator inventory) {
 		super(inventory, inventorySlotsIn);
-		addElement(new ElementActiveIcon(this, 90, 23, StorehouseIcons.SolarGenOn.getLocation(), inventory, 2));
-		addElement(new ElementChargingBar(this, 33, 35, StorehouseIcons.EnergyIndicator.getLocation(), inventory, 3, 4));
-		addElement(new ElementEnergyBar(this, 8, 8, inventory, 5, 6));
+		homePage.addElement(new ElementActiveIcon(this, 90, 23, StorehouseIcons.SolarGenOn.getLocation(), inventory, 2));
+		homePage.addElement(new ElementChargingBar(this, 33, 35, StorehouseIcons.EnergyIndicator.getLocation(), inventory, 3, 4));
+		homePage.addElement(new ElementEnergyBar(this, 8, 8, inventory, 5, 6));
 	}
-
 }

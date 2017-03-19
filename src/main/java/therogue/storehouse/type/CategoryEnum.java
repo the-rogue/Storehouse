@@ -12,7 +12,6 @@ package therogue.storehouse.type;
 
 import net.minecraft.item.ItemStack;
 import therogue.storehouse.client.gui.multisystem.Category;
-import therogue.storehouse.client.gui.multisystem.ICategory;
 import therogue.storehouse.client.gui.multisystem.SystemManager;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
@@ -21,23 +20,25 @@ import therogue.storehouse.tile.generator.GeneratorUtils;
 
 public enum CategoryEnum
 {
-	GENERATORS(new Category("generators", new ItemStack(ModBlocks.solar_generator, 1, GeneratorUtils.getMeta(MachineTier.basic)))),
-	MACHINES(new Category("machines", new ItemStack(ModBlocks.thermal_press, 1, 0))),
-	DECORATIVE(new Category("decorative_blocks", new ItemStack(ModBlocks.azurite_dust_block, 1, 0))),
-	WORLDGEN(new Category("world_gen", new ItemStack(ModBlocks.azurite_ore_block, 1, 0))),
-	TOOLS(new Category("tools", new ItemStack(ModItems.network_Inspector, 1, 0)));
-	public final ICategory category;
+	GENERATORS ("generators", new Category(new ItemStack(ModBlocks.solar_generator, 1, GeneratorUtils.getMeta(MachineTier.basic)))),
+	MACHINES ("machines", new Category(new ItemStack(ModBlocks.thermal_press, 1, 0))),
+	DECORATIVE ("decorative_blocks", new Category(new ItemStack(ModBlocks.azurite_dust_block, 1, 0))),
+	WORLDGEN ("world_gen", new Category(new ItemStack(ModBlocks.azurite_ore_block, 1, 0))),
+	TOOLS ("tools", new Category(new ItemStack(ModItems.network_Inspector, 1, 0))),
+	OTHER ("other", new Category(new ItemStack(ModItems.azurite_dust, 1, 0)));
 	
-	private CategoryEnum(ICategory category)
-	{
+	public final String name;
+	public final Category category;
+	
+	private CategoryEnum (String name, Category category) {
+		this.name = name;
 		this.category = category;
 	}
 	
-	static
-	{
+	public static void initCategories () {
 		for (CategoryEnum c : values())
 		{
-			SystemManager.getBook().addEntry(c.category);
+			SystemManager.categories.put(c.name, c.category);
 		}
 	}
 }
