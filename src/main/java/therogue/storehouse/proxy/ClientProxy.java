@@ -20,16 +20,13 @@ import therogue.storehouse.client.render.items.ItemRender;
 import therogue.storehouse.handlers.EventHandlerClient;
 import therogue.storehouse.util.loghelper;
 
-
-public class ClientProxy extends CommonProxy
-{
+public class ClientProxy extends CommonProxy {
 	
 	/**
 	 * PreInitialises all methods the client needs to run, and all common methods by calling super() to common proxy
 	 */
 	@Override
-	public void preInit(FMLPreInitializationEvent event)
-	{
+	public void preInit (FMLPreInitializationEvent event) {
 		super.preInit(event);
 		loghelper.log("debug", "Client Proxy Started PreInitialisation");
 		MinecraftForge.EVENT_BUS.register(EventHandlerClient.INSTANCE);
@@ -41,8 +38,7 @@ public class ClientProxy extends CommonProxy
 	 * Initialises all methods the client needs to run, and all common methods by calling super() to common proxy
 	 */
 	@Override
-	public void init(FMLInitializationEvent event)
-	{
+	public void init (FMLInitializationEvent event) {
 		super.init(event);
 		loghelper.log("debug", "Client Proxy Started Initialisation");
 		ItemRender.Init();
@@ -54,10 +50,10 @@ public class ClientProxy extends CommonProxy
 	 * PostInitialises all methods the client needs to run, and all common methods by calling super() to common proxy
 	 */
 	@Override
-	public void postInit(FMLPostInitializationEvent event)
-	{
+	public void postInit (FMLPostInitializationEvent event) {
 		super.postInit(event);
 		loghelper.log("debug", "Client Proxy Started PostInitialisation");
+		SystemManager.getEntries();
 		SystemManager.build();
 		loghelper.log("debug", "Client Proxy Finished PostInitialisation");
 	}

@@ -23,10 +23,9 @@ import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.IDs;
 
-public class StorehouseGuideItem extends StorehouseBaseActiveItem
-{
-	public StorehouseGuideItem(String name)
-	{
+public class StorehouseGuideItem extends StorehouseBaseActiveItem {
+	
+	public StorehouseGuideItem (String name) {
 		super(name);
 		this.setMaxStackSize(1);
 		this.addShiftInfo("A Guide to the Workings of Storehouse");
@@ -34,8 +33,7 @@ public class StorehouseGuideItem extends StorehouseBaseActiveItem
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
-	{
+	public ActionResult<ItemStack> onItemRightClick (ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 		if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
 		player.openGui(Storehouse.instance, IDs.STOREHOUSEGUIDEGUI, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
@@ -45,14 +43,12 @@ public class StorehouseGuideItem extends StorehouseBaseActiveItem
 	 * Called when a Block is right-clicked with this Item
 	 */
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-	{
+	public EnumActionResult onItemUse (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		return super.onItemUse(stack, player, world, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	
 	@Override
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
-	{
+	public boolean shouldCauseReequipAnimation (ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return slotChanged;
 	}
 }

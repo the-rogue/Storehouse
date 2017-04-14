@@ -10,32 +10,30 @@
 
 package therogue.storehouse.client.gui.multisystem.impl;
 
+import net.minecraft.item.ItemStack;
 import therogue.storehouse.client.gui.element.ElementEntryBar;
+import therogue.storehouse.client.gui.multisystem.IBoundedPage;
 import therogue.storehouse.client.gui.multisystem.IEntry;
-import therogue.storehouse.client.gui.multisystem.Page;
 
-public class Entry implements IEntry {
+public abstract class ItemStackEntry implements IEntry {
 	
 	protected final String superCategory;
+	protected final String name;
+	protected final ItemStack icon;
 	
-	public Entry (String superCategory) {
+	public ItemStackEntry (String superCategory, String name, ItemStack icon) {
 		this.superCategory = superCategory;
+		this.name = name;
+		this.icon = icon;
 	}
 	
 	@Override
-	public ElementEntryBar getTitleBar (int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
-		return null;
+	public ElementEntryBar getTitleBar (IBoundedPage bounds, int x, int y, int width, int height) {
+		return new ElementEntryBar(name, this, bounds, icon, x, y, width, height);
 	}
 	
 	@Override
 	public String getCategory () {
 		return this.superCategory;
-	}
-	
-	@Override
-	public Page getPage () {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

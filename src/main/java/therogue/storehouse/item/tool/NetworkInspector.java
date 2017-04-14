@@ -20,12 +20,15 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
+import therogue.storehouse.client.gui.multisystem.IBoundedPage;
 import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.impl.Entry;
+import therogue.storehouse.client.gui.multisystem.Page;
+import therogue.storehouse.client.gui.multisystem.impl.ItemStackEntry;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.ConfigValues;
+import therogue.storehouse.type.CategoryEnum;
 import cofh.api.energy.IEnergyContainerItem;
 
 public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem, IInfoSupplier {
@@ -70,7 +73,13 @@ public class NetworkInspector extends StorehouseBaseActiveItem implements IEnerg
 	
 	@Override
 	public IEntry getEntry () {
-		return new Entry("tools") {
+		return new ItemStackEntry(CategoryEnum.TOOLS.category.name, "Network Inspector", new ItemStack(this, 1, 0)) {
+			
+			@Override
+			public Page getPage (IBoundedPage bounds, int xStart, int yStart, int pageWidth, int pageHeight) {
+				Page thisPage = new Page(1);
+				return thisPage;
+			}
 		};
 	}
 }

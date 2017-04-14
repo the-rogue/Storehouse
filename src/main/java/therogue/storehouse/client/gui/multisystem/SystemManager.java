@@ -13,22 +13,40 @@ package therogue.storehouse.client.gui.multisystem;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.util.ResourceLocation;
-import therogue.storehouse.reference.General;
+import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.ModItems;
+import therogue.storehouse.item.IStorehouseBaseItem;
+import therogue.storehouse.type.CategoryEnum;
 
 public class SystemManager {
 	
 	public static final HashMap<String, Category> categories = new HashMap<String, Category>();
 	public static final ArrayList<IEntry> entries = new ArrayList<IEntry>();
 	
+	public static void getEntries () {
+		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
+		{
+			if (block instanceof IInfoSupplier)
+			{
+				entries.add(((IInfoSupplier) block).getEntry());
+			}
+		}
+		for (IStorehouseBaseItem item : ModItems.itemlist)
+		{
+			if (item instanceof IInfoSupplier)
+			{
+				entries.add(((IInfoSupplier) item).getEntry());
+			}
+		}
+	}
+	
 	public static void build () {
 		for (IEntry e : entries)
 		{
 			if (categories.get(e.getCategory()) == null)
 			{
-				Category c = new Category(new ResourceLocation(General.MOD_ID, "textures/gui/icons/CategoryGeneric.png"));
-				categories.put(e.getCategory(), c);
-				c.addEntry(e);
+				categories.get(CategoryEnum.OTHER.category.name).addEntry(e);
 			}
 			else
 			{

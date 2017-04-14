@@ -10,16 +10,47 @@
 
 package therogue.storehouse.client.gui.element;
 
-import therogue.storehouse.client.gui.GuiBase;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.client.gui.multisystem.IBoundedPage;
+import therogue.storehouse.client.gui.multisystem.IPageProvider;
+import therogue.storehouse.util.TextureHelper;
 
-public class ElementEntryBar extends ElementBase {
+public class ElementEntryBar extends ElementIcon {
 	
-	public ElementEntryBar (GuiBase gui) {
-		super(gui);
+	public ElementEntryBar (String name, IPageProvider linked, IBoundedPage pageBounds, ItemStack stack, int x, int y, int width, int height) {
+		super(name, linked, pageBounds, stack, x, y, width, height);
+	}
+	
+	public ElementEntryBar (String name, IPageProvider linked, IBoundedPage pageBounds, TextureAtlasSprite sprite, int x, int y, int width, int height) {
+		super(name, linked, pageBounds, sprite, x, y, width, height);
+	}
+	
+	public ElementEntryBar (String name, IPageProvider linked, IBoundedPage pageBounds, ResourceLocation icon, int x, int y, int width, int height) {
+		super(name, linked, pageBounds, icon, x, y, width, height);
 	}
 	
 	@Override
 	public void drawElement (int mouseX, int mouseY) {
-		// TODO Auto-generated method stub
+		switch (icon_type) {
+			case 0:
+				TextureHelper.bindTexture(icon);
+				gui.drawTexturedModalRect(x, y, height, height);
+			case 1:
+				// float widthScale = ((float) width) / 16.0F;
+				float heightScale = ((float) height) / 16.0F;
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(heightScale, heightScale, 1.0F);
+				RenderHelper.enableGUIStandardItemLighting();
+				Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(itemstack, (int) Math.floor(x / heightScale), (int) Math.floor(y / heightScale));
+				RenderHelper.disableStandardItemLighting();
+				GlStateManager.popMatrix();
+				gui.getFontRenderer().drawString(" " + name, x + height, y, 0);
+			default:
+		}
 	}
 }

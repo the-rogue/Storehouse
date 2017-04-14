@@ -20,25 +20,23 @@ import therogue.storehouse.tile.generator.GeneratorUtils;
 
 public enum CategoryEnum
 {
-	GENERATORS ("generators", new Category(new ItemStack(ModBlocks.solar_generator, 1, GeneratorUtils.getMeta(MachineTier.basic)))),
-	MACHINES ("machines", new Category(new ItemStack(ModBlocks.thermal_press, 1, 0))),
-	DECORATIVE ("decorative_blocks", new Category(new ItemStack(ModBlocks.azurite_dust_block, 1, 0))),
-	WORLDGEN ("world_gen", new Category(new ItemStack(ModBlocks.azurite_ore_block, 1, 0))),
-	TOOLS ("tools", new Category(new ItemStack(ModItems.network_Inspector, 1, 0))),
-	OTHER ("other", new Category(new ItemStack(ModItems.azurite_dust, 1, 0)));
+	GENERATORS (new Category("Generators", new ItemStack(ModBlocks.solar_generator, 1, GeneratorUtils.getMeta(MachineTier.basic)))),
+	MACHINES (new Category("Machines", new ItemStack(ModBlocks.thermal_press, 1, 0))),
+	DECORATIVE (new Category("Decorative Blocks", new ItemStack(ModBlocks.azurite_dust_block, 1, 0))),
+	WORLDGEN (new Category("World Gen", new ItemStack(ModBlocks.azurite_ore_block, 1, 0))),
+	TOOLS (new Category("Tools", new ItemStack(ModItems.network_Inspector, 1, 0))),
+	OTHER (new Category("Other", new ItemStack(ModItems.azurite_dust, 1, 0)));
 	
-	public final String name;
 	public final Category category;
 	
-	private CategoryEnum (String name, Category category) {
-		this.name = name;
+	private CategoryEnum (Category category) {
 		this.category = category;
 	}
 	
 	public static void initCategories () {
 		for (CategoryEnum c : values())
 		{
-			SystemManager.categories.put(c.name, c.category);
+			SystemManager.categories.put(c.category.name, c.category);
 		}
 	}
 }

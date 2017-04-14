@@ -12,11 +12,9 @@ package therogue.storehouse.client.gui.multisystem;
 
 import therogue.storehouse.client.gui.element.ElementEntryBar;
 
-public interface IEntry {
+public interface IEntry extends IPageProvider {
 	
-	public ElementEntryBar getTitleBar (int x, int y, int width, int height);
-	
-	public Page getPage ();
+	public ElementEntryBar getTitleBar (IBoundedPage bounds, int x, int y, int width, int height);
 	
 	public String getCategory ();
 }

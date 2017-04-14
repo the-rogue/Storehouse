@@ -13,6 +13,7 @@ package therogue.storehouse.client.gui.multisystem;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.minecraft.client.gui.Gui;
 import therogue.storehouse.client.gui.element.ElementBase;
 import therogue.storehouse.util.loghelper;
 
@@ -49,6 +50,7 @@ public class Page {
 	
 	public void drawPage (int pageNumber, int mouseX, int mouseY) {
 		ArrayList<ElementBase> list = pages.get(pageNumber);
+		Gui.drawRect(50, 80, 60, 90, 0);
 		if (list == null)
 		{
 			loghelper.log("warn", "Page: " + pageNumber + ", does not exist, when drawing page");
@@ -61,6 +63,13 @@ public class Page {
 		for (ElementBase e : list)
 		{
 			e.drawTopLayer(mouseX, mouseY);
+		}
+	}
+	
+	public void mouseClicked (int pageNumber, int mouseX, int mouseY, int mouseButton) {
+		for (ElementBase e : pages.get(pageNumber))
+		{
+			e.onClick(mouseX, mouseY, mouseButton);
 		}
 	}
 	

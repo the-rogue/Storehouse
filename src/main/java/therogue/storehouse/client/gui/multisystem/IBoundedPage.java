@@ -8,16 +8,19 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.handlers;
+package therogue.storehouse.client.gui.multisystem;
 
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import therogue.storehouse.client.gui.GuiBase;
 
-public class EventHandlerCommon {
+public interface IBoundedPage {
 	
-	public static final EventHandlerCommon INSTANCE = new EventHandlerCommon();
+	public GuiBase getGui ();
 	
-	@SubscribeEvent
-	public void onPlayerJoinWorldEvent (EntityJoinWorldEvent event) {
-	}
+	public int getUsableXStart ();
+	
+	public int getUsableYStart ();
+	
+	public int getUsableWidth ();
+	
+	public int getUsableHeight ();
 }

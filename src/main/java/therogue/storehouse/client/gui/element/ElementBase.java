@@ -12,26 +12,23 @@ package therogue.storehouse.client.gui.element;
 
 import therogue.storehouse.client.gui.GuiBase;
 
-
-public abstract class ElementBase
-{
+public abstract class ElementBase {
+	
 	public final GuiBase gui;
-
-	public ElementBase(GuiBase gui)
-	{
+	
+	public ElementBase (GuiBase gui) {
 		this.gui = gui;
 	}
-
-	public boolean isVisible()
-	{
+	
+	public boolean isVisible () {
 		return true;
 	}
-
-	public abstract void drawElement(int mouseX, int mouseY);
-
-	public void drawTopLayer(int mouseX, int mouseY)
-	{
-
+	
+	public abstract void drawElement (int mouseX, int mouseY);
+	
+	public void drawTopLayer (int mouseX, int mouseY) {
 	}
-
+	
+	public void onClick (int mouseX, int mouseY, int mouseButton) {
+	}
 }

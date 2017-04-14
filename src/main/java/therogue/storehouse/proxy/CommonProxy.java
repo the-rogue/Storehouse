@@ -37,9 +37,9 @@ public abstract class CommonProxy implements IProxy {
 	public void preInit (FMLPreInitializationEvent event) {
 		loghelper.log("debug", "Common Proxy Started PreInitialisation");
 		MinecraftForge.EVENT_BUS.register(EventHandlerCommon.INSTANCE);
-		CategoryEnum.initCategories();
 		ModItems.preInit();
 		ModBlocks.preInit();
+		CategoryEnum.initCategories();
 		ModTileEntities.preInit();
 		ConfigHandler.preInit(event.getSuggestedConfigurationFile());
 		loghelper.log("debug", "Common Proxy Finished PreInitialisation");

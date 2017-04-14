@@ -16,56 +16,56 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.element.ElementIcon;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.TextureHelper;
 
-public class Category {
+public class Category implements IPageProvider {
 	
 	private final List<IEntry> entries = new ArrayList<IEntry>();
+	public final String name;
 	private int icon_type;
 	private ItemStack itemstack;
 	private ResourceLocation icon;
 	
-	public Category (ItemStack stack) {
+	public Category (String name, ItemStack stack) {
+		this.name = name;
 		this.itemstack = stack;
 		this.icon_type = 1;
 	}
 	
-	public Category (TextureAtlasSprite sprite) {
+	public Category (String name, TextureAtlasSprite sprite) {
+		this.name = name;
 		this.icon = TextureHelper.convertSpritetoLocation(sprite);
 		this.icon_type = 0;
 	}
 	
-	public Category (ResourceLocation icon) {
+	public Category (String name, ResourceLocation icon) {
+		this.name = name;
 		this.icon = icon;
 		this.icon_type = 0;
 	}
 	
-	public ElementIcon addTitle (GuiBase gui, int x, int y, int width, int height) {
+	public ElementIcon addTitle (IBoundedPage pageBounds, int x, int y, int width, int height) {
 		switch (icon_type) {
 			case 0:
-				return new ElementIcon(gui, icon, x, y, width, height);
+				return new ElementIcon(name, this, pageBounds, icon, x, y, width, height);
 			case 1:
-				return new ElementIcon(gui, itemstack, x, y, width, height);
+				return new ElementIcon(name, this, pageBounds, itemstack, x, y, width, height);
 			default:
-				return new ElementIcon(gui, new ResourceLocation(General.MOD_ID, "textures/gui/icons/CategoryGeneric.png"), x, y, width, height);
+				return new ElementIcon(name, this, pageBounds, new ResourceLocation(General.MOD_ID, "textures/gui/icons/CategoryGeneric.png"), x, y, width, height);
 		}
 	}
 	
-	public Runnable addHovering (int mouseX, int mouseY) {
-		return null;
-	}
-	
-	public Page buildPage (GuiBase gui, int xStart, int yStart, int pageWidth, int pageHeight) {
+	@Override
+	public Page getPage (IBoundedPage bounds, int xStart, int yStart, int pageWidth, int pageHeight) {
 		Page page = new Page(1);
 		if (this.entries.size() != 0)
 		{
 			int entriesPerPage = (int) Math.floor(((float) pageHeight) / 8.0), x = xStart, y = yStart;
 			for (IEntry e : entries)
 			{
-				page.addElement(1, e.getTitleBar(x, y, pageWidth, pageHeight));
+				page.addElement(1, e.getTitleBar(bounds, x, y, pageWidth, 8));
 				if (y - yStart + 8 <= 8 * entriesPerPage)
 				{
 					y += 8;

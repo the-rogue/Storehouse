@@ -16,21 +16,31 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.multisystem.IBoundedPage;
+import therogue.storehouse.client.gui.multisystem.IPageProvider;
+import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
+
+import com.google.common.collect.Lists;
 
 public class ElementIcon extends ElementBase {
 	
-	private int icon_type;
-	private ItemStack itemstack;
-	private ResourceLocation icon;
-	private int x;
-	private int y;
-	private int width;
-	private int height;
+	public final String name;
+	public final IPageProvider linked;
+	public final IBoundedPage pageBounds;
+	protected int icon_type;
+	protected ItemStack itemstack;
+	protected ResourceLocation icon;
+	protected int x;
+	protected int y;
+	protected int width;
+	protected int height;
 	
-	public ElementIcon (GuiBase gui, ItemStack stack, int x, int y, int width, int height) {
-		super(gui);
+	public ElementIcon (String name, IPageProvider linked, IBoundedPage pageBounds, ItemStack stack, int x, int y, int width, int height) {
+		super(pageBounds.getGui());
+		this.name = name;
+		this.linked = linked;
+		this.pageBounds = pageBounds;
 		this.itemstack = stack;
 		this.icon_type = 1;
 		this.x = x;
@@ -39,8 +49,11 @@ public class ElementIcon extends ElementBase {
 		this.height = height;
 	}
 	
-	public ElementIcon (GuiBase gui, TextureAtlasSprite sprite, int x, int y, int width, int height) {
-		super(gui);
+	public ElementIcon (String name, IPageProvider linked, IBoundedPage pageBounds, TextureAtlasSprite sprite, int x, int y, int width, int height) {
+		super(pageBounds.getGui());
+		this.name = name;
+		this.linked = linked;
+		this.pageBounds = pageBounds;
 		this.icon = TextureHelper.convertSpritetoLocation(sprite);
 		this.icon_type = 0;
 		this.x = x;
@@ -49,8 +62,11 @@ public class ElementIcon extends ElementBase {
 		this.height = height;
 	}
 	
-	public ElementIcon (GuiBase gui, ResourceLocation icon, int x, int y, int width, int height) {
-		super(gui);
+	public ElementIcon (String name, IPageProvider linked, IBoundedPage pageBounds, ResourceLocation icon, int x, int y, int width, int height) {
+		super(pageBounds.getGui());
+		this.name = name;
+		this.linked = linked;
+		this.pageBounds = pageBounds;
 		this.icon = icon;
 		this.icon_type = 0;
 		this.x = x;
@@ -75,6 +91,23 @@ public class ElementIcon extends ElementBase {
 				RenderHelper.disableStandardItemLighting();
 				GlStateManager.popMatrix();
 			default:
+		}
+	}
+	
+	@Override
+	public void drawTopLayer (int mouseX, int mouseY) {
+		if (GuiHelper.isMouseInRectange(mouseX, mouseY, x, y, width, height))
+		{
+			gui.drawHoveringText(Lists.newArrayList(name), mouseX, mouseY);
+		}
+	}
+	
+	@Override
+	public void onClick (int mouseX, int mouseY, int mouseButton) {
+		if (GuiHelper.isMouseInRectange(mouseX, mouseY, x, y, width, height))
+		{
+			gui.superPage = gui.currentPage;
+			gui.currentPage = linked.getPage(pageBounds, pageBounds.getUsableXStart(), pageBounds.getUsableYStart(), pageBounds.getUsableWidth(), pageBounds.getUsableHeight());
 		}
 	}
 }

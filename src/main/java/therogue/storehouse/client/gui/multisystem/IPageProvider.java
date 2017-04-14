@@ -10,22 +10,7 @@
 
 package therogue.storehouse.client.gui.multisystem;
 
-public class PageWrapper {
+public interface IPageProvider {
 	
-	private final Page homePage;
-	private Page current;
-	private int pageNumber = 1;
-	
-	public PageWrapper (Page HomePage) {
-		this.homePage = HomePage;
-		this.current = HomePage;
-	}
-	
-	public void drawCurrent (int mouseX, int mouseY) {
-		current.drawPage(pageNumber, mouseX, mouseY);
-	}
-	
-	public void setCurrent (Page e) {
-		current = e;
-	}
+	public Page getPage (IBoundedPage bounds, int xStart, int yStart, int pageWidth, int pageHeight);
 }

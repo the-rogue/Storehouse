@@ -42,9 +42,12 @@ import org.lwjgl.input.Keyboard;
 
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
+import therogue.storehouse.client.gui.element.ElementCraftingGrid;
+import therogue.storehouse.client.gui.multisystem.IBoundedPage;
 import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.impl.Entry;
+import therogue.storehouse.client.gui.multisystem.Page;
+import therogue.storehouse.client.gui.multisystem.impl.ItemStackEntry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
@@ -57,6 +60,7 @@ import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorBasic;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorEnder;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
+import therogue.storehouse.type.CategoryEnum;
 import therogue.storehouse.util.loghelper;
 
 public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock, IInfoSupplier {
@@ -205,7 +209,14 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
 	
 	@Override
 	public IEntry getEntry () {
-		return new Entry("generators") {
+		return new ItemStackEntry(CategoryEnum.GENERATORS.category.name, "Solar Generator", new ItemStack(this, 1, 0)) {
+			
+			@Override
+			public Page getPage (IBoundedPage bounds, int xStart, int yStart, int pageWidth, int pageHeight) {
+				Page thisPage = new Page(1);
+				thisPage.addElement(1, new ElementCraftingGrid(bounds.getGui(), bounds.getUsableXStart() + 30, bounds.getUsableYStart() + 30));
+				return thisPage;
+			}
 		};
 	}
 }
