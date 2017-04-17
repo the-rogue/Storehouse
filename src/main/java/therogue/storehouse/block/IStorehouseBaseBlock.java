@@ -18,32 +18,30 @@ import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-
-public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>
-{
+public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
+	
 	/**
 	 * Defines Methods that I need when referencing my block classes elsewhere
 	 */
 	// Convenient because not all blocks extend StorehouseBaseBlock, e.g. Stairs and Slabs
-	@SideOnly(Side.CLIENT)
-	public void registertexture();
-
-	public Block getBlock();
-
-	public String getName();
-
-	public void registerblock();
-
-	public float getblockHardness();
-
-	public float getblockResistance();
-
-	public Material getblockMaterial();
+	@SideOnly (Side.CLIENT)
+	public void registertexture ();
 	
-	public void setDefaultRecipes();
+	public Block getBlock ();
 	
-	public ArrayList<String> getOredictEntrys();
+	public String getName ();
 	
-	public void setOredictEntry(String oredictEntry);
-
+	public void registerblock ();
+	
+	public float getblockHardness ();
+	
+	public float getblockResistance ();
+	
+	public Material getblockMaterial ();
+	
+	public void setDefaultRecipes ();
+	
+	public ArrayList<String> getOredictEntrys ();
+	
+	public void setOredictEntry (String oredictEntry);
 }

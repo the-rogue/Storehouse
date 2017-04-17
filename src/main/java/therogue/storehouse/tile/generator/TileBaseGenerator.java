@@ -73,7 +73,7 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 		for (EnumFacing facing : EnumFacing.values())
 		{
 			if (energyStorage.getEnergyStored() <= 0) return;
-			int sentRF = EnergyUtils.sendEnergy(worldObj, getPos(), facing, energyStorage.extractEnergy(energyStorage.getMaxExtract(), true));
+			int sentRF = EnergyUtils.sendEnergy(world, getPos(), facing, energyStorage.extractEnergy(energyStorage.getMaxExtract(), true));
 			energyStorage.extractEnergy(sentRF, false);
 		}
 	}
@@ -88,7 +88,7 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 	@Override
 	public void update()
 	{
-		if (GeneralUtils.isServerSide(worldObj))
+		if (GeneralUtils.isServerSide(world))
 		{
 			if (isRunning())
 			{
@@ -97,9 +97,9 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 			}
 			tick();
 			this.sendEnergyToNeighbours();
-			if (worldObj != null)
+			if (world != null)
 			{
-				this.worldObj.notifyBlockUpdate(this.getPos(), ModBlocks.azurite_dust_block.getDefaultState(), ModBlocks.azurite_dust_block.getDefaultState(), 0);
+				this.world.notifyBlockUpdate(this.getPos(), ModBlocks.azurite_dust_block.getDefaultState(), ModBlocks.azurite_dust_block.getDefaultState(), 0);
 			}
 		}
 	}

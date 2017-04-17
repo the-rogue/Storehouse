@@ -59,7 +59,7 @@ public class ContainerBase extends Container
 	public boolean canInteractWith(EntityPlayer player)
 	{
 		// TODO Auto-generated method stub
-		return this.teInv.isUseableByPlayer(player);
+		return this.teInv.isUsableByPlayer(player);
 	}
 	
 	@Override
@@ -81,14 +81,14 @@ public class ContainerBase extends Container
 	                return null;
 	        }
 
-	        if (current.stackSize == 0)
+	        if (current.getCount() == 0)
 	            slot.putStack((ItemStack) null);
 	        else
 	            slot.onSlotChanged();
 
-	        if (current.stackSize == previous.stackSize)
+	        if (current.getCount() == previous.getCount())
 	            return null;
-	        slot.onPickupFromSlot(playerIn, current);
+	        slot.onTake(playerIn, current);
 	    }
 	    return previous;
 	}
@@ -105,27 +105,27 @@ public class ContainerBase extends Container
 
         if (stack.isStackable())
         {
-            while (stack.stackSize > 0 && (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex))
+            while (stack.getCount() > 0 && (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex))
             {
                 Slot slot = (Slot)this.inventorySlots.get(i);
                 ItemStack itemstack = slot.getStack();
 
                 if (itemstack != null && ItemUtils.areItemStacksEqual(stack, itemstack))
                 {
-                    int j = itemstack.stackSize + stack.stackSize;
+                    int j = itemstack.getCount() + stack.getCount();
                     int maxSize = Math.min(slot.getSlotStackLimit(), stack.getMaxStackSize());
 
                     if (j <= maxSize)
                     {
-                        stack.stackSize = 0;
-                        itemstack.stackSize = j;
+                        stack.setCount(0);
+                        itemstack.setCount(j);
                         slot.onSlotChanged();
                         flag = true;
                     }
-                    else if (itemstack.stackSize < maxSize)
+                    else if (itemstack.getCount() < maxSize)
                     {
-                        stack.stackSize -= maxSize - itemstack.stackSize;
-                        itemstack.stackSize = maxSize;
+                        stack.setCount(stack.getCount() - (maxSize - itemstack.getCount()));
+                        itemstack.setCount(maxSize);
                         slot.onSlotChanged();
                         flag = true;
                     }
@@ -142,7 +142,7 @@ public class ContainerBase extends Container
             }
         }
 
-        if (stack.stackSize > 0)
+        if (stack.getCount() > 0)
         {
         	i = reverseDirection ? endIndex - 1 : startIndex;
 
@@ -154,12 +154,12 @@ public class ContainerBase extends Container
                 if (itemstack1 == null && slot1.isItemValid(stack)) // Forge: Make sure to respect isItemValid in the slot.
                 {
                 	int maxSize = Math.min(slot1.getSlotStackLimit(), stack.getMaxStackSize());
-                	maxSize = Math.min(maxSize, stack.stackSize);
+                	maxSize = Math.min(maxSize, stack.getCount());
                 	ItemStack newStack = stack.copy();
-                	newStack.stackSize = maxSize;
+                	newStack.setCount(maxSize);
                     slot1.putStack(newStack);
                     slot1.onSlotChanged();
-                    stack.stackSize -= maxSize;
+                    stack.setCount(stack.getCount()- maxSize);
                     flag = true;
                     break;
                 }

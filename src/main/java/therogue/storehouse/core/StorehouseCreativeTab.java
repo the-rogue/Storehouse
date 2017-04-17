@@ -11,27 +11,24 @@
 package therogue.storehouse.core;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.reference.General;
 
-
-public class StorehouseCreativeTab
-{
+public class StorehouseCreativeTab {
+	
 	/**
 	 * This mod's creative tab
 	 */
 	public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(General.MOD_ID) {
-
+		
 		@Override
-		public Item getTabIconItem()
-		{
-			return ModItems.azurite_dust;
+		public ItemStack getTabIconItem () {
+			return new ItemStack(ModItems.azurite_dust);
 		}
-
+		
 		@Override
-		public String getTranslatedTabLabel()
-		{
+		public String getTranslatedTabLabel () {
 			return General.MOD_NAME;
 		}
 	};

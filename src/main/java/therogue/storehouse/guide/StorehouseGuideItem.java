@@ -33,18 +33,18 @@ public class StorehouseGuideItem extends StorehouseBaseActiveItem {
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick (ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-		if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+	public ActionResult<ItemStack> onItemRightClick (World world, EntityPlayer player, EnumHand hand) {
+		if (!player.getHeldItem(hand).hasTagCompound()) player.getHeldItem(hand).setTagCompound(new NBTTagCompound());
 		player.openGui(Storehouse.instance, IDs.STOREHOUSEGUIDEGUI, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+		return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 	}
 	
 	/**
 	 * Called when a Block is right-clicked with this Item
 	 */
 	@Override
-	public EnumActionResult onItemUse (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		return super.onItemUse(stack, player, world, pos, hand, facing, hitX, hitY, hitZ);
+	public EnumActionResult onItemUse (EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	
 	@Override

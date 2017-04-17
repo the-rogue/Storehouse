@@ -10,13 +10,8 @@
 
 package therogue.storehouse.client.gui.element;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.init.ModItems;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.RGBAColor;
 
 public class ElementCraftingGrid extends ElementBase {
 	
@@ -25,25 +20,20 @@ public class ElementCraftingGrid extends ElementBase {
 	
 	public ElementCraftingGrid (GuiBase gui, int left, int top) {
 		super(gui);
-		loghelper.log("info", "creating elementcraftinggrid left: " + left + ", top: " + top);
 		this.left = left;
 		this.top = top;
 	}
 	
 	@Override
 	public void drawElement (int mouseX, int mouseY) {
-		loghelper.logSetTimes("drawcraftinggrid", 2, "drawcraftinggrid");
-		RenderHelper.enableGUIStandardItemLighting();
-		Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(ModItems.azurite_dust, 1, 0), left, top);
-		RenderHelper.disableStandardItemLighting();
-		Gui.drawRect(left + 52, top + 52, left + 72, top + 72, 0);
-		Gui.drawRect(left, top, left + 1, top + 52, 0);
-		Gui.drawRect(left + 1, top, left + 50, top + 1, 0);
-		Gui.drawRect(left + 51, top, left + 52, top + 52, 0);
-		Gui.drawRect(left + 1, top + 51, left + 50, top + 52, 0);
-		Gui.drawRect(left + 17, top + 1, left + 18, top + 51, 0);
-		Gui.drawRect(left + 34, top + 1, left + 35, top + 51, 0);
-		Gui.drawRect(left + 1, top + 17, left + 51, top + 18, 0);
-		Gui.drawRect(left + 1, top + 34, left + 51, top + 35, 0);
+		final RGBAColor black = new RGBAColor(0.0F, 0.0F, 0.0F, 1.0F);
+		GuiBase.drawRect(left, top, left + 1, top + 52, black);
+		GuiBase.drawRect(left + 51, top, left + 52, top + 52, black);
+		GuiBase.drawRect(left + 1, top, left + 51, top + 1, black);
+		GuiBase.drawRect(left + 1, top + 51, left + 51, top + 52, black);
+		GuiBase.drawRect(left + 17, top + 1, left + 18, top + 51, black);
+		GuiBase.drawRect(left + 34, top + 1, left + 35, top + 51, black);
+		GuiBase.drawRect(left + 1, top + 17, left + 51, top + 18, black);
+		GuiBase.drawRect(left + 1, top + 34, left + 51, top + 35, black);
 	}
 }

@@ -29,6 +29,7 @@ import therogue.storehouse.client.gui.multisystem.Page;
 import therogue.storehouse.client.gui.multisystem.impl.MainPage;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.util.RGBAColor;
 import therogue.storehouse.util.TextureHelper;
 
 public class GuiBase extends GuiContainer {
@@ -101,7 +102,7 @@ public class GuiBase extends GuiContainer {
 		GlStateManager.translate((float) this.guiLeft, (float) this.guiTop, 0.0F);
 		for (Slot s : this.inventorySlots.inventorySlots)
 		{
-			this.drawTexturedModalRect(s.xDisplayPosition - 1, s.yDisplayPosition - 1, this.xSize, 0, 18, 18);
+			this.drawTexturedModalRect(s.xPos - 1, s.yPos - 1, this.xSize, 0, 18, 18);
 		}
 		GlStateManager.popMatrix();
 	}
@@ -162,6 +163,26 @@ public class GuiBase extends GuiContainer {
 		vertexbuffer.pos((double) (x + width), (double) (y + 0), 0.0D).tex(1.0D, 0.0D).endVertex();
 		vertexbuffer.pos((double) (x + 0), (double) (y + 0), 0.0D).tex(0.0D, 0.0D).endVertex();
 		tessellator.draw();
+	}
+	
+	/**
+	 * Draws a solid color rectangle with the specified coordinates and color.
+	 */
+	public static void drawRect (int left, int top, int right, int bottom, RGBAColor color) {
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		GlStateManager.enableBlend();
+		GlStateManager.disableTexture2D();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.color(color.red, color.green, color.blue, color.alpha);
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
+		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
+		tessellator.draw();
+		GlStateManager.enableTexture2D();
+		GlStateManager.disableBlend();
 	}
 	
 	public void drawHoveringText (List<String> textLines, int x, int y) {

@@ -14,19 +14,13 @@ import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.machine.StorehouseBaseMachine;
 
-
-public class TileThermalPress extends StorehouseBaseMachine
-{
-
-	public TileThermalPress()
-	{
+public class TileThermalPress extends StorehouseBaseMachine {
+	
+	public TileThermalPress () {
 		super(ModBlocks.thermal_press, MachineTier.basic);
 	}
-
+	
 	@Override
-	public void update()
-	{
-
+	public void update () {
 	}
-
 }

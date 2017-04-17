@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
@@ -27,14 +28,14 @@ public class InventoryManager
 {
 	private IDefaultSidedInventory owner;
 	private InvWrapper inventoryWrapper;
-	private ItemStack[] inventory;
+	private NonNullList<ItemStack> inventory;
 	private int[] extractable_slots;
 	private int[] insertable_slots;
 
 	public InventoryManager(IDefaultSidedInventory owner, int size, @Nullable int[] insertable_slots, @Nullable int[] extractable_slots)
 	{
 		this.owner = owner;
-		inventory = new ItemStack[size];
+		inventory = NonNullList.<ItemStack>withSize(size, ItemStack.EMPTY);
 
 		inventoryWrapper = new InvWrapper(owner) {
 			@Override
@@ -53,13 +54,13 @@ public class InventoryManager
 		        if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
 		        	return stack;
 		        
-		        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.stackSize : 0);
+		        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
 		        
 		        ItemStack toInsert = stack.splitStack(m);
-		        toInsert.stackSize += (flag ? stackInSlot.stackSize : 0);
+		        toInsert.setCount(toInsert.getCount()+ (flag ? stackInSlot.getCount() : 0));
 		        setInventorySlotContents(slot, toInsert);
 		        owner.markDirty();
-		        return stack.stackSize <= 0 ? null : stack;
+		        return stack.getCount() <= 0 ? null : stack;
 			}
 
 			@Override
@@ -103,14 +104,14 @@ public class InventoryManager
 
 	public int getSizeInventory()
 	{
-		return inventory.length;
+		return inventory.size();
 	}
 
 	public ItemStack getStackInSlot(int index)
 	{
 		if (checkIndex(index))
 		{
-			return inventory[index];
+			return inventory.get(index);
 		}
 		return null;
 	}
@@ -139,24 +140,24 @@ public class InventoryManager
         if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
         	return stack;
         
-        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.stackSize : 0);
+        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
         
         ItemStack toInsert = stack.splitStack(m);
-        toInsert.stackSize += (flag ? stackInSlot.stackSize : 0);
+        toInsert.setCount(toInsert.getCount() + (flag ? stackInSlot.getCount() : 0));
         setInventorySlotContents(slot, toInsert);
         owner.markDirty();
-        return stack.stackSize <= 0 ? null : stack;
+        return stack.getCount() <= 0 ? null : stack;
     }
 
 	public void setInventorySlotContents(int index, ItemStack stack)
 	{
 		if (checkIndex(index))
 		{
-			inventory[index] = stack;
+			inventory.set(index, stack);
 		}
-		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+		if (stack != null && stack.getCount() > this.getInventoryStackLimit())
 		{
-			stack.stackSize = this.getInventoryStackLimit();
+			stack.setCount(this.getInventoryStackLimit());
 		}
 	}
 
@@ -207,16 +208,13 @@ public class InventoryManager
 
 	public void clear()
 	{
-		for (int i = 0; i < this.inventory.length; ++i)
-		{
-			this.inventory[i] = null;
-		}
+		this.inventory.clear();
 	}
 
 	public int[] getSlotsForFace(EnumFacing side)
 	{
-		int[] ret = new int[inventory.length];
-		for (int i = 0; i < inventory.length; i++)
+		int[] ret = new int[inventory.size()];
+		for (int i = 0; i < inventory.size(); i++)
 		{
 			ret[i] = i;
 		}
@@ -246,7 +244,7 @@ public class InventoryManager
 
 	public boolean checkIndex(int index)
 	{
-		if (index >= 0 && index < inventory.length)
+		if (index >= 0 && index < inventory.size())
 		{
 			return true;
 		}
@@ -276,11 +274,15 @@ public class InventoryManager
 		{
 			NBTTagCompound stackTag = list.getCompoundTagAt(i);
 			int slot = stackTag.getByte("Slot") & 255;
-			this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
+			this.setInventorySlotContents(slot, new ItemStack(stackTag));
 		}
 	}
 	public IDefaultSidedInventory getOwner(){
 		return owner;
+	}
+	
+	public boolean isEmpty() {
+		return false;
 	}
 
 }

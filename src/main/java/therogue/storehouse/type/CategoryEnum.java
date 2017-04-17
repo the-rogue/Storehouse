@@ -11,8 +11,8 @@
 package therogue.storehouse.type;
 
 import net.minecraft.item.ItemStack;
+import therogue.storehouse.client.gui.guide.GuideGui;
 import therogue.storehouse.client.gui.multisystem.Category;
-import therogue.storehouse.client.gui.multisystem.SystemManager;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.tile.MachineTier;
@@ -36,7 +36,7 @@ public enum CategoryEnum
 	public static void initCategories () {
 		for (CategoryEnum c : values())
 		{
-			SystemManager.categories.put(c.category.name, c.category);
+			GuideGui.categories.put(c.category.name, c.category);
 		}
 	}
 }

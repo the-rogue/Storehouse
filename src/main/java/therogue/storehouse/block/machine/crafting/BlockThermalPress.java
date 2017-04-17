@@ -10,19 +10,12 @@
 
 package therogue.storehouse.block.machine.crafting;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
-import therogue.storehouse.client.gui.multisystem.IBoundedPage;
-import therogue.storehouse.client.gui.multisystem.IEntry;
-import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.Page;
-import therogue.storehouse.client.gui.multisystem.impl.ItemStackEntry;
 import therogue.storehouse.tile.machine.crafting.TileThermalPress;
-import therogue.storehouse.type.CategoryEnum;
 
-public class BlockThermalPress extends StorehouseBaseTileBlock implements IInfoSupplier {
+public class BlockThermalPress extends StorehouseBaseTileBlock {
 	
 	public BlockThermalPress (String name) {
 		super(name);
@@ -31,19 +24,7 @@ public class BlockThermalPress extends StorehouseBaseTileBlock implements IInfoS
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
 		TileThermalPress tile = new TileThermalPress();
-		tile.setWorldObj(worldIn);
+		tile.setWorld(worldIn);
 		return tile;
-	}
-	
-	@Override
-	public IEntry getEntry () {
-		return new ItemStackEntry(CategoryEnum.MACHINES.category.name, "Thermal Press", new ItemStack(this, 1, 0)) {
-			
-			@Override
-			public Page getPage (IBoundedPage bounds, int xStart, int yStart, int pageWidth, int pageHeight) {
-				Page thisPage = new Page(1);
-				return thisPage;
-			}
-		};
 	}
 }

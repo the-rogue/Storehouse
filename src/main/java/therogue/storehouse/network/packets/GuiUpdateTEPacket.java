@@ -73,7 +73,7 @@ public class GuiUpdateTEPacket implements IMessage
 					@Override
 					public void run()
 					{
-						WorldClient world = Minecraft.getMinecraft().theWorld;
+						WorldClient world = Minecraft.getMinecraft().world;
 						if (world.isBlockLoaded(message.getPos())){
 							TileEntity te = world.getTileEntity(message.getPos());
 							if(te != null && te instanceof StorehouseBaseTileEntity){

@@ -78,7 +78,7 @@ public interface IDefaultSidedInventory extends ISidedInventory
     /**
      * Don't rename this method to canInteractWith due to conflicts with Container
      */
-    default boolean isUseableByPlayer(EntityPlayer player){
+    default boolean isUsableByPlayer(EntityPlayer player){
     	return getInventoryManager().isUseableByPlayer(player);
     }
 
@@ -119,4 +119,9 @@ public interface IDefaultSidedInventory extends ISidedInventory
     default boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
     	return getInventoryManager().canExtractItem(index, stack, direction);
     }
+    
+	default boolean isEmpty () {
+		return getInventoryManager().isEmpty();
+	}
+
 }

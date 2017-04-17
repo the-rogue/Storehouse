@@ -8,9 +8,19 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.client.gui.multisystem;
+package therogue.storehouse.util;
 
-public interface IInfoSupplier {
+public class RGBAColor {
 	
-	public IEntry getEntry ();
+	public final float red;
+	public final float green;
+	public final float blue;
+	public final float alpha;
+	
+	public RGBAColor (float red, float green, float blue, float alpha) {
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
+		this.alpha = alpha;
+	}
 }

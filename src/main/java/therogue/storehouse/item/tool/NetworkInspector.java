@@ -20,18 +20,12 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
-import therogue.storehouse.client.gui.multisystem.IBoundedPage;
-import therogue.storehouse.client.gui.multisystem.IEntry;
-import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.Page;
-import therogue.storehouse.client.gui.multisystem.impl.ItemStackEntry;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.ConfigValues;
-import therogue.storehouse.type.CategoryEnum;
 import cofh.api.energy.IEnergyContainerItem;
 
-public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem, IInfoSupplier {
+public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem {
 	
 	public NetworkInspector (String name) {
 		super(name);
@@ -66,20 +60,8 @@ public class NetworkInspector extends StorehouseBaseActiveItem implements IEnerg
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick (ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
-		player.addChatComponentMessage(new TextComponentString("Energy Stored: " + itemStack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored()));
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
-	}
-	
-	@Override
-	public IEntry getEntry () {
-		return new ItemStackEntry(CategoryEnum.TOOLS.category.name, "Network Inspector", new ItemStack(this, 1, 0)) {
-			
-			@Override
-			public Page getPage (IBoundedPage bounds, int xStart, int yStart, int pageWidth, int pageHeight) {
-				Page thisPage = new Page(1);
-				return thisPage;
-			}
-		};
+	public ActionResult<ItemStack> onItemRightClick (World world, EntityPlayer player, EnumHand hand) {
+		player.sendStatusMessage(new TextComponentString("Energy Stored: " + player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored()), false);
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 	}
 }

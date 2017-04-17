@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -42,12 +43,6 @@ import org.lwjgl.input.Keyboard;
 
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.block.StorehouseBaseTileBlock;
-import therogue.storehouse.client.gui.element.ElementCraftingGrid;
-import therogue.storehouse.client.gui.multisystem.IBoundedPage;
-import therogue.storehouse.client.gui.multisystem.IEntry;
-import therogue.storehouse.client.gui.multisystem.IInfoSupplier;
-import therogue.storehouse.client.gui.multisystem.Page;
-import therogue.storehouse.client.gui.multisystem.impl.ItemStackEntry;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
@@ -60,10 +55,9 @@ import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorBasic;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorEnder;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
 import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
-import therogue.storehouse.type.CategoryEnum;
 import therogue.storehouse.util.loghelper;
 
-public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock, IInfoSupplier {
+public class BlockSolarGenerator extends StorehouseBaseTileBlock implements IStorehouseVariantBlock {
 	
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D);
 	public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
@@ -106,7 +100,7 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
 	}
 	
 	@Override
-	public void getSubBlocks (Item item, CreativeTabs tab, List<ItemStack> list) {
+	public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (MachineTier g : MachineTier.values())
 		{
 			list.add(new ItemStack(item, 1, GeneratorUtils.getMeta(g)));
@@ -199,24 +193,11 @@ public class BlockSolarGenerator extends StorehouseBaseTileBlock implements ISto
 	}
 	
 	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote)
 		{
 			player.openGui(Storehouse.instance, IDs.SOLARGENERATORGUI, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
-	}
-	
-	@Override
-	public IEntry getEntry () {
-		return new ItemStackEntry(CategoryEnum.GENERATORS.category.name, "Solar Generator", new ItemStack(this, 1, 0)) {
-			
-			@Override
-			public Page getPage (IBoundedPage bounds, int xStart, int yStart, int pageWidth, int pageHeight) {
-				Page thisPage = new Page(1);
-				thisPage.addElement(1, new ElementCraftingGrid(bounds.getGui(), bounds.getUsableXStart() + 30, bounds.getUsableYStart() + 30));
-				return thisPage;
-			}
-		};
 	}
 }

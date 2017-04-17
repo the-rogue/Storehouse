@@ -49,7 +49,7 @@ public class TileSolarGenerator extends TileBaseGenerator implements ITickable
 	@Override
 	public boolean isRunning()
 	{
-		return BlockUtils.canBlockSeeSky(this.pos, this.worldObj) && (this.worldObj.getWorldInfo().getWorldTime() % 24000) < 12000;
+		return BlockUtils.canBlockSeeSky(this.pos, this.world) && (this.world.getWorldInfo().getWorldTime() % 24000) < 12000;
 	}
 
 	@Override

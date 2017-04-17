@@ -10,22 +10,28 @@
 
 package therogue.storehouse.client.gui.guide;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.multisystem.Category;
 import therogue.storehouse.client.gui.multisystem.IBoundedPage;
-import therogue.storehouse.client.gui.multisystem.SystemManager;
+import therogue.storehouse.client.gui.multisystem.IEntry;
 import therogue.storehouse.reference.General;
+import therogue.storehouse.type.CategoryEnum;
 
 public class GuideGui extends GuiBase implements IBoundedPage {
 	
+	public static final HashMap<String, Category> categories = new HashMap<String, Category>();
+	public static final ArrayList<IEntry> entries = new ArrayList<IEntry>();
 	public static final ResourceLocation TEXTURE = new ResourceLocation(General.MOD_ID, "textures/gui/StorehouseGuide.png");
 	
 	public GuideGui (Container inventorySlotsIn) {
 		super(TEXTURE, inventorySlotsIn);
 		int entriesPerPage = (int) Math.floor(112.0 / 32.0), x = 16, y = 32;
-		for (Category c : SystemManager.categories.values())
+		for (Category c : categories.values())
 		{
 			homePage.addElement(c.addTitle(this, x, y, 24, 24));
 			if (x - 16 + 24 >= 32 * entriesPerPage)
@@ -65,5 +71,22 @@ public class GuideGui extends GuiBase implements IBoundedPage {
 	@Override
 	public int getUsableHeight () {
 		return 180;
+	}
+	
+	public static void getEntries () {
+	}
+	
+	public static void init () {
+		for (IEntry e : entries)
+		{
+			if (categories.get(e.getCategory()) == null)
+			{
+				categories.get(CategoryEnum.OTHER.category.name).addEntry(e);
+			}
+			else
+			{
+				categories.get(e.getCategory()).addEntry(e);
+			}
+		}
 	}
 }
