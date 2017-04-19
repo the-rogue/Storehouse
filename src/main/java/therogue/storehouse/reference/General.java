@@ -12,19 +12,18 @@ package therogue.storehouse.reference;
 
 import net.minecraft.util.text.TextFormatting;
 
-public class General
-{
+public class General {
+	
 	/**
 	 * Stores all general values for the mod
 	 */
 	public static final String MOD_ID = "storehouse";
 	public static final String MOD_NAME = "Storehouse Expansion";
-	public static final String VERSION = "1.10.2-0.1.0";
-	public static final String MC_VERSIONS = "[1.10.2]";
+	public static final String VERSION = "1.11.2-0.1.0";
+	public static final String MC_VERSIONS = "[1.11.2]";
 	public static final String FINGERPRINT = "";
 	public static final String SERVER_PROXY_CLASS = "therogue.storehouse.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "therogue.storehouse.proxy.ClientProxy";
 	public static final String GUI_FACTORY = "therogue.storehouse.client.gui.config.StorehouseGuiFactory";
-	
 	public static final String SHIFTINFO = TextFormatting.WHITE + "" + TextFormatting.ITALIC + "Hold Shift For More Info";
 }

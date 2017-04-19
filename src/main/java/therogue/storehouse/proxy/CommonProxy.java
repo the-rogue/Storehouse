@@ -24,7 +24,6 @@ import therogue.storehouse.init.ModItems;
 import therogue.storehouse.init.ModTileEntities;
 import therogue.storehouse.init.Recipes;
 import therogue.storehouse.init.RegOreDictionary;
-import therogue.storehouse.type.CategoryEnum;
 import therogue.storehouse.util.loghelper;
 import therogue.storehouse.world.StorehouseWorldGen;
 
@@ -39,7 +38,6 @@ public abstract class CommonProxy implements IProxy {
 		MinecraftForge.EVENT_BUS.register(EventHandlerCommon.INSTANCE);
 		ModItems.preInit();
 		ModBlocks.preInit();
-		CategoryEnum.initCategories();
 		ModTileEntities.preInit();
 		ConfigHandler.preInit(event.getSuggestedConfigurationFile());
 		loghelper.log("debug", "Common Proxy Finished PreInitialisation");

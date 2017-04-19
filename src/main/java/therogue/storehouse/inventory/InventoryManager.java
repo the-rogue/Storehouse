@@ -42,8 +42,8 @@ public class InventoryManager
 			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 			{
 				if (!canInsertItem(slot, stack, null)) return stack;
-		        if (stack == null)
-		            return null;
+		        if (stack == null || stack.isEmpty())
+		            return ItemStack.EMPTY;
 
 		        if (!isItemValidForSlot(slot, stack))
 		            return stack;
@@ -66,7 +66,7 @@ public class InventoryManager
 			@Override
 			public ItemStack extractItem(int slot, int amount, boolean simulate)
 			{
-				if (!canExtractItem(slot, null, null)) return null;
+				if (!canExtractItem(slot, null, null)) return ItemStack.EMPTY;
 				return super.extractItem(slot, amount, simulate);
 			}
 		};
@@ -113,7 +113,7 @@ public class InventoryManager
 		{
 			return inventory.get(index);
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public ItemStack decrStackSize(int index, int count)
@@ -128,15 +128,15 @@ public class InventoryManager
 	
     public ItemStack pushItems(int slot, ItemStack stack)
     {
-        if (stack == null)
-            return null;
+        if (stack == null || stack.isEmpty())
+            return ItemStack.EMPTY;
 
         if (!isItemValidForSlotChecks(slot, stack))
             return stack;
 
         ItemStack stackInSlot = getStackInSlot(slot);
         
-        boolean flag = stackInSlot != null;
+        boolean flag = stackInSlot != null && !stackInSlot.isEmpty();
         if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
         	return stack;
         
@@ -146,7 +146,7 @@ public class InventoryManager
         toInsert.setCount(toInsert.getCount() + (flag ? stackInSlot.getCount() : 0));
         setInventorySlotContents(slot, toInsert);
         owner.markDirty();
-        return stack.getCount() <= 0 ? null : stack;
+        return stack.getCount() <= 0 ? ItemStack.EMPTY : stack;
     }
 
 	public void setInventorySlotContents(int index, ItemStack stack)

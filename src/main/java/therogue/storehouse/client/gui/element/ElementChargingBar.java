@@ -15,48 +15,39 @@ import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.util.TextureHelper;
 
-
-public class ElementChargingBar extends ElementProgressBar
-{
-
-	public ElementChargingBar(GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField)
-	{
+public class ElementChargingBar extends ElementProgressBar {
+	
+	public ElementChargingBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField) {
 		super(gui, x, y, iconLocation, stateChanger, progressField, maxProgressField);
 	}
-
+	
 	@Override
-	public float getMinU(float progress)
-	{
+	public float getMinU (float progress) {
 		return 0.0F;
 	}
-
+	
 	@Override
-	public float getMinV(float progress)
-	{
+	public float getMinV (float progress) {
 		return 1.0F - TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
 	}
-
+	
 	@Override
-	public float getMaxU(float progress)
-	{
+	public float getMaxU (float progress) {
 		return 1.0F;
 	}
-
+	
 	@Override
-	public float getMaxV(float progress)
-	{
+	public float getMaxV (float progress) {
 		return 1.0F;
 	}
-
+	
 	@Override
-	public int getWidth(float progress)
-	{
+	public int getWidth (float progress) {
 		return icon.getWidth();
 	}
-
+	
 	@Override
-	public int getHeight(float progress)
-	{
+	public int getHeight (float progress) {
 		return TextureHelper.calculateLength(icon.getHeight(), progress);
 	}
 }

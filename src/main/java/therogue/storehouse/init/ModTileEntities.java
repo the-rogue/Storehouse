@@ -12,12 +12,12 @@ package therogue.storehouse.init;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorAdvanced;
-import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorBasic;
-import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorEnder;
-import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorInfused;
-import therogue.storehouse.tile.generator.placeholder.TileSolarGeneratorUltimate;
-import therogue.storehouse.tile.machine.crafting.TileThermalPress;
+import therogue.storehouse.tile.machine.TileThermalPress;
+import therogue.storehouse.tile.machine.generator.TileSolarGeneratorAdvanced;
+import therogue.storehouse.tile.machine.generator.TileSolarGeneratorBasic;
+import therogue.storehouse.tile.machine.generator.TileSolarGeneratorEnder;
+import therogue.storehouse.tile.machine.generator.TileSolarGeneratorInfused;
+import therogue.storehouse.tile.machine.generator.TileSolarGeneratorUltimate;
 
 public class ModTileEntities
 {

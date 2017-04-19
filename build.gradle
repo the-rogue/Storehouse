@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-version = "1.10.2-0.1.0"
+version = "1.11.2-0.1.0"
 group= "therogue.Storehouse" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Storehouse"
 
@@ -55,7 +55,7 @@ dependencies {
     //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     
-	deobfCompile "MCMultiPart:MCMultiPart:1.4.0:universal"
+	deobfCompile "MCMultiPart2:MCMultiPart-exp:2.0.0_18"
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11-2.1.0-51"
 	
     // for more info...

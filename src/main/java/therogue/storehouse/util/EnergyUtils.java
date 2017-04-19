@@ -51,7 +51,7 @@ public class EnergyUtils
 
 	public static int sendItemEnergy(ItemStack energyItem, int maxRFToGive)
 	{
-		if (energyItem == null || maxRFToGive <= 0)
+		if (energyItem == null || energyItem.isEmpty() || maxRFToGive <= 0)
 		{
 			return 0;
 		}
@@ -70,7 +70,7 @@ public class EnergyUtils
 	}
 	
 	public static boolean isItemFull(ItemStack energyItem){
-		if (energyItem == null)
+		if (energyItem == null || energyItem.isEmpty())
 		{
 			return false;
 		}

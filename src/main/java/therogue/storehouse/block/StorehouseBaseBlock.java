@@ -19,14 +19,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import therogue.storehouse.client.render.blocks.BlockRender;
+import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.loghelper;
 
 
-public abstract class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
+public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 {
 	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 	/**

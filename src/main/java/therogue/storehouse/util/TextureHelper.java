@@ -14,15 +14,14 @@ import java.awt.image.BufferedImage;
 import java.io.Closeable;
 import java.io.IOException;
 
+import org.apache.commons.io.IOUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
-
-import org.apache.commons.io.IOUtils;
-
 import therogue.storehouse.client.gui.element.ElementBase;
 
 public class TextureHelper

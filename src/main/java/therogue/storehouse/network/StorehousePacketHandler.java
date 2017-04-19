@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import therogue.storehouse.network.packets.GuiUpdateTEPacket;
 import therogue.storehouse.reference.General;
 
 public class StorehousePacketHandler

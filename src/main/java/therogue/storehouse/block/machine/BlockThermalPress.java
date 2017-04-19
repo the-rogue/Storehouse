@@ -8,17 +8,22 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.handlers;
+package therogue.storehouse.block.machine;
 
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import therogue.storehouse.tile.machine.TileThermalPress;
 
-public class EventHandlerCommon {
+public class BlockThermalPress extends StorehouseBaseMachine {
 	
-	public static final EventHandlerCommon INSTANCE = new EventHandlerCommon();
+	public BlockThermalPress (String name) {
+		super(name);
+	}
 	
-	@SubscribeEvent
-	public void onPlayerJoinWorldEvent (EntityJoinWorldEvent event) {
-		
+	@Override
+	public TileEntity createNewTileEntity (World worldIn, int meta) {
+		TileThermalPress tile = new TileThermalPress();
+		tile.setWorld(worldIn);
+		return tile;
 	}
 }

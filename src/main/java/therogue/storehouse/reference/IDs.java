@@ -10,16 +10,12 @@
 
 package therogue.storehouse.reference;
 
-public class IDs
-{
+public class IDs {
+	
 	/**
 	 * Stores all values relating to IDs for the mod except the ModID
 	 */
 	public static final String RESOURCENAMEPREFIX = General.MOD_ID + ":";
-	
 	public static final int NULLGUI = -1;
 	public static final int SOLARGENERATORGUI = 0;
-	public static final int STOREHOUSEGUIDEGUI = 1;
-	
-	
 }

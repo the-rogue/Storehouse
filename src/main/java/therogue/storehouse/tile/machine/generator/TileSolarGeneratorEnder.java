@@ -8,17 +8,14 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.handlers;
+package therogue.storehouse.tile.machine.generator;
 
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import therogue.storehouse.tile.MachineTier;
 
-public class EventHandlerCommon {
-	
-	public static final EventHandlerCommon INSTANCE = new EventHandlerCommon();
-	
-	@SubscribeEvent
-	public void onPlayerJoinWorldEvent (EntityJoinWorldEvent event) {
-		
+public class TileSolarGeneratorEnder extends TileSolarGenerator
+{
+	public TileSolarGeneratorEnder()
+	{
+		super(MachineTier.ender);
 	}
 }

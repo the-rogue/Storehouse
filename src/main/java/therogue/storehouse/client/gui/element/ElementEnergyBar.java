@@ -16,7 +16,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.render.icons.StorehouseIcons;
+import therogue.storehouse.reference.Icons;
 import therogue.storehouse.util.TextureHelper;
 
 
@@ -25,7 +25,7 @@ public class ElementEnergyBar extends ElementProgressBar
 
 	public ElementEnergyBar(GuiBase gui, int x, int y, IInventory stateChanger, int progressField, int maxProgressField)
 	{
-		super(gui, x, y, StorehouseIcons.EnergyBar.getLocation(), stateChanger, progressField, maxProgressField);
+		super(gui, x, y, Icons.EnergyBar.getLocation(), stateChanger, progressField, maxProgressField);
 	}
 
 	@Override

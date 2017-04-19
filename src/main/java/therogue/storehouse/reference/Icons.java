@@ -8,17 +8,23 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.handlers;
+package therogue.storehouse.reference;
 
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.util.ResourceLocation;
 
-public class EventHandlerCommon {
+public enum Icons
+{
+	EnergyIndicator ("textures/gui/icons/EnergyIndicator.png"),
+	SolarGenOn ("textures/gui/icons/SolarGenOn.png"),
+	EnergyBar ("textures/gui/icons/EnergyBar.png");
 	
-	public static final EventHandlerCommon INSTANCE = new EventHandlerCommon();
+	private String location;
 	
-	@SubscribeEvent
-	public void onPlayerJoinWorldEvent (EntityJoinWorldEvent event) {
-		
+	private Icons (String location) {
+		this.location = IDs.RESOURCENAMEPREFIX + location;
+	}
+	
+	public ResourceLocation getLocation () {
+		return new ResourceLocation(location);
 	}
 }

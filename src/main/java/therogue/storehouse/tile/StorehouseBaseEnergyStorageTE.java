@@ -18,7 +18,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyStorageAdv;
-import therogue.storehouse.network.packets.GuiUpdateTEPacket;
+import therogue.storehouse.network.GuiUpdateTEPacket;
 
 
 public abstract class StorehouseBaseEnergyStorageTE extends StorehouseBaseTileEntity implements ITickable, IEnergyStorage

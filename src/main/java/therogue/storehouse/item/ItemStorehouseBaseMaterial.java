@@ -8,17 +8,15 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.handlers;
+package therogue.storehouse.item;
 
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-public class EventHandlerCommon {
-	
-	public static final EventHandlerCommon INSTANCE = new EventHandlerCommon();
-	
-	@SubscribeEvent
-	public void onPlayerJoinWorldEvent (EntityJoinWorldEvent event) {
-		
+public class ItemStorehouseBaseMaterial extends StorehouseBaseItem
+{
+	/**
+	 * Constructs a generic item used in crafting
+	 */
+	public ItemStorehouseBaseMaterial(String name)
+	{
+		super(name);
 	}
 }

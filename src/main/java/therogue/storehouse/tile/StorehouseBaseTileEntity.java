@@ -17,7 +17,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.network.packets.GuiUpdateTEPacket;
+import therogue.storehouse.network.GuiUpdateTEPacket;
 
 
 /*

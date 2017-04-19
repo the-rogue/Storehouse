@@ -31,7 +31,7 @@ public abstract class ElementProgressBar extends ElementBase
 	public final int progressField;
 	public final int maxProgressField;
 
-	public ElementProgressBar(GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField)
+	public ElementProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField)
 	{
 		super(gui);
 		this.iconLocation = iconLocation;

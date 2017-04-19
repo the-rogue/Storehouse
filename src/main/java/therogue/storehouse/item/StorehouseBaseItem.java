@@ -13,7 +13,7 @@ package therogue.storehouse.item;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.client.render.items.ItemRender;
+import therogue.storehouse.client.init.ItemRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;

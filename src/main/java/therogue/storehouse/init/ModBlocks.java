@@ -16,30 +16,27 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseOre;
-import therogue.storehouse.block.Decorative.StorehouseBaseDecorativeBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
 import therogue.storehouse.block.Decorative.StorehouseBaseStair;
-import therogue.storehouse.block.machine.crafting.BlockThermalPress;
-import therogue.storehouse.block.machine.generator.BlockSolarGenerator;
+import therogue.storehouse.block.machine.BlockSolarGenerator;
+import therogue.storehouse.block.machine.BlockThermalPress;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
 
-
-@GameRegistry.ObjectHolder(General.MOD_ID)
-public class ModBlocks
-{
+@GameRegistry.ObjectHolder (General.MOD_ID)
+public class ModBlocks {
+	
 	/**
 	 * Initialises a new array to hold all the blocks
 	 */
 	public static ArrayList<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
-
 	/**
 	 * Initialises all the blocks
 	 */
-	public static final StorehouseBaseBlock azurite_dust_block = new StorehouseBaseDecorativeBlock("azurite_dust_block");
-	public static final StorehouseBaseBlock azurite_crystal_block = new StorehouseBaseDecorativeBlock("azurite_crystal_block");
-	public static final StorehouseBaseBlock azurite_crystal_block_chiseled = new StorehouseBaseDecorativeBlock("azurite_crystal_block_chiseled");
+	public static final StorehouseBaseBlock azurite_dust_block = new StorehouseBaseBlock("azurite_dust_block");
+	public static final StorehouseBaseBlock azurite_crystal_block = new StorehouseBaseBlock("azurite_crystal_block");
+	public static final StorehouseBaseBlock azurite_crystal_block_chiseled = new StorehouseBaseBlock("azurite_crystal_block_chiseled");
 	public static final StorehouseBaseRotatedBlock azurite_crystal_block_pillar = new StorehouseBaseRotatedBlock(azurite_crystal_block, "pillar");
 	public static final StorehouseBaseStair azurite_dust_block_stair = new StorehouseBaseStair(azurite_dust_block);
 	public static final StorehouseBaseSlab.Half azurite_dust_block_half_slab = new StorehouseBaseSlab.Half(azurite_dust_block);
@@ -50,7 +47,6 @@ public class ModBlocks
 	public static final StorehouseBaseBlock azurite_ore_block = new StorehouseBaseOre("azurite_ore_block", ModItems.azurite_dust, 3, 6);
 	public static final StorehouseBaseBlock solar_generator = new BlockSolarGenerator("solar_generator");
 	public static final StorehouseBaseBlock thermal_press = new BlockThermalPress("thermal_press");
-
 	/**
 	 * Adds all the blocks to the array
 	 */
@@ -73,12 +69,11 @@ public class ModBlocks
 		blocklist.add(solar_generator);
 		blocklist.add(thermal_press);
 	}
-
+	
 	/**
 	 * Registers all the blocks
 	 */
-	public static void preInit()
-	{
+	public static void preInit () {
 		loghelper.log("debug", "Registering Blocks");
 		for (IStorehouseBaseBlock block : blocklist)
 		{

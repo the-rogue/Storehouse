@@ -25,7 +25,7 @@ import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.loghelper;
 
-@Mod (modid = General.MOD_ID, name = General.MOD_NAME, version = General.VERSION, acceptedMinecraftVersions = General.MC_VERSIONS, useMetadata = true, guiFactory = General.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json")
+@Mod (modid = General.MOD_ID, name = General.MOD_NAME, version = General.VERSION, acceptedMinecraftVersions = General.MC_VERSIONS, useMetadata = true, guiFactory = General.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json", dependencies = "before:guideapi")
 public class Storehouse {
 	
 	/**

@@ -14,8 +14,9 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -25,8 +26,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
-import therogue.storehouse.client.gui.multisystem.Page;
-import therogue.storehouse.client.gui.multisystem.impl.MainPage;
+import therogue.storehouse.client.gui.element.ElementBase;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.util.RGBAColor;
@@ -35,10 +35,7 @@ import therogue.storehouse.util.TextureHelper;
 public class GuiBase extends GuiContainer {
 	
 	protected ResourceLocation texture;
-	protected final MainPage homePage = new MainPage();
-	public Page currentPage = homePage;
-	public Page superPage = homePage;
-	private int pageNumber = 1;
+	protected List<ElementBase> elements = Lists.<ElementBase> newArrayList();
 	
 	public GuiBase (IInventory linked, Container inventorySlotsIn) {
 		super(inventorySlotsIn);
@@ -77,20 +74,6 @@ public class GuiBase extends GuiContainer {
 		return texture;
 	}
 	
-	protected void nextPage () {
-		if (pageNumber + 1 <= currentPage.getNumberOfPages())
-		{
-			++pageNumber;
-		}
-	}
-	
-	protected void previousPage () {
-		if (pageNumber > 1)
-		{
-			--pageNumber;
-		}
-	}
-	
 	@Override
 	protected void drawGuiContainerBackgroundLayer (float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -110,9 +93,15 @@ public class GuiBase extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY) {
 		GlStateManager.enableAlpha();
-		this.zLevel = 0.0F;
-		currentPage.drawPage(pageNumber, mouseX - this.guiLeft, mouseY - this.guiTop);
-		Gui.drawRect(50, 50, 60, 60, 0);
+		int x = mouseX - this.guiLeft, y = mouseY - this.guiTop;
+		for (ElementBase e : elements)
+		{
+			e.drawElement(x, y);
+		}
+		for (ElementBase e : elements)
+		{
+			e.drawTopLayer(x, y);
+		}
 		GlStateManager.disableAlpha();
 	}
 	
@@ -121,7 +110,11 @@ public class GuiBase extends GuiContainer {
 	 */
 	protected void mouseClicked (int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		currentPage.mouseClicked(pageNumber, mouseX - this.guiLeft, mouseY - this.guiTop, mouseButton);
+		int x = mouseX - this.guiLeft, y = mouseY - this.guiTop;
+		for (ElementBase e : elements)
+		{
+			e.onClick(x, y, mouseButton);
+		}
 	}
 	
 	/**

@@ -64,7 +64,7 @@ public class ContainerBase extends Container
 	
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot) {
-	    ItemStack previous = null;
+	    ItemStack previous = ItemStack.EMPTY;
 	    Slot slot = (Slot) this.inventorySlots.get(fromSlot);
 
 	    if (slot != null && slot.getHasStack()) {
@@ -74,20 +74,20 @@ public class ContainerBase extends Container
 	        if (fromSlot >= 36) {
 	            // From TE Inventory to Player Inventory (HotBar)
 	            if (!this.mergeItemStack(current, 0, 36, true))
-	                return null;
+	                return ItemStack.EMPTY;
 	        } else {
 	            // From Player Inventory to TE Inventory
 	            if (!this.mergeItemStack(current, 36, this.inventorySlots.size(), false))
-	                return null;
+	                return ItemStack.EMPTY;
 	        }
 
 	        if (current.getCount() == 0)
-	            slot.putStack((ItemStack) null);
+	            slot.putStack(ItemStack.EMPTY);
 	        else
 	            slot.onSlotChanged();
 
 	        if (current.getCount() == previous.getCount())
-	            return null;
+	            return ItemStack.EMPTY;
 	        slot.onTake(playerIn, current);
 	    }
 	    return previous;
