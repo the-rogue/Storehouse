@@ -108,12 +108,23 @@ public class GuiBase extends GuiContainer {
 	/**
 	 * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
 	 */
+	@Override
 	protected void mouseClicked (int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		int x = mouseX - this.guiLeft, y = mouseY - this.guiTop;
 		for (ElementBase e : elements)
 		{
 			e.onClick(x, y, mouseButton);
+		}
+	}
+	
+	@Override
+	protected void mouseReleased (int mouseX, int mouseY, int state) {
+		super.mouseReleased(mouseX, mouseY, state);
+		int x = mouseX - this.guiLeft, y = mouseY - this.guiTop;
+		for (ElementBase e : elements)
+		{
+			e.onRelease(x, y, state);
 		}
 	}
 	

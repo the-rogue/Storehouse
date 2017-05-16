@@ -81,6 +81,10 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseEnergyStorageT
 		return inventory;
 	}
 	
+	/**
+	 * Fields Used:
+	 *  #1 - Machine Tier
+	 */
 	@Override
 	public int getField(int id)
 	{

@@ -31,4 +31,7 @@ public abstract class ElementBase {
 	
 	public void onClick (int mouseX, int mouseY, int mouseButton) {
 	}
+	
+	public void onRelease (int mouseX, int mouseY, int state) {
+	}
 }

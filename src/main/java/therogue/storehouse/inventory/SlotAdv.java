@@ -10,34 +10,29 @@
 
 package therogue.storehouse.inventory;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SlotAdv extends Slot
-{
+public class SlotAdv extends Slot {
+	
 	protected final InventoryManager manager;
-
-	public SlotAdv(InventoryManager inventoryIn, int index, int xPosition, int yPosition)
-	{
+	
+	public SlotAdv (InventoryManager inventoryIn, int index, int xPosition, int yPosition) {
 		super(inventoryIn.getOwner(), index, xPosition, yPosition);
 		manager = inventoryIn;
 	}
-
-    /**
-     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-     */
-    public boolean isItemValid(@Nullable ItemStack stack)
-    {
-        return inventory.isItemValidForSlot(getSlotIndex(), stack);
-    }
-    /**
-     * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the case
-     * of armor slots)
-     */
-    public int getSlotStackLimit()
-    {
-        return this.manager.getInventoryStackLimit(getSlotIndex());
-    }
+	
+	/**
+	 * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
+	 */
+	public boolean isItemValid (ItemStack stack) {
+		return inventory.isItemValidForSlot(getSlotIndex(), stack);
+	}
+	
+	/**
+	 * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the case of armor slots)
+	 */
+	public int getSlotStackLimit () {
+		return this.manager.getInventoryStackLimit(getSlotIndex());
+	}
 }

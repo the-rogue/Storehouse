@@ -14,9 +14,12 @@ import net.minecraft.util.ResourceLocation;
 
 public enum Icons
 {
-	EnergyIndicator ("textures/gui/icons/EnergyIndicator.png"),
-	SolarGenOn ("textures/gui/icons/SolarGenOn.png"),
-	EnergyBar ("textures/gui/icons/EnergyBar.png");
+	EnergyIndicator ("textures/gui/icons/energyindicator.png"),
+	SolarGenOn ("textures/gui/icons/solargenon.png"),
+	EnergyBar ("textures/gui/icons/energybar.png"),
+	CombustionIndicator ("textures/gui/icons/combustionindicator.png"),
+	FluidTank ("textures/gui/icons/fluidtank.png"),
+	Button ("textures/gui/icons/button.png");
 	
 	private String location;
 	

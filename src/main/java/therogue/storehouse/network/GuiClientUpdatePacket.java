@@ -11,28 +11,27 @@
 package therogue.storehouse.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import therogue.storehouse.tile.StorehouseBaseTileEntity;
+import therogue.storehouse.tile.IClientPacketReciever;
 import therogue.storehouse.util.NetworkUtils;
 import therogue.storehouse.util.loghelper;
 
-public class GuiUpdateTEPacket implements IMessage {
+public class GuiClientUpdatePacket implements IMessage {
 	
 	private BlockPos pos;
 	private NBTTagCompound nbt;
 	
-	public GuiUpdateTEPacket () {
+	public GuiClientUpdatePacket () {
 	}
 	
-	public GuiUpdateTEPacket (BlockPos pos, NBTTagCompound nbt) {
+	public GuiClientUpdatePacket (BlockPos pos, NBTTagCompound nbt) {
 		this.pos = pos;
 		this.nbt = nbt;
 	}
@@ -57,23 +56,23 @@ public class GuiUpdateTEPacket implements IMessage {
 		return nbt;
 	}
 	
-	public static class GuiUpdateTEPacketHandler implements IMessageHandler<GuiUpdateTEPacket, IMessage> {
+	public static class GuiClientUpdatePacketHandler implements IMessageHandler<GuiClientUpdatePacket, IMessage> {
 		
 		@Override
-		public IMessage onMessage (GuiUpdateTEPacket message, MessageContext ctx) {
-			if (ctx.netHandler instanceof INetHandlerPlayClient)
+		public IMessage onMessage (GuiClientUpdatePacket message, MessageContext ctx) {
+			if (ctx.netHandler instanceof INetHandlerPlayServer)
 			{
-				Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+				ctx.getServerHandler().playerEntity.getServerWorld().addScheduledTask(new Runnable() {
 					
 					@Override
 					public void run () {
-						WorldClient world = Minecraft.getMinecraft().world;
+						WorldServer world = ctx.getServerHandler().playerEntity.getServerWorld();
 						if (world.isBlockLoaded(message.getPos()))
 						{
 							TileEntity te = world.getTileEntity(message.getPos());
-							if (te != null && te instanceof StorehouseBaseTileEntity)
+							if (te != null && te instanceof IClientPacketReciever)
 							{
-								StorehouseBaseTileEntity stoTE = (StorehouseBaseTileEntity) te;
+								IClientPacketReciever stoTE = (IClientPacketReciever) te;
 								stoTE.processGUIPacket(message);
 							}
 							else

@@ -10,8 +10,15 @@
 
 package therogue.storehouse.block.machine;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import therogue.storehouse.core.Storehouse;
+import therogue.storehouse.reference.IDs;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class BlockThermalPress extends StorehouseBaseMachine {
@@ -25,5 +32,14 @@ public class BlockThermalPress extends StorehouseBaseMachine {
 		TileThermalPress tile = new TileThermalPress();
 		tile.setWorld(worldIn);
 		return tile;
+	}
+	
+	@Override
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote)
+		{
+			player.openGui(Storehouse.instance, IDs.THERMALPRESSGUI, world, pos.getX(), pos.getY(), pos.getZ());
+		}
+		return true;
 	}
 }

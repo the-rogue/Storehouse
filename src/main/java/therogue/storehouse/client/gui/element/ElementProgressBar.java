@@ -20,9 +20,8 @@ import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
-
-public abstract class ElementProgressBar extends ElementBase
-{
+public abstract class ElementProgressBar extends ElementBase {
+	
 	public final BufferedImage icon;
 	public final ResourceLocation iconLocation;
 	public final int x;
@@ -30,9 +29,8 @@ public abstract class ElementProgressBar extends ElementBase
 	public final IInventory stateChanger;
 	public final int progressField;
 	public final int maxProgressField;
-
-	public ElementProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField)
-	{
+	
+	public ElementProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField) {
 		super(gui);
 		this.iconLocation = iconLocation;
 		this.icon = TextureHelper.getImageAt(iconLocation);
@@ -42,28 +40,27 @@ public abstract class ElementProgressBar extends ElementBase
 		this.progressField = progressField;
 		this.maxProgressField = maxProgressField;
 	}
-
+	
 	@Override
-	public void drawElement(int mouseX, int mouseY)
-	{
+	public void drawElement (int mouseX, int mouseY) {
 		if (icon == null) return;
-		float progress = (float) stateChanger.getField(progressField) / (float) stateChanger.getField(maxProgressField);
+		float progress = (float) stateChanger.getField(progressField) / (stateChanger.getField(maxProgressField) != 0 ? (float) stateChanger.getField(maxProgressField) : 1);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		TextureHelper.bindTexture(this, iconLocation);
-		gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth()/2, icon.getHeight(), GuiHelper.getColor(MachineTier.values()[stateChanger.getField(1)]));
+		gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight(), GuiHelper.getColor(MachineTier.values()[stateChanger.getField(1)]));
 		TextureHelper.bindTexture(this, iconLocation);
-		gui.drawTexturedModalRect(x + (icon.getWidth() - getWidth(progress))/2, y + icon.getHeight() - getHeight(progress), getMinU(progress)/2, getMinV(progress), getMaxU(progress)/2, getMaxV(progress), getWidth(progress)/2, getHeight(progress));
+		gui.drawTexturedModalRect(x + (icon.getWidth() - getWidth(progress)) / 2, y + icon.getHeight() - getHeight(progress), getMinU(progress) / 2, getMinV(progress), getMaxU(progress) / 2, getMaxV(progress), getWidth(progress) / 2, getHeight(progress));
 	}
-
-	public abstract float getMinU(float progress);
-
-	public abstract float getMinV(float progress);
-
-	public abstract float getMaxU(float progress);
-
-	public abstract float getMaxV(float progress);
-
-	public abstract int getWidth(float progress);
-
-	public abstract int getHeight(float progress);
+	
+	public abstract float getMinU (float progress);
+	
+	public abstract float getMinV (float progress);
+	
+	public abstract float getMaxU (float progress);
+	
+	public abstract float getMaxV (float progress);
+	
+	public abstract int getWidth (float progress);
+	
+	public abstract int getHeight (float progress);
 }

@@ -18,4 +18,7 @@ public class IDs {
 	public static final String RESOURCENAMEPREFIX = General.MOD_ID + ":";
 	public static final int NULLGUI = -1;
 	public static final int SOLARGENERATORGUI = 0;
+	public static final int COMBUSTIONGENERATORGUI = 1;
+	public static final int LIQUIDGENERATORGUI = 2;
+	public static final int THERMALPRESSGUI = 3;
 }

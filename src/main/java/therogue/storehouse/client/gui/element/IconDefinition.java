@@ -8,11 +8,20 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.reference;
+package therogue.storehouse.client.gui.element;
 
-public class MachineStats
-{
-	public static final int SOLARGENPERTICK = 1;
-	public static final int COMBUSTIONGENPERTICK = 2;
-	public static final int LIQUIDGENPERTICK = 2;
+import net.minecraft.util.ResourceLocation;
+
+public class IconDefinition {
+	
+	public final ResourceLocation icon;
+	public final int x, y, width, height;
+	
+	public IconDefinition (ResourceLocation icon, int x, int y, int width, int height) {
+		this.icon = icon;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
 }

@@ -10,16 +10,72 @@
 
 package therogue.storehouse.tile.machine;
 
+import net.minecraft.nbt.NBTTagCompound;
 import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.network.GuiClientUpdatePacket;
+import therogue.storehouse.network.StorehousePacketHandler;
+import therogue.storehouse.tile.IClientPacketReciever;
 import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.util.GeneralUtils;
 
-public class TileThermalPress extends StorehouseBaseMachine {
+public class TileThermalPress extends StorehouseBaseMachine implements IClientPacketReciever {
+	
+	private Mode mode = Mode.PRESS;
 	
 	public TileThermalPress () {
-		super(ModBlocks.thermal_press, MachineTier.basic);
+		super(ModBlocks.thermal_press, MachineTier.advanced);
+		inventory = new InventoryManager(this, 0, null, null);
 	}
 	
 	@Override
 	public void update () {
+	}
+	
+	@Override
+	public int getField (int id) {
+		switch (id) {
+			case 2:
+				return mode.ordinal();
+			default:
+				return super.getField(id);
+		}
+	}
+	
+	@Override
+	public void setField (int id, int value) {
+		switch (id) {
+			case 2:
+				modeUpdate(value);
+				NBTTagCompound sendtag = new NBTTagCompound();
+				sendtag.setInteger("type", 0);
+				sendtag.setInteger("mode", this.mode.ordinal());
+				StorehousePacketHandler.INSTANCE.sendToServer(new GuiClientUpdatePacket(this.getPos(), sendtag));
+			default:
+				super.setField(id, value);
+		}
+	}
+	
+	private void modeUpdate (int mode) {
+		Mode m = GeneralUtils.getEnumFromNumber(Mode.class, mode);
+		this.mode = m != null ? m : this.mode;
+	}
+	
+	@Override
+	public void processGUIPacket (GuiClientUpdatePacket message) {
+		NBTTagCompound nbt = message.getNbt();
+		switch (nbt.getInteger("type")) {
+			case 0:
+				modeUpdate(message.getNbt().getInteger("mode"));
+				break;
+		}
+	}
+	
+	public enum Mode
+	{
+		PRESS,
+		JOIN,
+		STAMP,
+		HIGH_PRESSURE;
 	}
 }

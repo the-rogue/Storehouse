@@ -49,7 +49,7 @@ public class ElementActiveIcon extends ElementBase {
 			if (stateChanger.getField(activeField) == 1)
 			{
 				TextureHelper.bindTexture(this, iconLocation);
-				gui.drawTexturedModalRect(x, y, 0.0F, 0.0F, 0.5F, 1.0F, icon.getWidth() / 2, icon.getHeight());// 0.941176471F, 0.956862745F, 0.976470588F,
+				gui.drawTexturedModalRect(x, y, 0.0F, 0.0F, 0.5F, 1.0F, icon.getWidth() / 2, icon.getHeight());
 			}
 		}
 	}

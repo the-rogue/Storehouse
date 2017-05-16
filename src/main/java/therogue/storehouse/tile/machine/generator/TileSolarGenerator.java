@@ -10,74 +10,59 @@
 
 package therogue.storehouse.tile.machine.generator;
 
+import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.CapabilityEnergy;
-import therogue.storehouse.container.machine.generator.ContainerSolarGenerator;
+import therogue.storehouse.container.machine.ContainerSolarGenerator;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.util.BlockUtils;
 import therogue.storehouse.util.EnergyUtils;
-import cofh.api.energy.IEnergyContainerItem;
 
-
-public class TileSolarGenerator extends TileBaseGenerator implements ITickable
-{
-	public TileSolarGenerator(MachineTier type)
-	{
+public class TileSolarGenerator extends TileBaseGenerator implements ITickable {
+	
+	public TileSolarGenerator (MachineTier type) {
 		super(ModBlocks.solar_generator, type, MachineStats.SOLARGENPERTICK, false);
 		inventory = new InventoryManager(this, 2, new int[] { 0 }, new int[] { 1 }) {
+			
 			@Override
-			public boolean isItemValidForSlotChecks(int index, ItemStack stack)
-			{
+			public boolean isItemValidForSlotChecks (int index, ItemStack stack) {
 				return stack.getItem() instanceof IEnergyContainerItem || stack.hasCapability(CapabilityEnergy.ENERGY, null);
-			}
-
-			@Override
-			public int getInventoryStackLimit(int slot)
-			{
-				return 1;
 			}
 		};
 	}
-
+	
 	@Override
-	public boolean isRunning()
-	{
+	public boolean isRunning () {
 		return BlockUtils.canBlockSeeSky(this.pos, this.world) && (this.world.getWorldInfo().getWorldTime() % 24000) < 12000;
 	}
-
+	
 	@Override
-	protected void tick()
-	{
+	protected void tick () {
 		this.sendEnergyToItems(0);
 		if (EnergyUtils.isItemFull(inventory.getStackInSlot(0)))
 		{
 			inventory.setInventorySlotContents(0, inventory.pushItems(1, inventory.getStackInSlot(0)));
 		}
 	}
-
+	
 	@Override
-	protected void doRunTick()
-	{
-
+	protected void doRunTick () {
 	}
-
+	
 	@Override
-	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
-	{
+	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
 		return new ContainerSolarGenerator(playerInventory, this);
 	}
-
+	
 	@Override
-	public String getGuiID()
-	{
+	public String getGuiID () {
 		return "storehouse:" + ModBlocks.solar_generator.getName() + "." + type.getName();
 	}
-
 }

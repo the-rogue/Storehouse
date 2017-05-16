@@ -8,11 +8,15 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.reference;
+package therogue.storehouse.tile.machine.generator;
 
-public class MachineStats
+import therogue.storehouse.tile.MachineTier;
+
+public class TileCombustionGeneratorAdvanced extends TileCombustionGenerator
 {
-	public static final int SOLARGENPERTICK = 1;
-	public static final int COMBUSTIONGENPERTICK = 2;
-	public static final int LIQUIDGENPERTICK = 2;
+
+	public TileCombustionGeneratorAdvanced()
+	{
+		super(MachineTier.advanced);
+	}
 }

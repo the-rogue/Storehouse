@@ -10,7 +10,10 @@
 
 package therogue.storehouse.util;
 
+import java.util.List;
+
 import net.minecraft.world.World;
+import scala.actors.threadpool.Arrays;
 
 public class GeneralUtils
 {
@@ -19,5 +22,15 @@ public class GeneralUtils
 	}
 	public static boolean isClientSide(World world) {
 		return world.isRemote;
+	}
+	@SuppressWarnings ("unchecked")
+	public static <E extends Enum<E>> E getEnumFromNumber(Class<? extends Enum<E>> enumtype, int number) {
+		List<E> constants = Arrays.asList(enumtype.getEnumConstants());
+		for (E element : constants) {
+			if (element.ordinal() == number) {
+				return element;
+			}
+		}
+		return null;
 	}
 }

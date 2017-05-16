@@ -110,6 +110,25 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 	
 	public abstract boolean isRunning();
 	
+	public int runtimeLeft() {
+		return 0;
+	}
+	
+	public int maxruntime(){
+		return 0;
+	}
+	
+	/**
+	 * Fields Used:
+	 *  #1 - Machine Tier
+	 *  #2 - Running?
+	 *  #3 - Current item energy level
+	 *  #4 - Max item level
+	 *  #5 - Current energy stored
+	 *  #6 - Max energy stored
+	 *  #7 - Current burn time left
+	 *  #8 - Max burn time for this fuel
+	 */
 	@Override
 	public int getField(int id)
 	{
@@ -122,11 +141,11 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 				return isRunning() ? 1 : 0;
 			case 3:
 				stack = inventory.getStackInSlot(0);
-				if (stack != null && stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem)
+				if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem)
 				{
 					return ((IEnergyContainerItem) stack.getItem()).getEnergyStored(stack);
 				}
-				else if (stack != null && stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
+				else if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
 				{
 					return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
 				}
@@ -136,11 +155,11 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 				}
 			case 4:
 				stack = inventory.getStackInSlot(0);
-				if (stack != null && stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem)
+				if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem)
 				{
 					return ((IEnergyContainerItem) stack.getItem()).getMaxEnergyStored(stack);
 				}
-				else if (stack != null && stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
+				else if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
 				{
 					return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
 				}
@@ -152,6 +171,10 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 				return energyStorage.getEnergyStored();
 			case 6:
 				return energyStorage.getMaxEnergyStored();
+			case 7:
+				return runtimeLeft();
+			case 8:
+				return maxruntime();
 			default:
 				return 0;
 		}
@@ -168,7 +191,7 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 	@Override
 	public int getFieldCount()
 	{
-		return 6;
+		return 8;
 	}
 	
 	@Override

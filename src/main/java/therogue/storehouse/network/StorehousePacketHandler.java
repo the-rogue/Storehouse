@@ -17,18 +17,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import therogue.storehouse.reference.General;
 
-public class StorehousePacketHandler
-{
-	private static int ID = 0;
+public class StorehousePacketHandler {
 	
+	private static int ID = 0;
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(General.MOD_ID);
 	
-	public static <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side){
+	public static <REQ extends IMessage, REPLY extends IMessage> void registerPacket (Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {
 		StorehousePacketHandler.INSTANCE.registerMessage(messageHandler, requestMessageType, ID++, side);
 	}
 	
-	static {
+	static
+	{
 		StorehousePacketHandler.registerPacket(GuiUpdateTEPacket.GuiUpdateTEPacketHandler.class, GuiUpdateTEPacket.class, Side.CLIENT);
+		StorehousePacketHandler.registerPacket(GuiClientUpdatePacket.GuiClientUpdatePacketHandler.class, GuiClientUpdatePacket.class, Side.SERVER);
 	}
-
 }

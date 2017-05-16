@@ -26,6 +26,30 @@ public class GeneratorUtils
 		return new EnergyStorageAdv(baseCapacity * modifier + baseCapacity * baseModifier, baseRecieve * modifier + baseRecieve * baseModifier, baseExtract * modifier + baseExtract * baseModifier);
 	}
 	
+	public static int getTotalModifier(int meta) {
+		return getTotalModifier(getTypeFromMeta(meta));
+	}
+	
+	public static int getTotalModifier(MachineTier tier) {
+		return getModifier(tier) + getBaseModifier(tier);
+	}
+	
+	public static int getModifier(int meta) {
+		return getModifier(getTypeFromMeta(meta));
+	}
+	
+	public static int getModifier(MachineTier tier) {
+		return (int) Math.pow(9, tier.ordinal());
+	}
+	
+	public static int getBaseModifier(int meta) {
+		return getBaseModifier(getTypeFromMeta(meta));
+	}
+	
+	public static int getBaseModifier(MachineTier tier) {
+		return tier.ordinal();
+	}
+	
 	public static int getRecieve(int meta, int baseRecieve)
 	{
 		return getRecieve(getTypeFromMeta(meta), baseRecieve);

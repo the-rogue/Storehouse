@@ -8,30 +8,25 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.container.machine.generator;
+package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
 import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.inventory.SlotAdv;
-import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
+import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
 
-public class ContainerSolarGenerator extends ContainerBase
-{
-/*
- * SLOTS:
- * 
- * Player's Inventory (HotBar) 0 - 8..0 - 8
- * Player's Inventory (Main) 9 - 35...9 - 35
- * TileSolarGenerator 36, 37..........0 , 1
- */
-	public ContainerSolarGenerator(IInventory playerInv, TileSolarGenerator teInv)
-	{
+public class ContainerCombustionGenerator extends ContainerBase {
+	
+	/*
+	 * SLOTS:
+	 * 
+	 * Player's Inventory (HotBar) 0 - 8..0 - 8 Player's Inventory (Main) 9 - 35...9 - 35 TileSolarGenerator 36, 37..........0 , 1
+	 */
+	public ContainerCombustionGenerator (IInventory playerInv, TileCombustionGenerator teInv) {
 		super(playerInv, teInv);
-		
 		// Add Solar Generator's Inventory Slot IDs 36,37
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 0, 30, 53));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 1, 30, 17));
-		
+		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 0, 30, 17));
+		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 1, 66, 17));
+		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 2, 48, 53));
 	}
-
 }

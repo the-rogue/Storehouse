@@ -8,11 +8,15 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.reference;
+package therogue.storehouse.container.machine;
 
-public class MachineStats
-{
-	public static final int SOLARGENPERTICK = 1;
-	public static final int COMBUSTIONGENPERTICK = 2;
-	public static final int LIQUIDGENPERTICK = 2;
+import net.minecraft.inventory.IInventory;
+import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.tile.StorehouseBaseTileEntity;
+
+public class ContainerThermalPress extends ContainerBase {
+	
+	public ContainerThermalPress (IInventory playerInv, StorehouseBaseTileEntity teInv) {
+		super(playerInv, teInv);
+	}
 }
