@@ -280,7 +280,7 @@ public class InventoryManager
 	public IDefaultSidedInventory getOwner(){
 		return owner;
 	}
-	
+
 	public boolean isEmpty() {
 		return false;
 	}

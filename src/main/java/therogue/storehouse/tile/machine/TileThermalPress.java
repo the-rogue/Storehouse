@@ -10,6 +10,7 @@
 
 package therogue.storehouse.tile.machine;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
@@ -25,7 +26,12 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	
 	public TileThermalPress () {
 		super(ModBlocks.thermal_press, MachineTier.advanced);
-		inventory = new InventoryManager(this, 0, null, null);
+		inventory = new InventoryManager(this, 8, new int[] { 1, 2, 3, 4, 5, 6, 7 }, new int[] { 0 }) {
+			
+			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
+				return true;
+			}
+		};
 	}
 	
 	@Override

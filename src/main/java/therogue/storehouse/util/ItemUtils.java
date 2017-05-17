@@ -28,6 +28,11 @@ public class ItemUtils {
 		return stackA.getCount() + stackB.getCount() <= limit && areItemStacksMergable(stackA, stackB);
 	}
 	
+	public static boolean areItemStacksEqual (ItemStack stack1, ItemStack stack2, boolean useMeta) {
+		if (!stack1.isEmpty() && stack1.getItem() == stack2.getItem() && !((stack1.getHasSubtypes() || useMeta) && stack1.getMetadata() != stack2.getMetadata())) return true;
+		return false;
+	}
+	
 	public static ItemStack mergeStacks (int limit, boolean modifyStacks, ItemStack... stacks) {
 		if (stacks == null || stacks.length <= 0)
 		{
