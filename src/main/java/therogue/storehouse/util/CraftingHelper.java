@@ -13,7 +13,10 @@ package therogue.storehouse.util;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import therogue.storehouse.crafting.RecipeInput;
 
 public class CraftingHelper {
@@ -42,8 +45,16 @@ public class CraftingHelper {
 		{
 			for (int i = 0; i < list.size(); i++)
 			{
-				if ((stack.isEmpty() && list.get(i).isEmpty()) || ItemUtils.areItemStacksEqual(stack, list.get(i), useMeta)) { return i; }
+				if (list.get(i).matches(stack)) { return i; }
 			}
+		}
+		return -1;
+	}
+	
+	public static int getMachedCraftingIndex (@Nonnull NonNullList<ItemStack> selection, RecipeInput comparison) {
+		for (int i = 0; i < selection.size(); i++)
+		{
+			if (comparison.matches(selection.get(i))) { return i; }
 		}
 		return -1;
 	}

@@ -12,7 +12,6 @@ package therogue.storehouse.inventory;
 
 import javax.annotation.Nullable;
 
-import therogue.storehouse.util.BlockUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -22,55 +21,43 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import therogue.storehouse.util.BlockUtils;
 
-
-public class InventoryManager
-{
+public class InventoryManager {
+	
 	private IDefaultSidedInventory owner;
 	private InvWrapper inventoryWrapper;
 	private NonNullList<ItemStack> inventory;
 	private int[] extractable_slots;
 	private int[] insertable_slots;
-
-	public InventoryManager(IDefaultSidedInventory owner, int size, @Nullable int[] insertable_slots, @Nullable int[] extractable_slots)
-	{
+	
+	public InventoryManager (IDefaultSidedInventory owner, int size, @Nullable int[] insertable_slots, @Nullable int[] extractable_slots) {
 		this.owner = owner;
-		inventory = NonNullList.<ItemStack>withSize(size, ItemStack.EMPTY);
-
+		inventory = NonNullList.<ItemStack> withSize(size, ItemStack.EMPTY);
 		inventoryWrapper = new InvWrapper(owner) {
+			
 			@Override
-			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
-			{
+			public ItemStack insertItem (int slot, ItemStack stack, boolean simulate) {
 				if (!canInsertItem(slot, stack, null)) return stack;
-		        if (stack == null || stack.isEmpty())
-		            return ItemStack.EMPTY;
-
-		        if (!isItemValidForSlot(slot, stack))
-		            return stack;
-
-		        ItemStack stackInSlot = getStackInSlot(slot);
-		        
-		        boolean flag = stackInSlot != null;
-		        if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
-		        	return stack;
-		        
-		        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
-		        
-		        ItemStack toInsert = stack.splitStack(m);
-		        toInsert.setCount(toInsert.getCount()+ (flag ? stackInSlot.getCount() : 0));
-		        setInventorySlotContents(slot, toInsert);
-		        owner.markDirty();
-		        return stack.getCount() <= 0 ? null : stack;
+				if (stack.isEmpty()) return stack;
+				if (!isItemValidForSlot(slot, stack)) return stack;
+				ItemStack stackInSlot = getStackInSlot(slot);
+				boolean flag = stackInSlot != null;
+				if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot)) return stack;
+				int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
+				ItemStack toInsert = stack.splitStack(m);
+				toInsert.setCount(toInsert.getCount() + (flag ? stackInSlot.getCount() : 0));
+				setInventorySlotContents(slot, toInsert);
+				owner.markDirty();
+				return stack;
 			}
-
+			
 			@Override
-			public ItemStack extractItem(int slot, int amount, boolean simulate)
-			{
+			public ItemStack extractItem (int slot, int amount, boolean simulate) {
 				if (!canExtractItem(slot, null, null)) return ItemStack.EMPTY;
 				return super.extractItem(slot, amount, simulate);
 			}
 		};
-
 		if (extractable_slots == null)
 		{
 			this.extractable_slots = new int[size];
@@ -96,61 +83,59 @@ public class InventoryManager
 			this.insertable_slots = insertable_slots;
 		}
 	}
-
-	public InvWrapper getWrapper()
-	{
+	
+	public InvWrapper getWrapper () {
 		return inventoryWrapper;
 	}
-
-	public int getSizeInventory()
-	{
+	
+	public int getSizeInventory () {
 		return inventory.size();
 	}
-
-	public ItemStack getStackInSlot(int index)
-	{
-		if (checkIndex(index))
-		{
-			return inventory.get(index);
-		}
+	
+	public ItemStack getStackInSlot (int index) {
+		if (checkIndex(index)) { return inventory.get(index); }
 		return ItemStack.EMPTY;
 	}
-
-	public ItemStack decrStackSize(int index, int count)
-	{
+	
+	public NonNullList<ItemStack> getStacksInSlots (int minIndex, int maxIndex) {
+		NonNullList<ItemStack> returns = NonNullList.create();
+		for (int i = minIndex; i <= maxIndex; i++)
+		{
+			if (checkIndex(i))
+			{
+				returns.add(inventory.get(i));
+			}
+		}
+		if (returns.isEmpty())
+		{
+			returns.add(ItemStack.EMPTY);
+		}
+		return returns;
+	}
+	
+	public ItemStack decrStackSize (int index, int count) {
 		return ItemStackHelper.getAndSplit(this.inventory, index, count);
 	}
-
-	public ItemStack removeStackFromSlot(int index)
-	{
+	
+	public ItemStack removeStackFromSlot (int index) {
 		return ItemStackHelper.getAndRemove(this.inventory, index);
 	}
 	
-    public ItemStack pushItems(int slot, ItemStack stack)
-    {
-        if (stack == null || stack.isEmpty())
-            return ItemStack.EMPTY;
-
-        if (!isItemValidForSlotChecks(slot, stack))
-            return stack;
-
-        ItemStack stackInSlot = getStackInSlot(slot);
-        
-        boolean flag = stackInSlot != null && !stackInSlot.isEmpty();
-        if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
-        	return stack;
-        
-        int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
-        
-        ItemStack toInsert = stack.splitStack(m);
-        toInsert.setCount(toInsert.getCount() + (flag ? stackInSlot.getCount() : 0));
-        setInventorySlotContents(slot, toInsert);
-        owner.markDirty();
-        return stack.getCount() <= 0 ? ItemStack.EMPTY : stack;
-    }
-
-	public void setInventorySlotContents(int index, ItemStack stack)
-	{
+	public ItemStack pushItems (int slot, ItemStack stack) {
+		if (stack == null || stack.isEmpty()) return ItemStack.EMPTY;
+		if (!isItemValidForSlotChecks(slot, stack)) return stack;
+		ItemStack stackInSlot = getStackInSlot(slot);
+		boolean flag = stackInSlot != null && !stackInSlot.isEmpty();
+		if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot)) return stack;
+		int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
+		ItemStack toInsert = stack.splitStack(m);
+		toInsert.setCount(toInsert.getCount() + (flag ? stackInSlot.getCount() : 0));
+		setInventorySlotContents(slot, toInsert);
+		owner.markDirty();
+		return stack.getCount() <= 0 ? ItemStack.EMPTY : stack;
+	}
+	
+	public void setInventorySlotContents (int index, ItemStack stack) {
 		if (checkIndex(index))
 		{
 			inventory.set(index, stack);
@@ -159,60 +144,50 @@ public class InventoryManager
 		{
 			stack.setCount(this.getInventoryStackLimit());
 		}
+		owner.onInventoryChange();
 	}
-
-	public int getInventoryStackLimit()
-	{
+	
+	public int getInventoryStackLimit () {
 		return 64;
 	}
-	public int getInventoryStackLimit(int slot)
-	{
+	
+	public int getInventoryStackLimit (int slot) {
 		switch (slot) {
-		default:
-			return 64;
+			default:
+				return 64;
 		}
 	}
-
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
+	
+	public boolean isUseableByPlayer (EntityPlayer player) {
 		return BlockUtils.isUsableByPlayer(this.owner.getTileEntity(), player);
 	}
-
-	public void openInventory(EntityPlayer player)
-	{
+	
+	public void openInventory (EntityPlayer player) {
 	}
-
-	public void closeInventory(EntityPlayer player)
-	{
+	
+	public void closeInventory (EntityPlayer player) {
 	}
-
-	public boolean isItemValidForSlot(int index, ItemStack stack)
-	{
+	
+	public boolean isItemValidForSlot (int index, ItemStack stack) {
 		if (isItemValidForSlotChecks(index, stack))
 		{
 			for (int i : insertable_slots)
 			{
-				if (i == index)
-				{
-					return true;
-				}
+				if (i == index) { return true; }
 			}
 		}
 		return false;
 	}
-
-	protected boolean isItemValidForSlotChecks(int index, ItemStack stack)
-	{
+	
+	protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
 		return true;
 	}
-
-	public void clear()
-	{
+	
+	public void clear () {
 		this.inventory.clear();
 	}
-
-	public int[] getSlotsForFace(EnumFacing side)
-	{
+	
+	public int[] getSlotsForFace (EnumFacing side) {
 		int[] ret = new int[inventory.size()];
 		for (int i = 0; i < inventory.size(); i++)
 		{
@@ -220,39 +195,26 @@ public class InventoryManager
 		}
 		return ret;
 	}
-
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
-	{
-		if (isItemValidForSlot(index, itemStackIn))
-		{
-			return true;
-		}
+	
+	public boolean canInsertItem (int index, ItemStack itemStackIn, EnumFacing direction) {
+		if (isItemValidForSlot(index, itemStackIn)) { return true; }
 		return false;
 	}
-
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-	{
+	
+	public boolean canExtractItem (int index, ItemStack stack, EnumFacing direction) {
 		for (int i : extractable_slots)
 		{
-			if (i == index)
-			{
-				return true;
-			}
+			if (i == index) { return true; }
 		}
 		return false;
 	}
-
-	public boolean checkIndex(int index)
-	{
-		if (index >= 0 && index < inventory.size())
-		{
-			return true;
-		}
+	
+	public boolean checkIndex (int index) {
+		if (index >= 0 && index < inventory.size()) { return true; }
 		return false;
 	}
-
-	public void writeToNBT(NBTTagCompound nbt)
-	{
+	
+	public void writeToNBT (NBTTagCompound nbt) {
 		NBTTagList list = new NBTTagList();
 		for (int i = 0; i < this.getSizeInventory(); ++i)
 		{
@@ -266,9 +228,8 @@ public class InventoryManager
 		}
 		nbt.setTag("Items", list);
 	}
-
-	public void readFromNBT(NBTTagCompound nbt)
-	{
+	
+	public void readFromNBT (NBTTagCompound nbt) {
 		NBTTagList list = nbt.getTagList("Items", 10);
 		for (int i = 0; i < list.tagCount(); ++i)
 		{
@@ -277,12 +238,12 @@ public class InventoryManager
 			this.setInventorySlotContents(slot, new ItemStack(stackTag));
 		}
 	}
-	public IDefaultSidedInventory getOwner(){
+	
+	public IDefaultSidedInventory getOwner () {
 		return owner;
 	}
-
-	public boolean isEmpty() {
+	
+	public boolean isEmpty () {
 		return false;
 	}
-
 }

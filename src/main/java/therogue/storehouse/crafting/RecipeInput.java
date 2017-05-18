@@ -10,6 +10,10 @@
 
 package therogue.storehouse.crafting;
 
+import javax.annotation.Nonnull;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
@@ -17,30 +21,39 @@ import therogue.storehouse.util.ItemUtils;
 
 public class RecipeInput {
 	
+	public static final RecipeInput EMPTY = new RecipeInput(ItemStack.EMPTY, false, false);
 	private ItemStack input;
 	private boolean useMeta;
 	private boolean useOreDict;
 	private NonNullList<ItemStack> oreEntries;
 	
-	public RecipeInput (ItemStack input) {
+	public RecipeInput (@Nonnull Block input) {
+		this(new ItemStack(input));
+	}
+	
+	public RecipeInput (@Nonnull Item input) {
+		this(new ItemStack(input));
+	}
+	
+	public RecipeInput (@Nonnull ItemStack input) {
 		this(input, false);
 	}
 	
-	public RecipeInput (ItemStack input, boolean useMeta) {
+	public RecipeInput (@Nonnull ItemStack input, boolean useMeta) {
 		this(input, useMeta, true);
 	}
 	
-	public RecipeInput (ItemStack input, boolean useMeta, boolean useOreDict) {
+	public RecipeInput (@Nonnull ItemStack input, boolean useMeta, boolean useOreDict) {
 		this.input = input;
 		this.useMeta = useMeta;
 		this.useOreDict = useOreDict;
 	}
 	
-	public boolean matches (ItemStack comparison) {
+	public boolean matches (@Nonnull ItemStack comparison) {
 		if (comparison.isEmpty()) return false;
 		for (ItemStack test : getOreDictEntries())
 		{
-			ItemUtils.areItemStacksEqual(test, comparison, useMeta);
+			if (ItemUtils.areItemStacksEqual(test, comparison, useMeta)) return true;
 		}
 		return false;
 	}
@@ -59,5 +72,13 @@ public class RecipeInput {
 			}
 		}
 		return oreEntries;
+	}
+	
+	public ItemStack getInput () {
+		return input.copy();
+	}
+	
+	public boolean isEmpty () {
+		return input.isEmpty();
 	}
 }

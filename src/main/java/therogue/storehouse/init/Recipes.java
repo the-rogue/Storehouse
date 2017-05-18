@@ -13,17 +13,18 @@ package therogue.storehouse.init;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.crafting.RecipeInput;
+import therogue.storehouse.crafting.MachineRecipe;
+import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.util.RecipeHelper;
 import therogue.storehouse.util.loghelper;
 
-
-public class Recipes
-{
+public class Recipes {
+	
 	/**
 	 * Sets all the recipes
 	 */
-	public static void init()
-	{
+	public static void init () {
 		loghelper.log("debug", "Registering default Recipes");
 		setDefaultRecipes();
 		loghelper.log("debug", "Registering Multi Recipes");
@@ -32,42 +33,45 @@ public class Recipes
 		setShapedRecipes();
 		loghelper.log("debug", "Registering Shapeless Recipes");
 		setShapelessRecipes();
+		loghelper.log("debug", "Registering Machine Recipes");
+		setMachineRecipes();
 	}
-
+	
 	/**
 	 * Adds all the default/ generic recipes for a particular block/item e.g. the stair recipe
 	 */
-	private static void setDefaultRecipes()
-	{
+	private static void setDefaultRecipes () {
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
 			block.setDefaultRecipes();
 		}
 	}
-
+	
 	/**
 	 * Adds all Recipes Involving the Ore Dictionary
 	 */
-	private static void setMultipleRecipes()
-	{
+	private static void setMultipleRecipes () {
 		RecipeHelper.registerTwoWayBlockRecipe(ModBlocks.azurite_crystal_block, ModItems.azurite_crystal, RegOreDictionary.oreDictEntries.get(0), null);
 		RecipeHelper.registerTwoWayBlockRecipe(ModBlocks.azurite_dust_block, ModItems.azurite_dust, null, null);
 	}
-
+	
 	/**
 	 * Adds all other shaped recipes
 	 */
-	private static void setShapedRecipes()
-	{
+	private static void setShapedRecipes () {
 	}
-
+	
 	/**
 	 * Adds all other shapeless recipes
 	 */
-	private static void setShapelessRecipes()
-	{
+	private static void setShapelessRecipes () {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.azurite_crystal_block_chiseled), ModBlocks.azurite_crystal_block_half_slab, ModBlocks.azurite_crystal_block_half_slab);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.azurite_crystal_block_pillar), ModBlocks.azurite_crystal_block, ModBlocks.azurite_crystal_block);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.azurite_dust_block), ModBlocks.azurite_dust_block_half_slab, ModBlocks.azurite_dust_block_half_slab);
+	}
+	
+	private static void setMachineRecipes () {
+		TileThermalPress.RECIPES.add(new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 0, new ItemStack(ModItems.azurite_crystal), new RecipeInput(ModBlocks.azurite_dust_block), new RecipeInput(ModItems.azurite_dust), new RecipeInput(ModBlocks.azurite_crystal_block_pillar),
+				new RecipeInput(ModItems.azurite_dust), new RecipeInput(ModBlocks.azurite_crystal_block_pillar)));
 	}
 }
