@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import therogue.storehouse.tile.IClientPacketReciever;
 import therogue.storehouse.util.NetworkUtils;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 public class GuiClientUpdatePacket implements IMessage {
 	
@@ -77,7 +77,7 @@ public class GuiClientUpdatePacket implements IMessage {
 							}
 							else
 							{
-								loghelper.log("error", String.format("Received invalid update packet for null tile entity at {} with data: {}", message.getPos(), message.getNbt()));
+								LOG.log("error", String.format("Received invalid update packet for null tile entity at {} with data: {}", message.getPos(), message.getNbt()));
 							}
 						}
 					}

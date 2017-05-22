@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.item.IStorehouseBaseItem;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class ItemRender
@@ -25,7 +25,7 @@ public class ItemRender
 	 */
 	public static void Init()
 	{
-		loghelper.log("debug", "Registering Item Textures");
+		LOG.log("debug", "Registering Item Textures");
 		for (IStorehouseBaseItem item : ModItems.itemlist)
 		{
 			item.registertexture();

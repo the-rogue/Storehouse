@@ -14,6 +14,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -38,9 +40,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-
-import org.lwjgl.input.Keyboard;
-
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
@@ -49,12 +48,8 @@ import therogue.storehouse.reference.IDs;
 import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.machine.generator.GeneratorUtils;
-import therogue.storehouse.tile.machine.generator.TileSolarGeneratorAdvanced;
-import therogue.storehouse.tile.machine.generator.TileSolarGeneratorBasic;
-import therogue.storehouse.tile.machine.generator.TileSolarGeneratorEnder;
-import therogue.storehouse.tile.machine.generator.TileSolarGeneratorInfused;
-import therogue.storehouse.tile.machine.generator.TileSolarGeneratorUltimate;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
+import therogue.storehouse.util.LOG;
 
 public class BlockSolarGenerator extends StorehouseBaseMachine implements IStorehouseVariantBlock {
 	
@@ -128,7 +123,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine implements IStore
 	 * Registers this block easily
 	 */
 	public void registerblock () {
-		loghelper.log("trace", "Registering StorehouseBaseBlock: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
 	}
@@ -174,20 +169,20 @@ public class BlockSolarGenerator extends StorehouseBaseMachine implements IStore
 	
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
-		MachineTier type = GeneratorUtils.getTypeFromMeta(meta);
-		switch (type) {
+		MachineTier tier = GeneratorUtils.getTypeFromMeta(meta);
+		switch (tier) {
 			case advanced:
-				return new TileSolarGeneratorAdvanced();
+				return new TileSolarGenerator.TileSolarGeneratorAdvanced();
 			case basic:
-				return new TileSolarGeneratorBasic();
+				return new TileSolarGenerator.TileSolarGeneratorBasic();
 			case ender:
-				return new TileSolarGeneratorEnder();
+				return new TileSolarGenerator.TileSolarGeneratorEnder();
 			case infused:
-				return new TileSolarGeneratorInfused();
+				return new TileSolarGenerator.TileSolarGeneratorInfused();
 			case ultimate:
-				return new TileSolarGeneratorUltimate();
+				return new TileSolarGenerator.TileSolarGeneratorUltimate();
 			default:
-				throw new IllegalArgumentException("Meta Out of Range");
+				return null;
 		}
 	}
 	

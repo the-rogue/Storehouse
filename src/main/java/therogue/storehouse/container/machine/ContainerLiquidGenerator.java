@@ -11,8 +11,8 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.inventory.SlotAdv;
 import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
 
 public class ContainerLiquidGenerator extends ContainerBase {
@@ -25,9 +25,9 @@ public class ContainerLiquidGenerator extends ContainerBase {
 	public ContainerLiquidGenerator (IInventory playerInv, TileLiquidGenerator teInv) {
 		super(playerInv, teInv);
 		// Add Solar Generator's Inventory Slot IDs 36,37
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 0, 30, 17));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 1, 66, 17));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 2, 141, 17));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 3, 141, 53));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 30, 17));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 66, 17));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 2, 141, 17));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 3, 141, 53));
 	}
 }

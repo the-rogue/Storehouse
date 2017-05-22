@@ -13,11 +13,11 @@ package therogue.storehouse.init;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.crafting.RecipeInput;
 import therogue.storehouse.crafting.MachineRecipe;
+import therogue.storehouse.crafting.RecipeInput;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.util.RecipeHelper;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 public class Recipes {
 	
@@ -25,15 +25,15 @@ public class Recipes {
 	 * Sets all the recipes
 	 */
 	public static void init () {
-		loghelper.log("debug", "Registering default Recipes");
+		LOG.log("debug", "Registering default Recipes");
 		setDefaultRecipes();
-		loghelper.log("debug", "Registering Multi Recipes");
+		LOG.log("debug", "Registering Multi Recipes");
 		setMultipleRecipes();
-		loghelper.log("debug", "Registering Shaped Recipes");
+		LOG.log("debug", "Registering Shaped Recipes");
 		setShapedRecipes();
-		loghelper.log("debug", "Registering Shapeless Recipes");
+		LOG.log("debug", "Registering Shapeless Recipes");
 		setShapelessRecipes();
-		loghelper.log("debug", "Registering Machine Recipes");
+		LOG.log("debug", "Registering Machine Recipes");
 		setMachineRecipes();
 	}
 	
@@ -71,7 +71,7 @@ public class Recipes {
 	}
 	
 	private static void setMachineRecipes () {
-		TileThermalPress.RECIPES.add(new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 0, new ItemStack(ModItems.azurite_crystal), new RecipeInput(ModBlocks.azurite_dust_block), new RecipeInput(ModItems.azurite_dust), new RecipeInput(ModBlocks.azurite_crystal_block_pillar),
+		TileThermalPress.RECIPES.add(new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStack(ModItems.azurite_crystal), new RecipeInput(ModBlocks.azurite_dust_block), new RecipeInput(ModItems.azurite_dust), new RecipeInput(ModBlocks.azurite_crystal_block_pillar),
 				new RecipeInput(ModItems.azurite_dust), new RecipeInput(ModBlocks.azurite_crystal_block_pillar)));
 	}
 }

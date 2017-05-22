@@ -10,213 +10,215 @@
 
 package therogue.storehouse.inventory;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import therogue.storehouse.util.BlockUtils;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import therogue.storehouse.util.ItemUtils;
 
-public class InventoryManager {
+public abstract class InventoryManager implements IItemHandlerModifiable {
 	
-	private IDefaultSidedInventory owner;
-	private InvWrapper inventoryWrapper;
+	public final ContainerHandler containerCapability = new ContainerHandler();
+	private IInventoryCapability owner;
 	private NonNullList<ItemStack> inventory;
-	private int[] extractable_slots;
-	private int[] insertable_slots;
+	private Set<Integer> extractable_slots;
+	private Set<Integer> insertable_slots;
 	
-	public InventoryManager (IDefaultSidedInventory owner, int size, @Nullable int[] insertable_slots, @Nullable int[] extractable_slots) {
+	public InventoryManager (IInventoryCapability owner, int size, @Nullable Integer[] insertable_slots, @Nullable Integer[] extractable_slots) {
 		this.owner = owner;
 		inventory = NonNullList.<ItemStack> withSize(size, ItemStack.EMPTY);
-		inventoryWrapper = new InvWrapper(owner) {
-			
-			@Override
-			public ItemStack insertItem (int slot, ItemStack stack, boolean simulate) {
-				if (!canInsertItem(slot, stack, null)) return stack;
-				if (stack.isEmpty()) return stack;
-				if (!isItemValidForSlot(slot, stack)) return stack;
-				ItemStack stackInSlot = getStackInSlot(slot);
-				boolean flag = stackInSlot != null;
-				if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot)) return stack;
-				int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
-				ItemStack toInsert = stack.splitStack(m);
-				toInsert.setCount(toInsert.getCount() + (flag ? stackInSlot.getCount() : 0));
-				setInventorySlotContents(slot, toInsert);
-				owner.markDirty();
-				return stack;
-			}
-			
-			@Override
-			public ItemStack extractItem (int slot, int amount, boolean simulate) {
-				if (!canExtractItem(slot, null, null)) return ItemStack.EMPTY;
-				return super.extractItem(slot, amount, simulate);
-			}
-		};
+		this.extractable_slots = new HashSet<Integer>();
+		this.insertable_slots = new HashSet<Integer>();
 		if (extractable_slots == null)
 		{
-			this.extractable_slots = new int[size];
 			for (int i = 0; i < size; i++)
 			{
-				this.extractable_slots[i] = i;
+				this.extractable_slots.add(i);
 			}
 		}
 		else
 		{
-			this.extractable_slots = extractable_slots;
+			this.extractable_slots.addAll(Arrays.asList(extractable_slots));
 		}
 		if (insertable_slots == null)
 		{
-			this.insertable_slots = new int[size];
 			for (int i = 0; i < size; i++)
 			{
-				this.insertable_slots[i] = i;
+				this.insertable_slots.add(i);
 			}
 		}
 		else
 		{
-			this.insertable_slots = insertable_slots;
+			this.insertable_slots.addAll(Arrays.asList(insertable_slots));
 		}
 	}
 	
-	public InvWrapper getWrapper () {
-		return inventoryWrapper;
-	}
-	
-	public int getSizeInventory () {
+	// ---------------------IItemHandlerModifiable functions---------------------------------------------------
+	/**
+	 * Returns the number of slots available
+	 *
+	 * @return The number of slots available
+	 **/
+	@Override
+	public int getSlots () {
 		return inventory.size();
 	}
 	
+	/**
+	 * Returns the ItemStack in a given slot.
+	 *
+	 * The result's stack size may be greater than the itemstacks max size.
+	 *
+	 * If the result is null, then the slot is empty. If the result is not null but the stack size is zero, then it represents an empty slot that will only accept* a specific itemstack.
+	 *
+	 * <p/>
+	 * IMPORTANT: This ItemStack MUST NOT be modified. This method is not for altering an inventories contents. Any implementers who are able to detect modification through this method should throw an exception.
+	 * <p/>
+	 * SERIOUSLY: DO NOT MODIFY THE RETURNED ITEMSTACK
+	 *
+	 * @param slot Slot to query
+	 * @return ItemStack in given slot. May be null.
+	 **/
+	@Override
 	public ItemStack getStackInSlot (int index) {
 		if (checkIndex(index)) { return inventory.get(index); }
 		return ItemStack.EMPTY;
 	}
 	
-	public NonNullList<ItemStack> getStacksInSlots (int minIndex, int maxIndex) {
-		NonNullList<ItemStack> returns = NonNullList.create();
-		for (int i = minIndex; i <= maxIndex; i++)
+	/**
+	 * Inserts an ItemStack into the given slot and return the remainder. The ItemStack should not be modified in this function! Note: This behaviour is subtly different from IFluidHandlers.fill()
+	 *
+	 * @param slot Slot to insert into.
+	 * @param stack ItemStack to insert.
+	 * @param simulate If true, the insertion is only simulated
+	 * @return The remaining ItemStack that was not inserted (if the entire stack is accepted, then return null). May be the same as the input ItemStack if unchanged, otherwise a new ItemStack.
+	 **/
+	@Nonnull
+	@Override
+	public ItemStack insertItem (int slot, ItemStack stack, boolean simulate) {
+		if (stack.isEmpty()) return stack;
+		if (!insertable_slots.contains(slot)) return stack;
+		if (!isItemValidForSlotChecks(slot, stack)) return stack;
+		ItemStack stackInSlot = getStackInSlot(slot);
+		if (!ItemUtils.areItemStacksMergable(stack, stackInSlot)) return stack;
+		ItemStack returns = stackInSlot.copy();
+		ItemStack inSlot = ItemUtils.mergeStacks(Math.min(getSlotLimit(slot), stack.getMaxStackSize()), true, stack.copy(), returns);
+		if (simulate)
 		{
-			if (checkIndex(i))
-			{
-				returns.add(inventory.get(i));
-			}
+			setStackInSlot(slot, inSlot);
 		}
-		if (returns.isEmpty())
-		{
-			returns.add(ItemStack.EMPTY);
-		}
+		owner.onInventoryChange();
 		return returns;
 	}
 	
-	public ItemStack decrStackSize (int index, int count) {
-		return ItemStackHelper.getAndSplit(this.inventory, index, count);
-	}
-	
-	public ItemStack removeStackFromSlot (int index) {
-		return ItemStackHelper.getAndRemove(this.inventory, index);
-	}
-	
-	public ItemStack pushItems (int slot, ItemStack stack) {
-		if (stack == null || stack.isEmpty()) return ItemStack.EMPTY;
-		if (!isItemValidForSlotChecks(slot, stack)) return stack;
+	/**
+	 * Extracts an ItemStack from the given slot. The returned value must be an empty itemstack if nothing is extracted, otherwise it's stack size must not be greater than amount or the itemstacks getMaxStackSize().
+	 *
+	 * @param slot Slot to extract from.
+	 * @param amount Amount to extract (may be greater than the current stacks max limit)
+	 * @param simulate If true, the extraction is only simulated
+	 * @return ItemStack extracted from the slot, must be an empty itemstack, if nothing can be extracted
+	 **/
+	@Override
+	@Nonnull
+	public ItemStack extractItem (int slot, int amount, boolean simulate) {
+		if (!extractable_slots.contains(slot)) return ItemStack.EMPTY;
+		if (amount == 0) return ItemStack.EMPTY;
 		ItemStack stackInSlot = getStackInSlot(slot);
-		boolean flag = stackInSlot != null && !stackInSlot.isEmpty();
-		if (flag && !ItemHandlerHelper.canItemStacksStack(stack, stackInSlot)) return stack;
-		int m = Math.min(stack.getMaxStackSize(), getInventoryStackLimit(slot)) - (flag ? stackInSlot.getCount() : 0);
-		ItemStack toInsert = stack.splitStack(m);
-		toInsert.setCount(toInsert.getCount() + (flag ? stackInSlot.getCount() : 0));
-		setInventorySlotContents(slot, toInsert);
-		owner.markDirty();
-		return stack.getCount() <= 0 ? ItemStack.EMPTY : stack;
-	}
-	
-	public void setInventorySlotContents (int index, ItemStack stack) {
-		if (checkIndex(index))
+		if (stackInSlot.isEmpty()) return ItemStack.EMPTY;
+		if (simulate)
 		{
-			inventory.set(index, stack);
+			stackInSlot = stackInSlot.copy();
 		}
-		if (stack != null && stack.getCount() > this.getInventoryStackLimit())
-		{
-			stack.setCount(this.getInventoryStackLimit());
-		}
+		int m = Math.min(stackInSlot.getMaxStackSize(), Math.min(stackInSlot.getCount(), amount));
+		ItemStack returns = stackInSlot.splitStack(m);
 		owner.onInventoryChange();
+		return returns;
 	}
 	
-	public int getInventoryStackLimit () {
-		return 64;
-	}
-	
-	public int getInventoryStackLimit (int slot) {
+	/**
+	 * Retrieves the maximum stack size allowed to exist in the given slot.
+	 *
+	 * @param slot Slot to query.
+	 * @return The maximum stack size allowed in the slot.
+	 */
+	@Override
+	public int getSlotLimit (int slot) {
 		switch (slot) {
 			default:
 				return 64;
 		}
 	}
 	
-	public boolean isUseableByPlayer (EntityPlayer player) {
-		return BlockUtils.isUsableByPlayer(this.owner.getTileEntity(), player);
-	}
-	
-	public void openInventory (EntityPlayer player) {
-	}
-	
-	public void closeInventory (EntityPlayer player) {
-	}
-	
-	public boolean isItemValidForSlot (int index, ItemStack stack) {
-		if (isItemValidForSlotChecks(index, stack))
+	/**
+	 * Overrides the stack in the given slot. This method is used by the standard Forge helper methods and classes. It is not intended for general use by other mods, and the handler may throw an error if it is called unexpectedly. It is also used by Internal Methods, but not to be used externally
+	 * other than by forge, use insert and extract and the simulate functions.
+	 *
+	 * @param slot Slot to modify
+	 * @param stack ItemStack to set slot to (may be an empty itemstack)
+	 * @throws RuntimeException if the handler is called in a way that the handler was not expecting.
+	 **/
+	@Override
+	public void setStackInSlot (int index, ItemStack stack) {
+		if (checkIndex(index))
 		{
-			for (int i : insertable_slots)
-			{
-				if (i == index) { return true; }
-			}
+			inventory.set(index, stack);
 		}
-		return false;
-	}
-	
-	protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-		return true;
-	}
-	
-	public void clear () {
-		this.inventory.clear();
-	}
-	
-	public int[] getSlotsForFace (EnumFacing side) {
-		int[] ret = new int[inventory.size()];
-		for (int i = 0; i < inventory.size(); i++)
+		if (!stack.isEmpty() && stack.getCount() > this.getSlotLimit(index))
 		{
-			ret[i] = i;
+			stack.setCount(this.getSlotLimit(index));
 		}
-		return ret;
+		owner.onInventoryChange();
 	}
 	
-	public boolean canInsertItem (int index, ItemStack itemStackIn, EnumFacing direction) {
-		if (isItemValidForSlot(index, itemStackIn)) { return true; }
-		return false;
+	// ---------------------------------Inventory Specific Methods------------------------------------
+	/**
+	 * Specify what items can go in which slots here for different inventories
+	 * 
+	 * @param slot The slot the stack would be inserted into
+	 * @param stack The stack that would be inserted
+	 * @return Whether or not this stack should be allowed to be placed into this inventory
+	 */
+	protected abstract boolean isItemValidForSlotChecks (int slot, ItemStack stack);
+	
+	// --------------------------------------INTERNAL METHODS------------------------------------------
+	// FOR USE BY THE TILE ENTITY ONLY
+	public void pushItems (int fromSlot, int toSlot) {
+		ItemStack fromStack = getStackInSlot(fromSlot);
+		if (fromStack.isEmpty()) return;
+		if (!isItemValidForSlotChecks(toSlot, fromStack)) return;
+		ItemStack toStack = getStackInSlot(toSlot);
+		if (!ItemUtils.areItemStacksMergable(fromStack, toStack)) return;
+		setStackInSlot(toSlot, ItemUtils.mergeStacks(Math.min(getSlotLimit(toSlot), fromStack.getMaxStackSize()), true, toStack, fromStack));
+		owner.onInventoryChange();
 	}
 	
-	public boolean canExtractItem (int index, ItemStack stack, EnumFacing direction) {
-		for (int i : extractable_slots)
-		{
-			if (i == index) { return true; }
-		}
-		return false;
-	}
-	
-	public boolean checkIndex (int index) {
+	private boolean checkIndex (int index) {
 		if (index >= 0 && index < inventory.size()) { return true; }
 		return false;
 	}
 	
+	public String toString () {
+		return "Inventory of the InventoryManager: " + inventory.toString();
+	}
+	
+	// ----------------------------NBT Functions-----------------------------------------------------
+	/**
+	 * Writes the data of the inventory to nbt, to be loaded back later
+	 * 
+	 * @param nbt The NBTTagCompound to write to.
+	 */
 	public void writeToNBT (NBTTagCompound nbt) {
 		NBTTagList list = new NBTTagList();
-		for (int i = 0; i < this.getSizeInventory(); ++i)
+		for (int i = 0; i < this.getSlots(); ++i)
 		{
 			if (this.getStackInSlot(i) != null)
 			{
@@ -229,21 +231,138 @@ public class InventoryManager {
 		nbt.setTag("Items", list);
 	}
 	
+	/**
+	 * Reads Data back from an nbt tag, after it has been loaded back
+	 * 
+	 * @param nbt The nbt tag to read from.
+	 */
 	public void readFromNBT (NBTTagCompound nbt) {
 		NBTTagList list = nbt.getTagList("Items", 10);
 		for (int i = 0; i < list.tagCount(); ++i)
 		{
 			NBTTagCompound stackTag = list.getCompoundTagAt(i);
 			int slot = stackTag.getByte("Slot") & 255;
-			this.setInventorySlotContents(slot, new ItemStack(stackTag));
+			this.setStackInSlot(slot, new ItemStack(stackTag));
 		}
 	}
 	
-	public IDefaultSidedInventory getOwner () {
-		return owner;
-	}
-	
-	public boolean isEmpty () {
-		return false;
+	private class ContainerHandler implements IItemHandlerModifiable {
+		
+		// ---------------------IItemHandlerModifiable functions---------------------------------------------------
+		/**
+		 * Returns the number of slots available
+		 *
+		 * @return The number of slots available
+		 **/
+		@Override
+		public int getSlots () {
+			return inventory.size();
+		}
+		
+		/**
+		 * Returns the ItemStack in a given slot.
+		 *
+		 * The result's stack size may be greater than the itemstacks max size.
+		 *
+		 * If the result is null, then the slot is empty. If the result is not null but the stack size is zero, then it represents an empty slot that will only accept* a specific itemstack.
+		 *
+		 * <p/>
+		 * IMPORTANT: This ItemStack MUST NOT be modified. This method is not for altering an inventories contents. Any implementers who are able to detect modification through this method should throw an exception.
+		 * <p/>
+		 * SERIOUSLY: DO NOT MODIFY THE RETURNED ITEMSTACK
+		 *
+		 * @param slot Slot to query
+		 * @return ItemStack in given slot. May be null.
+		 **/
+		@Override
+		public ItemStack getStackInSlot (int index) {
+			if (checkIndex(index)) { return inventory.get(index); }
+			return ItemStack.EMPTY;
+		}
+		
+		/**
+		 * Inserts an ItemStack into the given slot and return the remainder. The ItemStack should not be modified in this function! Note: This behaviour is subtly different from IFluidHandlers.fill()
+		 *
+		 * @param slot Slot to insert into.
+		 * @param stack ItemStack to insert.
+		 * @param simulate If true, the insertion is only simulated
+		 * @return The remaining ItemStack that was not inserted (if the entire stack is accepted, then return null). May be the same as the input ItemStack if unchanged, otherwise a new ItemStack.
+		 **/
+		@Nonnull
+		@Override
+		public ItemStack insertItem (int slot, ItemStack stack, boolean simulate) {
+			if (stack.isEmpty()) return stack;
+			if (!insertable_slots.contains(slot)) return stack;
+			if (!isItemValidForSlotChecks(slot, stack)) return stack;
+			ItemStack stackInSlot = getStackInSlot(slot);
+			if (!ItemUtils.areItemStacksMergable(stack, stackInSlot)) return stack;
+			ItemStack returns = stackInSlot.copy();
+			ItemStack inSlot = ItemUtils.mergeStacks(Math.min(getSlotLimit(slot), stack.getMaxStackSize()), true, stack.copy(), returns);
+			if (simulate)
+			{
+				setStackInSlot(slot, inSlot);
+			}
+			owner.onInventoryChange();
+			return returns;
+		}
+		
+		/**
+		 * Extracts an ItemStack from the given slot. The returned value must be an empty itemstack if nothing is extracted, otherwise it's stack size must not be greater than amount or the itemstacks getMaxStackSize().
+		 *
+		 * @param slot Slot to extract from.
+		 * @param amount Amount to extract (may be greater than the current stacks max limit)
+		 * @param simulate If true, the extraction is only simulated
+		 * @return ItemStack extracted from the slot, must be an empty itemstack, if nothing can be extracted
+		 **/
+		@Override
+		@Nonnull
+		public ItemStack extractItem (int slot, int amount, boolean simulate) {
+			if (amount == 0) return ItemStack.EMPTY;
+			ItemStack stackInSlot = getStackInSlot(slot);
+			if (stackInSlot.isEmpty()) return ItemStack.EMPTY;
+			if (simulate)
+			{
+				stackInSlot = stackInSlot.copy();
+			}
+			int m = Math.min(stackInSlot.getMaxStackSize(), Math.min(stackInSlot.getCount(), amount));
+			ItemStack returns = stackInSlot.splitStack(m);
+			owner.onInventoryChange();
+			return returns;
+		}
+		
+		/**
+		 * Retrieves the maximum stack size allowed to exist in the given slot.
+		 *
+		 * @param slot Slot to query.
+		 * @return The maximum stack size allowed in the slot.
+		 */
+		@Override
+		public int getSlotLimit (int slot) {
+			switch (slot) {
+				default:
+					return 64;
+			}
+		}
+		
+		/**
+		 * Overrides the stack in the given slot. This method is used by the standard Forge helper methods and classes. It is not intended for general use by other mods, and the handler may throw an error if it is called unexpectedly. It is also used by Internal Methods, but not to be used
+		 * externally other than by forge, use insert and extract and the simulate functions.
+		 *
+		 * @param slot Slot to modify
+		 * @param stack ItemStack to set slot to (may be an empty itemstack)
+		 * @throws RuntimeException if the handler is called in a way that the handler was not expecting.
+		 **/
+		@Override
+		public void setStackInSlot (int index, ItemStack stack) {
+			if (checkIndex(index))
+			{
+				inventory.set(index, stack);
+			}
+			if (!stack.isEmpty() && stack.getCount() > this.getSlotLimit(index))
+			{
+				stack.setCount(this.getSlotLimit(index));
+			}
+			owner.onInventoryChange();
+		}
 	}
 }

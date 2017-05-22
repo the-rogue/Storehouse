@@ -11,8 +11,8 @@
 package therogue.storehouse.client.gui.machine;
 
 import net.minecraft.inventory.Container;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.element.ElementActiveIcon;
 import therogue.storehouse.client.gui.element.ElementChargingBar;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.ElementFluidTank;
@@ -23,9 +23,9 @@ public class GuiLiquidGenerator extends GuiBase {
 	
 	public GuiLiquidGenerator (Container inventorySlotsIn, TileLiquidGenerator inventory) {
 		super(inventory, inventorySlotsIn);
-		elements.add(new ElementActiveIcon(this, 48, 35, Icons.CombustionIndicator.getLocation(), inventory, 2));
-		elements.add(new ElementChargingBar(this, 51, 17, Icons.EnergyIndicator.getLocation(), inventory, 3, 4));
-		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 5, 6));
-		elements.add(new ElementFluidTank(this, 105, 12, inventory, inventory));
+		elements.add(new ElementChargingBar(this, 48, 35, Icons.CombustionIndicator.getLocation(), inventory, 7, 8));
+		elements.add(new ElementChargingBar(this, 51, 17, Icons.EnergyIndicator.getLocation(), inventory, 5, 6));
+		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 2, 3));
+		elements.add(new ElementFluidTank(this, 105, 12, inventory.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), inventory));
 	}
 }

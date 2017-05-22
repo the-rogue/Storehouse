@@ -18,7 +18,7 @@ import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.tool.NetworkInspector;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 @GameRegistry.ObjectHolder (General.MOD_ID)
 public class ModItems {
@@ -38,7 +38,7 @@ public class ModItems {
 	 */
 	static
 	{
-		loghelper.log("debug", "Adding Items");
+		LOG.log("debug", "Adding Items");
 		itemlist.add(azurite_dust);
 		itemlist.add(azurite_crystal);
 		itemlist.add(network_Inspector);
@@ -48,7 +48,7 @@ public class ModItems {
 	 * Registers all the items
 	 */
 	public static void preInit () {
-		loghelper.log("debug", "Registering Items");
+		LOG.log("debug", "Registering Items");
 		for (IStorehouseBaseItem item : itemlist)
 		{
 			item.registeritem();

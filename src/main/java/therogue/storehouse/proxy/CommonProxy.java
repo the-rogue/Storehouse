@@ -24,7 +24,7 @@ import therogue.storehouse.init.ModItems;
 import therogue.storehouse.init.ModTileEntities;
 import therogue.storehouse.init.Recipes;
 import therogue.storehouse.init.RegOreDictionary;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 import therogue.storehouse.world.StorehouseWorldGen;
 
 public abstract class CommonProxy implements IProxy {
@@ -34,13 +34,13 @@ public abstract class CommonProxy implements IProxy {
 	 */
 	@Override
 	public void preInit (FMLPreInitializationEvent event) {
-		loghelper.log("debug", "Common Proxy Started PreInitialisation");
+		LOG.debug("Common Proxy Started PreInitialisation");
 		MinecraftForge.EVENT_BUS.register(EventHandlerCommon.INSTANCE);
 		ModItems.preInit();
 		ModBlocks.preInit();
 		ModTileEntities.preInit();
 		ConfigHandler.preInit(event.getSuggestedConfigurationFile());
-		loghelper.log("debug", "Common Proxy Finished PreInitialisation");
+		LOG.debug("Common Proxy Finished PreInitialisation");
 	}
 	
 	/**
@@ -48,12 +48,12 @@ public abstract class CommonProxy implements IProxy {
 	 */
 	@Override
 	public void init (FMLInitializationEvent event) {
-		loghelper.log("debug", "Common Proxy Started Initialisation");
+		LOG.debug("Common Proxy Started Initialisation");
 		RegOreDictionary.init();
 		Recipes.init();
 		StorehouseWorldGen.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Storehouse.instance, GuiHandler.INSTANCE);
-		loghelper.log("debug", "Common Proxy Finished Initialisation");
+		LOG.debug("Common Proxy Finished Initialisation");
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public abstract class CommonProxy implements IProxy {
 	 */
 	@Override
 	public void postInit (FMLPostInitializationEvent event) {
-		loghelper.log("debug", "Common Proxy Started PostInitialisation");
-		loghelper.log("debug", "Common Proxy Finished PostInitialisation");
+		LOG.debug("Common Proxy Started PostInitialisation");
+		LOG.debug("Common Proxy Finished PostInitialisation");
 	}
 }

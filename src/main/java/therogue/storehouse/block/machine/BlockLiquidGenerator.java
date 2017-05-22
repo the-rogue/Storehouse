@@ -44,12 +44,8 @@ import therogue.storehouse.reference.IDs;
 import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.machine.generator.GeneratorUtils;
-import therogue.storehouse.tile.machine.generator.TileLiquidGeneratorAdvanced;
-import therogue.storehouse.tile.machine.generator.TileLiquidGeneratorBasic;
-import therogue.storehouse.tile.machine.generator.TileLiquidGeneratorEnder;
-import therogue.storehouse.tile.machine.generator.TileLiquidGeneratorInfused;
-import therogue.storehouse.tile.machine.generator.TileLiquidGeneratorUltimate;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
+import therogue.storehouse.util.LOG;
 
 public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStorehouseVariantBlock {
 	
@@ -122,7 +118,7 @@ public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStor
 	 * Registers this block easily
 	 */
 	public void registerblock () {
-		loghelper.log("trace", "Registering StorehouseBaseBlock: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
 	}
@@ -148,20 +144,20 @@ public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStor
 	
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
-		MachineTier type = GeneratorUtils.getTypeFromMeta(meta);
-		switch (type) {
+		MachineTier tier = GeneratorUtils.getTypeFromMeta(meta);
+		switch (tier) {
 			case advanced:
-				return new TileLiquidGeneratorAdvanced();
+				return new TileLiquidGenerator.TileLiquidGeneratorAdvanced();
 			case basic:
-				return new TileLiquidGeneratorBasic();
+				return new TileLiquidGenerator.TileLiquidGeneratorBasic();
 			case ender:
-				return new TileLiquidGeneratorEnder();
+				return new TileLiquidGenerator.TileLiquidGeneratorEnder();
 			case infused:
-				return new TileLiquidGeneratorInfused();
+				return new TileLiquidGenerator.TileLiquidGeneratorInfused();
 			case ultimate:
-				return new TileLiquidGeneratorUltimate();
+				return new TileLiquidGenerator.TileLiquidGeneratorUltimate();
 			default:
-				throw new IllegalArgumentException("Meta Out of Range");
+				return null;
 		}
 	}
 	

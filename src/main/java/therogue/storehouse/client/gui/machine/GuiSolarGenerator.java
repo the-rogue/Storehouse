@@ -22,8 +22,8 @@ public class GuiSolarGenerator extends GuiBase {
 	
 	public GuiSolarGenerator (Container inventorySlotsIn, TileSolarGenerator inventory) {
 		super(inventory, inventorySlotsIn);
-		elements.add(new ElementActiveIcon(this, 90, 23, Icons.SolarGenOn.getLocation(), inventory, 2));
-		elements.add(new ElementChargingBar(this, 33, 35, Icons.EnergyIndicator.getLocation(), inventory, 3, 4));
-		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 5, 6));
+		elements.add(new ElementActiveIcon(this, 90, 23, Icons.SolarGenOn.getLocation(), inventory, 4));
+		elements.add(new ElementChargingBar(this, 33, 35, Icons.EnergyIndicator.getLocation(), inventory, 5, 6));
+		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 2, 3));
 	}
 }

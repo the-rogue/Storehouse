@@ -10,63 +10,66 @@
 
 package therogue.storehouse.tile;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IWorldNameable;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 
-
-/*
- * FIELDS
- */
-public abstract class StorehouseBaseTileEntity extends TileEntity implements IInventory
-{
+public abstract class StorehouseBaseTileEntity extends TileEntity implements IWorldNameable {
+	
 	private String customName;
 	protected IStorehouseBaseBlock block;
-
-	public StorehouseBaseTileEntity(IStorehouseBaseBlock block)
-	{
+	
+	public StorehouseBaseTileEntity (IStorehouseBaseBlock block) {
 		this.block = block;
 	}
-
+	
+	// -------------------------IWorldNamable Methods-----------------------------------
+	/**
+	 * Get the formatted ChatComponent that will be used for the sender's username in chat
+	 */
 	@Override
-	public ITextComponent getDisplayName()
-	{
+	public ITextComponent getDisplayName () {
 		return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
 	}
-
+	
+	/**
+	 * Returns true if this thing is named
+	 */
 	@Override
-	public boolean hasCustomName()
-	{
+	public boolean hasCustomName () {
 		return this.customName != null && !this.customName.isEmpty();
 	}
-
+	
+	/**
+	 * Get the name of this object.
+	 */
 	@Override
-	public String getName()
-	{
+	public String getName () {
 		return hasCustomName() ? customName : "container.storehouse:" + block.getName();
 	}
-
-	public void setCustomName(String customName)
-	{
+	
+	/**
+	 * Set the name of this object.
+	 */
+	public void setCustomName (String customName) {
 		this.customName = customName;
 	}
 	
-	public GuiUpdateTEPacket getGUIPacket(){
+	// -------------------------Standard TE methods-----------------------------------
+	public GuiUpdateTEPacket getGUIPacket () {
 		return new GuiUpdateTEPacket(this.getPos(), new NBTTagCompound());
 	}
 	
-	public void processGUIPacket(GuiUpdateTEPacket packet){
-		
+	public void processGUIPacket (GuiUpdateTEPacket packet) {
 	}
-
+	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-	{
+	public NBTTagCompound writeToNBT (NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if (this.hasCustomName())
 		{
@@ -74,15 +77,13 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IIn
 		}
 		return nbt;
 	}
-
+	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
+	public void readFromNBT (NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		if (nbt.hasKey("CustomName", 8))
 		{
 			this.setCustomName(nbt.getString("CustomName"));
 		}
-
 	}
 }

@@ -23,10 +23,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.element.ElementBase;
+import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.util.RGBAColor;
@@ -37,7 +37,7 @@ public class GuiBase extends GuiContainer {
 	protected ResourceLocation texture;
 	protected List<ElementBase> elements = Lists.<ElementBase> newArrayList();
 	
-	public GuiBase (IInventory linked, Container inventorySlotsIn) {
+	public GuiBase (IGuiSupplier linked, Container inventorySlotsIn) {
 		super(inventorySlotsIn);
 		switch (MachineTier.values()[linked.getField(1)]) {
 			case advanced:

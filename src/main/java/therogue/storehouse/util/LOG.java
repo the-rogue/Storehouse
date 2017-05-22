@@ -13,23 +13,20 @@ package therogue.storehouse.util;
 import java.util.HashMap;
 import java.util.Set;
 
-import net.minecraftforge.fml.common.FMLLog;
-
 import org.apache.logging.log4j.Level;
 
+import net.minecraftforge.fml.common.FMLLog;
 import therogue.storehouse.reference.ConfigValues;
 import therogue.storehouse.reference.General;
 
-
-public class loghelper
-{
+public class LOG {
+	
 	private static final HashMap<String, Integer> SETTIMES = new HashMap<String, Integer>();
-
+	
 	/**
 	 * Log Method to make logging easier
 	 */
-	public static void log(String logLevel, Object object)
-	{
+	public static void log (String logLevel, Object object) {
 		if (logLevel.equals("all"))
 		{
 			FMLLog.log(General.MOD_NAME, Level.ALL, String.valueOf(object));
@@ -70,10 +67,49 @@ public class loghelper
 			}
 		}
 	}
-
-	public static void logSetTimes(String key, int startvalue, Object object)
-	{
-		if (SETTIMES.get(key) == null) {
+	
+	public static void all (Object message) {
+		FMLLog.log(General.MOD_NAME, Level.ALL, String.valueOf(message));
+	}
+	
+	public static void off (Object message) {
+		FMLLog.log(General.MOD_NAME, Level.OFF, String.valueOf(message));
+	}
+	
+	public static void fatal (Object message) {
+		FMLLog.log(General.MOD_NAME, Level.FATAL, String.valueOf(message));
+	}
+	
+	public static void error (Object message) {
+		FMLLog.log(General.MOD_NAME, Level.ERROR, String.valueOf(message));
+	}
+	
+	public static void warn (Object message) {
+		FMLLog.log(General.MOD_NAME, Level.WARN, String.valueOf(message));
+	}
+	
+	public static void info (Object message) {
+		FMLLog.log(General.MOD_NAME, Level.INFO, String.valueOf(message));
+	}
+	
+	// Since FML doesn't print these to the console by default this is a good way to print debug/trace information when a config option is selected
+	public static void debug (Object message) {
+		if (ConfigValues.debuglogging)
+		{
+			FMLLog.log(General.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(message));
+		}
+	}
+	
+	public static void trace (Object message) {
+		if (ConfigValues.debuglogging)
+		{
+			FMLLog.log(General.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(message));
+		}
+	}
+	
+	public static void logSetTimes (String key, int startvalue, Object object) {
+		if (SETTIMES.get(key) == null)
+		{
 			SETTIMES.put(key, startvalue);
 		}
 		if (SETTIMES.get(key) != 0)
@@ -85,19 +121,19 @@ public class loghelper
 			}
 		}
 	}
-	public static void logSetTimes(String key, Object object) {
+	
+	public static void logSetTimes (String key, Object object) {
 		logSetTimes(key, -1, object);
 	}
-
-	public static void updateSetTimes(String key, int times)
-	{
+	
+	public static void updateSetTimes (String key, int times) {
 		if (times >= -1)
 		{
 			SETTIMES.put(key, times);
 		}
 	}
 	
-	public static Set<String> getkeys(){
+	public static Set<String> getkeys () {
 		return SETTIMES.keySet();
 	}
 }

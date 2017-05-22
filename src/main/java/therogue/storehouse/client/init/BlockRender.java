@@ -17,14 +17,14 @@ import net.minecraft.item.Item;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.init.ModBlocks;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class BlockRender
 {
 	public static void preInit()
 	{
-		loghelper.log("debug", "Registering Block Variants");
+		LOG.log("debug", "Registering Block Variants");
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
 			if (block instanceof IStorehouseVariantBlock) {
@@ -37,7 +37,7 @@ public class BlockRender
 	 */
 	public static void Init()
 	{
-		loghelper.log("debug", "Registering Block Textures");
+		LOG.log("debug", "Registering Block Textures");
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
 			block.registertexture();

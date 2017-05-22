@@ -23,7 +23,7 @@ import therogue.storehouse.command.DebugResetLogger;
 import therogue.storehouse.handlers.ConfigHandler;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 @Mod (modid = General.MOD_ID, name = General.MOD_NAME, version = General.VERSION, acceptedMinecraftVersions = General.MC_VERSIONS, useMetadata = true, guiFactory = General.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json", dependencies = "before:guideapi")
 public class Storehouse {
@@ -44,10 +44,10 @@ public class Storehouse {
 	 */
 	@EventHandler
 	public void preinit (FMLPreInitializationEvent event) {
-		loghelper.log("debug", "Pre Initialization Started");
+		LOG.log("debug", "Pre Initialization Started");
 		proxy.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
-		loghelper.log("info", "Pre Initialization Finished");
+		LOG.log("info", "Pre Initialization Finished");
 	}
 	
 	/**
@@ -55,9 +55,9 @@ public class Storehouse {
 	 */
 	@EventHandler
 	public void init (FMLInitializationEvent event) {
-		loghelper.log("debug", "Initialization Started");
+		LOG.log("debug", "Initialization Started");
 		proxy.init(event);
-		loghelper.log("info", "Initialization Finished");
+		LOG.log("info", "Initialization Finished");
 	}
 	
 	/**
@@ -65,9 +65,9 @@ public class Storehouse {
 	 */
 	@EventHandler
 	public void postinit (FMLPostInitializationEvent event) {
-		loghelper.log("debug", "Post Initialization Started");
+		LOG.log("debug", "Post Initialization Started");
 		proxy.postInit(event);
-		loghelper.log("info", "Post Initialization Finished");
+		LOG.log("info", "Post Initialization Finished");
 	}
 	
 	@EventHandler

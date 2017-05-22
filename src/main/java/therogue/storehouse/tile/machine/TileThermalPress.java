@@ -10,119 +10,124 @@
 
 package therogue.storehouse.tile.machine;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import therogue.storehouse.crafting.CraftingStacks;
-import therogue.storehouse.crafting.IRecipeUser;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.RangedWrapper;
+import therogue.storehouse.container.machine.ContainerThermalPress;
+import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineRecipe;
-import therogue.storehouse.crafting.MachineRecipe.MatchReturn;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiClientUpdatePacket;
 import therogue.storehouse.network.StorehousePacketHandler;
+import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.IClientPacketReciever;
 import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.GeneralUtils;
 import therogue.storehouse.util.ItemUtils;
-import therogue.storehouse.util.loghelper;
 
-public class TileThermalPress extends StorehouseBaseMachine implements IClientPacketReciever, IRecipeUser {
+public class TileThermalPress extends StorehouseBaseMachine implements IClientPacketReciever, ICrafter {
 	
-	public static final List<MachineRecipe> RECIPES = Lists.newArrayList();
+	public static final int RFPerTick = MachineStats.THERMALPRESSPERTICK;
 	private Mode mode = Mode.PRESS;
-	private boolean isCrafting;
+	private MachineRecipe currentCrafting;
+	private boolean craftingLock = false;
+	private int craftingTime = 0;
 	
 	public TileThermalPress () {
 		super(ModBlocks.thermal_press, MachineTier.advanced);
-		inventory = new InventoryManager(this, 8, new int[] { 1, 2, 3, 4, 5 }, new int[] { 0 }) {
+		inventory = new InventoryManager(this, 8, new Integer[] { 1, 2, 3, 4, 5 }, new Integer[] { 0 }) {
 			
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				return true;
+				if (getOrderMattersSlots().contains(index))
+				{
+				}
 			}
 		};
 	}
 	
+	// -------------------------ITickable-----------------------------------------------------------------
 	@Override
 	public void update () {
+		if (GeneralUtils.isServerSide(world))
+		{
+			handleCrafting();
+		}
 	}
 	
-	public void onInventoryChange () {
-		if (isCrafting) return;
-		isCrafting = true;
-		boolean hascrafted = false;
-		for (MachineRecipe recipe : RECIPES)
+	// -------------------------Utility Methods to keep update() short-----------------------------------
+	private void handleCrafting () {
+		if (currentCrafting != null)
 		{
-			if (!ItemUtils.areItemStacksMergableWithLimit(inventory.getInventoryStackLimit(0), recipe.getResult()[0], inventory.getStackInSlot(0))) continue;
-			MatchReturn isValidRecipe = recipe.matches(this);
-			loghelper.log("info", isValidRecipe.matched);
-			loghelper.log("info", isValidRecipe.ingredients);
-			if (isValidRecipe.matched)
+			if (currentCrafting.matches(this))
 			{
-				setCraftingStacks(recipe.craft(isValidRecipe));
-				hascrafted = true;
+				if (craftingTime <= 1)
+				{
+					if (ItemUtils.areItemStacksMergableWithLimit(Math.min(inventory.getStackInSlot(0).getMaxStackSize(), inventory.getSlotLimit(0)), currentCrafting.getResults().get(0), inventory.getStackInSlot(0)))
+					{
+						craftingLock = true;
+						ItemStack craftingResult = currentCrafting.craft(this).get(0);
+						if (craftingResult != null && !craftingResult.isEmpty())
+						{
+							inventory.setStackInSlot(0, ItemUtils.mergeStacks(Math.min(inventory.getStackInSlot(0).getMaxStackSize(), inventory.getSlotLimit(0)), true, inventory.getStackInSlot(0), craftingResult));
+						}
+						currentCrafting = null;
+						craftingTime = 0;
+						craftingLock = false;
+						onInventoryChange();
+					}
+				}
+				else
+				{
+					if (energyStorage.getEnergyStored() >= RFPerTick)
+					{
+						energyStorage.modifyEnergyStored(-RFPerTick);
+						--craftingTime;
+					}
+				}
+			}
+			else
+			{
+				currentCrafting = null;
+				craftingTime = 0;
 			}
 		}
-		isCrafting = false;
-		if (hascrafted) onInventoryChange();
 	}
 	
+	// -------------------------Tile Specific Utility Methods-------------------------------------------
+	private void modeUpdate (int mode) {
+		Mode m = GeneralUtils.getEnumFromNumber(Mode.class, mode);
+		this.mode = m != null ? m : this.mode;
+		this.onInventoryChange();
+	}
+	
+	// -------------------------ICrafter Methods-----------------------------------
 	@Override
-	public int getNumberOrderMattersSlots () {
+	public Set<Integer> getOrderMattersSlots () {
 		return mode.orderMattersSlots;
 	}
 	
 	@Override
-	public int getNumberCraftingSlots () {
-		return mode.craftingSlots;
-	}
-	
-	public void setCraftingStacks (CraftingStacks stacks) {
-		inventory.setInventorySlotContents(0, ItemUtils.mergeStacks(inventory.getInventoryStackLimit(0), true, stacks.output.get(0), inventory.getStackInSlot(0)));
-		for (int i = 1; i <= getNumberCraftingSlots(); i++)
-		{
-			inventory.setInventorySlotContents(i, stacks.inventory.get(i - 1));
-		}
+	public IItemHandlerModifiable getCraftingInventory () {
+		return new RangedWrapper(getInventory(), 1, mode.craftingSlots + 1);
 	}
 	
 	@Override
-	public CraftingStacks getCraftingStacks () {
-		return new CraftingStacks(inventory.getStacksInSlots(1, getNumberCraftingSlots()));
+	public IItemHandlerModifiable getOutputInventory () {
+		return new RangedWrapper(getInventory(), 0, 1);
 	}
 	
-	@Override
-	public int getField (int id) {
-		switch (id) {
-			case 2:
-				return mode.ordinal();
-			default:
-				return super.getField(id);
-		}
-	}
-	
-	@Override
-	public void setField (int id, int value) {
-		switch (id) {
-			case 2:
-				modeUpdate(value);
-				NBTTagCompound sendtag = new NBTTagCompound();
-				sendtag.setInteger("type", 0);
-				sendtag.setInteger("mode", this.mode.ordinal());
-				StorehousePacketHandler.INSTANCE.sendToServer(new GuiClientUpdatePacket(this.getPos(), sendtag));
-			default:
-				super.setField(id, value);
-		}
-	}
-	
-	private void modeUpdate (int mode) {
-		Mode m = GeneralUtils.getEnumFromNumber(Mode.class, mode);
-		this.mode = m != null ? m : this.mode;
-	}
-	
+	// ------------------IClientPacketReciever Methods-------------------------------------------------------
 	@Override
 	public void processGUIPacket (GuiClientUpdatePacket message) {
 		NBTTagCompound nbt = message.getNbt();
@@ -133,46 +138,105 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 		}
 	}
 	
+	// -------------------------Inventory Methods-----------------------------------
+	@Override
+	public void onInventoryChange () {
+		super.onInventoryChange();
+		if ((currentCrafting != null && currentCrafting.matches(this)) || craftingLock) return;
+		for (MachineRecipe recipe : RECIPES)
+		{
+			if (!ItemUtils.areItemStacksMergableWithLimit(inventory.getSlotLimit(0), recipe.getResults().get(0), inventory.getStackInSlot(0))) continue;
+			boolean isValidRecipe = recipe.matches(this);
+			if (isValidRecipe)
+			{
+				currentCrafting = recipe;
+				craftingTime = recipe.timeTaken;
+			}
+		}
+	}
+	
+	// -------------------------Container/Gui Methods----------------------------------------------------
+	@Override
+	public int getField (int id) {
+		switch (id) {
+			case 4:
+				return mode.ordinal();
+			default:
+				return super.getField(id);
+		}
+	}
+	
+	@Override
+	public void setField (int id, int value) {
+		switch (id) {
+			case 4:
+				modeUpdate(value);
+				NBTTagCompound sendtag = new NBTTagCompound();
+				sendtag.setInteger("type", 0);
+				sendtag.setInteger("mode", this.mode.ordinal());
+				StorehousePacketHandler.INSTANCE.sendToServer(new GuiClientUpdatePacket(this.getPos(), sendtag));
+			default:
+				super.setField(id, value);
+		}
+	}
+	
+	@Override
+	public int getFieldCount () {
+		return super.getFieldCount() + 1;
+	}
+	
+	// -------------------------IInteractionObject-----------------------------------------------------------------
+	@Override
+	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
+		return new ContainerThermalPress(playerInventory, this);
+	}
+	
+	@Override
+	public String getGuiID () {
+		return "storehouse:" + ModBlocks.thermal_press.getName();
+	}
+	
+	// ------------------Thermal Press Mode Enum-------------------------------------------------------
 	public static enum Mode
 	{
-		PRESS (3, new Predicate<IRecipeUser>() {
+		PRESS (3, new Predicate<ICrafter>() {
 			
 			@Override
-			public boolean test (IRecipeUser machine) {
+			public boolean test (ICrafter machine) {
 				if (machine instanceof TileThermalPress) { return ((TileThermalPress) machine).mode == Mode.PRESS; }
 				return false;
 			}
 		}),
-		JOIN (4, new Predicate<IRecipeUser>() {
+		JOIN (4, new Predicate<ICrafter>() {
 			
 			@Override
-			public boolean test (IRecipeUser machine) {
+			public boolean test (ICrafter machine) {
 				if (machine instanceof TileThermalPress) { return ((TileThermalPress) machine).mode == Mode.JOIN; }
 				return false;
 			}
 		}),
-		STAMP (2, new Predicate<IRecipeUser>() {
+		STAMP (2, new Predicate<ICrafter>() {
 			
 			@Override
-			public boolean test (IRecipeUser machine) {
+			public boolean test (ICrafter machine) {
 				if (machine instanceof TileThermalPress) { return ((TileThermalPress) machine).mode == Mode.STAMP; }
 				return false;
 			}
 		}),
-		HIGH_PRESSURE (5, new Predicate<IRecipeUser>() {
+		HIGH_PRESSURE (5, new Predicate<ICrafter>() {
 			
 			@Override
-			public boolean test (IRecipeUser machine) {
+			public boolean test (ICrafter machine) {
 				if (machine instanceof TileThermalPress) { return ((TileThermalPress) machine).mode == Mode.HIGH_PRESSURE; }
 				return false;
 			}
 		});
 		
 		public final int craftingSlots;
-		public final int orderMattersSlots = 1;
-		public final Predicate<IRecipeUser> modeTest;
+		public final Set<Integer> orderMattersSlots = Sets.newHashSet(0);
+		public final Predicate<ICrafter> modeTest;
 		
-		private Mode (int craftingSlots, Predicate<IRecipeUser> modeTest) {
+		private Mode (int craftingSlots, Predicate<ICrafter> modeTest) {
 			this.craftingSlots = craftingSlots;
 			this.modeTest = modeTest;
 		}

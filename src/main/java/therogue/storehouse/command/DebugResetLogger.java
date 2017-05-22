@@ -22,7 +22,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class DebugResetLogger extends CommandBase
@@ -53,13 +53,13 @@ public class DebugResetLogger extends CommandBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		loghelper.updateSetTimes(args[0], Integer.parseInt(args[1]));
+		LOG.updateSetTimes(args[0], Integer.parseInt(args[1]));
 	}
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
     	ArrayList<String> options = new ArrayList<String>();
     	if (args.length == 0){
-    		for (String s : loghelper.getkeys()){
+    		for (String s : LOG.getkeys()){
     			options.add(s);
     		}
     		return options;

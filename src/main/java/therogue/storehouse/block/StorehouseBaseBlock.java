@@ -23,7 +23,7 @@ import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
@@ -70,7 +70,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	public StorehouseBaseBlock(String name, Material material, float hardness, float resistance)
 	{
 		super(material);
-		loghelper.log("trace", "Creating new StorehouseBaseBlock: " + name);
+		LOG.log("trace", "Creating new StorehouseBaseBlock: " + name);
 		this.setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
 		this.setHardness(hardness);
@@ -109,7 +109,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	 */
 	public void registerblock()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseBlock: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
@@ -120,7 +120,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	@SideOnly(Side.CLIENT)
 	public void registertexture()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseBlock Texture: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseBlock Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
 	

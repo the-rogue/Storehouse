@@ -8,13 +8,17 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.tile.machine.generator;
+package therogue.storehouse.crafting;
 
-import therogue.storehouse.tile.MachineTier;
+import java.util.Set;
 
-public class TileCombustionGeneratorEnder extends TileCombustionGenerator {
+import net.minecraftforge.items.IItemHandlerModifiable;
+
+public interface ICrafter {
 	
-	public TileCombustionGeneratorEnder () {
-		super(MachineTier.ender);
-	}
+	public Set<Integer> getOrderMattersSlots ();
+	
+	public IItemHandlerModifiable getCraftingInventory ();
+	
+	public IItemHandlerModifiable getOutputInventory ();
 }

@@ -27,7 +27,7 @@ import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock
@@ -41,7 +41,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	public StorehouseBaseStair(IStorehouseBaseBlock block)
 	{
 		super(block.getBlock().getDefaultState());
-		loghelper.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
+		LOG.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
 		this.blocktype = block;
 		this.setUnlocalizedName(block.getName() + "_stair");
 		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
@@ -79,7 +79,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	@Override
 	public void registerblock()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseStair: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseStair: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
@@ -90,7 +90,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	@SideOnly(Side.CLIENT)
 	public void registertexture()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseStair Texture: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseStair Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
 

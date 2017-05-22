@@ -11,125 +11,155 @@
 package therogue.storehouse.crafting;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import therogue.storehouse.util.CraftingHelper;
 import therogue.storehouse.util.ItemUtils;
+import therogue.storehouse.util.LOG;
 
 public class MachineRecipe {
 	
-	public final Predicate<IRecipeUser> correctMode;
-	public final int energyRequired;
-	public final ItemStack output[];
+	public final Predicate<ICrafter> correctMode;
+	public final int timeTaken;
+	public final List<ItemStack> output;
 	public final List<RecipeInput> craftingInputs;
 	
-	public MachineRecipe (Predicate<IRecipeUser> correctMode, int energyRequired, ItemStack output, RecipeInput... craftingInputs) {
-		this(correctMode, energyRequired, new ItemStack[] { output }, craftingInputs);
+	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, ItemStack output, RecipeInput... craftingInputs) {
+		this(correctMode, timeTaken, Lists.newArrayList(output), craftingInputs);
 	}
 	
-	public MachineRecipe (Predicate<IRecipeUser> correctMode, int energyRequired, ItemStack output[], RecipeInput... craftingInputs) {
+	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, List<ItemStack> output, RecipeInput... craftingInputs) {
 		this.correctMode = correctMode;
-		this.energyRequired = energyRequired;
+		this.timeTaken = timeTaken;
 		this.output = output;
 		this.craftingInputs = Arrays.asList(craftingInputs);
 	}
 	
-	public ItemStack[] getResult () {
-		ItemStack[] copy = new ItemStack[output.length];
-		for (int i = 0; i < output.length; i++)
+	public List<ItemStack> getResults () {
+		List<ItemStack> copy = Lists.newArrayList();
+		for (ItemStack stack : output)
 		{
-			copy[i] = output[i].copy();
+			copy.add(stack.copy());
 		}
 		return copy;
 	}
 	
-	public MatchReturn matches (IRecipeUser machine) {
-		if (!correctMode.test(machine)) return new MatchReturn();
-		NonNullList<ItemStack> available = machine.getCraftingStacks().inventory;
-		NonNullList<ItemStack> inventoryIngredients = NonNullList.create();
-		for (int i = 0; i < machine.getNumberOrderMattersSlots(); i++)
+	public boolean matches (ICrafter machine) {
+		if (!correctMode.test(machine)) return false;
+		IItemHandlerModifiable craftInventory = machine.getCraftingInventory();
+		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
+		for (Integer i : orderedSlots)
 		{
-			if (craftingInputs.get(i).isEmpty())
-			{
-				inventoryIngredients.add(ItemStack.EMPTY);
-				continue;
-			}
-			if (craftingInputs.get(i).matches(available.get(i)))
-			{
-				inventoryIngredients.add(available.remove(i));
-			}
-			else
-			{
-				return new MatchReturn();
-			}
+			if (craftingInputs.get(i).isEmpty()) continue;
+			if (!craftingInputs.get(i).matches(craftInventory.getStackInSlot(i))) return false;
 		}
-		for (int i = machine.getNumberOrderMattersSlots(); i < machine.getNumberCraftingSlots(); i++)
+		NonNullList<ItemStack> availableIngredients = NonNullList.create();
+		for (int i = 0; i < craftInventory.getSlots(); i++)
 		{
-			if (craftingInputs.get(i).isEmpty())
-			{
-				inventoryIngredients.add(ItemStack.EMPTY);
-				continue;
-			}
-			int index = CraftingHelper.getMachedCraftingIndex(available, craftingInputs.get(i));
+			if (orderedSlots.contains(i)) continue;
+			availableIngredients.add(craftInventory.getStackInSlot(i).copy());
+		}
+		for (int i = 0; i < craftInventory.getSlots(); i++)
+		{
+			if (orderedSlots.contains(i)) continue;
+			if (craftingInputs.get(i).isEmpty()) continue;
+			int index = CraftingHelper.getMachedCraftingIndex(availableIngredients, craftingInputs.get(i));
 			if (index != -1)
 			{
-				inventoryIngredients.add(available.remove(index));
+				availableIngredients.get(index).shrink(craftingInputs.get(index).getInput().getCount());
 			}
 			else
 			{
-				return new MatchReturn();
+				return false;
 			}
 		}
-		return new MatchReturn(this, inventoryIngredients, machine.getCraftingStacks());
+		return true;
 	}
 	
-	public CraftingStacks craft (MatchReturn recipe) {
-		if (!recipe.matched || recipe.owner != this) return recipe.machineInventory;
-		for (ItemStack stack : recipe.ingredients)
+	private Map<Integer, Integer> ingredientSlots (ICrafter machine) {
+		IItemHandlerModifiable craftInventory = machine.getCraftingInventory();
+		Map<Integer, Integer> slots = new HashMap<Integer, Integer>();
+		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
+		for (Integer i : orderedSlots)
 		{
-			ItemStack container = ForgeHooks.getContainerItem(stack.copy());
-			if (!container.isEmpty() && stack.getCount() > 1 && !ItemUtils.areItemStacksMergable(container, stack)) { return recipe.machineInventory; }
+			if (!craftingInputs.get(i).isEmpty()) slots.put(i, craftingInputs.get(i).getInput().getCount());
 		}
-		for (ItemStack stack : recipe.ingredients)
+		NonNullList<ItemStack> availableIngredients = NonNullList.create();
+		for (int i = 0; i < craftInventory.getSlots(); i++)
 		{
-			ItemStack container = ForgeHooks.getContainerItem(stack.copy());
-			stack.setCount(stack.getCount() - 1);
+			if (orderedSlots.contains(i))
+			{
+				availableIngredients.add(ItemStack.EMPTY);
+			}
+			else
+			{
+				availableIngredients.add(craftInventory.getStackInSlot(i).copy());
+			}
+		}
+		for (int i = 0; i < craftInventory.getSlots(); i++)
+		{
+			if (orderedSlots.contains(i)) continue;
+			if (craftingInputs.get(i).isEmpty()) continue;
+			int index = CraftingHelper.getMachedCraftingIndex(availableIngredients, craftingInputs.get(i));
+			if (index != -1)
+			{
+				availableIngredients.get(index).shrink(craftingInputs.get(index).getInput().getCount());
+				if (slots.get(index) != null)
+				{
+					slots.put(index, slots.get(index) + craftingInputs.get(i).getInput().getCount());
+				}
+				else
+				{
+					slots.put(index, craftingInputs.get(i).getInput().getCount());
+				}
+			}
+		}
+		return slots;
+	}
+	
+	public List<ItemStack> craft (ICrafter machine) {
+		if (!matches(machine)) return Lists.newArrayList();
+		Map<Integer, Integer> ingredientSlots = ingredientSlots(machine);
+		LOG.log("info", ingredientSlots);
+		IItemHandlerModifiable inventoryCraft = machine.getCraftingInventory();
+		Map<Integer, ItemStack> containerItems = new HashMap<Integer, ItemStack>();
+		for (Integer slot : ingredientSlots.keySet())
+		{
+			ItemStack stack = inventoryCraft.getStackInSlot(slot);
+			ItemStack copy = stack.copy();
+			copy.setCount(ingredientSlots.get(slot));
+			ItemStack container = ForgeHooks.getContainerItem(copy);
 			if (!container.isEmpty())
 			{
-				int index = recipe.machineInventory.inventory.indexOf(stack);
-				recipe.machineInventory.inventory.set(index, ItemUtils.mergeStacks(64, true, stack, container));
+				if (stack.getCount() > 1 && !ItemUtils.areItemStacksMergableWithLimit(Math.min(stack.getMaxStackSize(), inventoryCraft.getSlotLimit(slot)), container, stack)) return Lists.newArrayList();
+				containerItems.put(slot, container);
 			}
 		}
-		for (ItemStack stack : output)
+		for (Integer slot : ingredientSlots.keySet())
 		{
-			recipe.machineInventory.output.add(stack.copy());
+			ItemStack stack = inventoryCraft.getStackInSlot(slot);
+			stack.setCount(stack.getCount() - ingredientSlots.get(slot));
+			if (containerItems.containsKey(slot))
+			{
+				ItemStack container = containerItems.get(slot);
+				inventoryCraft.setStackInSlot(slot, ItemUtils.mergeStacks(Math.min(stack.getMaxStackSize(), inventoryCraft.getSlotLimit(slot)), true, stack, container));
+			}
 		}
-		return recipe.machineInventory;
+		return getResults();
 	}
 	
-	public static class MatchReturn {
-		
-		public final MachineRecipe owner;
-		public final boolean matched;
-		public final NonNullList<ItemStack> ingredients;
-		public final CraftingStacks machineInventory;
-		
-		private MatchReturn (MachineRecipe owner, NonNullList<ItemStack> ingredients, CraftingStacks machineInventory) {
-			this.owner = owner;
-			this.matched = true;
-			this.ingredients = ingredients;
-			this.machineInventory = machineInventory;
-		}
-		
-		private MatchReturn () {
-			this.owner = null;
-			this.matched = false;
-			this.ingredients = NonNullList.create();
-			this.machineInventory = null;
-		}
+	@Override
+	public String toString () {
+		return "Inputs: " + craftingInputs.toString() + "\nOutputs: " + output.toString();
 	}
 }

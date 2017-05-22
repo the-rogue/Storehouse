@@ -11,83 +11,28 @@
 package therogue.storehouse.tile.machine.generator;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IInteractionObject;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.init.ModBlocks;
-import therogue.storehouse.inventory.IDefaultSidedInventory;
-import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.MachineTier;
-import therogue.storehouse.tile.StorehouseBaseEnergyStorageTE;
+import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.EnergyUtils;
 import therogue.storehouse.util.GeneralUtils;
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.IEnergyProvider;
 
-public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE implements IEnergyProvider, IDefaultSidedInventory, IInteractionObject
-{
-	protected InventoryManager inventory;
-	protected MachineTier type;
+public abstract class TileBaseGenerator extends StorehouseBaseMachine {
+	
 	protected int RFPerTick;
 	
-	public TileBaseGenerator(IStorehouseBaseBlock block, MachineTier type, int baseGeneration, boolean allowInsert)
-	{
-		super(block, GeneratorUtils.getAppropriateEnergyStored(type, baseGeneration, allowInsert), type);
-		this.type = type;
-		this.RFPerTick = GeneratorUtils.getRecieve(type, baseGeneration);
+	public TileBaseGenerator (IStorehouseBaseBlock block, MachineTier tier, int baseGeneration, boolean allowInsert) {
+		super(block, tier);
+		this.RFPerTick = GeneratorUtils.getRecieve(tier, baseGeneration);
+		energyStorage = GeneratorUtils.getAppropriateEnergyStored(tier, baseGeneration, allowInsert);
 	}
 	
+	// -------------------------ITickable-----------------------------------------------------------------
 	@Override
-	public int getEnergyStored(EnumFacing from)
-	{
-		return energyStorage.getEnergyStored();
-	}
-	
-	@Override
-	public int getMaxEnergyStored(EnumFacing from)
-	{
-		return energyStorage.getMaxEnergyStored();
-	}
-	
-	@Override
-	public boolean canConnectEnergy(EnumFacing from)
-	{
-		return true;
-	}
-	
-	@Override
-	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate)
-	{
-		return energyStorage.extractEnergy(maxExtract, simulate);
-	}
-	
-	/**
-	 * Sends energy to neighbouring energy blocks
-	 */
-	protected void sendEnergyToNeighbours()
-	{
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			if (energyStorage.getEnergyStored() <= 0) return;
-			int sentRF = EnergyUtils.sendEnergy(world, getPos(), facing, energyStorage.extractEnergy(energyStorage.getMaxExtract(), true));
-			energyStorage.extractEnergy(sentRF, false);
-		}
-	}
-	
-	protected void sendEnergyToItems(int slot)
-	{
-		if (energyStorage.getEnergyStored() <= 0) return;
-		int sentRF = EnergyUtils.sendItemEnergy(inventory.getStackInSlot(slot), energyStorage.extractEnergy(energyStorage.getMaxExtract() / 4, true));
-		energyStorage.extractEnergy(sentRF, false);
-	}
-	
-	@Override
-	public void update()
-	{
+	public void update () {
 		if (GeneralUtils.isServerSide(world))
 		{
 			if (isRunning())
@@ -104,139 +49,80 @@ public abstract class TileBaseGenerator extends StorehouseBaseEnergyStorageTE im
 		}
 	}
 	
-	protected abstract void doRunTick();
-	
-	protected abstract void tick();
-	
-	public abstract boolean isRunning();
-	
-	public int runtimeLeft() {
-		return 0;
-	}
-	
-	public int maxruntime(){
-		return 0;
-	}
-	
+	// -------------------------Utility Methods to keep update() short-----------------------------------
 	/**
-	 * Fields Used:
-	 *  #1 - Machine Tier
-	 *  #2 - Running?
-	 *  #3 - Current item energy level
-	 *  #4 - Max item level
-	 *  #5 - Current energy stored
-	 *  #6 - Max energy stored
-	 *  #7 - Current burn time left
-	 *  #8 - Max burn time for this fuel
+	 * Sends energy to neighbouring energy blocks
+	 */
+	protected void sendEnergyToNeighbours () {
+		for (EnumFacing facing : EnumFacing.values())
+		{
+			if (energyStorage.getEnergyStored() <= 0) return;
+			int sentRF = EnergyUtils.sendEnergy(world, getPos(), facing, energyStorage.extractEnergy(energyStorage.getMaxExtract(), true));
+			energyStorage.extractEnergy(sentRF, false);
+		}
+	}
+	
+	protected void sendEnergyToItems (int slot) {
+		if (energyStorage.getEnergyStored() <= 0) return;
+		int sentRF = EnergyUtils.sendItemEnergy(inventory.getStackInSlot(slot), energyStorage.extractEnergy(energyStorage.getMaxExtract() / 4, true));
+		energyStorage.extractEnergy(sentRF, false);
+	}
+	
+	// -------------------------Customisable Generator Methods-------------------------------------------
+	public abstract boolean isRunning ();
+	
+	protected abstract void doRunTick ();
+	
+	protected abstract void tick ();
+	
+	public int runtimeLeft () {
+		return 0;
+	}
+	
+	public int maxruntime () {
+		return 0;
+	}
+	
+	// -------------------------Container/Gui Methods----------------------------------------------------
+	/**
+	 * Fields Used: #4 - Running? #5 - Current item energy level #6 - Max item energy level #7 - Current burn time left #8 - Max burn time for this fuel
 	 */
 	@Override
-	public int getField(int id)
-	{
+	public int getField (int id) {
 		ItemStack stack;
-		switch (id)
-		{
-			case 1:
-				return tier.ordinal();
-			case 2:
-				return isRunning() ? 1 : 0;
-			case 3:
-				stack = inventory.getStackInSlot(0);
-				if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem)
-				{
-					return ((IEnergyContainerItem) stack.getItem()).getEnergyStored(stack);
-				}
-				else if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
-				{
-					return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
-				}
-				else
-				{
-					return 0;
-				}
+		switch (id) {
 			case 4:
-				stack = inventory.getStackInSlot(0);
-				if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem)
-				{
-					return ((IEnergyContainerItem) stack.getItem()).getMaxEnergyStored(stack);
-				}
-				else if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
-				{
-					return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
-				}
-				else
-				{
-					return 0;
-				}
+				return isRunning() ? 1 : 0;
 			case 5:
-				return energyStorage.getEnergyStored();
+				stack = inventory.getStackInSlot(0);
+				if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
 			case 6:
-				return energyStorage.getMaxEnergyStored();
+				stack = inventory.getStackInSlot(0);
+				if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
 			case 7:
 				return runtimeLeft();
 			case 8:
 				return maxruntime();
 			default:
-				return 0;
+				return super.getField(id);
 		}
 	}
 	
 	@Override
-	public void setField(int id, int value)
-	{
-		switch (id)
-		{
+	public void setField (int id, int value) {
+		super.setField(id, value);
+		switch (id) {
 		}
 	}
 	
 	@Override
-	public int getFieldCount()
-	{
-		return 8;
+	public int getFieldCount () {
+		return super.getFieldCount() + 5;
 	}
 	
+	// -------------------------IWorldNamable Methods-----------------------------------------------------
 	@Override
-	public boolean canExtract()
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean canReceive()
-	{
-		return false;
-	}
-	
-	@Override
-	public TileEntity getTileEntity()
-	{
-		return this;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return super.getName() + "_" + type.getName();
-	}
-	
-	@Override
-	public InventoryManager getInventoryManager()
-	{
-		if (inventory == null) { throw new NullPointerException("inventory is null for generator: " + getName()); }
-		return inventory;
-	}
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return true; }
-		return super.hasCapability(capability, facing);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	{
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return (T) inventory.getWrapper(); }
-		return super.getCapability(capability, facing);
+	public String getName () {
+		return super.getName() + "_" + tier.getName();
 	}
 }

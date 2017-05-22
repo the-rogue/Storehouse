@@ -44,12 +44,8 @@ import therogue.storehouse.reference.IDs;
 import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.machine.generator.GeneratorUtils;
-import therogue.storehouse.tile.machine.generator.TileCombustionGeneratorAdvanced;
-import therogue.storehouse.tile.machine.generator.TileCombustionGeneratorBasic;
-import therogue.storehouse.tile.machine.generator.TileCombustionGeneratorEnder;
-import therogue.storehouse.tile.machine.generator.TileCombustionGeneratorInfused;
-import therogue.storehouse.tile.machine.generator.TileCombustionGeneratorUltimate;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
+import therogue.storehouse.util.LOG;
 
 public class BlockCombustionGenerator extends StorehouseBaseMachine implements IStorehouseVariantBlock {
 	
@@ -122,7 +118,7 @@ public class BlockCombustionGenerator extends StorehouseBaseMachine implements I
 	 * Registers this block easily
 	 */
 	public void registerblock () {
-		loghelper.log("trace", "Registering StorehouseBaseBlock: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
 	}
@@ -148,20 +144,20 @@ public class BlockCombustionGenerator extends StorehouseBaseMachine implements I
 	
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
-		MachineTier type = GeneratorUtils.getTypeFromMeta(meta);
-		switch (type) {
+		MachineTier tier = GeneratorUtils.getTypeFromMeta(meta);
+		switch (tier) {
 			case advanced:
-				return new TileCombustionGeneratorAdvanced();
+				return new TileCombustionGenerator.TileCombustionGeneratorAdvanced();
 			case basic:
-				return new TileCombustionGeneratorBasic();
+				return new TileCombustionGenerator.TileCombustionGeneratorBasic();
 			case ender:
-				return new TileCombustionGeneratorEnder();
+				return new TileCombustionGenerator.TileCombustionGeneratorEnder();
 			case infused:
-				return new TileCombustionGeneratorInfused();
+				return new TileCombustionGenerator.TileCombustionGeneratorInfused();
 			case ultimate:
-				return new TileCombustionGeneratorUltimate();
+				return new TileCombustionGenerator.TileCombustionGeneratorUltimate();
 			default:
-				throw new IllegalArgumentException("Meta Out of Range");
+				return null;
 		}
 	}
 	

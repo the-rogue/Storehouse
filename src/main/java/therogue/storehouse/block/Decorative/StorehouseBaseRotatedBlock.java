@@ -25,7 +25,7 @@ import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock
@@ -38,7 +38,7 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	public StorehouseBaseRotatedBlock(IStorehouseBaseBlock blocktype, String namesuffix)
 	{
 		super(blocktype.getblockMaterial());
-		loghelper.log("trace", "Creating new StorehouseBaseRotatedBlock: " + blocktype.getName() + "_" + namesuffix);
+		LOG.log("trace", "Creating new StorehouseBaseRotatedBlock: " + blocktype.getName() + "_" + namesuffix);
 		this.setUnlocalizedName(blocktype.getName() + "_" + namesuffix);
 		this.setRegistryName(General.MOD_ID, blocktype.getName() + "_" + namesuffix);
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
@@ -78,7 +78,7 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	@Override
 	public void registerblock()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseRotatedBlock: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseRotatedBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
@@ -90,7 +90,7 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	@Override
 	public void registertexture()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseRotatedBlock Texture: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseRotatedBlock Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
 	

@@ -12,7 +12,7 @@ package therogue.storehouse.reference;
 
 import net.minecraftforge.common.config.Configuration;
 import therogue.storehouse.handlers.ConfigHandler;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class ConfigValues
@@ -43,9 +43,9 @@ public class ConfigValues
 	 */
 	public static void readConfigValues()
 	{
-		loghelper.log("trace", "Getting Configuration from ConfigHandler");
+		LOG.log("trace", "Getting Configuration from ConfigHandler");
 		configuration = ConfigHandler.getConfiguration();
-		loghelper.log("trace", "Started Reading Config Values");
+		LOG.log("trace", "Started Reading Config Values");
 
 		// Reads Values from the config
 		//General
@@ -53,6 +53,6 @@ public class ConfigValues
 		//Energy Values
 		networkInspectorCapacity = configuration.get(CATEGORY_ENERGY_VALUES, "NetworkInspectorCapacity", networkInspectorCapacity).getInt();
 		networkInspectorRecieveRate = configuration.get(CATEGORY_ENERGY_VALUES, "NetworkInspectorRecieveRate", networkInspectorRecieveRate).getInt();
-		loghelper.log("trace", "Finished Reading Config Values");
+		LOG.log("trace", "Finished Reading Config Values");
 	}
 }

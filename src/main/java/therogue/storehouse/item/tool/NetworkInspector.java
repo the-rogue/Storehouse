@@ -23,9 +23,8 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
 import therogue.storehouse.reference.ConfigValues;
-import cofh.api.energy.IEnergyContainerItem;
 
-public class NetworkInspector extends StorehouseBaseActiveItem implements IEnergyContainerItem {
+public class NetworkInspector extends StorehouseBaseActiveItem {
 	
 	public NetworkInspector (String name) {
 		super(name);
@@ -37,26 +36,6 @@ public class NetworkInspector extends StorehouseBaseActiveItem implements IEnerg
 	@Override
 	public ICapabilityProvider initCapabilities (ItemStack stack, NBTTagCompound nbt) {
 		return new ItemEnergyCapabilityProvider(stack, ConfigValues.networkInspectorCapacity, ConfigValues.networkInspectorRecieveRate, 0);
-	}
-	
-	@Override
-	public int receiveEnergy (ItemStack container, int maxReceive, boolean simulate) {
-		return container.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(maxReceive, simulate);
-	}
-	
-	@Override
-	public int extractEnergy (ItemStack container, int maxExtract, boolean simulate) {
-		return container.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(maxExtract, simulate);
-	}
-	
-	@Override
-	public int getEnergyStored (ItemStack container) {
-		return container.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
-	}
-	
-	@Override
-	public int getMaxEnergyStored (ItemStack container) {
-		return container.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
 	}
 	
 	@Override

@@ -15,7 +15,7 @@ import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public class StorehouseGuiFactory implements IModGuiFactory
@@ -34,7 +34,7 @@ public class StorehouseGuiFactory implements IModGuiFactory
 	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass()
 	{
-		loghelper.log("trace", "Storehouse Config Gui Class Given");
+		LOG.log("trace", "Storehouse Config Gui Class Given");
 		return StorehouseConfigGui.class;
 	}
 

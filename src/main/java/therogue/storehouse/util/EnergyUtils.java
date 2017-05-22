@@ -17,28 +17,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.IEnergyReceiver;
 
-
-public class EnergyUtils
-{
-	public static int sendEnergy(World world, BlockPos from, EnumFacing side, int maxRFToGive)
-	{
+public class EnergyUtils {
+	
+	public static int sendEnergy (World world, BlockPos from, EnumFacing side, int maxRFToGive) {
 		EnumFacing opposite = side.getOpposite();
 		BlockPos pos = from.offset(side);
 		TileEntity te = world.getTileEntity(pos);
 		int received = 0;
-
-		if (te instanceof IEnergyReceiver)
-		{
-			IEnergyReceiver teReceive = (IEnergyReceiver) te;
-			if (teReceive.canConnectEnergy(opposite))
-			{
-				received = teReceive.receiveEnergy(opposite, maxRFToGive, false);
-			}
-		}
-		else if (te != null && te.hasCapability(CapabilityEnergy.ENERGY, opposite))
+		if (te != null && te.hasCapability(CapabilityEnergy.ENERGY, opposite))
 		{
 			IEnergyStorage capability = te.getCapability(CapabilityEnergy.ENERGY, opposite);
 			if (capability.canReceive())
@@ -48,18 +35,10 @@ public class EnergyUtils
 		}
 		return received;
 	}
-
-	public static int sendItemEnergy(ItemStack energyItem, int maxRFToGive)
-	{
-		if (energyItem == null || energyItem.isEmpty() || maxRFToGive <= 0)
-		{
-			return 0;
-		}
-		if (energyItem.getItem() instanceof IEnergyContainerItem)
-		{
-			return ((IEnergyContainerItem) energyItem.getItem()).receiveEnergy(energyItem, maxRFToGive, false);
-		}
-		else if (energyItem.hasCapability(CapabilityEnergy.ENERGY, null) && energyItem.getCapability(CapabilityEnergy.ENERGY, null).canReceive())
+	
+	public static int sendItemEnergy (ItemStack energyItem, int maxRFToGive) {
+		if (energyItem == null || energyItem.isEmpty() || maxRFToGive <= 0) return 0;
+		if (energyItem.hasCapability(CapabilityEnergy.ENERGY, null) && energyItem.getCapability(CapabilityEnergy.ENERGY, null).canReceive())
 		{
 			return energyItem.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(maxRFToGive, false);
 		}
@@ -69,17 +48,9 @@ public class EnergyUtils
 		}
 	}
 	
-	public static boolean isItemFull(ItemStack energyItem){
-		if (energyItem == null || energyItem.isEmpty())
-		{
-			return false;
-		}
-		if (energyItem.getItem() instanceof IEnergyContainerItem)
-		{
-			IEnergyContainerItem item = (IEnergyContainerItem) energyItem.getItem();
-			return item.getEnergyStored(energyItem) == item.getMaxEnergyStored(energyItem);
-		}
-		else if (energyItem.hasCapability(CapabilityEnergy.ENERGY, null) && energyItem.getCapability(CapabilityEnergy.ENERGY, null).canReceive())
+	public static boolean isItemFull (ItemStack energyItem) {
+		if (energyItem == null || energyItem.isEmpty()) return false;
+		if (energyItem.hasCapability(CapabilityEnergy.ENERGY, null))
 		{
 			IEnergyStorage capability = energyItem.getCapability(CapabilityEnergy.ENERGY, null);
 			return capability.getEnergyStored() == capability.getMaxEnergyStored();

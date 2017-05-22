@@ -12,7 +12,6 @@ package therogue.storehouse.tile;
 
 import net.minecraft.util.IStringSerializable;
 
-
 public enum MachineTier implements IStringSerializable
 {
 	basic,
@@ -20,16 +19,14 @@ public enum MachineTier implements IStringSerializable
 	infused,
 	ender,
 	ultimate;
-
+	
 	@Override
-	public String getName()
-	{
+	public String getName () {
 		return this.name();
 	}
 	
 	@Override
-	public String toString()
-	{
+	public String toString () {
 		return getName();
 	}
 }

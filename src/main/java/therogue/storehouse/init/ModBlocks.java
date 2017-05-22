@@ -24,7 +24,7 @@ import therogue.storehouse.block.machine.BlockLiquidGenerator;
 import therogue.storehouse.block.machine.BlockSolarGenerator;
 import therogue.storehouse.block.machine.BlockThermalPress;
 import therogue.storehouse.reference.General;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 @GameRegistry.ObjectHolder (General.MOD_ID)
 public class ModBlocks {
@@ -56,7 +56,7 @@ public class ModBlocks {
 	 */
 	static
 	{
-		loghelper.log("debug", "Adding Blocks");
+		LOG.log("debug", "Adding Blocks");
 		// Adds Decorative blocks
 		blocklist.add(azurite_dust_block);
 		blocklist.add(azurite_crystal_block);
@@ -80,7 +80,7 @@ public class ModBlocks {
 	 * Registers all the blocks
 	 */
 	public static void preInit () {
-		loghelper.log("debug", "Registering Blocks");
+		LOG.log("debug", "Registering Blocks");
 		for (IStorehouseBaseBlock block : blocklist)
 		{
 			block.registerblock();

@@ -13,24 +13,41 @@ package therogue.storehouse.util;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class BlockUtils
-{
-	public static boolean canBlockSeeSky(BlockPos pos, World world) {
-		
-		for (BlockPos blockpos = pos.up(); blockpos.getY() < world.getActualHeight(); blockpos = blockpos.up()) {
-			
+public class BlockUtils {
+	
+	public static boolean canBlockSeeSky (BlockPos pos, World world) {
+		for (BlockPos blockpos = pos.up(); blockpos.getY() < world.getActualHeight(); blockpos = blockpos.up())
+		{
 			IBlockState iblockstate = world.getBlockState(blockpos);
-			if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 1 && iblockstate.getBlock() != Blocks.GLASS && !iblockstate.getMaterial().isLiquid()){
-				return false;
-			}
+			if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 1 && iblockstate.getBlock() != Blocks.GLASS && !iblockstate.getMaterial().isLiquid()) { return false; }
 		}
 		return true;
 	}
-	public static boolean isUsableByPlayer(TileEntity te, EntityPlayer player){
+	
+	public static boolean isUsableByPlayer (TileEntity te, EntityPlayer player) {
 		return te.getWorld().getTileEntity(te.getPos()) != te ? false : player.getDistanceSq((double) te.getPos().getX() + 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 64.0D;
+	}
+	
+	public static void dropInventory (World world, BlockPos pos, TileEntity tile) {
+		if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			IItemHandler inventory = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			for (int i = 0; i < inventory.getSlots(); ++i)
+			{
+				ItemStack itemstack = inventory.getStackInSlot(i);
+				if (!itemstack.isEmpty())
+				{
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemstack);
+				}
+			}
+		}
 	}
 }

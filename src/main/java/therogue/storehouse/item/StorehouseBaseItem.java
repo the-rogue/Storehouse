@@ -17,7 +17,7 @@ import therogue.storehouse.client.init.ItemRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 
 public abstract class StorehouseBaseItem extends Item implements IStorehouseBaseItem
@@ -28,7 +28,7 @@ public abstract class StorehouseBaseItem extends Item implements IStorehouseBase
 	public StorehouseBaseItem(String name)
 	{
 		super();
-		loghelper.log("trace", "Creating new StorehouseBaseItem: " + name);
+		LOG.log("trace", "Creating new StorehouseBaseItem: " + name);
 		this.setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
@@ -73,7 +73,7 @@ public abstract class StorehouseBaseItem extends Item implements IStorehouseBase
 	 */
 	public void registeritem()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseItem: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseItem: " + getName());
 		GameRegistry.register(this);
 	}
 
@@ -83,7 +83,7 @@ public abstract class StorehouseBaseItem extends Item implements IStorehouseBase
 	@Override
 	public void registertexture()
 	{
-		loghelper.log("trace", "Registering StorehouseBaseItem Texture: " + getName());
+		LOG.log("trace", "Registering StorehouseBaseItem Texture: " + getName());
 		ItemRender.itemTexture(this);
 	}
 }

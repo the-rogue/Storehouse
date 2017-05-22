@@ -8,13 +8,17 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.crafting;
+package therogue.storehouse.inventory;
 
-public interface IRecipeUser {
+import net.minecraftforge.items.IItemHandlerModifiable;
+
+public interface IGuiSupplier {
 	
-	public int getNumberOrderMattersSlots ();
+	public int getField (int id);
 	
-	public int getNumberCraftingSlots ();
+	public void setField (int id, int value);
 	
-	public CraftingStacks getCraftingStacks ();
+	public int getFieldCount ();
+	
+	public IItemHandlerModifiable getContainerCapability ();
 }

@@ -14,13 +14,13 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.reference.Icons;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.util.GuiHelper;
@@ -33,9 +33,9 @@ public class ElementFluidTank extends ElementBase {
 	public final int x;
 	public final int y;
 	public final IFluidHandler tank;
-	public final IInventory stateChanger;
+	public final IGuiSupplier stateChanger;
 	
-	public ElementFluidTank (GuiBase gui, int x, int y, IFluidHandler tank, IInventory stateChanger) {
+	public ElementFluidTank (GuiBase gui, int x, int y, IFluidHandler tank, IGuiSupplier stateChanger) {
 		super(gui);
 		this.iconLocation = Icons.FluidTank.getLocation();
 		this.icon = TextureHelper.getImageAt(iconLocation);

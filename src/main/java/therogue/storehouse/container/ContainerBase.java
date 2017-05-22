@@ -19,6 +19,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
+import therogue.storehouse.util.BlockUtils;
 import therogue.storehouse.util.ItemUtils;
 
 public class ContainerBase extends Container {
@@ -56,8 +57,7 @@ public class ContainerBase extends Container {
 	
 	@Override
 	public boolean canInteractWith (EntityPlayer player) {
-		// TODO Auto-generated method stub
-		return this.teInv.isUsableByPlayer(player);
+		return BlockUtils.isUsableByPlayer(teInv, player);
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ public class GuiCombustionGenerator extends GuiBase {
 	public GuiCombustionGenerator (Container inventorySlotsIn, TileCombustionGenerator inventory) {
 		super(inventory, inventorySlotsIn);
 		elements.add(new ElementChargingBar(this, 48, 35, Icons.CombustionIndicator.getLocation(), inventory, 7, 8));
-		elements.add(new ElementChargingBar(this, 51, 17, Icons.EnergyIndicator.getLocation(), inventory, 3, 4));
-		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 5, 6));
+		elements.add(new ElementChargingBar(this, 51, 17, Icons.EnergyIndicator.getLocation(), inventory, 5, 6));
+		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 2, 3));
 	}
 }

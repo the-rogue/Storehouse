@@ -10,14 +10,14 @@
 
 package therogue.storehouse.client.gui.element;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.util.TextureHelper;
 
 public class ElementStandardProgressBar extends ElementProgressBar {
 	
-	public ElementStandardProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField) {
+	public ElementStandardProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IGuiSupplier stateChanger, int progressField, int maxProgressField) {
 		super(gui, x, y, iconLocation, stateChanger, progressField, maxProgressField);
 	}
 	

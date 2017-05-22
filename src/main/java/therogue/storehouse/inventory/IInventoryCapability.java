@@ -8,7 +8,13 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.util;
+package therogue.storehouse.inventory;
 
-public class FluidUtils {
+import net.minecraftforge.items.IItemHandlerModifiable;
+
+public interface IInventoryCapability {
+	
+	public IItemHandlerModifiable getInventory ();
+	
+	public void onInventoryChange ();
 }

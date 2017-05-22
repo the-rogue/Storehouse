@@ -21,7 +21,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.init.ModBlocks;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
 public class StorehouseWorldGen implements IWorldGenerator
 {
@@ -36,14 +36,14 @@ public class StorehouseWorldGen implements IWorldGenerator
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
 	{
-		loghelper.log("trace", "Generating world Gen");
+		LOG.log("trace", "Generating world Gen");
 	    if(world.provider.isSurfaceWorld() && world.provider.getAverageGroundLevel() > 55 && world.provider.getAverageGroundLevel() < 70 && world.provider.getDimension() != 1) {
 	    	this.runGenerator(this.azurite_ore_gen, world, random, chunkX, chunkZ, 40, 2, 52);
 	    }
 
 	}
 	private void runGenerator(WorldGenerator generator, World world, Random rand, int chunk_X, int chunk_Z, int chancesToSpawn, int minHeight, int maxHeight) {
-		loghelper.log("trace", "Running WorldGenerator");
+		LOG.log("trace", "Running WorldGenerator");
 		while (minHeight < 0) {
 			++minHeight;
 		}
@@ -63,13 +63,13 @@ public class StorehouseWorldGen implements IWorldGenerator
 	        int x = chunk_X * 16 + rand.nextInt(16);
 	        int y = minHeight + rand.nextInt(heightDiff);
 	        int z = chunk_Z * 16 + rand.nextInt(16);
-	        loghelper.log("trace", "Generating the Stuff for chance: " + i);
+	        LOG.log("trace", "Generating the Stuff for chance: " + i);
 	        generator.generate(world, rand, new BlockPos(x, y, z));
 	    }
 	}
 	
 	public static void init() {
-		loghelper.log("trace", "Registering World Generator");
+		LOG.log("trace", "Registering World Generator");
 		GameRegistry.registerWorldGenerator(INSTANCE, 0);
 	}
 

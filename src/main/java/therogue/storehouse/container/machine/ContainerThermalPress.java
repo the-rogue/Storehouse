@@ -11,8 +11,8 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.inventory.SlotAdv;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class ContainerThermalPress extends ContainerBase {
@@ -20,11 +20,11 @@ public class ContainerThermalPress extends ContainerBase {
 	public ContainerThermalPress (IInventory playerInv, TileThermalPress teInv) {
 		super(playerInv, teInv);
 		// Add Thermal Press's Inventory Slot IDs 36-41
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 0, 110, 39));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 1, 74, 39));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 2, 74, 12));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 3, 74, 66));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 4, 47, 12));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 5, 47, 66));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 110, 39));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 74, 39));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 2, 74, 12));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 3, 74, 66));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 4, 47, 12));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 5, 47, 66));
 	}
 }

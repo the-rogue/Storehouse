@@ -12,9 +12,9 @@ package therogue.storehouse.client.gui.element;
 
 import java.util.Arrays;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.util.TextureHelper;
 
 public class ElementButton extends ElementBase {
@@ -23,12 +23,12 @@ public class ElementButton extends ElementBase {
 	public final String commonToolTip;
 	public final IconDefinition[] innerIcons;
 	public final String[] toolTips;
-	public final IInventory stateChanger;
+	public final IGuiSupplier stateChanger;
 	public final int modeField;
 	public final int numModes;
 	private boolean pressed = false;
 	
-	public ElementButton (GuiBase gui, IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, IInventory stateChanger, int modeField, int numModes) {
+	public ElementButton (GuiBase gui, IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, IGuiSupplier stateChanger, int modeField, int numModes) {
 		super(gui);
 		this.mainIcon = mainIcon;
 		this.commonToolTip = commonToolTip;
@@ -67,7 +67,7 @@ public class ElementButton extends ElementBase {
 		if (gui.isPointInGuiRegion(mainIcon.x, mainIcon.y, mainIcon.width, mainIcon.height, mouseX, mouseY))
 		{
 			this.pressed = true;
-			if (currentMode > numModes)
+			if (currentMode >= numModes - 1)
 			{
 				stateChanger.setField(modeField, 0);
 			}

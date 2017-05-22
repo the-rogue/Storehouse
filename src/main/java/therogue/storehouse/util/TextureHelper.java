@@ -57,7 +57,7 @@ public class TextureHelper {
 		}
 		catch (IOException e)
 		{
-			loghelper.log("error", "Could not load the Texture at: " + location.toString());
+			LOG.log("error", "Could not load the Texture at: " + location.toString());
 		}
 		finally
 		{

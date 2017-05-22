@@ -13,41 +13,37 @@ package therogue.storehouse.proxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import therogue.storehouse.util.loghelper;
+import therogue.storehouse.util.LOG;
 
-
-public class ServerProxy extends CommonProxy
-{	
+public class ServerProxy extends CommonProxy {
+	
 	/**
 	 * PreInitialises all methods the Server needs to run, and all common methods by calling super() to common proxy
 	 */
 	@Override
-	public void preInit(FMLPreInitializationEvent event)
-	{
+	public void preInit (FMLPreInitializationEvent event) {
 		super.preInit(event);
-		loghelper.log("debug", "Server Proxy Started PreInitialisation");
-		loghelper.log("debug", "Server Proxy Finished PreInitialisation");
+		LOG.debug("Server Proxy Started PreInitialisation");
+		LOG.debug("Server Proxy Finished PreInitialisation");
 	}
 	
 	/**
 	 * Initialises all methods the Server needs to run, and all common methods by calling super() to common proxy
 	 */
 	@Override
-	public void init(FMLInitializationEvent event)
-	{
+	public void init (FMLInitializationEvent event) {
 		super.init(event);
-		loghelper.log("debug", "Server Proxy Started Initialisation");
-		loghelper.log("debug", "Server Proxy Finished Initialisation");
+		LOG.debug("Server Proxy Started Initialisation");
+		LOG.debug("Server Proxy Finished Initialisation");
 	}
-
+	
 	/**
 	 * PostInitialises all methods the Server needs to run, and all common methods by calling super() to common proxy
 	 */
 	@Override
-	public void postInit(FMLPostInitializationEvent event)
-	{
+	public void postInit (FMLPostInitializationEvent event) {
 		super.postInit(event);
-		loghelper.log("debug", "Server Proxy Started PostInitialisation");
-		loghelper.log("debug", "Server Proxy Finished PostInitialisation");
+		LOG.debug("Server Proxy Started PostInitialisation");
+		LOG.debug("Server Proxy Finished PostInitialisation");
 	}
 }

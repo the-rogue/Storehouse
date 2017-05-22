@@ -11,27 +11,21 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.inventory.SlotAdv;
 import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
 
-public class ContainerSolarGenerator extends ContainerBase
-{
-/*
- * SLOTS:
- * 
- * Player's Inventory (HotBar) 0 - 8..0 - 8
- * Player's Inventory (Main) 9 - 35...9 - 35
- * TileSolarGenerator 36, 37..........0 , 1
- */
-	public ContainerSolarGenerator(IInventory playerInv, TileSolarGenerator teInv)
-	{
+public class ContainerSolarGenerator extends ContainerBase {
+	
+	/*
+	 * SLOTS:
+	 * 
+	 * Player's Inventory (HotBar) 0 - 8..0 - 8 Player's Inventory (Main) 9 - 35...9 - 35 TileSolarGenerator 36, 37..........0 , 1
+	 */
+	public ContainerSolarGenerator (IInventory playerInv, TileSolarGenerator teInv) {
 		super(playerInv, teInv);
-		
 		// Add Solar Generator's Inventory Slot IDs 36,37
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 0, 30, 53));
-		this.addSlotToContainer(new SlotAdv(teInv.getInventoryManager(), 1, 30, 17));
-		
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 30, 53));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 30, 17));
 	}
-
 }

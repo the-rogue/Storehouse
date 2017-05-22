@@ -81,4 +81,9 @@ public class RecipeInput {
 	public boolean isEmpty () {
 		return input.isEmpty();
 	}
+	
+	@Override
+	public String toString () {
+		return input.toString() + " (Uses meta: " + useMeta + ", Uses OreDict: " + useOreDict + ") ";
+	}
 }

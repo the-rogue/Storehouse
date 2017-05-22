@@ -13,9 +13,9 @@ package therogue.storehouse.client.gui.element;
 import java.awt.image.BufferedImage;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
@@ -26,11 +26,11 @@ public abstract class ElementProgressBar extends ElementBase {
 	public final ResourceLocation iconLocation;
 	public final int x;
 	public final int y;
-	public final IInventory stateChanger;
+	public final IGuiSupplier stateChanger;
 	public final int progressField;
 	public final int maxProgressField;
 	
-	public ElementProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IInventory stateChanger, int progressField, int maxProgressField) {
+	public ElementProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IGuiSupplier stateChanger, int progressField, int maxProgressField) {
 		super(gui);
 		this.iconLocation = iconLocation;
 		this.icon = TextureHelper.getImageAt(iconLocation);
