@@ -78,8 +78,7 @@ public class ContainerBase extends Container {
 				// From Player Inventory to TE Inventory
 				if (!this.mergeItemStack(current, 36, this.inventorySlots.size(), false)) return ItemStack.EMPTY;
 			}
-			if (current.getCount() == 0) slot.putStack(ItemStack.EMPTY);
-			else slot.onSlotChanged();
+			slot.onSlotChanged();
 			if (current.getCount() == previous.getCount()) return ItemStack.EMPTY;
 			slot.onTake(playerIn, current);
 		}
@@ -98,9 +97,9 @@ public class ContainerBase extends Container {
 		{
 			Slot slot = (Slot) this.inventorySlots.get(i);
 			ItemStack itemstack = slot.getStack();
-			if (ItemUtils.areItemStacksMergableWithLimit(Math.min(slot.getItemStackLimit(itemstack), itemstack.getMaxStackSize()), stack, itemstack) && slot.isItemValid(ItemUtils.mergeStacks(slot.getSlotStackLimit(), false, stack, itemstack)))
+			if (ItemUtils.areItemStacksMergable(stack, itemstack) && slot.isItemValid(ItemUtils.mergeStacks(slot.getSlotStackLimit(), false, stack, itemstack)))
 			{
-				slot.putStack(ItemUtils.mergeStacks(slot.getSlotStackLimit(), true, stack, itemstack));
+				slot.putStack(ItemUtils.mergeStacks(slot.getSlotStackLimit(), true, itemstack, stack));
 				slot.onSlotChanged();
 				flag = true;
 			}

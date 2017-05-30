@@ -18,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.reference.Icons;
@@ -59,11 +58,7 @@ public class ElementFluidTank extends ElementBase {
 		}
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		TextureHelper.bindTexture(this, iconLocation);
-		gui.drawTintedTexturedModalRect(x, y, 0.0F, 0.0F, 1.0F, 1.0F, icon.getWidth(), icon.getHeight(), GuiHelper.getColor(MachineTier.values()[stateChanger.getField(1)]));
-	}
-	
-	public float getMinV (float progress) {
-		return 1 - TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
+		gui.drawTintedTexturedModalRect(x, y, 0.0F, 0.0F, 1.0F, 1.0F, icon.getWidth(), icon.getHeight(), GuiHelper.getColour(MachineTier.values()[stateChanger.getField(1)]));
 	}
 	
 	@Override
@@ -76,7 +71,7 @@ public class ElementFluidTank extends ElementBase {
 			tank.getTankProperties()[0].getContents();
 			textLines.add(TextFormatting.GREEN + "" + (tank.getTankProperties()[0].getContents() != null ? tank.getTankProperties()[0].getContents().amount + "" : 0) + " mB /");
 			textLines.add(TextFormatting.GREEN + "" + tank.getTankProperties()[0].getCapacity() + " mB");
-			GuiUtils.drawHoveringText(textLines, -79, 16, gui.width, gui.height, 64, gui.getFontRenderer());
+			GuiHelper.drawHoveringText(gui.getFontRenderer(), textLines, 0, 1, 0, gui.width, gui.height, -1, gui.getGuiLeft(), gui.getGuiTop(), true, false);
 			// gui.drawHoveringText(textLines, gui.getXSize(), this.y);
 		}
 	}

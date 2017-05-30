@@ -47,7 +47,7 @@ public abstract class ElementProgressBar extends ElementBase {
 		float progress = (float) stateChanger.getField(progressField) / (stateChanger.getField(maxProgressField) != 0 ? (float) stateChanger.getField(maxProgressField) : 1);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		TextureHelper.bindTexture(this, iconLocation);
-		gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight(), GuiHelper.getColor(MachineTier.values()[stateChanger.getField(1)]));
+		gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight(), GuiHelper.getColour(MachineTier.values()[stateChanger.getField(1)]));
 		TextureHelper.bindTexture(this, iconLocation);
 		gui.drawTexturedModalRect(x + (icon.getWidth() - getWidth(progress)) / 2, y + icon.getHeight() - getHeight(progress), getMinU(progress) / 2, getMinV(progress), getMaxU(progress) / 2, getMaxV(progress), getWidth(progress) / 2, getHeight(progress));
 	}

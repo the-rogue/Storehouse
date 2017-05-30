@@ -25,7 +25,7 @@ public class ItemUtils {
 	}
 	
 	public static boolean areItemStacksMergableWithLimit (int limit, ItemStack stackA, ItemStack stackB) {
-		return stackA.getCount() + stackB.getCount() <= limit && areItemStacksMergable(stackA, stackB);
+		return stackA.getCount() + stackB.getCount() <= Math.min(limit, stackA.getMaxStackSize()) && areItemStacksMergable(stackA, stackB);
 	}
 	
 	public static boolean areItemStacksEqual (ItemStack stack1, ItemStack stack2, boolean useMeta) {
@@ -38,7 +38,7 @@ public class ItemUtils {
 		{
 			return null;
 		}
-		else if (stacks.length == 1) { return stacks[0]; }
+		else if (stacks.length == 1) return stacks[0];
 		ItemStack result = stacks[0].copy();
 		if (modifyStacks)
 		{
@@ -62,7 +62,7 @@ public class ItemUtils {
 				{
 					if (modifyStacks)
 					{
-						stacks[i].setCount(maxSize - result.getCount());
+						stacks[i].setCount(result.getCount() + stacks[i].getCount() - maxSize);
 					}
 					result.setCount(maxSize);
 				}

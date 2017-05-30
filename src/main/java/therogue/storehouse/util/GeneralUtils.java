@@ -10,27 +10,38 @@
 
 package therogue.storehouse.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.world.World;
 import scala.actors.threadpool.Arrays;
 
-public class GeneralUtils
-{
-	public static boolean isServerSide(World world) {
+public class GeneralUtils {
+	
+	public static boolean isServerSide (World world) {
 		return !world.isRemote;
 	}
-	public static boolean isClientSide(World world) {
+	
+	public static boolean isClientSide (World world) {
 		return world.isRemote;
 	}
+	
 	@SuppressWarnings ("unchecked")
-	public static <E extends Enum<E>> E getEnumFromNumber(Class<? extends Enum<E>> enumtype, int number) {
+	public static <E extends Enum<E>> E getEnumFromNumber (Class<? extends Enum<E>> enumtype, int number) {
 		List<E> constants = Arrays.asList(enumtype.getEnumConstants());
-		for (E element : constants) {
-			if (element.ordinal() == number) {
-				return element;
-			}
+		for (E element : constants)
+		{
+			if (element.ordinal() == number) return element;
 		}
 		return null;
+	}
+	
+	public static <T> List<T> copyList (List<T> toCopy) {
+		List<T> toReturn = new ArrayList<T>();
+		for (T element : toCopy)
+		{
+			toReturn.add(element);
+		}
+		return toReturn;
 	}
 }

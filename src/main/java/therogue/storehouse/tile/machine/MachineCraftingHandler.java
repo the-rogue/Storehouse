@@ -10,19 +10,37 @@
 
 package therogue.storehouse.tile.machine;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineRecipe;
+import therogue.storehouse.util.CraftingHelper;
 import therogue.storehouse.util.ItemUtils;
 import therogue.storehouse.util.LOG;
 
 public class MachineCraftingHandler {
+	
+	private static final Map<Class<? extends ICrafter>, MachineCraftingHandler> CRAFTING_HANDLERS = new HashMap<Class<? extends ICrafter>, MachineCraftingHandler>();
+	
+	public static MachineCraftingHandler getHandler (Class<? extends ICrafter> crafterClass) {
+		if (!CRAFTING_HANDLERS.containsKey(crafterClass))
+		{
+			CRAFTING_HANDLERS.put(crafterClass, new MachineCraftingHandler());
+		}
+		return CRAFTING_HANDLERS.get(crafterClass);
+	}
+	
+	public static void register (Class<? extends ICrafter> crafterClass, MachineRecipe recipe) {
+		getHandler(crafterClass).register(recipe);
+	}
 	
 	private List<MachineRecipe> RECIPES = Lists.newArrayList();
 	
@@ -40,73 +58,112 @@ public class MachineCraftingHandler {
 		}
 	}
 	
-	private class TileCrafter {
+	public CraftingManager newCrafter (ICrafter attachedTile) {
+		return new CraftingManager(attachedTile);
+	}
+	
+	private boolean checkItemValidForSlot (ICrafter tile, int index, ItemStack stack) {
+		IItemHandlerModifiable craftingInventory = tile.getCraftingInventory();
+		if (ItemUtils.areItemStacksMergable(craftingInventory.getStackInSlot(index), stack)) return true;
+		recipeloop: for (MachineRecipe recipe : RECIPES)
+		{
+			Set<Integer> matchedIngredients = new HashSet<Integer>();
+			int emptySlots = 0;
+			for (int i = 0; i < craftingInventory.getSlots(); i++)
+			{
+				if (craftingInventory.getStackInSlot(i).isEmpty())
+				{
+					++emptySlots;
+					continue;
+				}
+				int ingredientIndex = recipe.matchesRecipeIngredient(tile, i, craftingInventory.getStackInSlot(i), matchedIngredients);
+				if (ingredientIndex == -1)
+				{
+					continue recipeloop;
+				}
+				else
+				{
+					matchedIngredients.add(ingredientIndex);
+				}
+			}
+			if (matchedIngredients.size() + emptySlots > recipe.craftingInputs.size() && recipe.matchesRecipeIngredient(tile, index, stack, null) != -1) return true;
+			if (recipe.matchesRecipeIngredient(tile, index, stack, matchedIngredients) != -1) return true;;
+		}
+		return false;
+	}
+	
+	public class CraftingManager {
+		
 		private MachineRecipe currentCrafting = null;
 		private final ICrafter attachedTile;
 		private int craftingTime = 0;
-		private boolean craftingLock;
+		private boolean craftingLock = false;
 		
-		public TileCrafter(ICrafter attachedTile) {
+		private CraftingManager (ICrafter attachedTile) {
 			this.attachedTile = attachedTile;
 		}
-	public void checkRecipes(ICrafter machine) {
-		if ((currentCrafting != null && currentCrafting.matches(attachedTile)) || craftingLock) return;
-		IItemHandlerModifiable outputInventory = machine.getOutputInventory();
-		IItemHandlerModifiable craftingInventory = machine.getCraftingInventory();
-		for (MachineRecipe recipe : RECIPES)
-		{
-			if (recipe.getResults().size() < outputInventory.getSlots()) continue;
-			
-			for (int i = 0; i < outputInventory.getSlots(); i++) {
-				if (!ItemUtils.areItemStacksMergableWithLimit(inventory.getSlotLimit(0), recipe.getResults().get(0), inventory.getStackInSlot(0))) continue;
-			}
-			boolean isValidRecipe = recipe.matches(attachedTile);
-			if (isValidRecipe)
+		
+		public boolean checkItemValidForSlot (int index, ItemStack stack) {
+			return MachineCraftingHandler.this.checkItemValidForSlot(attachedTile, index, stack);
+		}
+		
+		public void checkRecipes () {
+			if ((currentCrafting != null && currentCrafting.matches(attachedTile)) || craftingLock) return;
+			IItemHandlerModifiable outputInventory = attachedTile.getOutputInventory();
+			for (MachineRecipe recipe : RECIPES)
 			{
-				currentCrafting = recipe;
-				craftingTime = recipe.timeTaken;
+				if (recipe.getResults().size() < outputInventory.getSlots()) continue;
+				Map<Integer, Integer> ouptutMap = CraftingHelper.getCorrespondingInventorySlots(recipe.getResults(), CraftingHelper.getInventoryList(outputInventory), CraftingHelper.getSlotLimitsList(outputInventory));
+				if (recipe.matches(attachedTile) && CraftingHelper.checkMatchingSlots(ouptutMap))
+				{
+					currentCrafting = recipe;
+					craftingTime = recipe.timeTaken;
+					break;
+				}
 			}
 		}
-	}
-	
-	public void doCraftingLoop(ICrafter machine) {
-		if (currentCrafting != null)
-		{
-			if (currentCrafting.matches(attachedTile))
+		
+		public void updateCraftingStatus () {
+			if (currentCrafting != null)
 			{
-				if (craftingTime <= 1)
+				if (currentCrafting.matches(attachedTile))
 				{
-					if (ItemUtils.areItemStacksMergableWithLimit(Math.min(inventory.getStackInSlot(0).getMaxStackSize(), inventory.getSlotLimit(0)), currentCrafting.getResults().get(0), inventory.getStackInSlot(0)))
+					if (attachedTile.isRunning())
 					{
-						craftingLock = true;
-						ItemStack craftingResult = currentCrafting.craft(this).get(0);
-						if (craftingResult != null && !craftingResult.isEmpty())
+						attachedTile.doRunTick();
+						if (craftingTime <= 1)
 						{
-							inventory.setStackInSlot(0, ItemUtils.mergeStacks(Math.min(inventory.getStackInSlot(0).getMaxStackSize(), inventory.getSlotLimit(0)), true, inventory.getStackInSlot(0), craftingResult));
+							IItemHandlerModifiable outputInventory = attachedTile.getOutputInventory();
+							Map<Integer, Integer> outputMap = CraftingHelper.getCorrespondingInventorySlots(currentCrafting.getResults(), CraftingHelper.getInventoryList(outputInventory), CraftingHelper.getSlotLimitsList(outputInventory));
+							if (CraftingHelper.checkMatchingSlots(outputMap))
+							{
+								craftingLock = true;
+								if (currentCrafting.craft(attachedTile))
+								{
+									List<ItemStack> results = currentCrafting.getResults();
+									for (int i = 0; i < results.size(); i++)
+									{
+										CraftingHelper.insertStack(outputInventory, outputMap.get(i), results.get(i));
+									}
+								}
+								currentCrafting = null;
+								craftingTime = 0;
+								craftingLock = false;
+								checkRecipes();
+							}
 						}
-						currentCrafting = null;
-						craftingTime = 0;
-						craftingLock = false;
-						onInventoryChange();
+						else
+						{
+							--craftingTime;
+						}
 					}
 				}
 				else
 				{
-					if (energyStorage.getEnergyStored() >= RFPerTick)
-					{
-						energyStorage.modifyEnergyStored(-RFPerTick);
-						--craftingTime;
-					}
+					currentCrafting = null;
+					craftingTime = 0;
 				}
-			}
-			else
-			{
-				currentCrafting = null;
-				craftingTime = 0;
 			}
 		}
 	}
-	}
-	
-
 }

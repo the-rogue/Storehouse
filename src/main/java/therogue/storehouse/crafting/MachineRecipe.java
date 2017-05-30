@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
@@ -25,7 +27,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import therogue.storehouse.util.CraftingHelper;
 import therogue.storehouse.util.ItemUtils;
-import therogue.storehouse.util.LOG;
 
 public class MachineRecipe {
 	
@@ -54,6 +55,36 @@ public class MachineRecipe {
 		return copy;
 	}
 	
+	public int matchesRecipeIngredient (ICrafter machine, int index, ItemStack test, @Nullable Set<Integer> exclusions) {
+		int orderedTest = matchesOrderedRecipeIngredient(machine, index, test);
+		if (orderedTest == -2) return matchesUnOrderedRecipeIngredient(machine, index, test, exclusions);
+		return orderedTest;
+	}
+	
+	public int matchesOrderedRecipeIngredient (ICrafter machine, int index, ItemStack test) {
+		if (!correctMode.test(machine)) return -1;
+		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
+		if (orderedSlots.contains(index))
+		{
+			if (craftingInputs.get(index).matches(test)) return index;
+			return -1;
+		}
+		return -2;
+	}
+	
+	public int matchesUnOrderedRecipeIngredient (ICrafter machine, int index, ItemStack test, @Nullable Set<Integer> exclusions) {
+		if (!correctMode.test(machine)) return -1;
+		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
+		for (int i = 0; i < craftingInputs.size(); i++)
+		{
+			if (exclusions != null && exclusions.contains(i)) continue;
+			if (orderedSlots.contains(i)) continue;
+			if (craftingInputs.get(i).isEmpty()) continue;
+			if (craftingInputs.get(i).matches(test)) return i;
+		}
+		return -1;
+	}
+	
 	public boolean matches (ICrafter machine) {
 		if (!correctMode.test(machine)) return false;
 		IItemHandlerModifiable craftInventory = machine.getCraftingInventory();
@@ -69,7 +100,7 @@ public class MachineRecipe {
 			if (orderedSlots.contains(i)) continue;
 			availableIngredients.add(craftInventory.getStackInSlot(i).copy());
 		}
-		for (int i = 0; i < craftInventory.getSlots(); i++)
+		for (int i = 0; i < craftingInputs.size(); i++)
 		{
 			if (orderedSlots.contains(i)) continue;
 			if (craftingInputs.get(i).isEmpty()) continue;
@@ -127,10 +158,9 @@ public class MachineRecipe {
 		return slots;
 	}
 	
-	public List<ItemStack> craft (ICrafter machine) {
-		if (!matches(machine)) return Lists.newArrayList();
+	public boolean craft (ICrafter machine) {
+		if (!matches(machine)) return false;
 		Map<Integer, Integer> ingredientSlots = ingredientSlots(machine);
-		LOG.log("info", ingredientSlots);
 		IItemHandlerModifiable inventoryCraft = machine.getCraftingInventory();
 		Map<Integer, ItemStack> containerItems = new HashMap<Integer, ItemStack>();
 		for (Integer slot : ingredientSlots.keySet())
@@ -141,7 +171,7 @@ public class MachineRecipe {
 			ItemStack container = ForgeHooks.getContainerItem(copy);
 			if (!container.isEmpty())
 			{
-				if (stack.getCount() > 1 && !ItemUtils.areItemStacksMergableWithLimit(Math.min(stack.getMaxStackSize(), inventoryCraft.getSlotLimit(slot)), container, stack)) return Lists.newArrayList();
+				if (stack.getCount() > 1 && !ItemUtils.areItemStacksMergableWithLimit(inventoryCraft.getSlotLimit(slot), container, stack)) return false;
 				containerItems.put(slot, container);
 			}
 		}
@@ -151,11 +181,10 @@ public class MachineRecipe {
 			stack.setCount(stack.getCount() - ingredientSlots.get(slot));
 			if (containerItems.containsKey(slot))
 			{
-				ItemStack container = containerItems.get(slot);
-				inventoryCraft.setStackInSlot(slot, ItemUtils.mergeStacks(Math.min(stack.getMaxStackSize(), inventoryCraft.getSlotLimit(slot)), true, stack, container));
+				CraftingHelper.insertStack(inventoryCraft, slot, containerItems.get(slot));
 			}
 		}
-		return getResults();
+		return true;
 	}
 	
 	@Override

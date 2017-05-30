@@ -96,9 +96,11 @@ public abstract class TileBaseGenerator extends StorehouseBaseMachine {
 			case 5:
 				stack = inventory.getStackInSlot(0);
 				if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
+				return 0;
 			case 6:
 				stack = inventory.getStackInSlot(0);
 				if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
+				return 0;
 			case 7:
 				return runtimeLeft();
 			case 8:

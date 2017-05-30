@@ -21,4 +21,8 @@ public interface ICrafter {
 	public IItemHandlerModifiable getCraftingInventory ();
 	
 	public IItemHandlerModifiable getOutputInventory ();
+	
+	public boolean isRunning ();
+	
+	public void doRunTick ();
 }

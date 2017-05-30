@@ -12,9 +12,9 @@ package therogue.storehouse.client.gui.element;
 
 import java.util.Arrays;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.inventory.IGuiSupplier;
+import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
 public class ElementButton extends ElementBase {
@@ -90,7 +90,7 @@ public class ElementButton extends ElementBase {
 			int currentMode = stateChanger.getField(modeField);
 			if (currentMode < toolTips.length && toolTips[currentMode] != null && !toolTips[currentMode].isEmpty())
 			{
-				GuiUtils.drawHoveringText(Arrays.asList(new String[] { commonToolTip, toolTips[currentMode] }), mainIcon.x + mainIcon.width, mainIcon.y + mainIcon.height, gui.width, gui.height, gui.width - mainIcon.x + mainIcon.width - 2, gui.getFontRenderer());
+				GuiHelper.drawHoveringText(gui.getFontRenderer(), Arrays.asList(new String[] { commonToolTip, toolTips[currentMode] }), mainIcon.x + mainIcon.width, 0, mainIcon.y + mainIcon.height, gui.width, gui.height, -1, gui.getGuiLeft(), gui.getGuiTop(), false, true);
 			}
 		}
 	}

@@ -58,6 +58,7 @@ public class LOG {
 			{
 				FMLLog.log(General.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(object));
 			}
+			FMLLog.log(General.MOD_NAME, Level.DEBUG, String.valueOf(object));
 		}
 		else if (logLevel.equals("trace"))
 		{
@@ -65,6 +66,7 @@ public class LOG {
 			{
 				FMLLog.log(General.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(object));
 			}
+			FMLLog.log(General.MOD_NAME, Level.TRACE, String.valueOf(object));
 		}
 	}
 	
@@ -98,6 +100,7 @@ public class LOG {
 		{
 			FMLLog.log(General.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(message));
 		}
+		FMLLog.log(General.MOD_NAME, Level.DEBUG, String.valueOf(message));
 	}
 	
 	public static void trace (Object message) {
@@ -105,6 +108,7 @@ public class LOG {
 		{
 			FMLLog.log(General.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(message));
 		}
+		FMLLog.log(General.MOD_NAME, Level.TRACE, String.valueOf(message));
 	}
 	
 	public static void logSetTimes (String key, int startvalue, Object object) {

@@ -20,10 +20,10 @@ public class ContainerThermalPress extends ContainerBase {
 	public ContainerThermalPress (IInventory playerInv, TileThermalPress teInv) {
 		super(playerInv, teInv);
 		// Add Thermal Press's Inventory Slot IDs 36-41
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 110, 39));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 74, 39));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 2, 74, 12));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 3, 74, 66));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 120, 39));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 65, 39));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 2, 83, 12));
+		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 3, 83, 66));
 		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 4, 47, 12));
 		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 5, 47, 66));
 	}

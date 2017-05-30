@@ -13,10 +13,10 @@ package therogue.storehouse.client.gui.element;
 import java.util.ArrayList;
 
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.reference.Icons;
+import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
 public class ElementEnergyBar extends ElementProgressBar {
@@ -64,8 +64,7 @@ public class ElementEnergyBar extends ElementProgressBar {
 			// TODO Insert Commas
 			textLines.add(TextFormatting.RED + "" + stateChanger.getField(progressField) + " RF /");
 			textLines.add(TextFormatting.RED + "" + stateChanger.getField(maxProgressField) + " RF");
-			GuiUtils.drawHoveringText(textLines, -79, 16, gui.width, gui.height, 64, gui.getFontRenderer());
-			// gui.drawHoveringText(textLines, gui.getXSize(), this.y);
+			GuiHelper.drawHoveringText(gui.getFontRenderer(), textLines, 0, 1, 0, gui.width, gui.height, -1, gui.getGuiLeft(), gui.getGuiTop(), true, false);
 		}
 	}
 }

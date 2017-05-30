@@ -23,6 +23,13 @@ import net.minecraftforge.items.IItemHandler;
 
 public class BlockUtils {
 	
+	/**
+	 * Helper method to test whether a block has a line of sight to the sky
+	 * 
+	 * @param pos the position of the block
+	 * @param world the world the block is in
+	 * @return whether the block has a line of sight to the sky
+	 */
 	public static boolean canBlockSeeSky (BlockPos pos, World world) {
 		for (BlockPos blockpos = pos.up(); blockpos.getY() < world.getActualHeight(); blockpos = blockpos.up())
 		{
@@ -32,10 +39,24 @@ public class BlockUtils {
 		return true;
 	}
 	
+	/**
+	 * Helper method to work out if a player is within 8 blocks of a TileEntity (and can therefore open it)
+	 * 
+	 * @param te the TileEntity in question
+	 * @param player the player trying to open the TileEntity
+	 * @return Whether the TileEntity could be opened
+	 */
 	public static boolean isUsableByPlayer (TileEntity te, EntityPlayer player) {
 		return te.getWorld().getTileEntity(te.getPos()) != te ? false : player.getDistanceSq((double) te.getPos().getX() + 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 64.0D;
 	}
 	
+	/**
+	 * Helper method to drop the inventory of a tileEntity using IItemHandler into the world
+	 * 
+	 * @param world the world to drop the contents into
+	 * @param pos the position to drop the contents at
+	 * @param tile the TileEntity to drop the contents of
+	 */
 	public static void dropInventory (World world, BlockPos pos, TileEntity tile) {
 		if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 		{

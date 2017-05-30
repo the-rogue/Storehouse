@@ -45,7 +45,7 @@ public class ElementActiveIcon extends ElementBase {
 		if (icon != null)
 		{
 			TextureHelper.bindTexture(this, iconLocation);
-			gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight(), GuiHelper.getColor(MachineTier.values()[stateChanger.getField(1)]));
+			gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight(), GuiHelper.getColour(MachineTier.values()[stateChanger.getField(1)]));
 			if (stateChanger.getField(activeField) == 1)
 			{
 				TextureHelper.bindTexture(this, iconLocation);

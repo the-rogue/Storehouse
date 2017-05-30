@@ -82,7 +82,7 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 			ItemStack tankItem = inventory.getStackInSlot(2);
 			ItemStack outputSlot = inventory.getStackInSlot(3);
 			ItemStack result = FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, false).result;
-			if (ItemUtils.areItemStacksMergableWithLimit(Math.min(inventory.getSlotLimit(3), outputSlot.getMaxStackSize()), result, outputSlot))
+			if (ItemUtils.areItemStacksMergableWithLimit(inventory.getSlotLimit(3), result, outputSlot))
 			{
 				inventory.setStackInSlot(2, ItemStack.EMPTY);
 				inventory.setStackInSlot(3, ItemUtils.mergeStacks(inventory.getSlotLimit(3), true, outputSlot, FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, true).result));

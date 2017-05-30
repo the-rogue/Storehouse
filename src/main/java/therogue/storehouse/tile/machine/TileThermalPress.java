@@ -24,34 +24,30 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import therogue.storehouse.container.machine.ContainerThermalPress;
 import therogue.storehouse.crafting.ICrafter;
-import therogue.storehouse.crafting.MachineRecipe;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiClientUpdatePacket;
+import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.IClientPacketReciever;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.StorehouseBaseMachine;
+import therogue.storehouse.tile.machine.MachineCraftingHandler.CraftingManager;
 import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.ItemUtils;
 
 public class TileThermalPress extends StorehouseBaseMachine implements IClientPacketReciever, ICrafter {
 	
 	public static final int RFPerTick = MachineStats.THERMALPRESSPERTICK;
 	private Mode mode = Mode.PRESS;
-	private MachineRecipe currentCrafting;
-	private boolean craftingLock = false;
-	private int craftingTime = 0;
+	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newCrafter(this);
 	
 	public TileThermalPress () {
 		super(ModBlocks.thermal_press, MachineTier.advanced);
 		inventory = new InventoryManager(this, 8, new Integer[] { 1, 2, 3, 4, 5 }, new Integer[] { 0 }) {
 			
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				if (getOrderMattersSlots().contains(index))
-				{
-				}
+				return theCrafter.checkItemValidForSlot(index - 1, stack);
 			}
 		};
 	}
@@ -61,46 +57,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	public void update () {
 		if (GeneralUtils.isServerSide(world))
 		{
-			handleCrafting();
-		}
-	}
-	
-	// -------------------------Utility Methods to keep update() short-----------------------------------
-	private void handleCrafting () {
-		if (currentCrafting != null)
-		{
-			if (currentCrafting.matches(this))
-			{
-				if (craftingTime <= 1)
-				{
-					if (ItemUtils.areItemStacksMergableWithLimit(Math.min(inventory.getStackInSlot(0).getMaxStackSize(), inventory.getSlotLimit(0)), currentCrafting.getResults().get(0), inventory.getStackInSlot(0)))
-					{
-						craftingLock = true;
-						ItemStack craftingResult = currentCrafting.craft(this).get(0);
-						if (craftingResult != null && !craftingResult.isEmpty())
-						{
-							inventory.setStackInSlot(0, ItemUtils.mergeStacks(Math.min(inventory.getStackInSlot(0).getMaxStackSize(), inventory.getSlotLimit(0)), true, inventory.getStackInSlot(0), craftingResult));
-						}
-						currentCrafting = null;
-						craftingTime = 0;
-						craftingLock = false;
-						onInventoryChange();
-					}
-				}
-				else
-				{
-					if (energyStorage.getEnergyStored() >= RFPerTick)
-					{
-						energyStorage.modifyEnergyStored(-RFPerTick);
-						--craftingTime;
-					}
-				}
-			}
-			else
-			{
-				currentCrafting = null;
-				craftingTime = 0;
-			}
+			theCrafter.updateCraftingStatus();
 		}
 	}
 	
@@ -127,6 +84,19 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 		return new RangedWrapper(getInventory(), 0, 1);
 	}
 	
+	@Override
+	public boolean isRunning () {
+		return energyStorage.getEnergyStored() >= RFPerTick;
+	}
+	
+	@Override
+	public void doRunTick () {
+		if (isRunning())
+		{
+			energyStorage.modifyEnergyStored(-RFPerTick);
+		}
+	}
+	
 	// ------------------IClientPacketReciever Methods-------------------------------------------------------
 	@Override
 	public void processGUIPacket (GuiClientUpdatePacket message) {
@@ -142,17 +112,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	@Override
 	public void onInventoryChange () {
 		super.onInventoryChange();
-		if ((currentCrafting != null && currentCrafting.matches(this)) || craftingLock) return;
-		for (MachineRecipe recipe : RECIPES)
-		{
-			if (!ItemUtils.areItemStacksMergableWithLimit(inventory.getSlotLimit(0), recipe.getResults().get(0), inventory.getStackInSlot(0))) continue;
-			boolean isValidRecipe = recipe.matches(this);
-			if (isValidRecipe)
-			{
-				currentCrafting = recipe;
-				craftingTime = recipe.timeTaken;
-			}
-		}
+		theCrafter.checkRecipes();
 	}
 	
 	// -------------------------Container/Gui Methods----------------------------------------------------
@@ -194,6 +154,33 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	@Override
 	public String getGuiID () {
 		return "storehouse:" + ModBlocks.thermal_press.getName();
+	}
+	
+	// -------------------------Standard TE methods-----------------------------------
+	@Override
+	public GuiUpdateTEPacket getGUIPacket () {
+		GuiUpdateTEPacket packet = super.getGUIPacket();
+		packet.getNbt().setInteger("TPMode", mode.ordinal());
+		return packet;
+	}
+	
+	@Override
+	public void processGUIPacket (GuiUpdateTEPacket packet) {
+		super.processGUIPacket(packet);
+		modeUpdate(packet.getNbt().getInteger("TPMode"));
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT (NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("TPMode", mode.ordinal());
+		return nbt;
+	}
+	
+	@Override
+	public void readFromNBT (NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		modeUpdate(nbt.getInteger("TPMode"));
 	}
 	
 	// ------------------Thermal Press Mode Enum-------------------------------------------------------
