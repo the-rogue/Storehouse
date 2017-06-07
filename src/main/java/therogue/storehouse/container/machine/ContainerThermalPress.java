@@ -11,20 +11,59 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.tile.machine.TileThermalPress;
+import therogue.storehouse.tile.machine.TileThermalPress.Mode;
+import therogue.storehouse.util.GuiHelper.XYCoords;
 
 public class ContainerThermalPress extends ContainerBase {
 	
+	private static final XYCoords[][] slotPositions = new XYCoords[4][];
+	private final TileThermalPress teInv;
+	
 	public ContainerThermalPress (IInventory playerInv, TileThermalPress teInv) {
 		super(playerInv, teInv);
+		this.teInv = teInv;
 		// Add Thermal Press's Inventory Slot IDs 36-41
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 120, 39));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 65, 39));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 2, 83, 12));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 3, 83, 66));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 4, 47, 12));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 5, 47, 66));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 0, 120, 37));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 1, 65, 37));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 2, 65, 10));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 3, 65, 64));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 4, Integer.MIN_VALUE, Integer.MIN_VALUE));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 5, Integer.MIN_VALUE, Integer.MIN_VALUE));
+		update();
+	}
+	
+	// -------------------Methods to move slots around--------------------
+	public static void addPositions (Mode mode, XYCoords... coords) {
+		slotPositions[mode.ordinal()] = coords;
+	}
+	
+	@Override
+	public void update () {
+		XYCoords[] positions = slotPositions[teInv.getField(4)];
+		for (int i = 0; i < tileEntitySlots.size() - 2; i++)
+		{
+			Slot s = tileEntitySlots.get(i + 2);
+			XYCoords coords = positions[i];
+			s.xPos = coords.x;
+			s.yPos = coords.y;
+			if (s.xPos == Integer.MIN_VALUE && s.yPos == Integer.MIN_VALUE)
+			{
+				if (this.inventorySlots.contains(s))
+				{
+					this.inventorySlots.remove(s);
+				}
+			}
+			else
+			{
+				if (!this.inventorySlots.contains(s))
+				{
+					this.inventorySlots.add(s);
+				}
+			}
+		}
 	}
 }

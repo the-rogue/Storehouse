@@ -10,7 +10,6 @@
 
 package therogue.storehouse.util;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,32 +18,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import therogue.storehouse.tile.MachineTier;
 
 public class GuiHelper {
-	
-	/**
-	 * Gets the Colour to use when drawing elements onto the different tiers of Gui
-	 * 
-	 * @param tier the machine tier that the Gui uses for its background
-	 * @return the colour that should be used when drawing onto the background
-	 */
-	public static Color getColour (MachineTier tier) {
-		switch (tier) {
-			case basic:
-				return new Color(106, 78, 45);
-			case advanced:
-				return new Color(116, 116, 116);
-			case ender:
-				return new Color(197, 215, 195);
-			case infused:
-				return new Color(182, 182, 182);
-			case ultimate:
-				return new Color(144, 142, 151);
-			default:
-				return new Color(255, 255, 255);
-		}
-	}
 	
 	/**
 	 * @param mouseX - Position of the mouse on the x-axis
@@ -246,5 +221,16 @@ public class GuiHelper {
 		GuiUtils.drawGradientRect(z, x + width + 2, y - 3 + 1, x + width + 3, y + height + 3 - 1, startBorderColor, endBorderColor);
 		GuiUtils.drawGradientRect(z, x - 3, y - 3, x + width + 3, y - 3 + 1, startBorderColor, startBorderColor);
 		GuiUtils.drawGradientRect(z, x - 3, y + height + 2, x + width + 3, y + height + 3, endBorderColor, endBorderColor);
+	}
+	
+	public static class XYCoords {
+		
+		public final int x;
+		public final int y;
+		
+		public XYCoords (int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
 	}
 }

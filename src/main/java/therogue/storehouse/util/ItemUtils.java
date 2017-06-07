@@ -20,15 +20,15 @@ public class ItemUtils {
 	 * 
 	 * @return Whether stackA can be merged with stackB
 	 */
-	public static boolean areItemStacksMergable (ItemStack stackA, ItemStack stackB) {
+	public static boolean areStacksMergable (ItemStack stackA, ItemStack stackB) {
 		return !stackA.isEmpty() && (stackB.isEmpty() || (stackB.getItem() == stackA.getItem() && stackA.isStackable() && stackB.isStackable() && (!stackA.getHasSubtypes() || stackA.getMetadata() == stackB.getMetadata()) && ItemStack.areItemStackTagsEqual(stackA, stackB)));
 	}
 	
-	public static boolean areItemStacksMergableWithLimit (int limit, ItemStack stackA, ItemStack stackB) {
-		return stackA.getCount() + stackB.getCount() <= Math.min(limit, stackA.getMaxStackSize()) && areItemStacksMergable(stackA, stackB);
+	public static boolean areStacksMergableWithLimit (int limit, ItemStack stackA, ItemStack stackB) {
+		return stackA.getCount() + stackB.getCount() <= Math.min(limit, stackA.getMaxStackSize()) && areStacksMergable(stackA, stackB);
 	}
 	
-	public static boolean areItemStacksEqual (ItemStack stack1, ItemStack stack2, boolean useMeta) {
+	public static boolean areStacksEqual (ItemStack stack1, ItemStack stack2, boolean useMeta) {
 		if (!stack1.isEmpty() && stack1.getItem() == stack2.getItem() && !((stack1.getHasSubtypes() || useMeta) && stack1.getMetadata() != stack2.getMetadata())) return true;
 		return false;
 	}
@@ -46,17 +46,25 @@ public class ItemUtils {
 		}
 		for (int i = 1; i < stacks.length; i++)
 		{
+			int maxSize = Math.min(limit, result.getMaxStackSize());
 			if (result.isEmpty())
 			{
 				result = stacks[i].copy();
-				if (modifyStacks)
+				if (result.getCount() > maxSize)
+				{
+					result.setCount(maxSize);
+					if (modifyStacks)
+					{
+						stacks[i].setCount(stacks[i].getCount() - maxSize);
+					}
+				}
+				else
 				{
 					stacks[i].setCount(0);
 				}
 				continue;
 			}
-			int maxSize = Math.min(limit, result.getMaxStackSize());
-			if (areItemStacksMergable(stacks[i], result))
+			if (areStacksMergable(stacks[i], result))
 			{
 				if (result.getCount() + stacks[i].getCount() > maxSize)
 				{

@@ -15,14 +15,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import therogue.storehouse.client.gui.machine.GuiCombustionGenerator;
+import therogue.storehouse.client.gui.machine.GuiCrystaliser;
 import therogue.storehouse.client.gui.machine.GuiLiquidGenerator;
 import therogue.storehouse.client.gui.machine.GuiSolarGenerator;
 import therogue.storehouse.client.gui.machine.GuiThermalPress;
 import therogue.storehouse.container.machine.ContainerCombustionGenerator;
+import therogue.storehouse.container.machine.ContainerCrystaliser;
 import therogue.storehouse.container.machine.ContainerLiquidGenerator;
 import therogue.storehouse.container.machine.ContainerSolarGenerator;
 import therogue.storehouse.container.machine.ContainerThermalPress;
 import therogue.storehouse.reference.IDs;
+import therogue.storehouse.tile.machine.TileCrystaliser;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
 import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
@@ -43,6 +46,8 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerLiquidGenerator(player.inventory, (TileLiquidGenerator) world.getTileEntity(new BlockPos(x, y, z)));
 			case IDs.THERMALPRESSGUI:
 				return new ContainerThermalPress(player.inventory, (TileThermalPress) world.getTileEntity(new BlockPos(x, y, z)));
+			case IDs.CRYSTALISERGUI:
+				return new ContainerCrystaliser(player.inventory, (TileCrystaliser) world.getTileEntity(new BlockPos(x, y, z)));
 			default:
 				return null;
 		}
@@ -63,6 +68,9 @@ public class GuiHandler implements IGuiHandler {
 			case IDs.THERMALPRESSGUI:
 				TileThermalPress mach1 = (TileThermalPress) world.getTileEntity(new BlockPos(x, y, z));
 				return new GuiThermalPress(new ContainerThermalPress(player.inventory, mach1), mach1);
+			case IDs.CRYSTALISERGUI:
+				TileCrystaliser mach2 = (TileCrystaliser) world.getTileEntity(new BlockPos(x, y, z));
+				return new GuiCrystaliser(new ContainerCrystaliser(player.inventory, mach2), mach2);
 			default:
 				return null;
 		}

@@ -11,43 +11,50 @@
 package therogue.storehouse.client.gui.element;
 
 import net.minecraft.util.ResourceLocation;
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.util.TextureHelper;
 
-public class ElementStandardProgressBar extends ElementProgressBar {
+public class ElementVerticalProgressBar extends ElementProgressBar {
 	
-	public ElementStandardProgressBar (GuiBase gui, int x, int y, ResourceLocation iconLocation, IGuiSupplier stateChanger, int progressField, int maxProgressField) {
-		super(gui, x, y, iconLocation, stateChanger, progressField, maxProgressField);
+	private final boolean upwards;
+	
+	public ElementVerticalProgressBar (int x, int y, ResourceLocation iconLocation) {
+		this(x, y, iconLocation, true);
+	}
+	
+	public ElementVerticalProgressBar (int x, int y, ResourceLocation iconLocation, boolean upwards) {
+		super(x, y, iconLocation);
+		this.upwards = upwards;
 	}
 	
 	@Override
 	public float getMinU (float progress) {
-		return 0;
+		return 0.0F;
 	}
 	
 	@Override
 	public float getMinV (float progress) {
-		return 0;
+		if (upwards) return 1.0F - TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
+		return 0.0F;
 	}
 	
 	@Override
 	public float getMaxU (float progress) {
-		return TextureHelper.scalePercentageToLength(getHeight(progress), progress);
+		return 1.0F;
 	}
 	
 	@Override
 	public float getMaxV (float progress) {
-		return 1;
+		if (upwards) return 1.0F;
+		return TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
 	}
 	
 	@Override
 	public int getWidth (float progress) {
-		return (int) (icon.getWidth() * progress);
+		return icon.getWidth();
 	}
 	
 	@Override
 	public int getHeight (float progress) {
-		return icon.getHeight();
+		return TextureHelper.calculateLength(icon.getHeight(), progress);
 	}
 }

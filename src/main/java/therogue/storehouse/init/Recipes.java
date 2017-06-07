@@ -14,9 +14,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineRecipe;
-import therogue.storehouse.crafting.RecipeInput;
-import therogue.storehouse.tile.machine.MachineCraftingHandler;
+import therogue.storehouse.crafting.wrapper.ItemStackComponent;
+import therogue.storehouse.tile.machine.TileCrystaliser;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.util.LOG;
 import therogue.storehouse.util.RecipeHelper;
@@ -73,9 +74,10 @@ public class Recipes {
 	}
 	
 	private static void setMachineRecipes () {
-		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStack(ModItems.azurite_crystal), new RecipeInput(ModBlocks.azurite_dust_block), new RecipeInput(ModItems.azurite_dust),
-				new RecipeInput(ModBlocks.azurite_crystal_block_pillar), new RecipeInput(ModItems.azurite_dust), new RecipeInput(ModBlocks.azurite_crystal_block_pillar)));
-		MachineCraftingHandler.register(TileThermalPress.class,
-				new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStack(Items.DIAMOND), new RecipeInput(ModItems.azurite_dust), new RecipeInput(ModItems.azurite_dust), new RecipeInput(Items.IRON_INGOT), new RecipeInput(Items.REDSTONE), new RecipeInput(Items.REDSTONE)));
+		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStackComponent(ModItems.azurite_crystal), new ItemStackComponent(ModBlocks.azurite_dust_block), new ItemStackComponent(ModItems.azurite_dust),
+				new ItemStackComponent(ModBlocks.azurite_crystal_block_pillar), new ItemStackComponent(ModItems.azurite_dust), new ItemStackComponent(ModBlocks.azurite_crystal_block_pillar)));
+		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(ModItems.azurite_dust), new ItemStackComponent(ModItems.azurite_dust),
+				new ItemStackComponent(Items.IRON_INGOT), new ItemStackComponent(Items.REDSTONE), new ItemStackComponent(Items.REDSTONE)));
+		MachineCraftingHandler.register(TileCrystaliser.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 80, new ItemStackComponent(ModItems.azurite_crystal), new ItemStackComponent(ModItems.azurite_dust)));
 	}
 }

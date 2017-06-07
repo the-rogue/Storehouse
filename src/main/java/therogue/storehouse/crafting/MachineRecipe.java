@@ -21,47 +21,62 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import therogue.storehouse.crafting.inventory.IRecipeInventory;
+import therogue.storehouse.crafting.wrapper.IRecipeComponent;
+import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.util.CraftingHelper;
-import therogue.storehouse.util.ItemUtils;
 
 public class MachineRecipe {
 	
+	public static final Predicate<ICrafter> ALWAYSMODE = new Predicate<ICrafter>() {
+		
+		@Override
+		public boolean test (ICrafter crafter) {
+			return true;
+		}
+	};
 	public final Predicate<ICrafter> correctMode;
 	public final int timeTaken;
-	public final List<ItemStack> output;
-	public final List<RecipeInput> craftingInputs;
+	public final List<IRecipeComponent> output;
+	public final List<IRecipeComponent> craftingInputs;
 	
-	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, ItemStack output, RecipeInput... craftingInputs) {
+	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, IRecipeComponent output, IRecipeComponent... craftingInputs) {
 		this(correctMode, timeTaken, Lists.newArrayList(output), craftingInputs);
 	}
 	
-	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, List<ItemStack> output, RecipeInput... craftingInputs) {
+	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, List<IRecipeComponent> output, IRecipeComponent... craftingInputs) {
 		this.correctMode = correctMode;
 		this.timeTaken = timeTaken;
 		this.output = output;
 		this.craftingInputs = Arrays.asList(craftingInputs);
 	}
 	
-	public List<ItemStack> getResults () {
-		List<ItemStack> copy = Lists.newArrayList();
-		for (ItemStack stack : output)
+	public List<IRecipeComponent> getResults () {
+		List<IRecipeComponent> copy = Lists.newArrayList();
+		for (IRecipeComponent stack : output)
 		{
 			copy.add(stack.copy());
 		}
 		return copy;
 	}
 	
-	public int matchesRecipeIngredient (ICrafter machine, int index, ItemStack test, @Nullable Set<Integer> exclusions) {
+	public List<IRecipeWrapper> getWrappedResults () {
+		List<IRecipeWrapper> copy = Lists.newArrayList();
+		for (IRecipeComponent stack : output)
+		{
+			copy.add(stack.getWrapper());
+		}
+		return copy;
+	}
+	
+	public int matchesRecipeIngredient (ICrafter machine, int index, IRecipeWrapper test, @Nullable Set<Integer> exclusions) {
 		int orderedTest = matchesOrderedRecipeIngredient(machine, index, test);
 		if (orderedTest == -2) return matchesUnOrderedRecipeIngredient(machine, index, test, exclusions);
 		return orderedTest;
 	}
 	
-	public int matchesOrderedRecipeIngredient (ICrafter machine, int index, ItemStack test) {
+	public int matchesOrderedRecipeIngredient (ICrafter machine, int index, IRecipeWrapper test) {
 		if (!correctMode.test(machine)) return -1;
 		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
 		if (orderedSlots.contains(index))
@@ -72,14 +87,14 @@ public class MachineRecipe {
 		return -2;
 	}
 	
-	public int matchesUnOrderedRecipeIngredient (ICrafter machine, int index, ItemStack test, @Nullable Set<Integer> exclusions) {
+	public int matchesUnOrderedRecipeIngredient (ICrafter machine, int index, IRecipeWrapper test, @Nullable Set<Integer> exclusions) {
 		if (!correctMode.test(machine)) return -1;
 		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
 		for (int i = 0; i < craftingInputs.size(); i++)
 		{
 			if (exclusions != null && exclusions.contains(i)) continue;
 			if (orderedSlots.contains(i)) continue;
-			if (craftingInputs.get(i).isEmpty()) continue;
+			if (craftingInputs.get(i).isUnUsed()) continue;
 			if (craftingInputs.get(i).matches(test)) return i;
 		}
 		return -1;
@@ -87,27 +102,27 @@ public class MachineRecipe {
 	
 	public boolean matches (ICrafter machine) {
 		if (!correctMode.test(machine)) return false;
-		IItemHandlerModifiable craftInventory = machine.getCraftingInventory();
+		IRecipeInventory craftInventory = machine.getCraftingInventory();
 		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
 		for (Integer i : orderedSlots)
 		{
-			if (craftingInputs.get(i).isEmpty()) continue;
-			if (!craftingInputs.get(i).matches(craftInventory.getStackInSlot(i))) return false;
+			if (craftingInputs.get(i).isUnUsed()) continue;
+			if (!craftingInputs.get(i).matches(craftInventory.getComponent(i))) return false;
 		}
-		NonNullList<ItemStack> availableIngredients = NonNullList.create();
-		for (int i = 0; i < craftInventory.getSlots(); i++)
+		NonNullList<IRecipeWrapper> availableIngredients = NonNullList.create();
+		for (int i = 0; i < craftInventory.getSize(); i++)
 		{
 			if (orderedSlots.contains(i)) continue;
-			availableIngredients.add(craftInventory.getStackInSlot(i).copy());
+			availableIngredients.add(craftInventory.getComponent(i).copy());
 		}
 		for (int i = 0; i < craftingInputs.size(); i++)
 		{
 			if (orderedSlots.contains(i)) continue;
-			if (craftingInputs.get(i).isEmpty()) continue;
+			if (craftingInputs.get(i).isUnUsed()) continue;
 			int index = CraftingHelper.getMachedCraftingIndex(availableIngredients, craftingInputs.get(i));
 			if (index != -1)
 			{
-				availableIngredients.get(index).shrink(craftingInputs.get(index).getInput().getCount());
+				availableIngredients.get(index).increaseSize(-craftingInputs.get(index).getSize());
 			}
 			else
 			{
@@ -118,41 +133,34 @@ public class MachineRecipe {
 	}
 	
 	private Map<Integer, Integer> ingredientSlots (ICrafter machine) {
-		IItemHandlerModifiable craftInventory = machine.getCraftingInventory();
+		IRecipeInventory craftInventory = machine.getCraftingInventory();
 		Map<Integer, Integer> slots = new HashMap<Integer, Integer>();
 		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
 		for (Integer i : orderedSlots)
 		{
-			if (!craftingInputs.get(i).isEmpty()) slots.put(i, craftingInputs.get(i).getInput().getCount());
+			if (!craftingInputs.get(i).isUnUsed()) slots.put(i, i);
 		}
-		NonNullList<ItemStack> availableIngredients = NonNullList.create();
-		for (int i = 0; i < craftInventory.getSlots(); i++)
+		NonNullList<IRecipeWrapper> availableIngredients = NonNullList.create();
+		for (int i = 0; i < craftInventory.getSize(); i++)
 		{
 			if (orderedSlots.contains(i))
 			{
-				availableIngredients.add(ItemStack.EMPTY);
+				availableIngredients.add(IRecipeWrapper.NOTHING);
 			}
 			else
 			{
-				availableIngredients.add(craftInventory.getStackInSlot(i).copy());
+				availableIngredients.add(craftInventory.getComponent(i).copy());
 			}
 		}
-		for (int i = 0; i < craftInventory.getSlots(); i++)
+		for (int i = 0; i < craftInventory.getSize(); i++)
 		{
 			if (orderedSlots.contains(i)) continue;
-			if (craftingInputs.get(i).isEmpty()) continue;
+			if (craftingInputs.get(i).isUnUsed()) continue;
 			int index = CraftingHelper.getMachedCraftingIndex(availableIngredients, craftingInputs.get(i));
 			if (index != -1)
 			{
-				availableIngredients.get(index).shrink(craftingInputs.get(index).getInput().getCount());
-				if (slots.get(index) != null)
-				{
-					slots.put(index, slots.get(index) + craftingInputs.get(i).getInput().getCount());
-				}
-				else
-				{
-					slots.put(index, craftingInputs.get(i).getInput().getCount());
-				}
+				availableIngredients.get(index).increaseSize(-craftingInputs.get(index).getSize());
+				slots.put(i, index);
 			}
 		}
 		return slots;
@@ -161,27 +169,26 @@ public class MachineRecipe {
 	public boolean craft (ICrafter machine) {
 		if (!matches(machine)) return false;
 		Map<Integer, Integer> ingredientSlots = ingredientSlots(machine);
-		IItemHandlerModifiable inventoryCraft = machine.getCraftingInventory();
-		Map<Integer, ItemStack> containerItems = new HashMap<Integer, ItemStack>();
-		for (Integer slot : ingredientSlots.keySet())
+		IRecipeInventory inventoryCraft = machine.getCraftingInventory();
+		Map<Integer, IRecipeWrapper> containerItems = new HashMap<Integer, IRecipeWrapper>();
+		for (Integer ingredient : ingredientSlots.keySet())
 		{
-			ItemStack stack = inventoryCraft.getStackInSlot(slot);
-			ItemStack copy = stack.copy();
-			copy.setCount(ingredientSlots.get(slot));
-			ItemStack container = ForgeHooks.getContainerItem(copy);
-			if (!container.isEmpty())
+			IRecipeComponent component = craftingInputs.get(ingredient);
+			IRecipeWrapper stack = inventoryCraft.getComponent(ingredientSlots.get(ingredient));
+			IRecipeWrapper container = component.getResidue();
+			if (!container.isUnUsed())
 			{
-				if (stack.getCount() > 1 && !ItemUtils.areItemStacksMergableWithLimit(inventoryCraft.getSlotLimit(slot), container, stack)) return false;
-				containerItems.put(slot, container);
+				if (stack.getSize() > component.getSize() && !stack.mergable(container, inventoryCraft.getComponentSlotLimit(ingredient))) return false;
+				containerItems.put(ingredient, container);
 			}
 		}
-		for (Integer slot : ingredientSlots.keySet())
+		for (Integer ingredient : ingredientSlots.keySet())
 		{
-			ItemStack stack = inventoryCraft.getStackInSlot(slot);
-			stack.setCount(stack.getCount() - ingredientSlots.get(slot));
-			if (containerItems.containsKey(slot))
+			IRecipeWrapper stack = inventoryCraft.getComponent(ingredientSlots.get(ingredient));
+			stack.increaseSize(-craftingInputs.get(ingredient).getSize());
+			if (containerItems.containsKey(ingredient))
 			{
-				CraftingHelper.insertStack(inventoryCraft, slot, containerItems.get(slot));
+				inventoryCraft.insertComponent(ingredientSlots.get(ingredient), containerItems.get(ingredient));
 			}
 		}
 		return true;

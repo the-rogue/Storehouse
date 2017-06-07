@@ -11,6 +11,7 @@
 package therogue.storehouse.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.tileentity.TileEntity;
@@ -20,8 +21,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import therogue.storehouse.tile.IClientPacketReciever;
-import therogue.storehouse.util.NetworkUtils;
 import therogue.storehouse.util.LOG;
+import therogue.storehouse.util.NetworkUtils;
 
 public class GuiClientUpdatePacket implements IMessage {
 	
@@ -62,18 +63,19 @@ public class GuiClientUpdatePacket implements IMessage {
 		public IMessage onMessage (GuiClientUpdatePacket message, MessageContext ctx) {
 			if (ctx.netHandler instanceof INetHandlerPlayServer)
 			{
-				ctx.getServerHandler().playerEntity.getServerWorld().addScheduledTask(new Runnable() {
+				EntityPlayerMP fromPlayer = ctx.getServerHandler().playerEntity;
+				fromPlayer.getServerWorld().addScheduledTask(new Runnable() {
 					
 					@Override
 					public void run () {
-						WorldServer world = ctx.getServerHandler().playerEntity.getServerWorld();
+						WorldServer world = fromPlayer.getServerWorld();
 						if (world.isBlockLoaded(message.getPos()))
 						{
 							TileEntity te = world.getTileEntity(message.getPos());
 							if (te != null && te instanceof IClientPacketReciever)
 							{
 								IClientPacketReciever stoTE = (IClientPacketReciever) te;
-								stoTE.processGUIPacket(message);
+								stoTE.processGUIPacket(message, fromPlayer);
 							}
 							else
 							{

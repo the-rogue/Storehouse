@@ -10,19 +10,20 @@
 
 package therogue.storehouse.client.gui.machine;
 
-import net.minecraft.inventory.Container;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.element.ElementChargingBar;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
+import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
+import therogue.storehouse.client.gui.element.ProgressHandler;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.reference.Icons;
 import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
 
 public class GuiCombustionGenerator extends GuiBase {
 	
-	public GuiCombustionGenerator (Container inventorySlotsIn, TileCombustionGenerator inventory) {
-		super(inventory, inventorySlotsIn);
-		elements.add(new ElementChargingBar(this, 48, 35, Icons.CombustionIndicator.getLocation(), inventory, 7, 8));
-		elements.add(new ElementChargingBar(this, 51, 17, Icons.EnergyIndicator.getLocation(), inventory, 5, 6));
-		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 2, 3));
+	public GuiCombustionGenerator (ContainerBase inventory, TileCombustionGenerator linked) {
+		super(linked, inventory);
+		elements.add(new ProgressHandler(this, linked, 7, 8, new ElementVerticalProgressBar(48, 35, Icons.CombustionIndicator.getLocation())));
+		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(51, 17, Icons.EnergyIndicator.getLocation())));
+		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8)));
 	}
 }

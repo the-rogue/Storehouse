@@ -15,14 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import therogue.storehouse.crafting.RecipeInput;
+import therogue.storehouse.crafting.inventory.IRecipeInventory;
+import therogue.storehouse.crafting.wrapper.IRecipeComponent;
+import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 
 public class CraftingHelper {
 	
@@ -31,45 +30,46 @@ public class CraftingHelper {
 		{
 			for (int i = 0; i < list.size(); i++)
 			{
-				if ((stack.isEmpty() && list.get(i).isEmpty()) || ItemUtils.areItemStacksMergableWithLimit(limits != null ? limits.get(i) != null ? limits.get(i) : 64 : 64, stack, list.get(i))) { return i; }
+				if ((stack.isEmpty() && list.get(i).isEmpty()) || ItemUtils.areStacksMergableWithLimit(limits != null ? limits.get(i) != null ? limits.get(i) : 64 : 64, stack, list.get(i))) { return i; }
 			}
 		}
 		return -1;
 	}
 	
-	public static int getMachedCraftingIndex (List<RecipeInput> list, ItemStack stack) {
+	public static int getMachedCraftingIndex (List<IRecipeWrapper> list, IRecipeComponent stack) {
 		if (list != null && list.size() > 0)
 		{
 			for (int i = 0; i < list.size(); i++)
 			{
-				if (list.get(i).matches(stack)) { return i; }
+				if (stack.matches(list.get(i))) { return i; }
 			}
 		}
 		return -1;
 	}
 	
-	public static int getMachedCraftingIndex (@Nonnull NonNullList<ItemStack> selection, RecipeInput comparison) {
-		for (int i = 0; i < selection.size(); i++)
-		{
-			if (comparison.matches(selection.get(i))) { return i; }
-		}
-		return -1;
-	}
-	
-	public static Map<Integer, Integer> getCorrespondingInventorySlots (List<ItemStack> inputs, List<ItemStack> inventory, @Nullable List<Integer> slotLimits) {
+	public static Map<Integer, Integer> getCorrespondingInventorySlots (List<IRecipeComponent> inputs, IRecipeInventory inventory, @Nullable List<Integer> slotLimits) {
 		Map<Integer, Integer> slots = new HashMap<Integer, Integer>();
-		NonNullList<ItemStack> availableIngredients = NonNullList.create();
-		for (int i = 0; i < inventory.size(); i++)
+		NonNullList<IRecipeWrapper> availableIngredients = NonNullList.create();
+		for (int i = 0; i < inventory.getSize(); i++)
 		{
-			availableIngredients.add(inventory.get(i).copy());
+			availableIngredients.add(inventory.getComponent(i).copy());
 		}
 		for (int i = 0; i < inputs.size(); i++)
 		{
-			if (inputs.get(i).isEmpty()) continue;
-			int index = getMachedIndex(slotLimits, availableIngredients, inputs.get(i));
+			IRecipeComponent thisInput = inputs.get(i);
+			if (thisInput.isUnUsed()) continue;
+			int index = -1;
+			for (int j = 0; j < availableIngredients.size(); j++)
+			{
+				if (availableIngredients.get(j).canAddComponent(thisInput, slotLimits != null ? slotLimits.get(j) : -1))
+				{
+					index = i;
+					break;
+				}
+			}
 			if (index != -1)
 			{
-				availableIngredients.get(index).grow(inputs.get(i).getCount());
+				availableIngredients.get(index).increaseSize(thisInput.getSize());
 			}
 			slots.put(i, index);
 		}
@@ -84,25 +84,12 @@ public class CraftingHelper {
 		return true;
 	}
 	
-	public static List<ItemStack> getInventoryList (IItemHandler inventory) {
-		List<ItemStack> listInventory = new ArrayList<ItemStack>();
-		for (int i = 0; i < inventory.getSlots(); i++)
-		{
-			listInventory.add(inventory.getStackInSlot(i));
-		}
-		return listInventory;
-	}
-	
-	public static List<Integer> getSlotLimitsList (IItemHandler inventory) {
+	public static List<Integer> getSlotLimitsList (IRecipeInventory inventory) {
 		List<Integer> listInventory = new ArrayList<Integer>();
-		for (int i = 0; i < inventory.getSlots(); i++)
+		for (int i = 0; i < inventory.getSize(); i++)
 		{
-			listInventory.add(inventory.getSlotLimit(i));
+			listInventory.add(inventory.getComponentSlotLimit(i));
 		}
 		return listInventory;
-	}
-	
-	public static void insertStack (IItemHandlerModifiable inventory, int slot, ItemStack stack) {
-		inventory.setStackInSlot(slot, ItemUtils.mergeStacks(inventory.getSlotLimit(slot), true, inventory.getStackInSlot(slot), stack));
 	}
 }

@@ -22,10 +22,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.element.ElementBase;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.tile.MachineTier;
@@ -36,42 +36,64 @@ public class GuiBase extends GuiContainer {
 	
 	protected ResourceLocation texture;
 	protected List<ElementBase> elements = Lists.<ElementBase> newArrayList();
+	protected Color tintColor;
+	public final ContainerBase inventory;
 	
-	public GuiBase (IGuiSupplier linked, Container inventorySlotsIn) {
-		super(inventorySlotsIn);
+	public GuiBase (IGuiSupplier linked, ContainerBase inventory) {
+		this(inventory);
 		switch (MachineTier.values()[linked.getField(1)]) {
 			case advanced:
 				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/advanced.png");
+				this.tintColor = new Color(116, 116, 116);
 				break;
 			case basic:
 				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/basic.png");
+				this.tintColor = new Color(106, 78, 45);
 				break;
 			case ender:
 				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/ender.png");
+				this.tintColor = new Color(197, 215, 195);
 				break;
 			case infused:
 				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/infused.png");
+				this.tintColor = new Color(182, 182, 182);
 				break;
 			case ultimate:
 				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/ultimate.png");
+				this.tintColor = new Color(144, 142, 151);
 				break;
 			default:
 				this.texture = null;
+				this.tintColor = new Color(255, 255, 255);
 				break;
 		}
-		this.xSize = 176;
-		this.ySize = 166;
 	}
 	
-	public GuiBase (ResourceLocation texture, Container inventorySlotsIn) {
-		super(inventorySlotsIn);
+	public GuiBase (ResourceLocation texture, ContainerBase inventory) {
+		this(inventory);
 		this.texture = texture;
-		this.xSize = 176;
-		this.ySize = 166;
+		this.tintColor = new Color(255, 255, 255);
 	}
 	
+	private GuiBase (ContainerBase inventory) {
+		super(inventory);
+		this.xSize = 176;
+		this.ySize = 166;
+		this.inventory = inventory;
+	}
+	
+	/**
+	 * @return the texture
+	 */
 	public ResourceLocation getTexture () {
 		return texture;
+	}
+	
+	/**
+	 * @return the tintColor
+	 */
+	public Color getTintColor () {
+		return tintColor;
 	}
 	
 	@Override
@@ -81,6 +103,7 @@ public class GuiBase extends GuiContainer {
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+		inventory.update();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) this.guiLeft, (float) this.guiTop, 0.0F);
 		for (Slot s : this.inventorySlots.inventorySlots)

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.tile.machine;
+package therogue.storehouse.crafting;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,12 +18,9 @@ import java.util.Set;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import therogue.storehouse.crafting.ICrafter;
-import therogue.storehouse.crafting.MachineRecipe;
+import therogue.storehouse.crafting.inventory.IRecipeInventory;
+import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.util.CraftingHelper;
-import therogue.storehouse.util.ItemUtils;
 import therogue.storehouse.util.LOG;
 
 public class MachineCraftingHandler {
@@ -62,21 +59,21 @@ public class MachineCraftingHandler {
 		return new CraftingManager(attachedTile);
 	}
 	
-	private boolean checkItemValidForSlot (ICrafter tile, int index, ItemStack stack) {
-		IItemHandlerModifiable craftingInventory = tile.getCraftingInventory();
-		if (ItemUtils.areItemStacksMergable(craftingInventory.getStackInSlot(index), stack)) return true;
+	private boolean checkItemValidForSlot (ICrafter tile, int index, IRecipeWrapper stack) {
+		IRecipeInventory craftingInventory = tile.getCraftingInventory();
+		if (stack.mergable(craftingInventory.getComponent(index), craftingInventory.getComponentSlotLimit(index))) return true;
 		recipeloop: for (MachineRecipe recipe : RECIPES)
 		{
 			Set<Integer> matchedIngredients = new HashSet<Integer>();
 			int emptySlots = 0;
-			for (int i = 0; i < craftingInventory.getSlots(); i++)
+			for (int i = 0; i < craftingInventory.getSize(); i++)
 			{
-				if (craftingInventory.getStackInSlot(i).isEmpty())
+				if (craftingInventory.getComponent(i).isUnUsed())
 				{
 					++emptySlots;
 					continue;
 				}
-				int ingredientIndex = recipe.matchesRecipeIngredient(tile, i, craftingInventory.getStackInSlot(i), matchedIngredients);
+				int ingredientIndex = recipe.matchesRecipeIngredient(tile, i, craftingInventory.getComponent(i), matchedIngredients);
 				if (ingredientIndex == -1)
 				{
 					continue recipeloop;
@@ -87,7 +84,7 @@ public class MachineCraftingHandler {
 				}
 			}
 			if (matchedIngredients.size() + emptySlots > recipe.craftingInputs.size() && recipe.matchesRecipeIngredient(tile, index, stack, null) != -1) return true;
-			if (recipe.matchesRecipeIngredient(tile, index, stack, matchedIngredients) != -1) return true;;
+			if (recipe.matchesRecipeIngredient(tile, index, stack, matchedIngredients) != -1) return true;
 		}
 		return false;
 	}
@@ -103,17 +100,18 @@ public class MachineCraftingHandler {
 			this.attachedTile = attachedTile;
 		}
 		
-		public boolean checkItemValidForSlot (int index, ItemStack stack) {
+		public boolean checkItemValidForSlot (int index, IRecipeWrapper stack) {
 			return MachineCraftingHandler.this.checkItemValidForSlot(attachedTile, index, stack);
 		}
 		
 		public void checkRecipes () {
 			if ((currentCrafting != null && currentCrafting.matches(attachedTile)) || craftingLock) return;
-			IItemHandlerModifiable outputInventory = attachedTile.getOutputInventory();
+			currentCrafting = null;
+			IRecipeInventory outputInventory = attachedTile.getOutputInventory();
 			for (MachineRecipe recipe : RECIPES)
 			{
-				if (recipe.getResults().size() < outputInventory.getSlots()) continue;
-				Map<Integer, Integer> ouptutMap = CraftingHelper.getCorrespondingInventorySlots(recipe.getResults(), CraftingHelper.getInventoryList(outputInventory), CraftingHelper.getSlotLimitsList(outputInventory));
+				if (recipe.getResults().size() < outputInventory.getSize()) continue;
+				Map<Integer, Integer> ouptutMap = CraftingHelper.getCorrespondingInventorySlots(recipe.getResults(), outputInventory, CraftingHelper.getSlotLimitsList(outputInventory));
 				if (recipe.matches(attachedTile) && CraftingHelper.checkMatchingSlots(ouptutMap))
 				{
 					currentCrafting = recipe;
@@ -133,17 +131,17 @@ public class MachineCraftingHandler {
 						attachedTile.doRunTick();
 						if (craftingTime <= 1)
 						{
-							IItemHandlerModifiable outputInventory = attachedTile.getOutputInventory();
-							Map<Integer, Integer> outputMap = CraftingHelper.getCorrespondingInventorySlots(currentCrafting.getResults(), CraftingHelper.getInventoryList(outputInventory), CraftingHelper.getSlotLimitsList(outputInventory));
+							IRecipeInventory outputInventory = attachedTile.getOutputInventory();
+							Map<Integer, Integer> outputMap = CraftingHelper.getCorrespondingInventorySlots(currentCrafting.getResults(), outputInventory, CraftingHelper.getSlotLimitsList(outputInventory));
 							if (CraftingHelper.checkMatchingSlots(outputMap))
 							{
 								craftingLock = true;
 								if (currentCrafting.craft(attachedTile))
 								{
-									List<ItemStack> results = currentCrafting.getResults();
+									List<IRecipeWrapper> results = currentCrafting.getWrappedResults();
 									for (int i = 0; i < results.size(); i++)
 									{
-										CraftingHelper.insertStack(outputInventory, outputMap.get(i), results.get(i));
+										outputInventory.insertComponent(outputMap.get(i), results.get(i));
 									}
 								}
 								currentCrafting = null;

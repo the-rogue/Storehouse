@@ -12,15 +12,15 @@ package therogue.storehouse.crafting;
 
 import java.util.Set;
 
-import net.minecraftforge.items.IItemHandlerModifiable;
+import therogue.storehouse.crafting.inventory.IRecipeInventory;
 
 public interface ICrafter {
 	
 	public Set<Integer> getOrderMattersSlots ();
 	
-	public IItemHandlerModifiable getCraftingInventory ();
+	public IRecipeInventory getCraftingInventory ();
 	
-	public IItemHandlerModifiable getOutputInventory ();
+	public IRecipeInventory getOutputInventory ();
 	
 	public boolean isRunning ();
 	

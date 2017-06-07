@@ -14,15 +14,14 @@ import java.util.ArrayList;
 
 import net.minecraft.util.text.TextFormatting;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.reference.Icons;
 import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
 public class ElementEnergyBar extends ElementProgressBar {
 	
-	public ElementEnergyBar (GuiBase gui, int x, int y, IGuiSupplier stateChanger, int progressField, int maxProgressField) {
-		super(gui, x, y, Icons.EnergyBar.getLocation(), stateChanger, progressField, maxProgressField);
+	public ElementEnergyBar (int x, int y) {
+		super(x, y, Icons.EnergyBar.getLocation());
 	}
 	
 	@Override
@@ -56,14 +55,14 @@ public class ElementEnergyBar extends ElementProgressBar {
 	}
 	
 	@Override
-	public void drawTopLayer (int mouseX, int mouseY) {
+	public void drawTopLayer (GuiBase gui, int mouseX, int mouseY, int progress, int maxProgress) {
 		if (icon == null) return;
 		if (gui.isPointInGuiRegion(this.x, this.y, this.icon.getWidth() / 2, this.icon.getHeight(), mouseX, mouseY))
 		{
 			ArrayList<String> textLines = new ArrayList<String>();
 			// TODO Insert Commas
-			textLines.add(TextFormatting.RED + "" + stateChanger.getField(progressField) + " RF /");
-			textLines.add(TextFormatting.RED + "" + stateChanger.getField(maxProgressField) + " RF");
+			textLines.add(TextFormatting.RED + "" + progress + " RF /");
+			textLines.add(TextFormatting.RED + "" + maxProgress + " RF");
 			GuiHelper.drawHoveringText(gui.getFontRenderer(), textLines, 0, 1, 0, gui.width, gui.height, -1, gui.getGuiLeft(), gui.getGuiTop(), true, false);
 		}
 	}

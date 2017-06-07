@@ -16,4 +16,5 @@ public class MachineStats {
 	public static final int COMBUSTIONGENPERTICK = 2;
 	public static final int LIQUIDGENPERTICK = 2;
 	public static final int THERMALPRESSPERTICK = 40;
+	public static final int CRYSTALISERPERTICK = 10;
 }

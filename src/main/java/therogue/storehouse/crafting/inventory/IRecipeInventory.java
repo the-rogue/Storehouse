@@ -1,5 +1,5 @@
 /*
- * This file is part of Storehouse. Copyright (c) 2016, TheRogue, All rights reserved.
+ * This file is part of Storehouse. Copyright (c) 2017, TheRogue, All rights reserved.
  * 
  * Storehouse is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
  * 
@@ -8,12 +8,17 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.tile;
+package therogue.storehouse.crafting.inventory;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import therogue.storehouse.network.GuiClientUpdatePacket;
+import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 
-public interface IClientPacketReciever {
+public interface IRecipeInventory {
 	
-	public void processGUIPacket (GuiClientUpdatePacket message, EntityPlayerMP from);
+	public IRecipeWrapper getComponent (int slot);
+	
+	public void insertComponent (int slot, IRecipeWrapper component);
+	
+	public int getComponentSlotLimit (int slot);
+	
+	public int getSize ();
 }

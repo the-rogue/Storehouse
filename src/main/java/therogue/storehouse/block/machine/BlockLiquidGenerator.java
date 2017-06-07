@@ -35,6 +35,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.core.Storehouse;
@@ -163,6 +167,15 @@ public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStor
 	
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (player.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+		{
+			IFluidHandler tank = world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+			FluidActionResult result = FluidUtil.interactWithFluidHandler(player.getHeldItem(hand), tank, player);
+			if (result.isSuccess()) {
+				player.setHeldItem(hand, result.result);
+				return true;
+			}
+		}
 		if (!world.isRemote)
 		{
 			player.openGui(Storehouse.instance, IDs.LIQUIDGENERATORGUI, world, pos.getX(), pos.getY(), pos.getZ());

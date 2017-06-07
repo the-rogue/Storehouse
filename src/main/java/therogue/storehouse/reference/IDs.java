@@ -21,4 +21,5 @@ public class IDs {
 	public static final int COMBUSTIONGENERATORGUI = 1;
 	public static final int LIQUIDGENERATORGUI = 2;
 	public static final int THERMALPRESSGUI = 3;
+	public static final int CRYSTALISERGUI = 4;
 }

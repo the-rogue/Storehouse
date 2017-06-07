@@ -10,22 +10,23 @@
 
 package therogue.storehouse.client.gui.machine;
 
-import net.minecraft.inventory.Container;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.element.ElementChargingBar;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.ElementFluidTank;
+import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
+import therogue.storehouse.client.gui.element.ProgressHandler;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.reference.Icons;
 import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
 
 public class GuiLiquidGenerator extends GuiBase {
 	
-	public GuiLiquidGenerator (Container inventorySlotsIn, TileLiquidGenerator inventory) {
-		super(inventory, inventorySlotsIn);
-		elements.add(new ElementChargingBar(this, 48, 35, Icons.CombustionIndicator.getLocation(), inventory, 7, 8));
-		elements.add(new ElementChargingBar(this, 51, 17, Icons.EnergyIndicator.getLocation(), inventory, 5, 6));
-		elements.add(new ElementEnergyBar(this, 8, 8, inventory, 2, 3));
-		elements.add(new ElementFluidTank(this, 105, 12, inventory.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), inventory));
+	public GuiLiquidGenerator (ContainerBase inventory, TileLiquidGenerator linked) {
+		super(linked, inventory);
+		elements.add(new ProgressHandler(this, linked, 7, 8, new ElementVerticalProgressBar(48, 35, Icons.CombustionIndicator.getLocation())));
+		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(51, 17, Icons.EnergyIndicator.getLocation())));
+		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8)));
+		elements.add(new ElementFluidTank(this, 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), linked));
 	}
 }

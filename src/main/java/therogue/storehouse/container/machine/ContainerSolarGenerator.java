@@ -25,7 +25,7 @@ public class ContainerSolarGenerator extends ContainerBase {
 	public ContainerSolarGenerator (IInventory playerInv, TileSolarGenerator teInv) {
 		super(playerInv, teInv);
 		// Add Solar Generator's Inventory Slot IDs 36,37
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 30, 53));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 30, 17));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 0, 30, 53));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 1, 30, 17));
 	}
 }

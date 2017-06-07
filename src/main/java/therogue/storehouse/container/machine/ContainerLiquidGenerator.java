@@ -25,9 +25,9 @@ public class ContainerLiquidGenerator extends ContainerBase {
 	public ContainerLiquidGenerator (IInventory playerInv, TileLiquidGenerator teInv) {
 		super(playerInv, teInv);
 		// Add Solar Generator's Inventory Slot IDs 36,37
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 0, 30, 17));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 1, 66, 17));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 2, 141, 17));
-		this.addSlotToContainer(new SlotItemHandler(teInv.getContainerCapability(), 3, 141, 53));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 0, 30, 17));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 1, 66, 17));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 2, 141, 17));
+		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 3, 141, 53));
 	}
 }

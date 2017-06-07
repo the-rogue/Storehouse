@@ -10,6 +10,9 @@
 
 package therogue.storehouse.container;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -20,11 +23,13 @@ import net.minecraft.item.ItemStack;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
 import therogue.storehouse.util.BlockUtils;
+import therogue.storehouse.util.GeneralUtils;
 import therogue.storehouse.util.ItemUtils;
 
 public class ContainerBase extends Container {
 	
 	private StorehouseBaseTileEntity teInv;
+	protected List<Slot> tileEntitySlots = new ArrayList<Slot>();
 	
 	public ContainerBase (IInventory playerInv, StorehouseBaseTileEntity teInv) {
 		this.teInv = teInv;
@@ -43,12 +48,22 @@ public class ContainerBase extends Container {
 		}
 	}
 	
+	public Slot addTESlot (Slot slot) {
+		this.addSlotToContainer(slot);
+		tileEntitySlots.add(slot);
+		return slot;
+	}
+	
+	public void update () {
+	}
+	
 	@Override
 	public void detectAndSendChanges () {
 		super.detectAndSendChanges();
+		update();
 		for (IContainerListener listener : this.listeners)
 		{
-			if (listener instanceof EntityPlayerMP)
+			if (listener instanceof EntityPlayerMP && GeneralUtils.isServerSide(((EntityPlayerMP) listener).getEntityWorld()))
 			{
 				StorehousePacketHandler.INSTANCE.sendTo(teInv.getGUIPacket(), (EntityPlayerMP) listener);
 			}
@@ -97,7 +112,7 @@ public class ContainerBase extends Container {
 		{
 			Slot slot = (Slot) this.inventorySlots.get(i);
 			ItemStack itemstack = slot.getStack();
-			if (ItemUtils.areItemStacksMergable(stack, itemstack) && slot.isItemValid(ItemUtils.mergeStacks(slot.getSlotStackLimit(), false, stack, itemstack)))
+			if (ItemUtils.areStacksMergable(stack, itemstack) && slot.isItemValid(ItemUtils.mergeStacks(slot.getSlotStackLimit(), false, stack, itemstack)))
 			{
 				slot.putStack(ItemUtils.mergeStacks(slot.getSlotStackLimit(), true, itemstack, stack));
 				slot.onSlotChanged();

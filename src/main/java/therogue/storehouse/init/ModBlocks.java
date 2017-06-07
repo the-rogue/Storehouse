@@ -20,6 +20,7 @@ import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
 import therogue.storehouse.block.Decorative.StorehouseBaseStair;
 import therogue.storehouse.block.machine.BlockCombustionGenerator;
+import therogue.storehouse.block.machine.BlockCrystaliser;
 import therogue.storehouse.block.machine.BlockLiquidGenerator;
 import therogue.storehouse.block.machine.BlockSolarGenerator;
 import therogue.storehouse.block.machine.BlockThermalPress;
@@ -51,6 +52,7 @@ public class ModBlocks {
 	public static final StorehouseBaseBlock combustion_generator = new BlockCombustionGenerator("combustion_generator");
 	public static final StorehouseBaseBlock liquid_generator = new BlockLiquidGenerator("liquid_generator");
 	public static final StorehouseBaseBlock thermal_press = new BlockThermalPress("thermal_press");
+	public static final StorehouseBaseBlock crystaliser = new BlockCrystaliser("crystaliser");
 	/**
 	 * Adds all the blocks to the array
 	 */
@@ -74,6 +76,7 @@ public class ModBlocks {
 		blocklist.add(combustion_generator);
 		blocklist.add(liquid_generator);
 		blocklist.add(thermal_press);
+		blocklist.add(crystaliser);
 	}
 	
 	/**

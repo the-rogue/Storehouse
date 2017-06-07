@@ -10,20 +10,21 @@
 
 package therogue.storehouse.client.gui.machine;
 
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.element.ElementButton;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.IconDefinition;
+import therogue.storehouse.client.gui.element.ProgressHandler;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.reference.Icons;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class GuiThermalPress extends GuiBase {
 	
-	public GuiThermalPress (Container inventorySlotsIn, TileThermalPress linked) {
-		super(linked, inventorySlotsIn);
-		elements.add(new ElementEnergyBar(this, 8, 8, linked, 2, 3));
+	public GuiThermalPress (ContainerBase inventory, TileThermalPress linked) {
+		super(linked, inventory);
+		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8)));
 		IconDefinition[] innerIcons = new IconDefinition[] { new IconDefinition(new ResourceLocation("textures/gui/thermalpress/press_mode.png"), this.xSize - 17, 7, 10, 10), new IconDefinition(new ResourceLocation("textures/gui/thermalpress/join_mode.png"), this.xSize - 17, 7, 10, 10),
 				new IconDefinition(new ResourceLocation("textures/gui/thermalpress/stamp_mode.png"), this.xSize - 17, 7, 10, 10), new IconDefinition(new ResourceLocation("textures/gui/thermalpress/high_pressure_mode.png"), this.xSize - 17, 7, 10, 10), };
 		elements.add(new ElementButton(this, new IconDefinition(Icons.Button.getLocation(), this.xSize - 20, 4, 16, 16), "Click to change the mode of the Thermal Press", innerIcons,
