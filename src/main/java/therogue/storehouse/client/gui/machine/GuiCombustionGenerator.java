@@ -15,15 +15,17 @@ import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.reference.Icons;
+import therogue.storehouse.reference.TierIcons;
+import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
+import therogue.storehouse.util.GeneralUtils;
 
 public class GuiCombustionGenerator extends GuiBase {
 	
 	public GuiCombustionGenerator (ContainerBase inventory, TileCombustionGenerator linked) {
-		super(linked, inventory);
-		elements.add(new ProgressHandler(this, linked, 7, 8, new ElementVerticalProgressBar(48, 35, Icons.CombustionIndicator.getLocation())));
-		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(51, 17, Icons.EnergyIndicator.getLocation())));
-		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8)));
+		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory);
+		elements.add(new ProgressHandler(this, linked, 7, 8, new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(linked.getField(1)))));
+		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
+		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
 	}
 }

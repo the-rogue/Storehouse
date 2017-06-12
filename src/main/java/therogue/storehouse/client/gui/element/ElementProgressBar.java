@@ -36,7 +36,7 @@ public abstract class ElementProgressBar implements IProgressBar {
 		if (icon == null) return;
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		TextureHelper.bindTexture(gui, iconLocation);
-		gui.drawTintedTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight(), gui.getTintColor());
+		gui.drawTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight());
 		TextureHelper.bindTexture(gui, iconLocation);
 		gui.drawTexturedModalRect(x + (icon.getWidth() - getWidth(progress)) / 2, y + icon.getHeight() - getHeight(progress), getMinU(progress) / 2, getMinV(progress), getMaxU(progress) / 2, getMaxV(progress), getWidth(progress) / 2, getHeight(progress));
 	}

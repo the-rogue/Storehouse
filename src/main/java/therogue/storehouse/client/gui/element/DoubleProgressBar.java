@@ -23,6 +23,12 @@ public class DoubleProgressBar implements IProgressBar {
 	}
 	
 	@Override
+	public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
+		progressBar1.drawBottomLayer(gui, mouseX, mouseY, progress);
+		progressBar2.drawBottomLayer(gui, mouseX, mouseY, progress);
+	}
+	
+	@Override
 	public void drawBar (GuiBase gui, int mouseX, int mouseY, float progress) {
 		progressBar1.drawBar(gui, mouseX, mouseY, progress);
 		progressBar2.drawBar(gui, mouseX, mouseY, progress);

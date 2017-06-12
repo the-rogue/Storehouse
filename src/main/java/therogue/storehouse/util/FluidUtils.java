@@ -10,16 +10,18 @@
 
 package therogue.storehouse.util;
 
+import javax.annotation.Nullable;
+
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidUtils {
 	
-	public static boolean areStacksMergable (FluidStack stackA, FluidStack stackB) {
-		return stackA.isFluidEqual(stackB);
+	public static boolean areStacksMergable (@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
+		return stackA == null || stackA.isFluidEqual(stackB);
 	}
 	
-	public static boolean areStacksMergableWithLimit (int limit, FluidStack stackA, FluidStack stackB) {
-		return stackA.isFluidEqual(stackB) && stackA.amount + stackB.amount <= limit;
+	public static boolean areStacksMergableWithLimit (int limit, @Nullable FluidStack stackA, @Nullable FluidStack stackB) {
+		return stackA == null || stackA.isFluidEqual(stackB) && stackA.amount + stackB.amount <= limit;
 	}
 	
 	public static FluidStack mergeStacks (int limit, boolean modifyStacks, FluidStack... stacks) {

@@ -93,7 +93,8 @@ public class MachineCraftingHandler {
 		
 		private MachineRecipe currentCrafting = null;
 		private final ICrafter attachedTile;
-		private int craftingTime = 0;
+		public int totalCraftingTime = 0;
+		public int craftingTime = 0;
 		private boolean craftingLock = false;
 		
 		private CraftingManager (ICrafter attachedTile) {
@@ -115,6 +116,7 @@ public class MachineCraftingHandler {
 				if (recipe.matches(attachedTile) && CraftingHelper.checkMatchingSlots(ouptutMap))
 				{
 					currentCrafting = recipe;
+					totalCraftingTime = recipe.timeTaken;
 					craftingTime = recipe.timeTaken;
 					break;
 				}
@@ -145,6 +147,7 @@ public class MachineCraftingHandler {
 									}
 								}
 								currentCrafting = null;
+								totalCraftingTime = 0;
 								craftingTime = 0;
 								craftingLock = false;
 								checkRecipes();
@@ -159,6 +162,7 @@ public class MachineCraftingHandler {
 				else
 				{
 					currentCrafting = null;
+					totalCraftingTime = 0;
 					craftingTime = 0;
 				}
 			}

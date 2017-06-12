@@ -29,11 +29,9 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	
 	protected InventoryManager inventory;
 	protected EnergyStorageAdv energyStorage = new EnergyStorageAdv(8000, 100, 0);
-	public final MachineTier tier;
 	
-	public StorehouseBaseMachine (IStorehouseBaseBlock block, MachineTier tier) {
+	public StorehouseBaseMachine (IStorehouseBaseBlock block) {
 		super(block);
-		this.tier = tier;
 	}
 	
 	// -------------------------Inventory Methods-----------------------------------
@@ -55,8 +53,6 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	@Override
 	public int getField (int id) {
 		switch (id) {
-			case 1:
-				return tier.ordinal();
 			case 2:
 				return energyStorage.getEnergyStored();
 			case 3:

@@ -38,7 +38,6 @@ import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.IClientPacketReciever;
-import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.GeneralUtils;
 import therogue.storehouse.util.GuiHelper.XYCoords;
@@ -50,7 +49,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newCrafter(this);
 	
 	public TileThermalPress () {
-		super(ModBlocks.thermal_press, MachineTier.advanced);
+		super(ModBlocks.thermal_press);
 		inventory = new InventoryManager(this, 6, new Integer[] { 1, 2, 3, 4, 5 }, new Integer[] { 0 }) {
 			
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
@@ -154,6 +153,10 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 		switch (id) {
 			case 4:
 				return mode.ordinal();
+			case 5:
+				return theCrafter.craftingTime;
+			case 6:
+				return theCrafter.totalCraftingTime;
 			default:
 				return super.getField(id);
 		}
@@ -175,7 +178,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	
 	@Override
 	public int getFieldCount () {
-		return super.getFieldCount() + 1;
+		return super.getFieldCount() + 3;
 	}
 	
 	// -------------------------IInteractionObject-----------------------------------------------------------------

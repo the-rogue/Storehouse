@@ -24,6 +24,9 @@ public abstract class ElementBase {
 		return true;
 	}
 	
+	public void drawBottomLayer (int mouseX, int mouseY) {
+	}
+	
 	public abstract void drawElement (int mouseX, int mouseY);
 	
 	public void drawTopLayer (int mouseX, int mouseY) {

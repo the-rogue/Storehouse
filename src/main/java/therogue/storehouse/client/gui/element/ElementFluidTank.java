@@ -20,7 +20,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.inventory.IGuiSupplier;
-import therogue.storehouse.reference.Icons;
 import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
@@ -33,9 +32,9 @@ public class ElementFluidTank extends ElementBase {
 	public final IFluidHandler tank;
 	public final IGuiSupplier stateChanger;
 	
-	public ElementFluidTank (GuiBase gui, int x, int y, IFluidHandler tank, IGuiSupplier stateChanger) {
+	public ElementFluidTank (GuiBase gui, ResourceLocation location, int x, int y, IFluidHandler tank, IGuiSupplier stateChanger) {
 		super(gui);
-		this.iconLocation = Icons.FluidTank.getLocation();
+		this.iconLocation = location;
 		this.icon = TextureHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
@@ -57,7 +56,7 @@ public class ElementFluidTank extends ElementBase {
 		}
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		TextureHelper.bindTexture(this, iconLocation);
-		gui.drawTintedTexturedModalRect(x, y, 0.0F, 0.0F, 1.0F, 1.0F, icon.getWidth(), icon.getHeight(), gui.getTintColor());
+		gui.drawTexturedModalRect(x, y, 0.0F, 0.0F, 1.0F, 1.0F, icon.getWidth(), icon.getHeight());
 	}
 	
 	@Override

@@ -12,16 +12,16 @@ package therogue.storehouse.client.gui.element;
 
 import java.util.ArrayList;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.reference.Icons;
 import therogue.storehouse.util.GuiHelper;
 import therogue.storehouse.util.TextureHelper;
 
 public class ElementEnergyBar extends ElementProgressBar {
 	
-	public ElementEnergyBar (int x, int y) {
-		super(x, y, Icons.EnergyBar.getLocation());
+	public ElementEnergyBar (int x, int y, ResourceLocation location) {
+		super(x, y, location);
 	}
 	
 	@Override

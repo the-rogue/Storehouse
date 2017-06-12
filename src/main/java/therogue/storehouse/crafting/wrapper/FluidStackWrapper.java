@@ -22,12 +22,12 @@ public class FluidStackWrapper implements IRecipeWrapper {
 	}
 	
 	public FluidStack getStack () {
-		return stack.copy();
+		return stack != null ? stack.copy() : null;
 	}
 	
 	@Override
 	public boolean isUnUsed () {
-		return stack.amount <= 0;
+		return stack == null || stack != null && stack.amount <= 0;
 	}
 	
 	@Override
@@ -58,21 +58,22 @@ public class FluidStackWrapper implements IRecipeWrapper {
 	
 	@Override
 	public void increaseSize (int i) {
-		stack.amount += i;
+		if (stack != null) stack.amount += i;
 	}
 	
 	@Override
 	public void setSize (int i) {
-		stack.amount = i;
+		if (stack != null) stack.amount = i;
 	}
 	
 	@Override
 	public int getSize () {
-		return stack.amount;
+		if (stack != null) return stack.amount;
+		return 0;
 	}
 	
 	@Override
 	public IRecipeWrapper copy () {
-		return new FluidStackWrapper(stack.copy());
+		return new FluidStackWrapper(getStack());
 	}
 }

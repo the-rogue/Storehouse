@@ -23,6 +23,15 @@ public class JoinProgressBar implements IProgressBar {
 	}
 	
 	@Override
+	public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
+		float doubleprogress = progress * 2.0F;
+		float progress2 = doubleprogress - Math.min(doubleprogress, 1);
+		float progress1 = doubleprogress - progress2;
+		progressBar1.drawBottomLayer(gui, mouseX, mouseY, progress1);
+		progressBar2.drawBottomLayer(gui, mouseX, mouseY, progress2);
+	}
+	
+	@Override
 	public void drawBar (GuiBase gui, int mouseX, int mouseY, float progress) {
 		float doubleprogress = progress * 2.0F;
 		float progress2 = doubleprogress - Math.min(doubleprogress, 1);

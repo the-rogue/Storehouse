@@ -23,9 +23,11 @@ import therogue.storehouse.util.GeneralUtils;
 public abstract class TileBaseGenerator extends StorehouseBaseMachine {
 	
 	protected int RFPerTick;
+	protected MachineTier tier;
 	
 	public TileBaseGenerator (IStorehouseBaseBlock block, MachineTier tier, int baseGeneration, boolean allowInsert) {
-		super(block, tier);
+		super(block);
+		this.tier = tier;
 		this.RFPerTick = GeneratorUtils.getRecieve(tier, baseGeneration);
 		energyStorage = GeneratorUtils.getAppropriateEnergyStored(tier, baseGeneration, allowInsert);
 	}
@@ -91,6 +93,8 @@ public abstract class TileBaseGenerator extends StorehouseBaseMachine {
 	public int getField (int id) {
 		ItemStack stack;
 		switch (id) {
+			case 1:
+				return tier.ordinal();
 			case 4:
 				return isRunning() ? 1 : 0;
 			case 5:

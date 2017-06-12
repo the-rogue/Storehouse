@@ -11,14 +11,22 @@
 package therogue.storehouse.tile;
 
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.reference.IDs;
 
 public enum MachineTier implements IStringSerializable
 {
-	basic,
-	advanced,
-	infused,
-	ender,
-	ultimate;
+	basic (IDs.RESOURCENAMEPREFIX + "textures/gui/basic.png"),
+	advanced (IDs.RESOURCENAMEPREFIX + "textures/gui/advanced.png"),
+	infused ("textures/gui/infused.png"),
+	ender (IDs.RESOURCENAMEPREFIX + "textures/gui/ender.png"),
+	ultimate (IDs.RESOURCENAMEPREFIX + "textures/gui/ultimate.png");
+	
+	public final ResourceLocation guiLocation;
+	
+	private MachineTier (String guiLocation) {
+		this.guiLocation = new ResourceLocation(guiLocation);
+	}
 	
 	@Override
 	public String getName () {

@@ -16,6 +16,9 @@ public interface IProgressBar {
 	
 	public void drawBar (GuiBase gui, int mouseX, int mouseY, float progress);
 	
+	default public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
+	}
+	
 	default public void drawTopLayer (GuiBase gui, int mouseX, int mouseY, int progress, int maxprogress) {
 	}
 	

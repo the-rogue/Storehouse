@@ -40,7 +40,6 @@ import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.reference.MachineStats;
-import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.GeneralUtils;
 import therogue.storehouse.util.ItemUtils;
@@ -59,7 +58,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	};
 	
 	public TileCrystaliser () {
-		super(ModBlocks.crystaliser, MachineTier.basic);
+		super(ModBlocks.crystaliser);
 		inventory = new InventoryManager(this, 4, new Integer[] { 1, 2 }, new Integer[] { 0, 3 }) {
 			
 			@Override
@@ -146,6 +145,32 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 		theCrafter.checkRecipes();
 	}
 	
+	// -------------------------Gui Methods----------------------------------------------------
+	@Override
+	public int getField (int id) {
+		switch (id) {
+			case 4:
+				return theCrafter.totalCraftingTime - theCrafter.craftingTime;
+			case 5:
+				return theCrafter.totalCraftingTime;
+			default:
+				return super.getField(id);
+		}
+	}
+	
+	@Override
+	public void setField (int id, int value) {
+		switch (id) {
+			default:
+				super.setField(id, value);
+		}
+	}
+	
+	@Override
+	public int getFieldCount () {
+		return super.getFieldCount() + 2;
+	}
+	
 	// -------------------------IInteractionObject-----------------------------------------------------------------
 	@Override
 	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
@@ -162,6 +187,8 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	public GuiUpdateTEPacket getGUIPacket () {
 		GuiUpdateTEPacket packet = super.getGUIPacket();
 		tank.writeToNBT(packet.getNbt());
+		packet.getNbt().setInteger("maxCraftingTime", theCrafter.totalCraftingTime);
+		packet.getNbt().setInteger("craftingTime", theCrafter.craftingTime);
 		return packet;
 	}
 	
@@ -169,6 +196,8 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	public void processGUIPacket (GuiUpdateTEPacket packet) {
 		super.processGUIPacket(packet);
 		tank.readFromNBT(packet.getNbt());
+		theCrafter.totalCraftingTime = packet.getNbt().getInteger("maxCraftingTime");
+		theCrafter.craftingTime = packet.getNbt().getInteger("craftingTime");
 	}
 	
 	@Override

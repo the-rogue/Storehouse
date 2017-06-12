@@ -26,57 +26,20 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.element.ElementBase;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.inventory.IGuiSupplier;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.RGBAColor;
 import therogue.storehouse.util.TextureHelper;
 
 public class GuiBase extends GuiContainer {
 	
+	public static final ResourceLocation NORMAL_TEXTURE = new ResourceLocation(IDs.RESOURCENAMEPREFIX + "textures/gui/normal.png");
 	protected ResourceLocation texture;
 	protected List<ElementBase> elements = Lists.<ElementBase> newArrayList();
-	protected Color tintColor;
 	public final ContainerBase inventory;
 	
-	public GuiBase (IGuiSupplier linked, ContainerBase inventory) {
-		this(inventory);
-		switch (MachineTier.values()[linked.getField(1)]) {
-			case advanced:
-				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/advanced.png");
-				this.tintColor = new Color(116, 116, 116);
-				break;
-			case basic:
-				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/basic.png");
-				this.tintColor = new Color(106, 78, 45);
-				break;
-			case ender:
-				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/ender.png");
-				this.tintColor = new Color(197, 215, 195);
-				break;
-			case infused:
-				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/infused.png");
-				this.tintColor = new Color(182, 182, 182);
-				break;
-			case ultimate:
-				this.texture = new ResourceLocation(General.MOD_ID, "textures/gui/ultimate.png");
-				this.tintColor = new Color(144, 142, 151);
-				break;
-			default:
-				this.texture = null;
-				this.tintColor = new Color(255, 255, 255);
-				break;
-		}
-	}
-	
 	public GuiBase (ResourceLocation texture, ContainerBase inventory) {
-		this(inventory);
-		this.texture = texture;
-		this.tintColor = new Color(255, 255, 255);
-	}
-	
-	private GuiBase (ContainerBase inventory) {
 		super(inventory);
+		this.texture = texture;
 		this.xSize = 176;
 		this.ySize = 166;
 		this.inventory = inventory;
@@ -87,13 +50,6 @@ public class GuiBase extends GuiContainer {
 	 */
 	public ResourceLocation getTexture () {
 		return texture;
-	}
-	
-	/**
-	 * @return the tintColor
-	 */
-	public Color getTintColor () {
-		return tintColor;
 	}
 	
 	@Override
@@ -110,6 +66,12 @@ public class GuiBase extends GuiContainer {
 		{
 			this.drawTexturedModalRect(s.xPos - 1, s.yPos - 1, this.xSize, 0, 18, 18);
 		}
+		GlStateManager.enableAlpha();
+		for (ElementBase e : elements)
+		{
+			e.drawBottomLayer(mouseX - this.guiLeft, mouseY - this.guiTop);
+		}
+		GlStateManager.disableAlpha();
 		GlStateManager.popMatrix();
 	}
 	

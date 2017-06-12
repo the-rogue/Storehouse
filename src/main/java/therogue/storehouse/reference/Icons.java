@@ -1,5 +1,5 @@
 /*
- * This file is part of Storehouse. Copyright (c) 2016, TheRogue, All rights reserved.
+ * This file is part of Storehouse. Copyright (c) 2017, TheRogue, All rights reserved.
  * 
  * Storehouse is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
  * 
@@ -19,6 +19,7 @@ public enum Icons
 	EnergyBar ("textures/gui/icons/energybar.png"),
 	CombustionIndicator ("textures/gui/icons/combustionindicator.png"),
 	FluidTank ("textures/gui/icons/fluidtank.png"),
+	CrystaliserProgressIcon ("textures/gui/icons/crystaliserprogress.png"),
 	Button ("textures/gui/icons/button.png");
 	
 	private String location;

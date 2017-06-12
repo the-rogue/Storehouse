@@ -105,8 +105,8 @@ public class TextureHelper {
 		if (fluid == null || fluid.getFluid() == null) { return; }
 		TextureAtlasSprite texture = convertLocationToSprite(fluid.getFluid().getStill(fluid));
 		double minU = texture.getMinU(), minV = texture.getMinV(), maxU = texture.getMaxU(), maxV = texture.getMaxV();
-		int colour = fluid.getFluid().getColor(fluid);
-		GlStateManager.color((colour >> 16 & 0xFF) / 255, (colour >> 8 & 0xFF) / 255, (colour & 0xFF) / 255);
+		// int colour = fluid.getFluid().getColor(fluid);
+		// GlStateManager.color((colour >> 16 & 0xFF) / 255, (colour >> 8 & 0xFF) / 255, (colour & 0xFF) / 255);
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.enableBlend();
 		for (int i = 0; i < width; i += 16)

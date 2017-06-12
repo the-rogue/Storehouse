@@ -16,15 +16,17 @@ import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.reference.Icons;
+import therogue.storehouse.reference.TierIcons;
+import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
+import therogue.storehouse.util.GeneralUtils;
 
 public class GuiSolarGenerator extends GuiBase {
 	
 	public GuiSolarGenerator (ContainerBase inventory, TileSolarGenerator linked) {
-		super(linked, inventory);
-		elements.add(new ElementActiveIcon(this, 90, 23, Icons.SolarGenOn.getLocation(), linked, 4));
-		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(33, 35, Icons.EnergyIndicator.getLocation())));
-		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8)));
+		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory);
+		elements.add(new ElementActiveIcon(this, 90, 23, TierIcons.SolarGenOn.getLocation(linked.getField(1)), linked, 4));
+		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(33, 35, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
+		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
 	}
 }
