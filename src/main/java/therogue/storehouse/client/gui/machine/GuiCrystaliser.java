@@ -10,10 +10,13 @@
 
 package therogue.storehouse.client.gui.machine;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
+import therogue.storehouse.client.gui.element.ElementFluidTank;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.reference.TierIcons;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 
 public class GuiCrystaliser extends GuiBase {
@@ -21,5 +24,6 @@ public class GuiCrystaliser extends GuiBase {
 	public GuiCrystaliser (ContainerBase inventory, TileCrystaliser linked) {
 		super(linked, inventory);
 		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8)));
+		elements.add(new ElementFluidTank(this, TierIcons.FluidTank.getLocation(linked.getField(1)), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), linked));
 	}
 }

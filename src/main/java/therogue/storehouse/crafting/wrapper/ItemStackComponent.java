@@ -57,7 +57,7 @@ public class ItemStackComponent implements IRecipeComponent {
 		if (comparison.isUnUsed() || !(comparison instanceof ItemStackWrapper)) return false;
 		for (ItemStack test : getOreDictEntries(input, useOreDict))
 		{
-			if (ItemUtils.areStacksEqual(test, ((ItemStackWrapper) comparison).getStack(), useMeta)) return true;
+			if (ItemUtils.areStacksEqual(test, ((ItemStackWrapper) comparison).getStack(), useMeta) && ((ItemStackWrapper) comparison).getStack().getCount() >= test.getCount()) return true;
 		}
 		return false;
 	}
@@ -71,6 +71,11 @@ public class ItemStackComponent implements IRecipeComponent {
 			for (int i : OreDictionary.getOreIDs(entry))
 			{
 				entries.addAll(OreDictionary.getOres(OreDictionary.getOreName(i)));
+			}
+			int isc = entry.getCount();
+			for (ItemStack is : entries)
+			{
+				is.setCount(isc);
 			}
 			oreEntries.put(entry, entries);
 		}

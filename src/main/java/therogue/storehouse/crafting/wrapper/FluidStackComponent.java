@@ -33,7 +33,7 @@ public class FluidStackComponent implements IRecipeComponent {
 	@Override
 	public boolean matches (IRecipeWrapper component) {
 		if (!(component instanceof FluidStackWrapper)) return false;
-		return FluidUtils.areStacksMergable(stack, ((FluidStackWrapper) component).getStack());
+		return FluidUtils.areStacksMergable(stack, ((FluidStackWrapper) component).getStack()) && this.stack.amount <= ((FluidStackWrapper) component).getStack().amount;
 	}
 	
 	@Override

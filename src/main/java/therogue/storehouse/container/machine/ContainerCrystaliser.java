@@ -23,9 +23,11 @@ public class ContainerCrystaliser extends ContainerBase {
 	public ContainerCrystaliser (IInventory playerInv, TileCrystaliser teInv) {
 		super(playerInv, teInv);
 		this.tileCrystaliser = teInv.getContainerCapability();
+		this.addTESlot(new SlotItemHandler(tileCrystaliser, 2, 141, 17));
+		this.addTESlot(new SlotItemHandler(tileCrystaliser, 3, 141, 53));
 		this.addTESlot(new SlotItemHandler(tileCrystaliser, 0, 65, 37));
 		this.addTESlot(new SlotItemHandler(tileCrystaliser, 1, 65, 37));
-		tileEntitySlots.get(1).slotNumber = tileEntitySlots.get(0).slotNumber;
+		tileEntitySlots.get(3).slotNumber = tileEntitySlots.get(2).slotNumber;
 		update();
 	}
 	
@@ -33,13 +35,13 @@ public class ContainerCrystaliser extends ContainerBase {
 	public void update () {
 		if (tileCrystaliser.getStackInSlot(0).isEmpty())
 		{
-			if (inventorySlots.contains(tileEntitySlots.get(0))) inventorySlots.remove(tileEntitySlots.get(0));
-			if (!inventorySlots.contains(tileEntitySlots.get(1))) inventorySlots.add(tileEntitySlots.get(1));
+			if (inventorySlots.contains(tileEntitySlots.get(2))) inventorySlots.remove(tileEntitySlots.get(2));
+			if (!inventorySlots.contains(tileEntitySlots.get(3))) inventorySlots.add(tileEntitySlots.get(3));
 		}
 		else
 		{
-			if (inventorySlots.contains(tileEntitySlots.get(1))) inventorySlots.remove(tileEntitySlots.get(1));
-			if (!inventorySlots.contains(tileEntitySlots.get(0))) inventorySlots.add(tileEntitySlots.get(0));
+			if (inventorySlots.contains(tileEntitySlots.get(3))) inventorySlots.remove(tileEntitySlots.get(3));
+			if (!inventorySlots.contains(tileEntitySlots.get(2))) inventorySlots.add(tileEntitySlots.get(2));
 		}
 	}
 }

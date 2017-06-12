@@ -12,10 +12,13 @@ package therogue.storehouse.init;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineRecipe;
+import therogue.storehouse.crafting.wrapper.FluidStackComponent;
 import therogue.storehouse.crafting.wrapper.ItemStackComponent;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 import therogue.storehouse.tile.machine.TileThermalPress;
@@ -78,6 +81,6 @@ public class Recipes {
 				new ItemStackComponent(ModBlocks.azurite_crystal_block_pillar), new ItemStackComponent(ModItems.azurite_dust), new ItemStackComponent(ModBlocks.azurite_crystal_block_pillar)));
 		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(ModItems.azurite_dust), new ItemStackComponent(ModItems.azurite_dust),
 				new ItemStackComponent(Items.IRON_INGOT), new ItemStackComponent(Items.REDSTONE), new ItemStackComponent(Items.REDSTONE)));
-		MachineCraftingHandler.register(TileCrystaliser.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 80, new ItemStackComponent(ModItems.azurite_crystal), new ItemStackComponent(ModItems.azurite_dust)));
+		MachineCraftingHandler.register(TileCrystaliser.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 80, new ItemStackComponent(ModItems.azurite_crystal), new ItemStackComponent(ModItems.azurite_dust), new FluidStackComponent(new FluidStack(FluidRegistry.WATER, 1000))));
 	}
 }

@@ -24,11 +24,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import therogue.storehouse.container.machine.ContainerCrystaliser;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.CraftingManager;
+import therogue.storehouse.crafting.inventory.DoubleInventory;
+import therogue.storehouse.crafting.inventory.FluidTankInventory;
 import therogue.storehouse.crafting.inventory.IRecipeInventory;
 import therogue.storehouse.crafting.inventory.RangedItemInventory;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
@@ -40,6 +43,7 @@ import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.GeneralUtils;
+import therogue.storehouse.util.ItemUtils;
 
 public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	
@@ -56,17 +60,31 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	
 	public TileCrystaliser () {
 		super(ModBlocks.crystaliser, MachineTier.basic);
-		inventory = new InventoryManager(this, 2, new Integer[] { 1 }, new Integer[] { 0 }) {
+		inventory = new InventoryManager(this, 4, new Integer[] { 1, 2 }, new Integer[] { 0, 3 }) {
 			
 			@Override
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				if (!this.getStackInSlot(0).isEmpty()) return false;
-				return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
+				if (index == 1)
+				{
+					if (!this.getStackInSlot(0).isEmpty()) return false;
+					return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
+				}
+				if ((index == 2 || index == 3) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) return true;
+				return false;
 			}
 			
 			@Override
 			public int getSlotLimit (int slot) {
-				return 1;
+				switch (slot) {
+					case 0:
+					case 1:
+						return 1;
+					case 2:
+					case 3:
+						return 64;
+					default:
+						return 64;
+				}
 			}
 		};
 		tank.setTileEntity(this);
@@ -77,6 +95,17 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	public void update () {
 		if (GeneralUtils.isServerSide(world))
 		{
+			if (!inventory.getStackInSlot(2).isEmpty())
+			{
+				ItemStack tankItem = inventory.getStackInSlot(2);
+				ItemStack outputSlot = inventory.getStackInSlot(3);
+				ItemStack result = FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, false).result;
+				if (ItemUtils.areStacksMergableWithLimit(inventory.getSlotLimit(3), result, outputSlot))
+				{
+					inventory.setStackInSlot(2, ItemStack.EMPTY);
+					inventory.setStackInSlot(3, ItemUtils.mergeStacks(inventory.getSlotLimit(3), true, outputSlot, FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, true).result));
+				}
+			}
 			theCrafter.updateCraftingStatus();
 		}
 	}
@@ -89,7 +118,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	
 	@Override
 	public IRecipeInventory getCraftingInventory () {
-		return new RangedItemInventory(getInventory(), 1, 2);
+		return new DoubleInventory(new RangedItemInventory(getInventory(), 1, 2), new FluidTankInventory(tank));
 	}
 	
 	@Override

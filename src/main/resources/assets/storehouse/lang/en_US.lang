@@ -5,7 +5,6 @@ command.storehouse:rlogger.usage=Command that allows debug logging - Useless for
 item.storehouse:azurite_dust.name=Azurite Dust
 item.storehouse:azurite_crystal.name=Azurite Crystal
 item.storehouse:network_inspector.name=Network Inspector
-item.storehouse:storehouse_guide.name=Storehouse Guide
 
 //Decorative Blocks
 tile.storehouse:azurite_dust_block.name=Azurite Dust Block
@@ -16,6 +15,7 @@ tile.storehouse:azurite_crystal_block_stair.name=Crystalised Azurite Block Stair
 tile.storehouse:azurite_crystal_block_slab.name=Crystalised Azurite Block Slab
 tile.storehouse:azurite_crystal_block_chiseled.name=Chiseled Crystalised Azurite Block
 tile.storehouse:azurite_crystal_block_pillar.name=Pillar Crystalised Azurite Block
+tile.storehouse:azurite_ore_block.name=Azurite Ore
 
 //Generators
 tile.storehouse:solar_generator_basic.name=Basic Solar Panel
@@ -23,6 +23,17 @@ tile.storehouse:solar_generator_advanced.name=Advanced Solar Panel
 tile.storehouse:solar_generator_infused.name=Infused Solar Panel
 tile.storehouse:solar_generator_ender.name=Ender Solar Panel
 tile.storehouse:solar_generator_ultimate.name=Ultimate Solar Panel
+tile.storehouse:combustion_generator_basic.name=Basic Combustion Generator
+tile.storehouse:combustion_generator_advanced.name=Advanced Combustion Generator
+tile.storehouse:combustion_generator_infused.name=Infused Combustion Generator
+tile.storehouse:combustion_generator_ender.name=Ender Combustion Generator
+tile.storehouse:combustion_generator_ultimate.name=Ultimate Combustion Generator
+tile.storehouse:liquid_generator_basic.name=Basic Liquid Generator
+tile.storehouse:liquid_generator_advanced.name=Advanced Liquid Generator
+tile.storehouse:liquid_generator_infused.name=Infused Liquid Generator
+tile.storehouse:liquid_generator_ender.name=Ender Liquid Generator
+tile.storehouse:liquid_generator_ultimate.name=Ultimate Liquid Generator
 
 //Machines
 tile.storehouse:thermal_press.name=Thermal Press
+tile.storehouse:crystaliser.name=Crystaliser
