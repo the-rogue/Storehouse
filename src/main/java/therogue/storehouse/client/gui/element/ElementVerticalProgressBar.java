@@ -17,6 +17,15 @@ public class ElementVerticalProgressBar extends ElementProgressBar {
 	
 	private final boolean upwards;
 	
+	public ElementVerticalProgressBar (int x, int y, int width, int height, int foregroundColour, int backgroundColour) {
+		this(x, y, width, height, foregroundColour, backgroundColour, true);
+	}
+	
+	public ElementVerticalProgressBar (int x, int y, int width, int height, int foregroundColour, int backgroundColour, boolean upwards) {
+		super(x, y, width, height, foregroundColour, backgroundColour);
+		this.upwards = upwards;
+	}
+	
 	public ElementVerticalProgressBar (int x, int y, ResourceLocation iconLocation) {
 		this(x, y, iconLocation, true);
 	}
@@ -33,7 +42,7 @@ public class ElementVerticalProgressBar extends ElementProgressBar {
 	
 	@Override
 	public float getMinV (float progress) {
-		if (upwards) return 1.0F - TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
+		if (upwards) return 1.0F - TextureHelper.scalePercentageToLength(height, progress);
 		return 0.0F;
 	}
 	
@@ -45,16 +54,16 @@ public class ElementVerticalProgressBar extends ElementProgressBar {
 	@Override
 	public float getMaxV (float progress) {
 		if (upwards) return 1.0F;
-		return TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
+		return TextureHelper.scalePercentageToLength(height, progress);
 	}
 	
 	@Override
 	public int getWidth (float progress) {
-		return icon.getWidth();
+		return width;
 	}
 	
 	@Override
 	public int getHeight (float progress) {
-		return TextureHelper.calculateLength(icon.getHeight(), progress);
+		return TextureHelper.calculateLength(height, progress);
 	}
 }

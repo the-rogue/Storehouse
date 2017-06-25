@@ -12,6 +12,7 @@ package therogue.storehouse.client.gui.element;
 
 import java.awt.image.BufferedImage;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
@@ -19,26 +20,54 @@ import therogue.storehouse.util.TextureHelper;
 
 public abstract class ElementProgressBar implements IProgressBar {
 	
-	public final BufferedImage icon;
-	public final ResourceLocation iconLocation;
+	protected ResourceLocation iconLocation;
 	public final int x;
 	public final int y;
+	public final int width;
+	public final int height;
+	protected int foregroundColour = 0;
+	protected int backgroundColour = 0;
 	
 	public ElementProgressBar (int x, int y, ResourceLocation iconLocation) {
 		this.iconLocation = iconLocation;
-		this.icon = TextureHelper.getImageAt(iconLocation);
+		BufferedImage icon = TextureHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
+		if (icon != null)
+		{
+			this.width = icon.getWidth();
+			this.height = icon.getHeight();
+		}
+		else
+		{
+			this.width = this.height = 0;
+		}
+	}
+	
+	public ElementProgressBar (int x, int y, int width, int height, int foregroundColour, int backgroundColour) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.foregroundColour = foregroundColour;
+		this.backgroundColour = backgroundColour;
 	}
 	
 	@Override
 	public void drawBar (GuiBase gui, int mouseX, int mouseY, float progress) {
-		if (icon == null) return;
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		TextureHelper.bindTexture(gui, iconLocation);
-		gui.drawTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight());
-		TextureHelper.bindTexture(gui, iconLocation);
-		gui.drawTexturedModalRect(x + (icon.getWidth() - getWidth(progress)) / 2, y + icon.getHeight() - getHeight(progress), getMinU(progress) / 2, getMinV(progress), getMaxU(progress) / 2, getMaxV(progress), getWidth(progress) / 2, getHeight(progress));
+		if (iconLocation != null)
+		{
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			TextureHelper.bindTexture(gui, iconLocation);
+			gui.drawTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, width / 2, height);
+			TextureHelper.bindTexture(gui, iconLocation);
+			gui.drawTexturedModalRect(x + (width - getWidth(progress)) / 2, y + height - getHeight(progress), getMinU(progress) / 2, getMinV(progress), getMaxU(progress) / 2, getMaxV(progress), getWidth(progress) / 2, getHeight(progress));
+		}
+		else
+		{
+			Gui.drawRect(x, y, x + width, y + height, backgroundColour);
+			Gui.drawRect(x + getWidth(progress), y + getHeight(progress), x + getWidth(progress), y + getHeight(progress), foregroundColour);
+		}
 	}
 	
 	public abstract float getMinU (float progress);

@@ -20,7 +20,11 @@ public enum Icons
 	CombustionIndicator ("textures/gui/icons/combustionindicator.png"),
 	FluidTank ("textures/gui/icons/fluidtank.png"),
 	CrystaliserProgressIcon ("textures/gui/icons/crystaliserprogress.png"),
-	Button ("textures/gui/icons/button.png");
+	Button ("textures/gui/icons/button.png"),
+	ProgressUp ("textures/gui/icons/progressbar/up.png"),
+	ProgressDown ("textures/gui/icons/progressbar/down.png"),
+	ProgressLeft ("textures/gui/icons/progressbar/left.png"),
+	ProgressRight ("textures/gui/icons/progressbar/right.png");
 	
 	private String location;
 	

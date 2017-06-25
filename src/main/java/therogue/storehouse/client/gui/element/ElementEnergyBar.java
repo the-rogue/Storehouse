@@ -31,7 +31,7 @@ public class ElementEnergyBar extends ElementProgressBar {
 	
 	@Override
 	public float getMinV (float progress) {
-		return 1 - TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
+		return 1 - TextureHelper.scalePercentageToLength(height, progress);
 	}
 	
 	@Override
@@ -46,18 +46,17 @@ public class ElementEnergyBar extends ElementProgressBar {
 	
 	@Override
 	public int getWidth (float progress) {
-		return icon.getWidth();
+		return width;
 	}
 	
 	@Override
 	public int getHeight (float progress) {
-		return TextureHelper.calculateLength(icon.getHeight(), progress);
+		return TextureHelper.calculateLength(height, progress);
 	}
 	
 	@Override
 	public void drawTopLayer (GuiBase gui, int mouseX, int mouseY, int progress, int maxProgress) {
-		if (icon == null) return;
-		if (gui.isPointInGuiRegion(this.x, this.y, this.icon.getWidth() / 2, this.icon.getHeight(), mouseX, mouseY))
+		if (gui.isPointInGuiRegion(this.x, this.y, width / 2, height, mouseX, mouseY))
 		{
 			ArrayList<String> textLines = new ArrayList<String>();
 			// TODO Insert Commas

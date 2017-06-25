@@ -17,6 +17,15 @@ public class ElementHorizontalProgressBar extends ElementProgressBar {
 	
 	private final boolean toRight;
 	
+	public ElementHorizontalProgressBar (int x, int y, int width, int height, int foregroundColour, int backgroundColour) {
+		this(x, y, width, height, foregroundColour, backgroundColour, true);
+	}
+	
+	public ElementHorizontalProgressBar (int x, int y, int width, int height, int foregroundColour, int backgroundColour, boolean toRight) {
+		super(x, y, width, height, foregroundColour, backgroundColour);
+		this.toRight = toRight;
+	}
+	
 	public ElementHorizontalProgressBar (int x, int y, ResourceLocation iconLocation) {
 		this(x, y, iconLocation, true);
 	}
@@ -29,7 +38,7 @@ public class ElementHorizontalProgressBar extends ElementProgressBar {
 	@Override
 	public float getMinU (float progress) {
 		if (toRight) return 0.0F;
-		return 1.0F - TextureHelper.scalePercentageToLength(icon.getHeight(), progress);
+		return 1.0F - TextureHelper.scalePercentageToLength(height, progress);
 	}
 	
 	@Override
@@ -39,7 +48,7 @@ public class ElementHorizontalProgressBar extends ElementProgressBar {
 	
 	@Override
 	public float getMaxU (float progress) {
-		if (toRight) return TextureHelper.scalePercentageToLength(icon.getWidth(), progress);
+		if (toRight) return TextureHelper.scalePercentageToLength(width, progress);
 		return 1.0F;
 	}
 	
@@ -50,11 +59,11 @@ public class ElementHorizontalProgressBar extends ElementProgressBar {
 	
 	@Override
 	public int getWidth (float progress) {
-		return TextureHelper.calculateLength(icon.getWidth(), progress);
+		return TextureHelper.calculateLength(width, progress);
 	}
 	
 	@Override
 	public int getHeight (float progress) {
-		return icon.getHeight();
+		return height;
 	}
 }
