@@ -35,7 +35,7 @@ public abstract class ElementProgressBar implements IProgressBar {
 		this.y = y;
 		if (icon != null)
 		{
-			this.width = icon.getWidth();
+			this.width = icon.getWidth() / 2;
 			this.height = icon.getHeight();
 		}
 		else
@@ -59,28 +59,80 @@ public abstract class ElementProgressBar implements IProgressBar {
 		{
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			TextureHelper.bindTexture(gui, iconLocation);
-			gui.drawTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, width / 2, height);
+			gui.drawTexturedModalRect(getX(), getY(), getMinU(), getMinV(), getMaxU(), getMaxV(), getWidth(), getHeight());
 			TextureHelper.bindTexture(gui, iconLocation);
-			gui.drawTexturedModalRect(x + (width - getWidth(progress)) / 2, y + height - getHeight(progress), getMinU(progress) / 2, getMinV(progress), getMaxU(progress) / 2, getMaxV(progress), getWidth(progress) / 2, getHeight(progress));
+			gui.drawTexturedModalRect(getX(progress), getY(progress), getMinU(progress), getMinV(progress), getMaxU(progress), getMaxV(progress), getWidth(progress), getHeight(progress));
 		}
 		else
 		{
-			Gui.drawRect(x, y, x + width, y + height, backgroundColour);
-			Gui.drawRect(x + getWidth(progress), y + getHeight(progress), x + getWidth(progress), y + getHeight(progress), foregroundColour);
+			Gui.drawRect(getX(), getY(), getX() + getWidth(), getY() + getHeight(), backgroundColour);
+			Gui.drawRect(getX(progress), getY(progress), getX(progress) + getWidth(progress), getY(progress) + getHeight(progress), foregroundColour);
 		}
 	}
 	
-	public abstract float getMinU (float progress);
+	public float getMinU () {
+		return 0.5F;
+	}
 	
-	public abstract float getMinV (float progress);
+	public float getMinV () {
+		return 0.0F;
+	}
 	
-	public abstract float getMaxU (float progress);
+	public float getMaxU () {
+		return 1.0F;
+	}
 	
-	public abstract float getMaxV (float progress);
+	public float getMaxV () {
+		return 1.0F;
+	}
 	
-	public abstract int getWidth (float progress);
+	public int getX () {
+		return x;
+	}
 	
-	public abstract int getHeight (float progress);
+	public int getY () {
+		return y;
+	}
+	
+	public int getWidth () {
+		return width;
+	}
+	
+	public int getHeight () {
+		return height;
+	}
+	
+	public float getMinU (float progress) {
+		return 0.0F;
+	}
+	
+	public float getMinV (float progress) {
+		return 0.0F;
+	}
+	
+	public float getMaxU (float progress) {
+		return 0.5F;
+	}
+	
+	public float getMaxV (float progress) {
+		return 1.0F;
+	}
+	
+	public int getX (float progress) {
+		return x;
+	}
+	
+	public int getY (float progress) {
+		return y;
+	}
+	
+	public int getWidth (float progress) {
+		return width;
+	}
+	
+	public int getHeight (float progress) {
+		return height;
+	}
 	
 	@Override
 	public void drawTopLayer (GuiBase gui, int mouseX, int mouseY, int progress, int maxprogress) {

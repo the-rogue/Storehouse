@@ -25,28 +25,13 @@ public class ElementEnergyBar extends ElementProgressBar {
 	}
 	
 	@Override
-	public float getMinU (float progress) {
-		return 0;
-	}
-	
-	@Override
 	public float getMinV (float progress) {
 		return 1 - TextureHelper.scalePercentageToLength(height, progress);
 	}
 	
 	@Override
-	public float getMaxU (float progress) {
-		return 1;
-	}
-	
-	@Override
-	public float getMaxV (float progress) {
-		return 1;
-	}
-	
-	@Override
-	public int getWidth (float progress) {
-		return width;
+	public int getY (float progress) {
+		return y + height - getHeight(progress);
 	}
 	
 	@Override

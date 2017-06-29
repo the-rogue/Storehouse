@@ -154,7 +154,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 			case 4:
 				return mode.ordinal();
 			case 5:
-				return theCrafter.craftingTime;
+				return theCrafter.totalCraftingTime - theCrafter.craftingTime;
 			case 6:
 				return theCrafter.totalCraftingTime;
 			default:
@@ -197,6 +197,8 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	public GuiUpdateTEPacket getGUIPacket () {
 		GuiUpdateTEPacket packet = super.getGUIPacket();
 		packet.getNbt().setInteger("TPMode", mode.ordinal());
+		packet.getNbt().setInteger("maxCraftingTime", theCrafter.totalCraftingTime);
+		packet.getNbt().setInteger("craftingTime", theCrafter.craftingTime);
 		return packet;
 	}
 	
@@ -204,6 +206,8 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	public void processGUIPacket (GuiUpdateTEPacket packet) {
 		super.processGUIPacket(packet);
 		modeUpdate(packet.getNbt().getInteger("TPMode"));
+		theCrafter.totalCraftingTime = packet.getNbt().getInteger("maxCraftingTime");
+		theCrafter.craftingTime = packet.getNbt().getInteger("craftingTime");
 	}
 	
 	@Override

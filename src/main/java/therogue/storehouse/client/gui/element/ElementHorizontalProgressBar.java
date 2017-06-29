@@ -42,28 +42,19 @@ public class ElementHorizontalProgressBar extends ElementProgressBar {
 	}
 	
 	@Override
-	public float getMinV (float progress) {
-		return 0.0F;
-	}
-	
-	@Override
 	public float getMaxU (float progress) {
 		if (toRight) return TextureHelper.scalePercentageToLength(width, progress);
 		return 1.0F;
 	}
 	
 	@Override
-	public float getMaxV (float progress) {
-		return 1.0F;
+	public int getX (float progress) {
+		if (toRight) return x;
+		return x + width - getWidth(progress);
 	}
 	
 	@Override
 	public int getWidth (float progress) {
 		return TextureHelper.calculateLength(width, progress);
-	}
-	
-	@Override
-	public int getHeight (float progress) {
-		return height;
 	}
 }

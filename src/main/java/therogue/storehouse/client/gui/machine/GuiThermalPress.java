@@ -49,7 +49,7 @@ public class GuiThermalPress extends GuiBase {
 		IProgressBar rectCombo1 = new DoubleProgressBar(rect1, rect2);
 		IProgressBar rectCombo2 = new DoubleProgressBar(rectCombo1, rect3);
 		IProgressBar barConnector = new ElementVerticalProgressBar(55, 55, 38, 2, Gui.NORMAL_COLOUR, Gui.WHITE);
-		IProgressBar pointer = new ElementVerticalProgressBar(59, 47, Icons.ProgressUp.getLocation());
+		IProgressBar pointer = new ElementVerticalProgressBar(68, 47, Icons.ProgressUp.getLocation());
 		IProgressBar combo1 = new JoinProgressBar(rectCombo2, barConnector);
 		IProgressBar combo2 = new JoinProgressBar(combo1, pointer);
 		return new ProgressHandler(gui, linked, 5, 6, combo2);
