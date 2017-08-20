@@ -15,15 +15,12 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.machine.ContainerThermalPress;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
@@ -56,6 +53,11 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 				return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
 			}
 		};
+	}
+	
+	@Override
+	public boolean hasFastRenderer () {
+		return false;
 	}
 	
 	// -------------------------ITickable-----------------------------------------------------------------
@@ -113,29 +115,6 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 		switch (nbt.getInteger("type")) {
 			case 0:
 				modeUpdate(message.getNbt().getInteger("mode"));
-				Container open = from.openContainer;
-				if (open instanceof ContainerThermalPress)
-				{
-					ContainerThermalPress corresponding = (ContainerThermalPress) open;
-					for (Slot s : corresponding.inventorySlots)
-					{
-						if (s instanceof SlotItemHandler && ((SlotItemHandler) s).getItemHandler() == this.getContainerCapability())
-						{
-							corresponding.transferStackInSlot(from, s.slotNumber);
-						}
-					}
-					for (int i = 1; i < inventory.getSlots(); i++)
-					{
-						ItemStack itemstack = inventory.getStackInSlot(i);
-						if (!itemstack.isEmpty())
-						{
-							EntityItem entityitem = new EntityItem(world, from.posX, from.posY, from.posZ, itemstack);
-							world.spawnEntity(entityitem);
-						}
-						inventory.setStackInSlot(i, ItemStack.EMPTY);
-					}
-					this.onInventoryChange();
-				}
 				break;
 		}
 	}

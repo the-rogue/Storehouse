@@ -36,6 +36,11 @@ public class ElementVerticalProgressBar extends ElementProgressBar {
 	}
 	
 	@Override
+	public int getNumberOfPixels () {
+		return height;
+	}
+	
+	@Override
 	public float getMinV (float progress) {
 		if (upwards) return 1.0F - TextureHelper.scalePercentageToLength(height, progress);
 		return 0.0F;

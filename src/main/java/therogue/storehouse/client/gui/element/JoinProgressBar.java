@@ -23,9 +23,15 @@ public class JoinProgressBar implements IProgressBar {
 	}
 	
 	@Override
+	public int getNumberOfPixels () {
+		return progressBar1.getNumberOfPixels() + progressBar2.getNumberOfPixels();
+	}
+	
+	@Override
 	public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
+		float threshold = progressBar1.getNumberOfPixels() / (progressBar1.getNumberOfPixels() + progressBar2.getNumberOfPixels()) * 2;
 		float doubleprogress = progress * 2.0F;
-		float progress2 = doubleprogress - Math.min(doubleprogress, 1);
+		float progress2 = doubleprogress - Math.min(doubleprogress, threshold);
 		float progress1 = doubleprogress - progress2;
 		progressBar1.drawBottomLayer(gui, mouseX, mouseY, progress1);
 		progressBar2.drawBottomLayer(gui, mouseX, mouseY, progress2);

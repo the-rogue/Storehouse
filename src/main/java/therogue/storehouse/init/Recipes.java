@@ -82,5 +82,9 @@ public class Recipes {
 		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(ModItems.azurite_dust), new ItemStackComponent(ModItems.azurite_dust),
 				new ItemStackComponent(Items.IRON_INGOT), new ItemStackComponent(Items.REDSTONE), new ItemStackComponent(Items.REDSTONE)));
 		MachineCraftingHandler.register(TileCrystaliser.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 80, new ItemStackComponent(ModItems.azurite_crystal), new ItemStackComponent(ModItems.azurite_dust), new FluidStackComponent(new FluidStack(FluidRegistry.WATER, 1000))));
+		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.PRESS.modeTest, 40, new ItemStackComponent(Items.DIAMOND_AXE), new ItemStackComponent(Items.WOODEN_AXE), new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(ModItems.azurite_crystal)));
+		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.STAMP.modeTest, 40, new ItemStackComponent(Items.DIAMOND_AXE), new ItemStackComponent(Items.IRON_AXE), new ItemStackComponent(Items.DIAMOND)));
+		MachineCraftingHandler.register(TileThermalPress.class,
+				new MachineRecipe(TileThermalPress.Mode.JOIN.modeTest, 40, new ItemStackComponent(Items.DIAMOND_AXE), new ItemStackComponent(Items.GOLD_INGOT), new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(ModItems.azurite_crystal), new ItemStackComponent(Items.STICK)));
 	}
 }

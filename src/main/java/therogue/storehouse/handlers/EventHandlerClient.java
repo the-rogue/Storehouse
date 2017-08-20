@@ -10,7 +10,16 @@
 
 package therogue.storehouse.handlers;
 
-public class EventHandlerClient
-{
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import therogue.storehouse.client.init.TextureInit;
+
+public class EventHandlerClient {
+	
 	public static final EventHandlerClient INSTANCE = new EventHandlerClient();
+	
+	@SubscribeEvent
+	public void onTextureStitchEvent (TextureStitchEvent.Pre event) {
+		TextureInit.init(event);
+	}
 }

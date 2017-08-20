@@ -83,6 +83,7 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	@Override
 	public GuiUpdateTEPacket getGUIPacket () {
 		GuiUpdateTEPacket packet = super.getGUIPacket();
+		inventory.writeToNBT(packet.getNbt());
 		packet.getNbt().setInteger("EnergyStored", energyStorage.getEnergyStored());
 		return packet;
 	}
@@ -90,6 +91,7 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	@Override
 	public void processGUIPacket (GuiUpdateTEPacket packet) {
 		super.processGUIPacket(packet);
+		inventory.readFromNBT(packet.getNbt());
 		energyStorage.setEnergyStored(packet.getNbt().getInteger("EnergyStored"));
 	}
 	

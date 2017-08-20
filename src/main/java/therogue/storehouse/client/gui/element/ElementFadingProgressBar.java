@@ -32,8 +32,12 @@ public class ElementFadingProgressBar implements IProgressBar {
 	}
 	
 	@Override
+	public int getNumberOfPixels () {
+		return (int) Math.round(Math.sqrt(height * width));
+	}
+	
+	@Override
 	public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
-		
 		GlStateManager.color(becomeColour.getRed() / 255.0F, becomeColour.getGreen() / 255.0F, becomeColour.getBlue() / 255.0F, progress);
 	}
 	

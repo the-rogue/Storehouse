@@ -23,6 +23,11 @@ public class DoubleProgressBar implements IProgressBar {
 	}
 	
 	@Override
+	public int getNumberOfPixels () {
+		return Math.max(progressBar1.getNumberOfPixels(), progressBar2.getNumberOfPixels());
+	}
+	
+	@Override
 	public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
 		progressBar1.drawBottomLayer(gui, mouseX, mouseY, progress);
 		progressBar2.drawBottomLayer(gui, mouseX, mouseY, progress);

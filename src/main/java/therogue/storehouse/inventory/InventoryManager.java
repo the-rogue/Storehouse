@@ -276,6 +276,7 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 		 **/
 		@Override
 		public ItemStack getStackInSlot (int index) {
+			owner.onInventoryChange();
 			return InventoryManager.this.getStackInSlot(index);
 		}
 		

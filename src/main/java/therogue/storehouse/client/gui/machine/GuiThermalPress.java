@@ -16,6 +16,8 @@ import therogue.storehouse.client.gui.element.DoubleProgressBar;
 import therogue.storehouse.client.gui.element.ElementBase;
 import therogue.storehouse.client.gui.element.ElementButton;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
+import therogue.storehouse.client.gui.element.ElementHorizontalProgressBar;
+import therogue.storehouse.client.gui.element.ElementMode;
 import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
 import therogue.storehouse.client.gui.element.IProgressBar;
 import therogue.storehouse.client.gui.element.IconDefinition;
@@ -39,19 +41,52 @@ public class GuiThermalPress extends GuiBase {
 				new IconDefinition(new ResourceLocation(IDs.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/high_pressure_mode.png"), this.xSize - 17, 7, 10, 10), };
 		elements.add(new ElementButton(this, new IconDefinition(Icons.Button.getLocation(), this.xSize - 20, 4, 16, 16), "Click to change the mode of the Thermal Press", innerIcons,
 				new String[] { "Current Setting: Press", "Current Setting: Join", "Current Setting: Stamp", "Current Setting: High Pressure" }, linked, 4, 4));
-		elements.add(createProgressBar(this, linked));
+		elements.add(new ElementMode(this, linked, 4, createPressProgressBar(this, linked), createJoinProgressBar(this, linked), createStampProgressBar(this, linked), createHighPressureProgressBar(this, linked)));
 	}
 	
-	public static ElementBase createProgressBar (GuiBase gui, IGuiSupplier linked) {
-		IProgressBar rect1 = new ElementVerticalProgressBar(55, 57, 2, 7, Gui.NORMAL_COLOUR, Gui.WHITE);
-		IProgressBar rect2 = new ElementVerticalProgressBar(73, 57, 2, 7, Gui.NORMAL_COLOUR, Gui.WHITE);
-		IProgressBar rect3 = new ElementVerticalProgressBar(91, 57, 2, 7, Gui.NORMAL_COLOUR, Gui.WHITE);
-		IProgressBar rectCombo1 = new DoubleProgressBar(rect1, rect2);
-		IProgressBar rectCombo2 = new DoubleProgressBar(rectCombo1, rect3);
-		IProgressBar barConnector = new ElementVerticalProgressBar(55, 55, 38, 2, Gui.NORMAL_COLOUR, Gui.WHITE);
-		IProgressBar pointer = new ElementVerticalProgressBar(68, 47, Icons.ProgressUp.getLocation());
-		IProgressBar combo1 = new JoinProgressBar(rectCombo2, barConnector);
-		IProgressBar combo2 = new JoinProgressBar(combo1, pointer);
-		return new ProgressHandler(gui, linked, 5, 6, combo2);
+	private static ElementBase createPressProgressBar (GuiBase gui, IGuiSupplier linked) {
+		IProgressBar pointerbottom = new ElementVerticalProgressBar(67, 55, Icons.ProgressUp.getLocation());
+		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
+		IProgressBar topbottom = new DoubleProgressBar(pointerbottom, pointertop);
+		IProgressBar bar = new JoinProgressBar(topbottom, createFinal());
+		return new ProgressHandler(gui, linked, 5, 6, bar);
+	}
+	
+	private static ElementBase createJoinProgressBar (GuiBase gui, IGuiSupplier linked) {
+		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
+		IProgressBar bar = new JoinProgressBar(pointertop, createFinal());
+		return new ProgressHandler(gui, linked, 5, 6, bar);
+	}
+	
+	private static ElementBase createStampProgressBar (GuiBase gui, IGuiSupplier linked) {
+		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
+		IProgressBar bar = new JoinProgressBar(pointertop, createFinal());
+		return new ProgressHandler(gui, linked, 5, 6, bar);
+	}
+	
+	private static ElementBase createHighPressureProgressBar (GuiBase gui, IGuiSupplier linked) {
+		IProgressBar rectupbottom = new ElementVerticalProgressBar(72, 63, 2, 2, Gui.WHITE, Gui.NORMAL_COLOUR);
+		IProgressBar leftbarbottom = new ElementHorizontalProgressBar(65, 65, 8, 2, Gui.WHITE, Gui.NORMAL_COLOUR, true);
+		IProgressBar rightbarbottom = new ElementHorizontalProgressBar(73, 65, 8, 2, Gui.WHITE, Gui.NORMAL_COLOUR, false);
+		IProgressBar pointerbottom = new ElementVerticalProgressBar(67, 55, Icons.ProgressUp.getLocation());
+		IProgressBar barbottom = new DoubleProgressBar(leftbarbottom, rightbarbottom);
+		IProgressBar combo1bottom = new JoinProgressBar(barbottom, rectupbottom);
+		IProgressBar combo2bottom = new JoinProgressBar(combo1bottom, pointerbottom);
+		IProgressBar rectdowntop = new ElementVerticalProgressBar(72, 25, 2, 2, Gui.WHITE, Gui.NORMAL_COLOUR, false);
+		IProgressBar leftbartop = new ElementHorizontalProgressBar(65, 23, 8, 2, Gui.WHITE, Gui.NORMAL_COLOUR, true);
+		IProgressBar rightbartop = new ElementHorizontalProgressBar(73, 23, 8, 2, Gui.WHITE, Gui.NORMAL_COLOUR, false);
+		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
+		IProgressBar bartop = new DoubleProgressBar(leftbartop, rightbartop);
+		IProgressBar combo1top = new JoinProgressBar(bartop, rectdowntop);
+		IProgressBar combo2top = new JoinProgressBar(combo1top, pointertop);
+		IProgressBar topbottom = new DoubleProgressBar(combo2top, combo2bottom);
+		IProgressBar bar = new JoinProgressBar(topbottom, createFinal());
+		return new ProgressHandler(gui, linked, 5, 6, bar);
+	}
+	
+	private static IProgressBar createFinal () {
+		IProgressBar pointerright = new ElementHorizontalProgressBar(100, 39, Icons.ProgressRight.getLocation());
+		IProgressBar barright = new ElementHorizontalProgressBar(92, 44, 8, 2, Gui.WHITE, Gui.NORMAL_COLOUR);
+		return new JoinProgressBar(barright, pointerright);
 	}
 }
