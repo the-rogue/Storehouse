@@ -29,6 +29,16 @@ public class BlockThermalPress extends StorehouseBaseMachine {
 	}
 	
 	@Override
+	public boolean isOpaqueCube (IBlockState state) {
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube (IBlockState state) {
+		return false;
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
 		TileThermalPress tile = new TileThermalPress();
 		tile.setWorld(worldIn);
@@ -44,24 +54,12 @@ public class BlockThermalPress extends StorehouseBaseMachine {
 		return true;
 	}
 	
-	@Override
-	@Deprecated
-	public boolean isOpaqueCube (IBlockState state) {
-		return true;
-	}
-	
-	@Override
-	@Deprecated
-	public boolean isFullCube (IBlockState state) {
-		return true;
-	}
-	
 	/**
 	 * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only, LIQUID for vanilla liquids, INVISIBLE to skip all rendering
 	 */
 	@Override
 	@Deprecated
 	public EnumBlockRenderType getRenderType (IBlockState state) {
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		return EnumBlockRenderType.MODEL;
 	}
 }

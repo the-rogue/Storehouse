@@ -24,7 +24,7 @@ import therogue.storehouse.tile.machine.TileThermalPress;
 public class ThermalPressTESR extends TileEntitySpecialRenderer<TileThermalPress> {
 	
 	public void renderTileEntityAt (TileThermalPress te, double x, double y, double z, float partialTicks, int destroyStage) {
-		GlStateManager.pushMatrix();
+		/*GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		Tessellator tes = Tessellator.getInstance();
 		VertexBuffer vb = tes.getBuffer();
@@ -61,6 +61,6 @@ public class ThermalPressTESR extends TileEntitySpecialRenderer<TileThermalPress
 		vb.pos(0, 1, 1).tex(1, 0).endVertex();
 		vb.pos(0, 0, 1).tex(1, 1).endVertex();
 		tes.draw();
-		GlStateManager.popMatrix();
+		GlStateManager.popMatrix();*/
 	}
 }

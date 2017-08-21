@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "normal": { "model": "storehouse:machine/thermal_press_box" }
+    }
+}

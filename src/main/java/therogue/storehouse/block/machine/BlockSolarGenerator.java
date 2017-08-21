@@ -122,6 +122,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine implements IStore
 	/**
 	 * Registers this block easily
 	 */
+	@Override
 	public void registerblock () {
 		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
@@ -147,22 +148,26 @@ public class BlockSolarGenerator extends StorehouseBaseMachine implements IStore
 		}
 	}
 	
+	@Override
 	@Nullable
-	public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, World worldIn, BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		return NULL_AABB;
 	}
 	
 	/**
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
+	@Override
 	public boolean isOpaqueCube (IBlockState state) {
 		return false;
 	}
 	
+	@Override
 	public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess source, BlockPos pos) {
 		return AABB;
 	}
 	
+	@Override
 	public boolean isFullCube (IBlockState state) {
 		return false;
 	}
