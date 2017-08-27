@@ -46,7 +46,7 @@ public class ElementEnergyBar extends ElementProgressBar {
 	
 	@Override
 	public void drawTopLayer (GuiBase gui, int mouseX, int mouseY, int progress, int maxProgress) {
-		if (gui.isPointInGuiRegion(this.x, this.y, width / 2, height, mouseX, mouseY))
+		if (gui.isPointInGuiRegion(this.x, this.y, width, height, mouseX, mouseY))
 		{
 			ArrayList<String> textLines = new ArrayList<String>();
 			// TODO Insert Commas

@@ -1,5 +1,8 @@
 {
     "variants": {
-        "normal": { "model": "storehouse:machine/thermal_press_box" }
+        "facing=north": { "model": "storehouse:machine/thermal_press_box", "y": 180  },
+        "facing=south": { "model": "storehouse:machine/thermal_press_box"},
+        "facing=west":  { "model": "storehouse:machine/thermal_press_box", "y": 90 },
+        "facing=east":  { "model": "storehouse:machine/thermal_press_box", "y": 270 }
     }
 }

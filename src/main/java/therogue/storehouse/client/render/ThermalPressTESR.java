@@ -10,57 +10,42 @@
 
 package therogue.storehouse.client.render;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.client.particle.SteamParticle;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class ThermalPressTESR extends TileEntitySpecialRenderer<TileThermalPress> {
 	
 	public void renderTileEntityAt (TileThermalPress te, double x, double y, double z, float partialTicks, int destroyStage) {
-		/*GlStateManager.pushMatrix();
+		Random random = te.getWorld().rand;
+		for (int j1 = 0; j1 < 100; ++j1)
+		{
+			double d16 = te.getPos().getX() + 0.5D + random.nextGaussian() * 0.2;
+			double d19 = te.getPos().getY() + 0.5D + random.nextGaussian() * 0.2;
+			double d22 = te.getPos().getZ() + 0.5D + random.nextGaussian() * 0.2;
+			double d24 = random.nextGaussian() * 0.01D;
+			double d26 = random.nextGaussian() * 0.01D;
+			double d27 = random.nextGaussian() * 0.01D;
+			Minecraft.getMinecraft().effectRenderer.addEffect(new SteamParticle(te.getWorld(), d16, d19, d22, d24, d26, d27));
+		}
+		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		Tessellator tes = Tessellator.getInstance();
 		VertexBuffer vb = tes.getBuffer();
 		this.bindTexture(new ResourceLocation(General.MOD_ID, "textures/blocks/machine/storehouse_iron.png"));
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		// Up
-		vb.pos(1, 1, 0).tex(0, 1).endVertex();
-		vb.pos(0, 1, 0).tex(1, 1).endVertex();
-		vb.pos(0, 1, 1).tex(1, 0).endVertex();
-		vb.pos(1, 1, 1).tex(0, 0).endVertex();
-		// East
-		vb.pos(1, 0, 1).tex(0, 1).endVertex();
-		vb.pos(1, 0, 0).tex(1, 1).endVertex();
-		vb.pos(1, 1, 0).tex(1, 0).endVertex();
-		vb.pos(1, 1, 1).tex(0, 0).endVertex();
-		// Down
-		vb.pos(1, 0, 0).tex(0, 1).endVertex();
-		vb.pos(1, 0, 1).tex(0, 0).endVertex();
-		vb.pos(0, 0, 1).tex(1, 0).endVertex();
-		vb.pos(0, 0, 0).tex(1, 1).endVertex();
-		// West
-		vb.pos(0, 0, 1).tex(0, 1).endVertex();
-		vb.pos(0, 1, 1).tex(0, 0).endVertex();
-		vb.pos(0, 1, 0).tex(1, 0).endVertex();
-		vb.pos(0, 0, 0).tex(1, 1).endVertex();
-		// North
-		vb.pos(1, 0, 0).tex(0, 1).endVertex();
-		vb.pos(0, 0, 0).tex(1, 1).endVertex();
-		vb.pos(0, 1, 0).tex(1, 0).endVertex();
-		vb.pos(1, 1, 0).tex(0, 0).endVertex();
-		// South
-		vb.pos(1, 0, 1).tex(0, 1).endVertex();
-		vb.pos(1, 1, 1).tex(0, 0).endVertex();
-		vb.pos(0, 1, 1).tex(1, 0).endVertex();
-		vb.pos(0, 0, 1).tex(1, 1).endVertex();
 		tes.draw();
-		GlStateManager.popMatrix();*/
+		GlStateManager.popMatrix();
 	}
 }

@@ -1,5 +1,5 @@
 {
-    "parent":"storehouse:block/machine/thermal_press_box",
+    "parent":"storehouse:block/machine/thermal_press_item_block",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

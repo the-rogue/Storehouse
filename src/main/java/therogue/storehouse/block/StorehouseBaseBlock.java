@@ -14,7 +14,9 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,9 +27,9 @@ import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
 
-
-public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
-{
+public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
+	
+	public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class);
 	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 	/**
 	 * Declares defaults
@@ -35,40 +37,34 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	private static Material default_material = Material.ROCK;
 	private static float default_hardness = 3.0F;
 	private static float default_resistance = 10.0F;
-
+	
 	/**
 	 * Initiates the block with various defaults
 	 */
-	public StorehouseBaseBlock(String name)
-	{
+	public StorehouseBaseBlock (String name) {
 		this(name, default_material);
 	}
-
-	public StorehouseBaseBlock(String name, Material material)
-	{
+	
+	public StorehouseBaseBlock (String name, Material material) {
 		this(name, material, default_hardness);
 	}
-
-	public StorehouseBaseBlock(String name, float hardness)
-	{
+	
+	public StorehouseBaseBlock (String name, float hardness) {
 		this(name, hardness, default_resistance);
 	}
-
-	public StorehouseBaseBlock(String name, Material material, float hardness)
-	{
+	
+	public StorehouseBaseBlock (String name, Material material, float hardness) {
 		this(name, material, hardness, default_resistance);
 	}
-
-	public StorehouseBaseBlock(String name, float hardness, float resistance)
-	{
+	
+	public StorehouseBaseBlock (String name, float hardness, float resistance) {
 		this(name, default_material, hardness, resistance);
 	}
-
+	
 	/**
 	 * Initiates the block using the specified properties
 	 */
-	public StorehouseBaseBlock(String name, Material material, float hardness, float resistance)
-	{
+	public StorehouseBaseBlock (String name, Material material, float hardness, float resistance) {
 		super(material);
 		LOG.log("trace", "Creating new StorehouseBaseBlock: " + name);
 		this.setUnlocalizedName(name);
@@ -77,49 +73,44 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 		this.setResistance(resistance);
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 	}
-
+	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	@Override
-	public String getUnlocalizedName()
-	{
+	public String getUnlocalizedName () {
 		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
-
+	
 	/**
 	 * Useful method to make the code easier to read
 	 */
-	private String getUnwrappedUnlocalizedName(String unlocalizedName)
-	{
+	private String getUnwrappedUnlocalizedName (String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
-
+	
 	/**
 	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseBlock.
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName () {
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
-
+	
 	/**
 	 * Registers this block easily
 	 */
-	public void registerblock()
-	{
+	public void registerblock () {
 		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
-
+	
 	/**
 	 * Registers the texture for this block easily
 	 */
-	@SideOnly(Side.CLIENT)
-	public void registertexture()
-	{
+	@SideOnly (Side.CLIENT)
+	public void registertexture () {
 		LOG.log("trace", "Registering StorehouseBaseBlock Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
@@ -128,60 +119,50 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock
 	 * Getter for blockHardness
 	 */
 	@Override
-	public float getblockHardness()
-	{
+	public float getblockHardness () {
 		return blockHardness;
 	}
-
+	
 	/**
 	 * Getter for blockResistance
 	 */
 	@Override
-	public float getblockResistance()
-	{
+	public float getblockResistance () {
 		return blockResistance;
 	}
-
+	
 	/**
 	 * Getter for blockMaterial
 	 */
 	@Override
-	public Material getblockMaterial()
-	{
+	public Material getblockMaterial () {
 		return blockMaterial;
 	}
-
+	
 	/**
 	 * Sets Generic Recipes for the Block Type
 	 */
 	@Override
-	public void setDefaultRecipes()
-	{
-
+	public void setDefaultRecipes () {
 	}
-
+	
 	/**
 	 * Gets the Ore Dictionary names this block is registered as
 	 */
-	public ArrayList<String> getOredictEntrys()
-	{
+	public ArrayList<String> getOredictEntrys () {
 		return OredictEntrys;
 	}
-
+	
 	/**
 	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
 	 */
-	public void setOredictEntry(String oredictEntry)
-	{
+	public void setOredictEntry (String oredictEntry) {
 		OreDictionary.registerOre(oredictEntry, this);
 		OredictEntrys.add(oredictEntry);
 	}
-
+	
 	@Override
-	public Block getBlock()
-	{
+	public Block getBlock () {
 		return this;
 	}
-
-
 }

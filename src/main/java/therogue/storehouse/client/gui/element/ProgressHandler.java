@@ -12,6 +12,7 @@ package therogue.storehouse.client.gui.element;
 
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.inventory.IGuiSupplier;
+import therogue.storehouse.util.LOG;
 
 public class ProgressHandler extends ElementBase {
 	
@@ -37,6 +38,7 @@ public class ProgressHandler extends ElementBase {
 	@Override
 	public void drawElement (int mouseX, int mouseY) {
 		float progress = (float) stateChanger.getField(progressField) / (stateChanger.getField(maxProgressField) != 0 ? (float) stateChanger.getField(maxProgressField) : 1.0F);
+		//LOG.info(progress);
 		drawThing.drawBar(this.gui, mouseX, mouseY, progress);
 	}
 	

@@ -91,8 +91,8 @@ public class MachineCraftingHandler {
 	
 	public class CraftingManager {
 		
-		private MachineRecipe currentCrafting = null;
 		private final ICrafter attachedTile;
+		private MachineRecipe currentCrafting = null;
 		public int totalCraftingTime = 0;
 		public int craftingTime = 0;
 		private boolean craftingLock = false;
@@ -101,13 +101,20 @@ public class MachineCraftingHandler {
 			this.attachedTile = attachedTile;
 		}
 		
+		private void resetCraftingStatus () {
+			currentCrafting = null;
+			totalCraftingTime = 0;
+			craftingTime = 0;
+			craftingLock = false;
+		}
+		
 		public boolean checkItemValidForSlot (int index, IRecipeWrapper stack) {
 			return MachineCraftingHandler.this.checkItemValidForSlot(attachedTile, index, stack);
 		}
 		
 		public void checkRecipes () {
 			if ((currentCrafting != null && currentCrafting.matches(attachedTile)) || craftingLock) return;
-			currentCrafting = null;
+			resetCraftingStatus();
 			IRecipeInventory outputInventory = attachedTile.getOutputInventory();
 			for (MachineRecipe recipe : RECIPES)
 			{
@@ -146,10 +153,7 @@ public class MachineCraftingHandler {
 										outputInventory.insertComponent(outputMap.get(i), results.get(i));
 									}
 								}
-								currentCrafting = null;
-								totalCraftingTime = 0;
-								craftingTime = 0;
-								craftingLock = false;
+								resetCraftingStatus();
 								checkRecipes();
 							}
 						}
@@ -161,9 +165,7 @@ public class MachineCraftingHandler {
 				}
 				else
 				{
-					currentCrafting = null;
-					totalCraftingTime = 0;
-					craftingTime = 0;
+					resetCraftingStatus();
 				}
 			}
 		}
