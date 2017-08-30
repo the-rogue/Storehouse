@@ -10,13 +10,97 @@
 
 package therogue.storehouse.item;
 
-public class ItemStorehouseBaseMaterial extends StorehouseBaseItem
-{
+import java.util.Map.Entry;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+import therogue.storehouse.reference.IDs;
+
+public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
+	
+	private final BiMap<Integer, String> materials = HashBiMap.create();
+	
 	/**
 	 * Constructs a generic item used in crafting
 	 */
-	public ItemStorehouseBaseMaterial(String name)
-	{
+	public ItemStorehouseBaseMaterial (String name) {
 		super(name);
+		this.setHasSubtypes(true);
+		this.setMaxDamage(0);
+	}
+	
+	public ItemStorehouseBaseMaterial addMaterial (int id, String name) {
+		materials.put(id, name);
+		return this;
+	}
+	
+	public ItemStorehouseBaseMaterial addMaterial (int id, String name, String oreName) {
+		materials.put(id, name);
+		OreDictionary.registerOre(oreName, new ItemStack(this, 1, id));
+		return this;
+	}
+	
+	@Override
+	public int getMetadata (int damage) {
+		return damage;
+	}
+	
+	@Override
+	public String getUnlocalizedName (ItemStack stack) {
+		return IDs.RESOURCENAMEPREFIX + "material_" + materials.get(stack.getMetadata());
+	}
+	
+	/**
+	 * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
+	 */
+	@Override
+	@SideOnly (Side.CLIENT)
+	public void getSubItems (Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		for (int i = 0; i < materials.size(); i++)
+		{
+			subItems.add(new ItemStack(itemIn, 1, i));
+		}
+	}
+	
+	@Override
+	@SideOnly (Side.CLIENT)
+	public void preInitClient () {
+		for (Entry<Integer, String> material : materials.entrySet())
+		{
+			ModelBakery.registerItemVariants(this, new ResourceLocation(getUnlocalizedName().substring(5) + "_" + material.getValue()));
+		}
+	}
+	
+	@Override
+	@SideOnly (Side.CLIENT)
+	public void InitClient () {
+		for (Entry<Integer, String> material : materials.entrySet())
+		{
+			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, material.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + material.getValue(), "inventory"));
+		}
+	}
+	
+	/**
+	 * Registers a name in the Ore Dictionary for this item
+	 */
+	public ItemStorehouseBaseMaterial setOredictEntry (String oredictEntry, String itemName) {
+		return setOredictEntry(oredictEntry, materials.get(itemName));
+	}
+	
+	public StorehouseBaseItem setOredictEntry (String oredictEntry, int meta) {
+		OreDictionary.registerOre(oredictEntry, new ItemStack(this, 1, meta));
+		return this;
 	}
 }

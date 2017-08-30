@@ -36,7 +36,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.block.IStorehouseVariantBlock;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
@@ -45,9 +46,8 @@ import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.machine.generator.GeneratorUtils;
 import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
-import therogue.storehouse.util.LOG;
 
-public class BlockCombustionGenerator extends StorehouseBaseMachine implements IStorehouseVariantBlock {
+public class BlockCombustionGenerator extends StorehouseBaseMachine {
 	
 	public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
 	
@@ -117,8 +117,8 @@ public class BlockCombustionGenerator extends StorehouseBaseMachine implements I
 	/**
 	 * Registers this block easily
 	 */
-	public void registerblock () {
-		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
+	@Override
+	public void preInit () {
 		GameRegistry.register(this);
 		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
 	}
@@ -127,7 +127,8 @@ public class BlockCombustionGenerator extends StorehouseBaseMachine implements I
 	 * Registers any Model variants
 	 */
 	@Override
-	public void registervariants () {
+	@SideOnly (Side.CLIENT)
+	public void preInitClient () {
 		for (MachineTier g : MachineTier.values())
 		{
 			ModelBakery.registerItemVariants(ItemBlock.getItemFromBlock(this), new ResourceLocation(getUnlocalizedName().substring(5) + "_" + g.getName()));
@@ -135,7 +136,8 @@ public class BlockCombustionGenerator extends StorehouseBaseMachine implements I
 	}
 	
 	@Override
-	public void registertexture () {
+	@SideOnly (Side.CLIENT)
+	public void InitClient () {
 		for (MachineTier g : MachineTier.values())
 		{
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), GeneratorUtils.getMeta(g), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + g.toString(), "inventory"));

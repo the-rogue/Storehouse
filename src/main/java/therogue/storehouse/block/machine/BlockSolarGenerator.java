@@ -40,7 +40,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.block.IStorehouseVariantBlock;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
@@ -51,7 +52,7 @@ import therogue.storehouse.tile.machine.generator.GeneratorUtils;
 import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
 import therogue.storehouse.util.LOG;
 
-public class BlockSolarGenerator extends StorehouseBaseMachine implements IStorehouseVariantBlock {
+public class BlockSolarGenerator extends StorehouseBaseMachine {
 	
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D);
 	public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
@@ -123,7 +124,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine implements IStore
 	 * Registers this block easily
 	 */
 	@Override
-	public void registerblock () {
+	public void preInit () {
 		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
@@ -133,7 +134,8 @@ public class BlockSolarGenerator extends StorehouseBaseMachine implements IStore
 	 * Registers any Model variants
 	 */
 	@Override
-	public void registervariants () {
+	@SideOnly (Side.CLIENT)
+	public void preInitClient () {
 		for (MachineTier g : MachineTier.values())
 		{
 			ModelBakery.registerItemVariants(ItemBlock.getItemFromBlock(this), new ResourceLocation(getUnlocalizedName().substring(5) + "_" + g.getName()));
@@ -141,7 +143,8 @@ public class BlockSolarGenerator extends StorehouseBaseMachine implements IStore
 	}
 	
 	@Override
-	public void registertexture () {
+	@SideOnly (Side.CLIENT)
+	public void InitClient () {
 		for (MachineTier g : MachineTier.values())
 		{
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), GeneratorUtils.getMeta(g), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + g.toString(), "inventory"));

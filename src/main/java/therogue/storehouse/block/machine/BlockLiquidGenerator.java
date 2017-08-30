@@ -40,7 +40,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.block.IStorehouseVariantBlock;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.core.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
@@ -51,7 +52,7 @@ import therogue.storehouse.tile.machine.generator.GeneratorUtils;
 import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
 import therogue.storehouse.util.LOG;
 
-public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStorehouseVariantBlock {
+public class BlockLiquidGenerator extends StorehouseBaseMachine {
 	
 	public static final PropertyEnum<MachineTier> TYPE = PropertyEnum.create("type", MachineTier.class);
 	
@@ -121,7 +122,8 @@ public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStor
 	/**
 	 * Registers this block easily
 	 */
-	public void registerblock () {
+	@Override
+	public void preInit () {
 		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new StorehouseBaseVariantItemBlock(MachineTier.values().length, this).setRegistryName(getRegistryName()));
@@ -131,7 +133,8 @@ public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStor
 	 * Registers any Model variants
 	 */
 	@Override
-	public void registervariants () {
+	@SideOnly (Side.CLIENT)
+	public void preInitClient () {
 		for (MachineTier g : MachineTier.values())
 		{
 			ModelBakery.registerItemVariants(ItemBlock.getItemFromBlock(this), new ResourceLocation(getUnlocalizedName().substring(5) + "_" + g.getName()));
@@ -139,7 +142,8 @@ public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStor
 	}
 	
 	@Override
-	public void registertexture () {
+	@SideOnly (Side.CLIENT)
+	public void InitClient () {
 		for (MachineTier g : MachineTier.values())
 		{
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), GeneratorUtils.getMeta(g), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + g.toString(), "inventory"));
@@ -171,7 +175,8 @@ public class BlockLiquidGenerator extends StorehouseBaseMachine implements IStor
 		{
 			IFluidHandler tank = world.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 			FluidActionResult result = FluidUtil.interactWithFluidHandler(player.getHeldItem(hand), tank, player);
-			if (result.isSuccess()) {
+			if (result.isSuccess())
+			{
 				player.setHeldItem(hand, result.result);
 				return true;
 			}

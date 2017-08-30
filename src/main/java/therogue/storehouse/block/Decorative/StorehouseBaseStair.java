@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.init.BlockRender;
@@ -28,18 +27,16 @@ import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
+import therogue.storehouse.util.RecipeHelper;
 
-
-public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock
-{
+public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock {
+	
 	public final IStorehouseBaseBlock blocktype;
-	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
-
+	
 	/**
 	 * Does all the normal registering of stuff that the base block does
 	 */
-	public StorehouseBaseStair(IStorehouseBaseBlock block)
-	{
+	public StorehouseBaseStair (IStorehouseBaseBlock block) {
 		super(block.getBlock().getDefaultState());
 		LOG.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
 		this.blocktype = block;
@@ -47,127 +44,101 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 	}
-
+	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	@Override
-	public String getUnlocalizedName()
-	{
+	public String getUnlocalizedName () {
 		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
-
+	
 	/**
 	 * Useful method to make the code easier to read
 	 */
-	private String getUnwrappedUnlocalizedName(String unlocalizedName)
-	{
+	private String getUnwrappedUnlocalizedName (String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
-
+	
 	/**
 	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseBlock.
 	 */
-	public String getName()
-	{
+	public String getName () {
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
-
+	
 	/**
 	 * Registers this block easily
 	 */
 	@Override
-	public void registerblock()
-	{
+	public void preInit () {
 		LOG.log("trace", "Registering StorehouseBaseStair: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
-
+	
 	/**
 	 * Registers the texture for this block easily
 	 */
-	@SideOnly(Side.CLIENT)
-	public void registertexture()
-	{
+	@Override
+	@SideOnly (Side.CLIENT)
+	public void InitClient () {
 		LOG.log("trace", "Registering StorehouseBaseStair Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
-
+	
 	/**
 	 * Getter for blockHardness
 	 */
 	@Override
-	public float getblockHardness()
-	{
+	public float getblockHardness () {
 		return blockHardness;
 	}
-
+	
 	/**
 	 * Getter for blockResistance
 	 */
 	@Override
-	public float getblockResistance()
-	{
+	public float getblockResistance () {
 		return blockResistance;
 	}
-
+	
 	/**
 	 * Getter for blockMaterial
 	 */
 	@Override
-	public Material getblockMaterial()
-	{
+	public Material getblockMaterial () {
 		return blockMaterial;
 	}
-
+	
 	/**
 	 * Sets Generic Recipes for the Block Type
 	 */
-	public void setDefaultRecipes()
-	{
-		if (blocktype.getOredictEntrys().equals(new ArrayList<String>()))
+	@Override
+	public void Init () {
+		if (RecipeHelper.getOreDictEntries(blocktype.getBlock()).equals(new ArrayList<String>()))
 		{
 			setrecipes(blocktype);
 		}
 		else
 		{
-			for (String s : blocktype.getOredictEntrys())
+			for (String s : RecipeHelper.getOreDictEntries(blocktype.getBlock()))
 			{
 				setrecipes(s);
 			}
 		}
 	}
-
+	
 	/**
 	 * Helper method to make code look cleaner
 	 */
-	private void setrecipes(Object s)
-	{
+	private void setrecipes (Object s) {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 4), "  d", " dd", "ddd", 'd', s));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 4), "d  ", "dd ", "ddd", 'd', s));
 	}
-
-	/**
-	 * Gets the Ore Dictionary names this block is registered as
-	 */
-	public ArrayList<String> getOredictEntrys()
-	{
-		return OredictEntrys;
-	}
-
-	/**
-	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
-	 */
-	public void setOredictEntry(String oredictEntry)
-	{
-		OreDictionary.registerOre(oredictEntry, this);
-		OredictEntrys.add(oredictEntry);
-	}
-
+	
 	@Override
-	public Block getBlock()
-	{
+	public Block getBlock () {
 		return this;
 	}
 }

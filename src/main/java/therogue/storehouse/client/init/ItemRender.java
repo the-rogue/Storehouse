@@ -15,28 +15,34 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.item.IStorehouseBaseItem;
-import therogue.storehouse.util.LOG;
 
-
-public class ItemRender
-{
-	/**
-	 * Goes through the list of blocks and calls the method within them to register their texture
-	 */
-	public static void Init()
-	{
-		LOG.log("debug", "Registering Item Textures");
+public class ItemRender {
+	
+	public static void preInit () {
 		for (IStorehouseBaseItem item : ModItems.itemlist)
 		{
-			item.registertexture();
+			item.preInitClient();
 		}
 	}
-
+	
+	public static void Init () {
+		for (IStorehouseBaseItem item : ModItems.itemlist)
+		{
+			item.InitClient();
+		}
+	}
+	
+	public static void postInit () {
+		for (IStorehouseBaseItem item : ModItems.itemlist)
+		{
+			item.postInitClient();
+		}
+	}
+	
 	/**
 	 * Useful Helper method to register the texture for each item, that all the items use
 	 */
-	public static void itemTexture(Item item)
-	{
+	public static void itemTexture (Item item) {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(item.getUnlocalizedName().substring(5), "inventory"));
 	}
 }

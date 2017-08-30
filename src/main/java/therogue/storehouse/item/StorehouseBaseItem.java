@@ -13,77 +13,77 @@ package therogue.storehouse.item;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.client.init.ItemRender;
 import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
 
-
-public abstract class StorehouseBaseItem extends Item implements IStorehouseBaseItem
-{
+public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
+	
 	/**
 	 * Initiates the item using the specified name
 	 */
-	public StorehouseBaseItem(String name)
-	{
+	public StorehouseBaseItem (String name) {
 		super();
 		LOG.log("trace", "Creating new StorehouseBaseItem: " + name);
 		this.setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
 		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
 	}
-
+	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	@Override
-	public String getUnlocalizedName()
-	{
+	public String getUnlocalizedName () {
 		return String.format("item.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
-
+	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
-	{
+	public String getUnlocalizedName (ItemStack stack) {
 		return String.format("item.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
-
+	
 	/**
 	 * Useful method to make the code easier to read
 	 */
-	private String getUnwrappedUnlocalizedName(String unlocalizedName)
-	{
+	private String getUnwrappedUnlocalizedName (String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
-
+	
 	/**
 	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseItem.
 	 */
-	public String getName()
-	{
+	public String getName () {
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
-
+	
 	/**
 	 * Registers this item easily
 	 */
-	public void registeritem()
-	{
-		LOG.log("trace", "Registering StorehouseBaseItem: " + getName());
+	@Override
+	public void preInit () {
 		GameRegistry.register(this);
 	}
-
+	
 	/**
 	 * Registers the texture for this item easily
 	 */
 	@Override
-	public void registertexture()
-	{
-		LOG.log("trace", "Registering StorehouseBaseItem Texture: " + getName());
+	public void InitClient () {
 		ItemRender.itemTexture(this);
+	}
+	
+	/**
+	 * Registers a name in the Ore Dictionary for this item
+	 */
+	public StorehouseBaseItem setOredictEntry (String oredictEntry) {
+		OreDictionary.registerOre(oredictEntry, this);
+		return this;
 	}
 }

@@ -10,16 +10,32 @@
 
 package therogue.storehouse.item;
 
-public interface IStorehouseBaseItem {
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import therogue.storehouse.util.IInit;
+
+public interface IStorehouseBaseItem extends IForgeRegistryEntry<Item>, IInit {
 	
 	/**
 	 * Defines Methods that i need when referencing my item classes elsewhere
 	 */
 	// Convenient because not all items may extend StorehouseBaseItem in the future,
 	// see IStorehouseBaseBlock for an example of this being used properly
-	public void registeritem ();
-	
-	public void registertexture ();
-	
 	public String getName ();
+	
+	@SideOnly (Side.CLIENT)
+	public default void preInitClient () {
+	};
+	
+	public default void Init () {
+	};
+	
+	public default void postInit () {
+	}
+	
+	@SideOnly (Side.CLIENT)
+	public default void postInitClient () {
+	};
 }

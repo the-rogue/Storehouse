@@ -10,8 +10,6 @@
 
 package therogue.storehouse.block;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -30,7 +28,6 @@ import therogue.storehouse.util.LOG;
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	
 	public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class);
-	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 	/**
 	 * Declares defaults
 	 */
@@ -100,8 +97,8 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	/**
 	 * Registers this block easily
 	 */
-	public void registerblock () {
-		LOG.log("trace", "Registering StorehouseBaseBlock: " + getName());
+	@Override
+	public void preInit () {
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
@@ -109,9 +106,9 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	/**
 	 * Registers the texture for this block easily
 	 */
+	@Override
 	@SideOnly (Side.CLIENT)
-	public void registertexture () {
-		LOG.log("trace", "Registering StorehouseBaseBlock Texture: " + getName());
+	public void InitClient () {
 		BlockRender.blockTexture(this);
 	}
 	
@@ -140,25 +137,11 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	}
 	
 	/**
-	 * Sets Generic Recipes for the Block Type
-	 */
-	@Override
-	public void setDefaultRecipes () {
-	}
-	
-	/**
-	 * Gets the Ore Dictionary names this block is registered as
-	 */
-	public ArrayList<String> getOredictEntrys () {
-		return OredictEntrys;
-	}
-	
-	/**
 	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
 	 */
-	public void setOredictEntry (String oredictEntry) {
+	public StorehouseBaseBlock setOredictEntry (String oredictEntry) {
 		OreDictionary.registerOre(oredictEntry, this);
-		OredictEntrys.add(oredictEntry);
+		return this;
 	}
 	
 	@Override

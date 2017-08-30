@@ -16,35 +16,32 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.block.IStorehouseVariantBlock;
 import therogue.storehouse.client.render.ThermalPressTESR;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.machine.TileThermalPress;
-import therogue.storehouse.util.LOG;
 
 public class BlockRender {
 	
 	public static void preInit () {
-		LOG.log("debug", "Registering Block Variants");
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
-			if (block instanceof IStorehouseVariantBlock)
-			{
-				((IStorehouseVariantBlock) block).registervariants();
-			}
+			block.preInitClient();
 		}
 	}
 	
-	/**
-	 * Goes through the list of blocks and calls the method within them to register their texture
-	 */
 	public static void Init () {
-		LOG.log("debug", "Registering Block Textures");
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
-			block.registertexture();
+			block.InitClient();
 		}
 		registerTESRS();
+	}
+	
+	public static void postInit () {
+		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
+		{
+			block.postInitClient();
+		}
 	}
 	
 	/**

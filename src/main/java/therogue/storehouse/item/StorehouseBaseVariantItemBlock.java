@@ -12,25 +12,25 @@ package therogue.storehouse.item;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import therogue.storehouse.block.IStorehouseVariantBlock;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 
-public class StorehouseBaseVariantItemBlock extends ItemBlock
-{
-	protected IStorehouseVariantBlock iblock;
-	public StorehouseBaseVariantItemBlock(int maxMeta, IStorehouseVariantBlock iblock)
-	{
+public class StorehouseBaseVariantItemBlock extends ItemBlock {
+	
+	protected IStorehouseBaseBlock iblock;
+	
+	public StorehouseBaseVariantItemBlock (int maxMeta, IStorehouseBaseBlock iblock) {
 		super(iblock.getBlock());
 		this.iblock = iblock;
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}
-    public int getMetadata(int damage)
-    {
-        return damage;
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return this.iblock.getUnlocalizedName(stack);
-    }
+	
+	public int getMetadata (int damage) {
+		return damage;
+	}
+	
+	@Override
+	public String getUnlocalizedName (ItemStack stack) {
+		return this.iblock.getUnlocalizedName(stack);
+	}
 }

@@ -29,6 +29,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 		LOG.debug("Client Proxy Started PreInitialisation");
 		MinecraftForge.EVENT_BUS.register(EventHandlerClient.INSTANCE);
+		ItemRender.preInit();
 		BlockRender.preInit();
 		LOG.debug("Client Proxy Finished PreInitialisation");
 	}
@@ -52,6 +53,8 @@ public class ClientProxy extends CommonProxy {
 	public void postInit (FMLPostInitializationEvent event) {
 		super.postInit(event);
 		LOG.debug("Client Proxy Started PostInitialisation");
+		ItemRender.postInit();
+		BlockRender.postInit();
 		LOG.debug("Client Proxy Finished PostInitialisation");
 	}
 }

@@ -24,7 +24,7 @@ public class StorehouseCreativeTab {
 		
 		@Override
 		public ItemStack getTabIconItem () {
-			return new ItemStack(ModItems.azurite_dust);
+			return ModItems.azurite_dust_itemstack;
 		}
 		
 		@Override

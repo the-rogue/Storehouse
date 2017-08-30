@@ -22,8 +22,6 @@ import therogue.storehouse.handlers.GuiHandler;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.init.ModTileEntities;
-import therogue.storehouse.init.Recipes;
-import therogue.storehouse.init.RegOreDictionary;
 import therogue.storehouse.util.LOG;
 import therogue.storehouse.world.StorehouseWorldGen;
 
@@ -49,8 +47,8 @@ public abstract class CommonProxy implements IProxy {
 	@Override
 	public void init (FMLInitializationEvent event) {
 		LOG.debug("Common Proxy Started Initialisation");
-		RegOreDictionary.init();
-		Recipes.init();
+		ModItems.Init();
+		ModBlocks.Init();
 		StorehouseWorldGen.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Storehouse.instance, GuiHandler.INSTANCE);
 		LOG.debug("Common Proxy Finished Initialisation");
@@ -62,6 +60,8 @@ public abstract class CommonProxy implements IProxy {
 	@Override
 	public void postInit (FMLPostInitializationEvent event) {
 		LOG.debug("Common Proxy Started PostInitialisation");
+		ModItems.postInit();
+		ModBlocks.Init();
 		LOG.debug("Common Proxy Finished PostInitialisation");
 	}
 }

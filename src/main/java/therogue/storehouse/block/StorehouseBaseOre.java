@@ -14,16 +14,19 @@ import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
-public class StorehouseBaseOre extends StorehouseBaseBlock
-{
-	private Item drop;
+public class StorehouseBaseOre extends StorehouseBaseBlock {
+	
+	private ItemStack drop;
 	private int min_quantity;
 	private int max_quantity;
 	
-	public StorehouseBaseOre(String name, Item drop) { this(name, drop, 1, 1);}
-	public StorehouseBaseOre(String name, Item drop, int min_quantity, int max_quantity)
-	{
+	public StorehouseBaseOre (String name, ItemStack drop) {
+		this(name, drop, 1, 1);
+	}
+	
+	public StorehouseBaseOre (String name, ItemStack drop, int min_quantity, int max_quantity) {
 		super(name);
 		this.drop = drop;
 		this.min_quantity = min_quantity;
@@ -32,15 +35,21 @@ public class StorehouseBaseOre extends StorehouseBaseBlock
 	}
 	
 	@Override
-	public Item getItemDropped(IBlockState blockstate, Random random, int fortune) {
-	    return this.drop;
+	public Item getItemDropped (IBlockState blockstate, Random random, int fortune) {
+		return this.drop.getItem();
 	}
-
+	
 	@Override
-	public int quantityDropped(IBlockState blockstate, int fortune, Random random) {
-	    if (this.min_quantity >= this.max_quantity)
-	        return this.min_quantity;
-	    return this.min_quantity + random.nextInt(this.max_quantity - this.min_quantity + fortune + 1);
+	public int quantityDropped (IBlockState blockstate, int fortune, Random random) {
+		if (this.min_quantity >= this.max_quantity) return this.min_quantity;
+		return this.min_quantity + random.nextInt(this.max_quantity - this.min_quantity + fortune + 1);
 	}
-
+	
+	/**
+	 * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It returns the metadata of the dropped item based on the old metadata of the block.
+	 */
+	@Override
+	public int damageDropped (IBlockState state) {
+		return this.drop.getMetadata();
+	}
 }

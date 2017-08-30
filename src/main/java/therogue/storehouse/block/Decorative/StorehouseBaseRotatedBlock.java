@@ -27,16 +27,14 @@ import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
 
-
-public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock
-{
+public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock {
+	
 	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
-
+	
 	/**
 	 * Does all the normal registering of stuff that the base block does
 	 */
-	public StorehouseBaseRotatedBlock(IStorehouseBaseBlock blocktype, String namesuffix)
-	{
+	public StorehouseBaseRotatedBlock (IStorehouseBaseBlock blocktype, String namesuffix) {
 		super(blocktype.getblockMaterial());
 		LOG.log("trace", "Creating new StorehouseBaseRotatedBlock: " + blocktype.getName() + "_" + namesuffix);
 		this.setUnlocalizedName(blocktype.getName() + "_" + namesuffix);
@@ -45,51 +43,46 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 		this.setHardness(blocktype.getblockHardness());
 		this.setResistance(blocktype.getblockResistance());
 	}
-
+	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	@Override
-	public String getUnlocalizedName()
-	{
+	public String getUnlocalizedName () {
 		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
-
+	
 	/**
 	 * Useful method to make the code easier to read
 	 */
-	private String getUnwrappedUnlocalizedName(String unlocalizedName)
-	{
+	private String getUnwrappedUnlocalizedName (String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
-
+	
 	/**
 	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseBlock.
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName () {
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
-
+	
 	/**
 	 * Registers this block easily
 	 */
 	@Override
-	public void registerblock()
-	{
+	public void preInit () {
 		LOG.log("trace", "Registering StorehouseBaseRotatedBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
-
+	
 	/**
 	 * Registers the texture for this block easily
 	 */
-	@SideOnly(Side.CLIENT)
+	@SideOnly (Side.CLIENT)
 	@Override
-	public void registertexture()
-	{
+	public void InitClient () {
 		LOG.log("trace", "Registering StorehouseBaseRotatedBlock Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
@@ -98,58 +91,44 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	 * Getter for blockHardness
 	 */
 	@Override
-	public float getblockHardness()
-	{
+	public float getblockHardness () {
 		return blockHardness;
 	}
-
+	
 	/**
 	 * Getter for blockResistance
 	 */
 	@Override
-	public float getblockResistance()
-	{
+	public float getblockResistance () {
 		return blockResistance;
 	}
-
+	
 	/**
 	 * Getter for blockMaterial
 	 */
 	@Override
-	public Material getblockMaterial()
-	{
+	public Material getblockMaterial () {
 		return blockMaterial;
 	}
-
-	/**
-	 * Sets Generic Recipes for the Block Type
-	 */
-	@Override
-	public void setDefaultRecipes()
-	{
-
-	}
-
+	
 	/**
 	 * Gets the Ore Dictionary names this block is registered as
 	 */
-	public ArrayList<String> getOredictEntrys()
-	{
+	public ArrayList<String> getOredictEntrys () {
 		return OredictEntrys;
 	}
-
+	
 	/**
 	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
 	 */
-	public void setOredictEntry(String oredictEntry)
-	{
+	public StorehouseBaseRotatedBlock setOredictEntry (String oredictEntry) {
 		OreDictionary.registerOre(oredictEntry, this);
 		OredictEntrys.add(oredictEntry);
+		return this;
 	}
-
+	
 	@Override
-	public Block getBlock()
-	{
+	public Block getBlock () {
 		return this;
 	}
 }

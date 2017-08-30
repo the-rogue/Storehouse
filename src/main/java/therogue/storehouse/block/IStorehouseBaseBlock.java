@@ -10,28 +10,22 @@
 
 package therogue.storehouse.block;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import therogue.storehouse.util.IInit;
 
-public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
+public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>, IInit {
 	
 	/**
 	 * Defines Methods that I need when referencing my block classes elsewhere
 	 */
-	// Convenient because not all blocks extend StorehouseBaseBlock, e.g. Stairs and Slabs
-	@SideOnly (Side.CLIENT)
-	public void registertexture ();
-	
 	public Block getBlock ();
 	
 	public String getName ();
-	
-	public void registerblock ();
 	
 	public float getblockHardness ();
 	
@@ -39,9 +33,21 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
 	
 	public Material getblockMaterial ();
 	
-	public void setDefaultRecipes ();
+	public default String getUnlocalizedName (ItemStack stack) {
+		return getBlock().getUnlocalizedName();
+	}
 	
-	public ArrayList<String> getOredictEntrys ();
+	@SideOnly (Side.CLIENT)
+	public default void preInitClient () {
+	};
 	
-	public void setOredictEntry (String oredictEntry);
+	public default void Init () {
+	};
+	
+	public default void postInit () {
+	}
+	
+	@SideOnly (Side.CLIENT)
+	public default void postInitClient () {
+	};
 }

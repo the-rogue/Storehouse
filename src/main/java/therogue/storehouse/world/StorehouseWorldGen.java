@@ -23,51 +23,51 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.util.LOG;
 
-public class StorehouseWorldGen implements IWorldGenerator
-{
-	public static final StorehouseWorldGen INSTANCE = new StorehouseWorldGen();
+public class StorehouseWorldGen implements IWorldGenerator {
 	
-	private WorldGenerator azurite_ore_gen; // Generates Azurite Ore 
+	public static final StorehouseWorldGen INSTANCE = new StorehouseWorldGen();
+	private WorldGenerator azurite_ore_gen; // Generates Azurite Ore
 	
 	public StorehouseWorldGen () {
-		azurite_ore_gen = new WorldGenMinable(ModBlocks.azurite_ore_block.getDefaultState(),3);
+		azurite_ore_gen = new WorldGenMinable(ModBlocks.azurite_ore_block.getDefaultState(), 3);
 	}
-
+	
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
-	{
-	    if(world.provider.isSurfaceWorld() && world.provider.getAverageGroundLevel() > 55 && world.provider.getAverageGroundLevel() < 70 && world.provider.getDimension() != 1) {
-	    	this.runGenerator(this.azurite_ore_gen, world, random, chunkX, chunkZ, 40, 2, 52);
-	    }
-
+	public void generate (Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+		if (world.provider.isSurfaceWorld() && world.provider.getAverageGroundLevel() > 55 && world.provider.getAverageGroundLevel() < 70 && world.provider.getDimension() != 1)
+		{
+			this.runGenerator(this.azurite_ore_gen, world, random, chunkX, chunkZ, 40, 2, 52);
+		}
 	}
-	private void runGenerator(WorldGenerator generator, World world, Random rand, int chunk_X, int chunk_Z, int chancesToSpawn, int minHeight, int maxHeight) {
-		while (minHeight < 0) {
+	
+	private void runGenerator (WorldGenerator generator, World world, Random rand, int chunk_X, int chunk_Z, int chancesToSpawn, int minHeight, int maxHeight) {
+		while (minHeight < 0)
+		{
 			++minHeight;
 		}
-		while (maxHeight > 256) {
+		while (maxHeight > 256)
+		{
 			--minHeight;
 		}
-		if (minHeight > maxHeight) {
+		if (minHeight > maxHeight)
+		{
 			int temp = minHeight;
 			minHeight = maxHeight;
 			maxHeight = temp;
 		}
-	    if (minHeight < 0 || maxHeight > 256 || minHeight > maxHeight)
-	        throw new IllegalArgumentException("Illegal Height Arguments for WorldGenerator"); //Should never be thrown
-
-	    int heightDiff = maxHeight - minHeight + 1;
-	    for (int i = 0; i < chancesToSpawn; i ++) {
-	        int x = chunk_X * 16 + rand.nextInt(16);
-	        int y = minHeight + rand.nextInt(heightDiff);
-	        int z = chunk_Z * 16 + rand.nextInt(16);
-	        generator.generate(world, rand, new BlockPos(x, y, z));
-	    }
+		if (minHeight < 0 || maxHeight > 256 || minHeight > maxHeight) throw new IllegalArgumentException("Illegal Height Arguments for WorldGenerator"); // Should never be thrown
+		int heightDiff = maxHeight - minHeight + 1;
+		for (int i = 0; i < chancesToSpawn; i++)
+		{
+			int x = chunk_X * 16 + rand.nextInt(16);
+			int y = minHeight + rand.nextInt(heightDiff);
+			int z = chunk_Z * 16 + rand.nextInt(16);
+			generator.generate(world, rand, new BlockPos(x, y, z));
+		}
 	}
 	
-	public static void init() {
+	public static void init () {
 		LOG.log("trace", "Registering World Generator");
 		GameRegistry.registerWorldGenerator(INSTANCE, 0);
 	}
-
 }

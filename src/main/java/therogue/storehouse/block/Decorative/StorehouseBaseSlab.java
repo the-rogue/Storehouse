@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.init.BlockRender;
@@ -39,27 +38,23 @@ import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
+import therogue.storehouse.util.RecipeHelper;
 
-
-public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehouseBaseBlock
-{
+public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehouseBaseBlock {
+	
 	public static final PropertyEnum<StorehouseBaseSlab.Variant> VARIANT = PropertyEnum.<StorehouseBaseSlab.Variant> create("variant", StorehouseBaseSlab.Variant.class);
 	protected StorehouseBaseSlab.Half halfslab;
 	public final IStorehouseBaseBlock blocktype;
-	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
-
+	
 	/**
 	 * Registers the normal stuff and then sets the default properties depending on whether it is a double slab or not
 	 */
-	public StorehouseBaseSlab(IStorehouseBaseBlock blocktype)
-	{
+	public StorehouseBaseSlab (IStorehouseBaseBlock blocktype) {
 		super(blocktype.getblockMaterial());
 		this.blocktype = blocktype;
 		this.setHardness(blocktype.getblockHardness());
 		this.setResistance(blocktype.getblockResistance());
-
 		IBlockState iblockstate = this.blockState.getBaseState();
-
 		if (!this.isDouble())
 		{
 			iblockstate = iblockstate.withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM);
@@ -67,300 +62,252 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		}
 		this.setDefaultState(iblockstate.withProperty(VARIANT, Variant.DEFAULT));
 	}
-
+	
 	/**
 	 * Get the Item that this Block should drop when harvested.
 	 */
 	@Nullable
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
-	{
+	public Item getItemDropped (IBlockState state, Random rand, int fortune) {
 		return Item.getItemFromBlock(this);
 	}
-
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-	{
+	
+	public ItemStack getItem (World worldIn, BlockPos pos, IBlockState state) {
 		return new ItemStack(this);
 	}
-
+	
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta (int meta) {
 		IBlockState iblockstate = this.getDefaultState().withProperty(VARIANT, Variant.DEFAULT);
-
 		if (!this.isDouble())
 		{
 			iblockstate = iblockstate.withProperty(HALF, (meta & 8) == 0 ? BlockSlab.EnumBlockHalf.BOTTOM : BlockSlab.EnumBlockHalf.TOP);
 		}
-
 		return iblockstate;
 	}
-
+	
 	/**
 	 * Convert the BlockState into the correct metadata value
 	 */
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState (IBlockState state) {
 		int i = 0;
-
 		if (!this.isDouble() && state.getValue(HALF) == BlockSlab.EnumBlockHalf.TOP)
 		{
 			i |= 8;
 		}
-
 		return i;
 	}
-
+	
 	/**
 	 * Creates the Block State
 	 */
-	protected BlockStateContainer createBlockState()
-	{
+	protected BlockStateContainer createBlockState () {
 		return this.isDouble() ? new BlockStateContainer(this, new IProperty[] { VARIANT }) : new BlockStateContainer(this, new IProperty[] { HALF, VARIANT });
 	}
-
+	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
-	public String getUnlocalizedName(int meta)
-	{
+	public String getUnlocalizedName (int meta) {
 		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
-
+	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
-	public String getUnlocalizedName()
-	{
+	public String getUnlocalizedName () {
 		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
-
+	
 	/**
 	 * Useful method to make the code easier to read
 	 */
-	private String getUnwrappedUnlocalizedName(String unlocalizedName)
-	{
+	private String getUnwrappedUnlocalizedName (String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
-
+	
 	/**
 	 * Registers the texture for this block easily
 	 */
-	@SideOnly(Side.CLIENT)
-	public void registertexture()
-	{
+	@Override
+	@SideOnly (Side.CLIENT)
+	public void InitClient () {
 		LOG.log("trace", "Registering StorehouseBaseSlab Texture: " + getName());
 		BlockRender.blockTexture(this);
 	}
-
+	
 	/**
 	 * Gets the raw name as passed to the constructor of this class, useful in various places and also specified in IStorehouseBaseBlock.
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName () {
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
-
+	
 	/**
 	 * Method Required By BlockSlab Returns Variant Property
 	 */
-	public IProperty<?> getVariantProperty()
-	{
+	public IProperty<?> getVariantProperty () {
 		return VARIANT;
 	}
-
+	
 	/**
 	 * Method Required By BlockSlab Returns The Variant Property type for this slab (Always default)
 	 */
-	public Comparable<?> getTypeForItem(ItemStack stack)
-	{
+	public Comparable<?> getTypeForItem (ItemStack stack) {
 		return Variant.DEFAULT;
 	}
-
+	
 	/**
 	 * Getter for blockHardness
 	 */
 	@Override
-	public float getblockHardness()
-	{
+	public float getblockHardness () {
 		return blockHardness;
 	}
-
+	
 	/**
 	 * Getter for blockResistance
 	 */
 	@Override
-	public float getblockResistance()
-	{
+	public float getblockResistance () {
 		return blockResistance;
 	}
-
+	
 	/**
 	 * Getter for blockMaterial
 	 */
 	@Override
-	public Material getblockMaterial()
-	{
+	public Material getblockMaterial () {
 		return blockMaterial;
 	}
-
-	/**
-	 * Gets the Ore Dictionary names this block is registered as
-	 */
-	public ArrayList<String> getOredictEntrys()
-	{
-		return OredictEntrys;
-	}
-
-	/**
-	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
-	 */
-	public void setOredictEntry(String oredictEntry)
-	{
-		OreDictionary.registerOre(oredictEntry, halfslab);
-		OredictEntrys.add(oredictEntry);
-	}
-
+	
 	/**
 	 * Sets Generic Recipes for the Block Type
 	 */
 	@Override
-	public void setDefaultRecipes()
-	{
+	public void Init () {
 		if (!isDouble())
 		{
-			if (blocktype.getOredictEntrys().equals(new ArrayList<String>()))
+			if (RecipeHelper.getOreDictEntries(blocktype.getBlock()).equals(new ArrayList<String>()))
 			{
 				setrecipes(blocktype);
 			}
 			else
 			{
-				for (String s : blocktype.getOredictEntrys())
+				for (String s : RecipeHelper.getOreDictEntries(blocktype.getBlock()))
 				{
 					setrecipes(s);
 				}
 			}
-
 		}
 	}
-
+	
 	/**
 	 * Helper method to make code look cleaner
 	 */
-	private void setrecipes(Object s)
-	{
+	private void setrecipes (Object s) {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "ddd", "   ", "   ", 'd', s));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "ddd", "   ", 'd', s));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "   ", "ddd", 'd', s));
 	}
 	
 	@Override
-	public Block getBlock() {
+	public Block getBlock () {
 		return this;
 	}
-
+	
 	/**
 	 * Double Slab Class
 	 */
-	public static class Double extends StorehouseBaseSlab
-	{
+	public static class Double extends StorehouseBaseSlab {
+		
 		/**
 		 * Constructs a new Double Slab and sets the specific properties of the double slab
 		 */
-		public Double(IStorehouseBaseBlock blocktype, StorehouseBaseSlab.Half halfslab)
-		{
+		public Double (IStorehouseBaseBlock blocktype, StorehouseBaseSlab.Half halfslab) {
 			super(blocktype);
 			LOG.log("trace", "Creating new StorehouseBaseSlab.Double: " + blocktype.getName() + "_double_slab");
 			this.halfslab = halfslab;
 			super.setUnlocalizedName(blocktype.getName() + "_double_slab");
 			this.setRegistryName(General.MOD_ID, blocktype.getName() + "_double_slab");
 		}
-
+		
 		/**
 		 * Method Required By BlockSlab Returns whether it is a double slab or not
 		 */
-		public boolean isDouble()
-		{
+		public boolean isDouble () {
 			return true;
 		}
-
+		
 		/**
 		 * Tells the game to drop the halfslab item
 		 */
 		@Override
-		public Item getItemDropped(IBlockState state, Random rand, int fortune)
-		{
+		public Item getItemDropped (IBlockState state, Random rand, int fortune) {
 			return Item.getItemFromBlock(halfslab);
 		}
-
+		
 		/**
 		 * Tells the game to drop the halfslab item
 		 */
 		@Override
-		public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-		{
+		public ItemStack getItem (World worldIn, BlockPos pos, IBlockState state) {
 			return new ItemStack(halfslab);
 		}
-
+		
 		/**
 		 * Registers the block and the item, it is easiest to register the halfslab item here
 		 */
 		@Override
-		public void registerblock()
-		{
+		public void preInit () {
 			LOG.log("trace", "Registering StorehouseBaseSlab.Double: " + getName());
 			GameRegistry.register(this);
 			GameRegistry.register(new ItemSlab(halfslab, halfslab, this).setRegistryName(General.MOD_ID, halfslab.getName()));
 		}
 	}
-
+	
 	/**
 	 * Half Slab Class
 	 */
-	public static class Half extends StorehouseBaseSlab
-	{
+	public static class Half extends StorehouseBaseSlab {
+		
 		/**
 		 * Constructs a new Half Slab and sets the specific properties of the half slab
 		 */
-		public Half(IStorehouseBaseBlock blocktype)
-		{
+		public Half (IStorehouseBaseBlock blocktype) {
 			super(blocktype);
 			LOG.log("trace", "Creating new StorehouseBaseSlab.Half: " + blocktype.getName() + "_slab");
 			super.setUnlocalizedName(blocktype.getName() + "_slab");
 			this.setRegistryName(General.MOD_ID, blocktype.getName() + "_slab");
 		}
-
+		
 		/**
 		 * Method Required By BlockSlab Returns whether it is a double slab or not
 		 */
-		public boolean isDouble()
-		{
+		public boolean isDouble () {
 			return false;
 		}
-
+		
 		/**
 		 * Only registers the block, because the halfslab item is registered with the doubleslab
 		 */
 		@Override
-		public void registerblock()
-		{
+		public void preInit () {
 			LOG.log("trace", "Registering StorehouseBaseSlab.Half: " + getName());
 			GameRegistry.register(this);
 		}
-
 	}
-
+	
 	/**
 	 * Required Enum Property for some of the required BlockSlab methods to use
 	 */
 	static enum Variant implements IStringSerializable
 	{
 		DEFAULT;
-
-		public String getName()
-		{
+		
+		public String getName () {
 			return "default";
 		}
 	}

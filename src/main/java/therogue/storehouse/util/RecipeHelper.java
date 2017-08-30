@@ -10,37 +10,64 @@
 
 package therogue.storehouse.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 /**
  * Contains lots of methods for setting common recipes
  */
-public class RecipeHelper
-{
-	public static void registerTwoWayBlockRecipe(Block block, Item item, @Nullable String blockoreentry, @Nullable String itemoreentry){
-		if (block == null || item == null) {
-			throw new RuntimeException("Attempted to register twoWayBlockRecipe with null item or block. Block: " + block + " Item: " + item + " BlockOreEntry: " + blockoreentry + " ItemOreEntry: " + itemoreentry);
-		}
-		if (blockoreentry != null && itemoreentry != null) {
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(item, 9), blockoreentry));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(block), "ddd", "ddd", "ddd", 'd', itemoreentry));
-		} else if (blockoreentry != null) {
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(item, 9), blockoreentry));
-			GameRegistry.addRecipe(new ItemStack(block), "ddd", "ddd", "ddd", 'd', item);
-		} else if (itemoreentry != null) {
-			GameRegistry.addShapelessRecipe(new ItemStack(item, 9), block);
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(block), "ddd", "ddd", "ddd", 'd', itemoreentry));
-		} else {
-			GameRegistry.addShapelessRecipe(new ItemStack(item, 9), block);
-			GameRegistry.addRecipe(new ItemStack(block), "ddd", "ddd", "ddd", 'd', item);
-		}
+public class RecipeHelper {
+	
+	public static List<String> getOreDictEntries (Block block) {
+		return getOreDictEntries(new ItemStack(block));
 	}
 	
+	public static List<String> getOreDictEntries (Item item) {
+		return getOreDictEntries(new ItemStack(item));
+	}
+	
+	public static List<String> getOreDictEntries (ItemStack stack) {
+		List<String> entries = new ArrayList<String>();
+		for (int i : OreDictionary.getOreIDs(stack))
+		{
+			entries.add(OreDictionary.getOreName(i));
+		}
+		return entries;
+	}
+	
+	public static void registerTwoWayBlockRecipe (ItemStack block, ItemStack item, @Nullable String blockoreentry, @Nullable String itemoreentry) {
+		if (block == null || item == null) { throw new RuntimeException("Attempted to register twoWayBlockRecipe with null item or block. Block: " + block + " Item: " + item + " BlockOreEntry: " + blockoreentry + " ItemOreEntry: " + itemoreentry); }
+		ItemStack item9 = item.copy();
+		item9.setCount(9);
+		if (blockoreentry != null && itemoreentry != null)
+		{
+			GameRegistry.addRecipe(new ShapelessOreRecipe(item9, blockoreentry));
+			GameRegistry.addRecipe(new ShapedOreRecipe(block, "ddd", "ddd", "ddd", 'd', itemoreentry));
+		}
+		else if (blockoreentry != null)
+		{
+			GameRegistry.addRecipe(new ShapelessOreRecipe(item9, blockoreentry));
+			GameRegistry.addRecipe(block, "ddd", "ddd", "ddd", 'd', item);
+		}
+		else if (itemoreentry != null)
+		{
+			GameRegistry.addShapelessRecipe(item9, block);
+			GameRegistry.addRecipe(new ShapedOreRecipe(block, "ddd", "ddd", "ddd", 'd', itemoreentry));
+		}
+		else
+		{
+			GameRegistry.addShapelessRecipe(item9, block);
+			GameRegistry.addRecipe(block, "ddd", "ddd", "ddd", 'd', item);
+		}
+	}
 }
