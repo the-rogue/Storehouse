@@ -38,7 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.core.Storehouse;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;

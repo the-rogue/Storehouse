@@ -18,9 +18,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.init.BlockRender;
-import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
@@ -68,7 +67,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 		this.setRegistryName(General.MOD_ID, name);
 		this.setHardness(hardness);
 		this.setResistance(resistance);
-		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
+		this.setCreativeTab(Storehouse.CREATIVE_TAB);
 	}
 	
 	/**
@@ -134,14 +133,6 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	@Override
 	public Material getblockMaterial () {
 		return blockMaterial;
-	}
-	
-	/**
-	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
-	 */
-	public StorehouseBaseBlock setOredictEntry (String oredictEntry) {
-		OreDictionary.registerOre(oredictEntry, this);
-		return this;
 	}
 	
 	@Override

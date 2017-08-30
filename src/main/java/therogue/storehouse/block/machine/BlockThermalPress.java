@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.core.Storehouse;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.tile.machine.TileThermalPress;
 

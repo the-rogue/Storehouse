@@ -1,5 +1,5 @@
 {
-    "parent":"storehouse:block/ore/azurite_ore_block",
+    "parent":"storehouse:block/ore/tin",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

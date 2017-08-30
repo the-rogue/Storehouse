@@ -21,9 +21,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.init.BlockRender;
-import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
@@ -42,7 +42,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 		this.blocktype = block;
 		this.setUnlocalizedName(block.getName() + "_stair");
 		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
-		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
+		this.setCreativeTab(Storehouse.CREATIVE_TAB);
 	}
 	
 	/**

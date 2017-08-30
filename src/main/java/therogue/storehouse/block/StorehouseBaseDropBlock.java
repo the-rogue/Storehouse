@@ -16,17 +16,17 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class StorehouseBaseOre extends StorehouseBaseBlock {
+public class StorehouseBaseDropBlock extends StorehouseBaseBlock {
 	
 	private ItemStack drop;
 	private int min_quantity;
 	private int max_quantity;
 	
-	public StorehouseBaseOre (String name, ItemStack drop) {
+	public StorehouseBaseDropBlock (String name, ItemStack drop) {
 		this(name, drop, 1, 1);
 	}
 	
-	public StorehouseBaseOre (String name, ItemStack drop, int min_quantity, int max_quantity) {
+	public StorehouseBaseDropBlock (String name, ItemStack drop, int min_quantity, int max_quantity) {
 		super(name);
 		this.drop = drop;
 		this.min_quantity = min_quantity;

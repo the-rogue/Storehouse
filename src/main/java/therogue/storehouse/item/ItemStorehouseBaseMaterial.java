@@ -10,10 +10,9 @@
 
 package therogue.storehouse.item;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -26,11 +25,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import therogue.storehouse.reference.IDs;
 
 public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 	
-	private final BiMap<Integer, String> materials = HashBiMap.create();
+	private final Map<Integer, String> materials = new HashMap<Integer, String>();
 	
 	/**
 	 * Constructs a generic item used in crafting
@@ -46,12 +44,6 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 		return this;
 	}
 	
-	public ItemStorehouseBaseMaterial addMaterial (int id, String name, String oreName) {
-		materials.put(id, name);
-		OreDictionary.registerOre(oreName, new ItemStack(this, 1, id));
-		return this;
-	}
-	
 	@Override
 	public int getMetadata (int damage) {
 		return damage;
@@ -59,7 +51,7 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 	
 	@Override
 	public String getUnlocalizedName (ItemStack stack) {
-		return IDs.RESOURCENAMEPREFIX + "material_" + materials.get(stack.getMetadata());
+		return super.getUnlocalizedName(stack) + "_" + materials.get(stack.getMetadata());
 	}
 	
 	/**
@@ -90,13 +82,6 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 		{
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, material.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + material.getValue(), "inventory"));
 		}
-	}
-	
-	/**
-	 * Registers a name in the Ore Dictionary for this item
-	 */
-	public ItemStorehouseBaseMaterial setOredictEntry (String oredictEntry, String itemName) {
-		return setOredictEntry(oredictEntry, materials.get(itemName));
 	}
 	
 	public StorehouseBaseItem setOredictEntry (String oredictEntry, int meta) {

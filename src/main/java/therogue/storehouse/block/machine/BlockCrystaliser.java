@@ -21,7 +21,7 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import therogue.storehouse.core.Storehouse;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 

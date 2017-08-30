@@ -10,8 +10,6 @@
 
 package therogue.storehouse.block.Decorative;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.material.Material;
@@ -19,17 +17,14 @@ import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.init.BlockRender;
-import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock {
-	
-	private final ArrayList<String> OredictEntrys = new ArrayList<String>();
 	
 	/**
 	 * Does all the normal registering of stuff that the base block does
@@ -39,7 +34,7 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 		LOG.log("trace", "Creating new StorehouseBaseRotatedBlock: " + blocktype.getName() + "_" + namesuffix);
 		this.setUnlocalizedName(blocktype.getName() + "_" + namesuffix);
 		this.setRegistryName(General.MOD_ID, blocktype.getName() + "_" + namesuffix);
-		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
+		this.setCreativeTab(Storehouse.CREATIVE_TAB);
 		this.setHardness(blocktype.getblockHardness());
 		this.setResistance(blocktype.getblockResistance());
 	}
@@ -109,22 +104,6 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	@Override
 	public Material getblockMaterial () {
 		return blockMaterial;
-	}
-	
-	/**
-	 * Gets the Ore Dictionary names this block is registered as
-	 */
-	public ArrayList<String> getOredictEntrys () {
-		return OredictEntrys;
-	}
-	
-	/**
-	 * Registers a name in the Ore Dictionary for this block and adds it to the list of entries
-	 */
-	public StorehouseBaseRotatedBlock setOredictEntry (String oredictEntry) {
-		OreDictionary.registerOre(oredictEntry, this);
-		OredictEntrys.add(oredictEntry);
-		return this;
 	}
 	
 	@Override

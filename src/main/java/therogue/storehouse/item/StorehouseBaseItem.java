@@ -14,8 +14,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.init.ItemRender;
-import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
@@ -30,7 +30,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 		LOG.log("trace", "Creating new StorehouseBaseItem: " + name);
 		this.setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
-		this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
+		this.setCreativeTab(Storehouse.CREATIVE_TAB);
 	}
 	
 	/**

@@ -27,9 +27,13 @@ public class StorehouseWorldGen implements IWorldGenerator {
 	
 	public static final StorehouseWorldGen INSTANCE = new StorehouseWorldGen();
 	private WorldGenerator azurite_ore_gen; // Generates Azurite Ore
+	private WorldGenerator copper_ore_gen;
+	private WorldGenerator tin_ore_gen;
 	
 	public StorehouseWorldGen () {
-		azurite_ore_gen = new WorldGenMinable(ModBlocks.azurite_ore_block.getDefaultState(), 3);
+		azurite_ore_gen = new WorldGenMinable(ModBlocks.ore_blocks.getStateFromMeta(ModBlocks.azurite_ore_itemstack.getMetadata()), 3);
+		copper_ore_gen = new WorldGenMinable(ModBlocks.ore_blocks.getStateFromMeta(ModBlocks.copper_ore_itemstack.getMetadata()), 8);
+		tin_ore_gen = new WorldGenMinable(ModBlocks.ore_blocks.getStateFromMeta(ModBlocks.tin_ore_itemstack.getMetadata()), 8);
 	}
 	
 	@Override
@@ -37,6 +41,8 @@ public class StorehouseWorldGen implements IWorldGenerator {
 		if (world.provider.isSurfaceWorld() && world.provider.getAverageGroundLevel() > 55 && world.provider.getAverageGroundLevel() < 70 && world.provider.getDimension() != 1)
 		{
 			this.runGenerator(this.azurite_ore_gen, world, random, chunkX, chunkZ, 40, 2, 52);
+			this.runGenerator(this.copper_ore_gen, world, random, chunkX, chunkZ, 8, 40, 75);
+			this.runGenerator(this.tin_ore_gen, world, random, chunkX, chunkZ, 7, 20, 55);
 		}
 	}
 	

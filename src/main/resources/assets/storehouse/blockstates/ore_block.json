@@ -1,0 +1,52 @@
+{
+	"variants": {
+		"meta=0": {
+			"model": "storehouse:ore/azurite"
+		},
+		"meta=1": {
+			"model": "storehouse:ore/copper"
+		},
+		"meta=2": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=3": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=4": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=5": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=6": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=7": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=8": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=9": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=10": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=11": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=12": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=13": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=14": {
+			"model": "storehouse:ore/tin"
+		},
+		"meta=15": {
+			"model": "storehouse:ore/tin"
+		}
+	}
+}

@@ -13,69 +13,93 @@ package therogue.storehouse.init;
 import java.util.ArrayList;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.tool.NetworkInspector;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.OreDictEntries;
-import therogue.storehouse.util.LOG;
 
-@GameRegistry.ObjectHolder (General.MOD_ID)
 public class ModItems {
 	
 	/**
 	 * Initialises a new array to hold all the items
 	 */
 	public static ArrayList<IStorehouseBaseItem> itemlist = new ArrayList<IStorehouseBaseItem>();
-	/**
-	 * Initialises all the items
-	 */
-	public static final StorehouseBaseItem network_Inspector = new NetworkInspector("network_inspector");
-	public static final ItemStorehouseBaseMaterial materials = new ItemStorehouseBaseMaterial("material");
-	/**
-	 * Adds ItemStack versions that I can reference
-	 */
-	public static ItemStack network_Inspector_itemstack = new ItemStack(network_Inspector);
-	public static ItemStack azurite_dust_itemstack = new ItemStack(materials, 1, 0);
-	public static ItemStack azurite_crystal_itemstack = new ItemStack(materials, 1, 1);
-	public static ItemStack copper_ingot_itemstack = new ItemStack(materials, 1, 2);
-	public static ItemStack tin_ingot_itemstack = new ItemStack(materials, 1, 3);
-	public static ItemStack circuit_chip_itemstack = new ItemStack(materials, 1, 4);
-	/**
-	 * Adds all the items to the array
-	 */
-	static
-	{
-		LOG.log("debug", "Adding Items");
+	
+	public static void preInit () {
+		/**
+		 * Tools
+		 */
+		network_Inspector = new NetworkInspector("network_inspector");
 		itemlist.add(network_Inspector);
+		/**
+		 * Materials
+		 */
+		materials = new ItemStorehouseBaseMaterial("material");
 		itemlist.add(materials);
 		materials.addMaterial(0, "azurite_dust");
 		materials.addMaterial(1, "azurite_crystal");
-		materials.addMaterial(2, "copper_ingot", OreDictEntries.COPPER_INGOT);
-		materials.addMaterial(3, "tin_ingot", OreDictEntries.TIN_INGOT);
+		materials.addMaterial(2, "copper_ingot");
+		materials.addMaterial(3, "tin_ingot");
 		materials.addMaterial(4, "circuit_chip");
-	}
-	
-	public static void preInit () {
+		/**
+		 * PreInit Items
+		 */
 		for (IStorehouseBaseItem item : itemlist)
 		{
 			item.preInit();
 		}
+		/**
+		 * Tools
+		 */
+		network_Inspector_itemstack = new ItemStack(network_Inspector);
+		/**
+		 * Materials
+		 */
+		azurite_dust_itemstack = new ItemStack(materials, 1, 0);
+		azurite_crystal_itemstack = new ItemStack(materials, 1, 1);
+		copper_ingot_itemstack = new ItemStack(materials, 1, 2);
+		tin_ingot_itemstack = new ItemStack(materials, 1, 3);
+		circuit_chip_itemstack = new ItemStack(materials, 1, 4);
 	}
 	
 	public static void Init () {
+		/**
+		 * Init Items
+		 */
 		for (IStorehouseBaseItem item : itemlist)
 		{
 			item.Init();
 		}
+		/**
+		 * Register Ore Dictionary Names
+		 */
+		OreDictionary.registerOre("ingotCopper", copper_ingot_itemstack);
+		OreDictionary.registerOre("ingotTin", tin_ingot_itemstack);
 	}
 	
 	public static void postInit () {
+		/**
+		 * PostInit Items
+		 */
 		for (IStorehouseBaseItem item : itemlist)
 		{
 			item.postInit();
 		}
 	}
+	
+	/**
+	 * Items
+	 */
+	public static StorehouseBaseItem network_Inspector;
+	public static ItemStorehouseBaseMaterial materials;
+	/**
+	 * ItemStack versions
+	 */
+	public static ItemStack network_Inspector_itemstack;
+	public static ItemStack azurite_dust_itemstack;
+	public static ItemStack azurite_crystal_itemstack;
+	public static ItemStack copper_ingot_itemstack;
+	public static ItemStack tin_ingot_itemstack;
+	public static ItemStack circuit_chip_itemstack;
 }

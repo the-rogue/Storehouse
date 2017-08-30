@@ -32,9 +32,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.init.BlockRender;
-import therogue.storehouse.core.StorehouseCreativeTab;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
@@ -58,7 +58,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		if (!this.isDouble())
 		{
 			iblockstate = iblockstate.withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM);
-			this.setCreativeTab(StorehouseCreativeTab.CREATIVE_TAB);
+			this.setCreativeTab(Storehouse.CREATIVE_TAB);
 		}
 		this.setDefaultState(iblockstate.withProperty(VARIANT, Variant.DEFAULT));
 	}
