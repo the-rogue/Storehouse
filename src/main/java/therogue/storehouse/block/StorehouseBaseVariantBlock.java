@@ -33,7 +33,7 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	private final Map<Integer, SubBlock> blocks = new HashMap<Integer, SubBlock>();
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
 	
-	public StorehouseBaseVariantBlock (String name, int numberOfBlocks) {
+	public StorehouseBaseVariantBlock (String name) {
 		super(name);
 		this.setDefaultState(this.getBlockState().getBaseState().withProperty(META, 0));
 	}

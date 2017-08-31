@@ -1,0 +1,52 @@
+{
+	"variants": {
+		"meta=0": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=1": {
+			"model": "storehouse:crafting/advanced_machine_casing"
+		},
+		"meta=2": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=3": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=4": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=5": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=6": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=7": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=8": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=9": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=10": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=11": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=12": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=13": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=14": {
+			"model": "storehouse:crafting/machine_casing"
+		},
+		"meta=15": {
+			"model": "storehouse:crafting/machine_casing"
+		}
+	}
+}

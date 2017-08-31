@@ -66,11 +66,16 @@ public class ModBlocks {
 		/**
 		 * Add Materials
 		 */
-		ore_blocks = new StorehouseBaseVariantBlock("ore_block", 3);
+		ore_blocks = new StorehouseBaseVariantBlock("ore_block");
 		blocklist.add(ore_blocks);
 		ore_blocks.addSubBlock(0, "azurite", ModItems.azurite_dust_itemstack, 3, 6);
 		ore_blocks.addSubBlock(1, "copper");
 		ore_blocks.addSubBlock(2, "tin");
+		ore_blocks.addSubBlock(3, "aluminum");
+		ore_blocks.addSubBlock(4, "lead");
+		crafting_blocks = new StorehouseBaseVariantBlock("crafting_block");
+		crafting_blocks.addSubBlock(0, "machine_casing");
+		crafting_blocks.addSubBlock(1, "advanced_machine_casing");
 		/**
 		 * Add Machines
 		 */
@@ -111,6 +116,10 @@ public class ModBlocks {
 		azurite_ore_itemstack = new ItemStack(ore_blocks, 1, 0);
 		copper_ore_itemstack = new ItemStack(ore_blocks, 1, 1);
 		tin_ore_itemstack = new ItemStack(ore_blocks, 1, 2);
+		aluminum_ore_itemstack = new ItemStack(ore_blocks, 1, 3);
+		lead_ore_itemstack = new ItemStack(ore_blocks, 1, 3);
+		machine_casing_itemstack = new ItemStack(crafting_blocks, 1, 0);
+		advanced_machine_casing_itemstack = new ItemStack(crafting_blocks, 1, 1);
 		/**
 		 * Add Machines
 		 */
@@ -137,6 +146,8 @@ public class ModBlocks {
 		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_pillar);
 		OreDictionary.registerOre("oreCopper", copper_ore_itemstack);
 		OreDictionary.registerOre("oreTin", tin_ore_itemstack);
+		OreDictionary.registerOre("oreAluminum", aluminum_ore_itemstack);
+		OreDictionary.registerOre("oreLead", lead_ore_itemstack);
 	}
 	
 	public static void postInit () {
@@ -169,6 +180,42 @@ public class ModBlocks {
 	public static BlockLiquidGenerator liquid_generator;
 	public static BlockThermalPress thermal_press;
 	public static BlockCrystaliser crystaliser;
+	public static BlockPainter painter;
+	public static BlockAlloySmelter alloy_smelter;
+	public static BlockCarbonCompressor carbon_compressor;
+	public static BlockBioMachine bio_machine;
+	public static BlockPotionBrewer potion_brewer;
+	public static BlockPotionInjector potion_injector;
+	public static BlockCraftingController crafting_controller;
+	public static BlockCraftingCable crafting_cable;
+	public static BlockShelfStocker shelf_stocker;
+	public static BlockStockController stock_controller;
+	public static BlockStockRequester stock_requester;
+	public static BlockStockTransfer stock_transfer;
+	public static BlockPlayerStocker player_stocker;
+	public static BlockAirConUnit air_con_unit;
+	public static BlockFan fan;
+	public static BlockInterDimensionalProvider inter_dimensional_provider;
+	public static BlockBlackHoleStabiliser black_hole_stabiliser;
+	public static BlockSingularityCore singularity_core;
+	public static BlockBlackHoleEnergyGatherer black_hole_energy_gatherer;
+	public static BlockBlackHoleEnergyTap black_hole_energy_tap;
+	public static BlockBlackHoleContainmentFieldGenerator black_hole_containment_field_generator;
+	public static BlockBlackHoleContainmentController black_hole_containment_controller;
+	public static BlockBlackHoleMatterExtractor black_hole_matter_extractor;
+	public static BlockBlackHoleMatterShaper black_hole_matter_shaper;
+	public static BlockBlackHoleMatterConverter black_hole_matter_converter;
+	public static BlockBlackHoleEnergyCannon black_hole_energy_cannon;
+	public static BlockDragonAttractor dragon_attractor;
+	public static BlockDragonContainmentField dragon_containment_field;
+	public static BlockDragonGrinder dragon_grinder;
+	public static BlockEnderVacuum ender_vacuum;
+	public static BlockResourceConstructor resource_constructor;
+	public static BlockForceField force_field;
+	public static BlockPlacer block_placer;
+	public static BlockWoodStorehouse wood_storehouse;
+	public static BlockIronStorehouse iron_storhouse;
+	// TODO ADD OTHER STOREHOUSES
 	/**
 	 * ItemStack versions
 	 */
@@ -183,11 +230,18 @@ public class ModBlocks {
 	public static ItemStack azurite_ore_itemstack;
 	public static ItemStack copper_ore_itemstack;
 	public static ItemStack tin_ore_itemstack;
-	public static ItemStack machine_shell_itemstack;
-	public static ItemStack advanced_machine_shell_itemstack;
+	public static ItemStack aluminum_ore_itemstack;
+	public static ItemStack lead_ore_itemstack;
+	public static ItemStack machine_casing_itemstack;
+	public static ItemStack advanced_machine_casing_itemstack;
 	public static ItemStack solar_generator_itemstack;
 	public static ItemStack combustion_generator_itemstack;
 	public static ItemStack liquid_generator_itemstack;
 	public static ItemStack thermal_press_itemstack;
 	public static ItemStack crystaliser_itemstack;
+	public static ItemStack compressed_iron;
+	public static ItemStack double_compressed_iron;
+	public static ItemStack triple_compressed_iron;
+	public static ItemStack quadruple_compressed_iron;
+	// TODO Remember these ^^
 }
