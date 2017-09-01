@@ -13,6 +13,7 @@ package therogue.storehouse.init;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.tile.machine.TileCrystaliser;
+import therogue.storehouse.tile.machine.TileStamper;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
 import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
@@ -38,5 +39,6 @@ public class ModTileEntities {
 		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorUltimate.class, IDs.RESOURCENAMEPREFIX + "liquid_generator_ultimate");
 		GameRegistry.registerTileEntity(TileThermalPress.class, IDs.RESOURCENAMEPREFIX + "thermal_press");
 		GameRegistry.registerTileEntity(TileCrystaliser.class, IDs.RESOURCENAMEPREFIX + "crystaliser");
+		GameRegistry.registerTileEntity(TileStamper.class, IDs.RESOURCENAMEPREFIX + "stamper");
 	}
 }

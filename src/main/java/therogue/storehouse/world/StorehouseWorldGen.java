@@ -20,7 +20,7 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.grouped.Ores;
 import therogue.storehouse.util.LOG;
 
 public class StorehouseWorldGen implements IWorldGenerator {
@@ -31,9 +31,9 @@ public class StorehouseWorldGen implements IWorldGenerator {
 	private WorldGenerator tin_ore_gen;
 	
 	public StorehouseWorldGen () {
-		azurite_ore_gen = new WorldGenMinable(ModBlocks.ore_blocks.getStateFromMeta(ModBlocks.azurite_ore_itemstack.getMetadata()), 3);
-		copper_ore_gen = new WorldGenMinable(ModBlocks.ore_blocks.getStateFromMeta(ModBlocks.copper_ore_itemstack.getMetadata()), 8);
-		tin_ore_gen = new WorldGenMinable(ModBlocks.ore_blocks.getStateFromMeta(ModBlocks.tin_ore_itemstack.getMetadata()), 8);
+		azurite_ore_gen = new WorldGenMinable(Ores.ore_block.getStateFromMeta(Ores.AZURITE.createStack().getMetadata()), 3);
+		copper_ore_gen = new WorldGenMinable(Ores.ore_block.getStateFromMeta(Ores.COPPER.createStack().getMetadata()), 8);
+		tin_ore_gen = new WorldGenMinable(Ores.ore_block.getStateFromMeta(Ores.TIN.createStack().getMetadata()), 8);
 	}
 	
 	@Override

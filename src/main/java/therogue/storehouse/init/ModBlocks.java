@@ -12,19 +12,19 @@ package therogue.storehouse.init;
 
 import java.util.ArrayList;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
-import therogue.storehouse.block.StorehouseBaseVariantBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
-import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
-import therogue.storehouse.block.Decorative.StorehouseBaseStair;
 import therogue.storehouse.block.machine.BlockCombustionGenerator;
 import therogue.storehouse.block.machine.BlockCrystaliser;
 import therogue.storehouse.block.machine.BlockLiquidGenerator;
 import therogue.storehouse.block.machine.BlockSolarGenerator;
+import therogue.storehouse.block.machine.BlockStamper;
 import therogue.storehouse.block.machine.BlockThermalPress;
+import therogue.storehouse.init.grouped.CraftingBlocks;
+import therogue.storehouse.init.grouped.DecorativeBlockContainer;
+import therogue.storehouse.init.grouped.Ores;
 
 public class ModBlocks {
 	
@@ -40,55 +40,34 @@ public class ModBlocks {
 		/**
 		 * Adds Decorative blocks
 		 */
-		azurite_dust_block = new StorehouseBaseBlock("azurite_dust_block");
-		blocklist.add(azurite_dust_block);
-		azurite_crystal_block = new StorehouseBaseBlock("azurite_crystal_block");
-		blocklist.add(azurite_crystal_block);
+		azurite_dust_block = new DecorativeBlockContainer("azurite_dust_block");
+		azurite_crystal_block = new DecorativeBlockContainer("azurite_crystal_block");
 		azurite_crystal_block_chiseled = new StorehouseBaseBlock("azurite_crystal_block_chiseled");
+		azurite_crystal_block_pillar = new StorehouseBaseRotatedBlock(azurite_crystal_block.block, "pillar");
+		blocklist.addAll(azurite_dust_block.returnAll());
+		blocklist.addAll(azurite_crystal_block.returnAll());
 		blocklist.add(azurite_crystal_block_chiseled);
-		azurite_crystal_block_pillar = new StorehouseBaseRotatedBlock(azurite_crystal_block, "pillar");
 		blocklist.add(azurite_crystal_block_pillar);
-		/**
-		 * Adds Decorative block varients
-		 */
-		azurite_dust_block_stair = new StorehouseBaseStair(azurite_dust_block);
-		blocklist.add(azurite_dust_block_stair);
-		azurite_dust_block_half_slab = new StorehouseBaseSlab.Half(azurite_dust_block);
-		blocklist.add(azurite_dust_block_half_slab);
-		azurite_dust_block_double_slab = new StorehouseBaseSlab.Double(azurite_dust_block, azurite_dust_block_half_slab);
-		blocklist.add(azurite_dust_block_double_slab);
-		azurite_crystal_block_stair = new StorehouseBaseStair(azurite_crystal_block);
-		blocklist.add(azurite_crystal_block_stair);
-		azurite_crystal_block_half_slab = new StorehouseBaseSlab.Half(azurite_crystal_block);
-		blocklist.add(azurite_crystal_block_half_slab);
-		azurite_crystal_block_double_slab = new StorehouseBaseSlab.Double(azurite_crystal_block, azurite_crystal_block_half_slab);
-		blocklist.add(azurite_crystal_block_double_slab);
 		/**
 		 * Add Materials
 		 */
-		ore_blocks = new StorehouseBaseVariantBlock("ore_block");
-		blocklist.add(ore_blocks);
-		ore_blocks.addSubBlock(0, "azurite", ModItems.azurite_dust_itemstack, 3, 6);
-		ore_blocks.addSubBlock(1, "copper");
-		ore_blocks.addSubBlock(2, "tin");
-		ore_blocks.addSubBlock(3, "aluminum");
-		ore_blocks.addSubBlock(4, "lead");
-		crafting_blocks = new StorehouseBaseVariantBlock("crafting_block");
-		crafting_blocks.addSubBlock(0, "machine_casing");
-		crafting_blocks.addSubBlock(1, "advanced_machine_casing");
+		Ores.addMaterials();
+		CraftingBlocks.addMaterials();
 		/**
 		 * Add Machines
 		 */
 		solar_generator = new BlockSolarGenerator("solar_generator");
-		blocklist.add(solar_generator);
 		combustion_generator = new BlockCombustionGenerator("combustion_generator");
-		blocklist.add(combustion_generator);
 		liquid_generator = new BlockLiquidGenerator("liquid_generator");
-		blocklist.add(liquid_generator);
 		thermal_press = new BlockThermalPress("thermal_press");
-		blocklist.add(thermal_press);
 		crystaliser = new BlockCrystaliser("crystaliser");
+		stamper = new BlockStamper("stamper");
+		blocklist.add(solar_generator);
+		blocklist.add(combustion_generator);
+		blocklist.add(liquid_generator);
+		blocklist.add(thermal_press);
 		blocklist.add(crystaliser);
+		blocklist.add(stamper);
 		/**
 		 * PreInit Blocks
 		 */
@@ -96,38 +75,6 @@ public class ModBlocks {
 		{
 			block.preInit();
 		}
-		/**
-		 * Adds Decorative blocks
-		 */
-		azurite_dust_block_itemstack = new ItemStack(azurite_dust_block);
-		azurite_crystal_block_itemstack = new ItemStack(azurite_crystal_block);
-		azurite_crystal_block_chiseled_itemstack = new ItemStack(azurite_crystal_block_chiseled);
-		azurite_crystal_block_pillar_itemstack = new ItemStack(azurite_crystal_block_pillar);
-		/**
-		 * Adds Decorative block varients
-		 */
-		azurite_dust_block_stair_itemstack = new ItemStack(azurite_dust_block_stair);
-		azurite_dust_block_half_slab_itemstack = new ItemStack(azurite_dust_block_half_slab);
-		azurite_crystal_block_stair_itemstack = new ItemStack(azurite_crystal_block_stair);
-		azurite_crystal_block_half_slab_itemstack = new ItemStack(azurite_crystal_block_half_slab);
-		/**
-		 * Add Materials
-		 */
-		azurite_ore_itemstack = new ItemStack(ore_blocks, 1, 0);
-		copper_ore_itemstack = new ItemStack(ore_blocks, 1, 1);
-		tin_ore_itemstack = new ItemStack(ore_blocks, 1, 2);
-		aluminum_ore_itemstack = new ItemStack(ore_blocks, 1, 3);
-		lead_ore_itemstack = new ItemStack(ore_blocks, 1, 3);
-		machine_casing_itemstack = new ItemStack(crafting_blocks, 1, 0);
-		advanced_machine_casing_itemstack = new ItemStack(crafting_blocks, 1, 1);
-		/**
-		 * Add Machines
-		 */
-		solar_generator_itemstack = new ItemStack(solar_generator);
-		combustion_generator_itemstack = new ItemStack(combustion_generator);
-		liquid_generator_itemstack = new ItemStack(liquid_generator);
-		thermal_press_itemstack = new ItemStack(thermal_press);
-		crystaliser_itemstack = new ItemStack(crystaliser);
 	}
 	
 	public static void Init () {
@@ -141,13 +88,11 @@ public class ModBlocks {
 		/**
 		 * Register Ore Dictionary Names
 		 */
-		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block);
+		Ores.Init();
+		CraftingBlocks.Init();
+		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block.block);
 		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_chiseled);
 		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_pillar);
-		OreDictionary.registerOre("oreCopper", copper_ore_itemstack);
-		OreDictionary.registerOre("oreTin", tin_ore_itemstack);
-		OreDictionary.registerOre("oreAluminum", aluminum_ore_itemstack);
-		OreDictionary.registerOre("oreLead", lead_ore_itemstack);
 	}
 	
 	public static void postInit () {
@@ -163,85 +108,25 @@ public class ModBlocks {
 	/**
 	 * Blocks
 	 */
-	public static StorehouseBaseBlock azurite_dust_block;
-	public static StorehouseBaseBlock azurite_crystal_block;
+	public static DecorativeBlockContainer azurite_dust_block;
+	public static DecorativeBlockContainer azurite_crystal_block;
 	public static StorehouseBaseBlock azurite_crystal_block_chiseled;
 	public static StorehouseBaseRotatedBlock azurite_crystal_block_pillar;
-	public static StorehouseBaseStair azurite_dust_block_stair;
-	public static StorehouseBaseSlab.Half azurite_dust_block_half_slab;
-	public static StorehouseBaseSlab.Double azurite_dust_block_double_slab;
-	public static StorehouseBaseStair azurite_crystal_block_stair;
-	public static StorehouseBaseSlab.Half azurite_crystal_block_half_slab;
-	public static StorehouseBaseSlab.Double azurite_crystal_block_double_slab;
-	public static StorehouseBaseVariantBlock ore_blocks;
-	public static StorehouseBaseVariantBlock crafting_blocks;
 	public static BlockSolarGenerator solar_generator;
 	public static BlockCombustionGenerator combustion_generator;
 	public static BlockLiquidGenerator liquid_generator;
 	public static BlockThermalPress thermal_press;
 	public static BlockCrystaliser crystaliser;
-	public static BlockPainter painter;
-	public static BlockAlloySmelter alloy_smelter;
-	public static BlockCarbonCompressor carbon_compressor;
-	public static BlockBioMachine bio_machine;
-	public static BlockPotionBrewer potion_brewer;
-	public static BlockPotionInjector potion_injector;
-	public static BlockCraftingController crafting_controller;
-	public static BlockCraftingCable crafting_cable;
-	public static BlockShelfStocker shelf_stocker;
-	public static BlockStockController stock_controller;
-	public static BlockStockRequester stock_requester;
-	public static BlockStockTransfer stock_transfer;
-	public static BlockPlayerStocker player_stocker;
-	public static BlockAirConUnit air_con_unit;
-	public static BlockFan fan;
-	public static BlockInterDimensionalProvider inter_dimensional_provider;
-	public static BlockBlackHoleStabiliser black_hole_stabiliser;
-	public static BlockSingularityCore singularity_core;
-	public static BlockBlackHoleEnergyGatherer black_hole_energy_gatherer;
-	public static BlockBlackHoleEnergyTap black_hole_energy_tap;
-	public static BlockBlackHoleContainmentFieldGenerator black_hole_containment_field_generator;
-	public static BlockBlackHoleContainmentController black_hole_containment_controller;
-	public static BlockBlackHoleMatterExtractor black_hole_matter_extractor;
-	public static BlockBlackHoleMatterShaper black_hole_matter_shaper;
-	public static BlockBlackHoleMatterConverter black_hole_matter_converter;
-	public static BlockBlackHoleEnergyCannon black_hole_energy_cannon;
-	public static BlockDragonAttractor dragon_attractor;
-	public static BlockDragonContainmentField dragon_containment_field;
-	public static BlockDragonGrinder dragon_grinder;
-	public static BlockEnderVacuum ender_vacuum;
-	public static BlockResourceConstructor resource_constructor;
-	public static BlockForceField force_field;
-	public static BlockPlacer block_placer;
-	public static BlockWoodStorehouse wood_storehouse;
-	public static BlockIronStorehouse iron_storhouse;
-	// TODO ADD OTHER STOREHOUSES
-	/**
-	 * ItemStack versions
-	 */
-	public static ItemStack azurite_dust_block_itemstack;
-	public static ItemStack azurite_crystal_block_itemstack;
-	public static ItemStack azurite_crystal_block_chiseled_itemstack;
-	public static ItemStack azurite_crystal_block_pillar_itemstack;
-	public static ItemStack azurite_dust_block_stair_itemstack;
-	public static ItemStack azurite_dust_block_half_slab_itemstack;
-	public static ItemStack azurite_crystal_block_stair_itemstack;
-	public static ItemStack azurite_crystal_block_half_slab_itemstack;
-	public static ItemStack azurite_ore_itemstack;
-	public static ItemStack copper_ore_itemstack;
-	public static ItemStack tin_ore_itemstack;
-	public static ItemStack aluminum_ore_itemstack;
-	public static ItemStack lead_ore_itemstack;
-	public static ItemStack machine_casing_itemstack;
-	public static ItemStack advanced_machine_casing_itemstack;
-	public static ItemStack solar_generator_itemstack;
-	public static ItemStack combustion_generator_itemstack;
-	public static ItemStack liquid_generator_itemstack;
-	public static ItemStack thermal_press_itemstack;
-	public static ItemStack crystaliser_itemstack;
-	public static ItemStack compressed_iron;
-	public static ItemStack double_compressed_iron;
-	public static ItemStack triple_compressed_iron;
-	public static ItemStack quadruple_compressed_iron;
-	// TODO Remember these ^^
+	public static BlockStamper stamper;/**
+										 * public static BlockPainter painter; public static BlockAlloySmelter alloy_smelter; public static BlockCarbonCompressor carbon_compressor; public static BlockBioMachine bio_machine; public static BlockPotionBrewer potion_brewer; public static
+										 * BlockPotionInjector potion_injector; public static BlockCraftingController crafting_controller; public static BlockCraftingCable crafting_cable; public static BlockShelfStocker shelf_stocker; public static BlockStockController stock_controller; public
+										 * static BlockStockRequester stock_requester; public static BlockStockTransfer stock_transfer; public static BlockPlayerStocker player_stocker; public static BlockPlayerUnstocker player_unstocker; public static BlockPlayerRemoteFeeder player_remote_feeder;
+										 * public static BlockPlayerHealthRegenerator player_health_regenerator; public static BlockAirConUnit air_con_unit; public static BlockFan fan; public static BlockInterDimensionalProvider inter_dimensional_provider; public static BlockWirelessRedstoneManager
+										 * wireless_redstone_manager; public static BlockWirelessTransmitter wireless_transmitter; public static BlockWirelessReciever wireless_reciever; public static BlockBlackHoleStabiliser black_hole_stabiliser; public static BlockSingularityCore singularity_core;
+										 * public static BlockBlackHoleEnergyGatherer black_hole_energy_gatherer; public static BlockBlackHoleEnergyTap black_hole_energy_tap; public static BlockBlackHoleContainmentFieldGenerator black_hole_containment_field_generator; public static
+										 * BlockBlackHoleContainmentController black_hole_containment_controller; public static BlockBlackHoleMatterExtractor black_hole_matter_extractor; public static BlockBlackHoleMatterShaper black_hole_matter_shaper; public static BlockBlackHoleMatterConverter
+										 * black_hole_matter_converter; public static BlockBlackHoleEnergyCannon black_hole_energy_cannon; public static BlockDragonAttractor dragon_attractor; public static BlockDragonContainmentField dragon_containment_field; public static BlockDragonGrinder
+										 * dragon_grinder; public static BlockEnderVacuum ender_vacuum; public static BlockResourceConstructor resource_constructor; public static BlockForceField force_field; public static BlockPlacer block_placer; public static BlockWoodStorehouse wood_storehouse;
+										 * public static BlockStoneStorehouse stone_storehouse; public static BlockIronStorehouse iron_storhouse; public static BlockSteelStorehouse steel_storehouse; public static BlockTitaniumStorehouse titanium_storehouse;
+										 */
 }

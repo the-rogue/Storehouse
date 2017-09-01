@@ -14,12 +14,6 @@
 		"facing=east": {
 			"model": "storehouse:machine/thermal_press_box",
 			"y": 270
-		},
-		"facing=up": {
-			"model": "storehouse:machine/thermal_press_box"
-		},
-		"facing=down": {
-			"model": "storehouse:machine/thermal_press_box"
 		}
 	}
 }

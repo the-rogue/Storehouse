@@ -31,12 +31,18 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 	private NonNullList<ItemStack> inventory;
 	private Set<Integer> extractable_slots;
 	private Set<Integer> insertable_slots;
+	private Set<Integer> insertable_gui_slots;
 	
 	public InventoryManager (IInventoryCapability owner, int size, @Nullable Integer[] insertable_slots, @Nullable Integer[] extractable_slots) {
+		this(owner, size, insertable_slots, null, extractable_slots);
+	}
+	
+	public InventoryManager (IInventoryCapability owner, int size, @Nullable Integer[] insertable_slots, @Nullable Integer[] insertable_gui_slots, @Nullable Integer[] extractable_slots) {
 		this.owner = owner;
 		inventory = NonNullList.<ItemStack> withSize(size, ItemStack.EMPTY);
 		this.extractable_slots = new HashSet<Integer>();
 		this.insertable_slots = new HashSet<Integer>();
+		this.insertable_gui_slots = new HashSet<Integer>();
 		if (extractable_slots == null)
 		{
 			for (int i = 0; i < size; i++)
@@ -59,6 +65,8 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 		{
 			this.insertable_slots.addAll(Arrays.asList(insertable_slots));
 		}
+		this.insertable_gui_slots.addAll(this.insertable_slots);
+		if (insertable_gui_slots != null) this.insertable_gui_slots.addAll(Arrays.asList(insertable_gui_slots));
 	}
 	
 	// ---------------------IItemHandlerModifiable functions---------------------------------------------------
@@ -292,7 +300,7 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 		@Override
 		public ItemStack insertItem (int slot, ItemStack stack, boolean simulate) {
 			if (stack.isEmpty()) return stack;
-			if (!insertable_slots.contains(slot)) return stack;
+			if (!insertable_gui_slots.contains(slot)) return stack;
 			if (!isItemValidForSlotChecks(slot, stack)) return stack;
 			ItemStack stackInSlot = getStackInSlot(slot);
 			if (!ItemUtils.areStacksMergable(stack, stackInSlot)) return stack;

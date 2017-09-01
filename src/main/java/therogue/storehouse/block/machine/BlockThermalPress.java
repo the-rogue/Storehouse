@@ -12,10 +12,7 @@ package therogue.storehouse.block.machine;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -30,21 +27,10 @@ import therogue.storehouse.Storehouse;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
-public class BlockThermalPress extends StorehouseBaseMachine {
+public class BlockThermalPress extends StorehouseBaseFacingMachine {
 	
 	public BlockThermalPress (String name) {
 		super(name);
-		this.setDefaultState(this.getBlockState().getBaseState().withProperty(FACING, EnumFacing.NORTH));
-	}
-	
-	@Override
-	public boolean isOpaqueCube (IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public boolean isFullCube (IBlockState state) {
-		return false;
 	}
 	
 	@Override
@@ -63,6 +49,17 @@ public class BlockThermalPress extends StorehouseBaseMachine {
 		return true;
 	}
 	
+	// --------------------Render Methods-------------------------------------------------
+	@Override
+	public boolean isOpaqueCube (IBlockState state) {
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube (IBlockState state) {
+		return false;
+	}
+	
 	/**
 	 * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only, LIQUID for vanilla liquids, INVISIBLE to skip all rendering
 	 */
@@ -77,28 +74,5 @@ public class BlockThermalPress extends StorehouseBaseMachine {
 	@Override
 	public BlockRenderLayer getBlockLayer () {
 		return BlockRenderLayer.TRANSLUCENT;
-	}
-	
-	// --------------------Facing-------------------------------------------------
-	/**
-	 * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the IBlockstate
-	 */
-	public IBlockState getStateForPlacement (World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING, placer.getAdjustedHorizontalFacing().getOpposite());
-	}
-	
-	@Override
-	public BlockStateContainer createBlockState () {
-		return new BlockStateContainer(this, new IProperty[] { FACING });
-	}
-	
-	@Override
-	public int getMetaFromState (IBlockState state) {
-		return state.getValue(FACING).getIndex();
-	}
-	
-	@Override
-	public IBlockState getStateFromMeta (int meta) {
-		return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
 	}
 }

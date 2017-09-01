@@ -12,11 +12,10 @@ package therogue.storehouse.init;
 
 import java.util.ArrayList;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import therogue.storehouse.init.grouped.Materials;
+import therogue.storehouse.init.grouped.Resources;
+import therogue.storehouse.init.grouped.Upgrades;
 import therogue.storehouse.item.IStorehouseBaseItem;
-import therogue.storehouse.item.ItemStorehouseBaseMaterial;
-import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.tool.NetworkInspector;
 
 public class ModItems {
@@ -32,16 +31,13 @@ public class ModItems {
 		 */
 		network_Inspector = new NetworkInspector("network_inspector");
 		itemlist.add(network_Inspector);
-		/**
-		 * Materials
+		/*
+		 * network_configurer = new NetworkConfigurer("network_configurer"); itemlist.add(network_configurer); network_requester = new NetworkRequester("network_requester"); itemlist.add(network_requester); network_tinkerer = new NetworkTinkerer("network_tinkerer"); itemlist.add(network_tinkerer);
+		 * personal_stocker = new PersonalStocker("personal_stocker"); itemlist.add(personal_stocker); black_hole_starter = new BlackHoleStarter("black_hole_starter"); itemlist.add(black_hole_starter);
 		 */
-		materials = new ItemStorehouseBaseMaterial("material");
-		itemlist.add(materials);
-		materials.addMaterial(0, "azurite_dust");
-		materials.addMaterial(1, "azurite_crystal");
-		materials.addMaterial(2, "copper_ingot");
-		materials.addMaterial(3, "tin_ingot");
-		materials.addMaterial(4, "circuit_chip");
+		Resources.addMaterials();
+		Materials.addMaterials();
+		Upgrades.addMaterials();
 		/**
 		 * PreInit Items
 		 */
@@ -49,18 +45,6 @@ public class ModItems {
 		{
 			item.preInit();
 		}
-		/**
-		 * Tools
-		 */
-		network_Inspector_itemstack = new ItemStack(network_Inspector);
-		/**
-		 * Materials
-		 */
-		azurite_dust_itemstack = new ItemStack(materials, 1, 0);
-		azurite_crystal_itemstack = new ItemStack(materials, 1, 1);
-		copper_ingot_itemstack = new ItemStack(materials, 1, 2);
-		tin_ingot_itemstack = new ItemStack(materials, 1, 3);
-		circuit_chip_itemstack = new ItemStack(materials, 1, 4);
 	}
 	
 	public static void Init () {
@@ -71,11 +55,9 @@ public class ModItems {
 		{
 			item.Init();
 		}
-		/**
-		 * Register Ore Dictionary Names
-		 */
-		OreDictionary.registerOre("ingotCopper", copper_ingot_itemstack);
-		OreDictionary.registerOre("ingotTin", tin_ingot_itemstack);
+		Resources.Init();
+		Materials.Init();
+		Upgrades.Init();
 	}
 	
 	public static void postInit () {
@@ -91,55 +73,8 @@ public class ModItems {
 	/**
 	 * Items
 	 */
-	public static StorehouseBaseItem network_Inspector;
-	public static ItemStorehouseBaseMaterial materials;
-	public static ItemStorehouseBaseMaterial upgrades;
-	/**
-	 * ItemStack versions
+	public static NetworkInspector network_Inspector;
+	/*
+	 * public static NetworkConfigurer network_configurer; public static NetworkRequester network_requester; public static NetworkTinkerer network_tinkerer; public static PersonalStocker personal_stocker; public static BlackHoleStarter black_hole_starter;
 	 */
-	public static ItemStack network_Inspector_itemstack;
-	public static ItemStack extrusion_tool_itemstack;
-	public static ItemStack plate_tool_itemStack;
-	public static ItemStack cutter_tool_itemStack;
-	public static ItemStack azurite_dust_itemstack;
-	public static ItemStack azurite_crystal_itemstack;
-	public static ItemStack copper_ingot_itemstack;
-	public static ItemStack tin_ingot_itemstack;
-	public static ItemStack aluminum_ingot_itemstack;
-	public static ItemStack lead_ingot_itemstack;
-	public static ItemStack steel_ingot_itemstack;
-	public static ItemStack brass_ingot_itemstack;
-	public static ItemStack bronze_ingot_itemstack;
-	public static ItemStack Duralium_ingot_itemstack;
-	public static ItemStack circuit_chip_itemstack;
-	public static ItemStack iron_plate_itemstack;
-	public static ItemStack copper_plate_itemstack;
-	public static ItemStack tin_plate_itemstack;
-	public static ItemStack gold_plate_itemstack;
-	public static ItemStack steel_plate_itemstack;
-	public static ItemStack diamond_edging_itemstack;
-	public static ItemStack silicon_itemstack;
-	public static ItemStack integrated_chip_itemstack;
-	public static ItemStack copper_wire_itemstack;
-	public static ItemStack gold_wire_itemstack;
-	public static ItemStack solder_itemstack;
-	public static ItemStack diamond_edged_steel_plate_itemstack;
-	public static ItemStack timer_upgrade;
-	public static ItemStack variable_chance_upgrade;
-	public static ItemStack speed_upgrade;
-	public static ItemStack crafting_loop_upgrade;
-	public static ItemStack wireless_redstone_upgrade;
-	public static ItemStack ejection_upgrade;
-	public static ItemStack importer_upgrade;
-	public static ItemStack interdimentional_upgrade;
-	public static ItemStack singularity_core;
-	public static ItemStack nitrogel;
-	public static ItemStack black_hole_kickstarter;
-	public static ItemStack transfer_unit;
-	public static ItemStack fan_blade;
-	public static ItemStack refrigerant_parts;
-	public static ItemStack network_configurer;
-	public static ItemStack network_requester;
-	public static ItemStack network_tinkerer;
-	public static ItemStack personal_stocker;
 }

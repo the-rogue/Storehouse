@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.EnergyUtils;
@@ -46,7 +45,7 @@ public abstract class TileBaseGenerator extends StorehouseBaseMachine {
 			this.sendEnergyToNeighbours();
 			if (world != null)
 			{
-				this.world.notifyBlockUpdate(this.getPos(), ModBlocks.azurite_dust_block.getDefaultState(), ModBlocks.azurite_dust_block.getDefaultState(), 0);
+				this.world.notifyBlockUpdate(this.getPos(), block.getBlock().getDefaultState(), block.getBlock().getDefaultState(), 0);
 			}
 		}
 	}

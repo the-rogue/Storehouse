@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import therogue.storehouse.command.DebugResetLogger;
 import therogue.storehouse.handlers.ConfigHandler;
-import therogue.storehouse.init.ModItems;
+import therogue.storehouse.init.grouped.Resources;
 import therogue.storehouse.proxy.IProxy;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.util.LOG;
@@ -85,7 +85,7 @@ public class Storehouse {
 		
 		@Override
 		public ItemStack getTabIconItem () {
-			return ModItems.azurite_dust_itemstack;
+			return Resources.AZURITE_DUST.createStack();
 		}
 		
 		@Override

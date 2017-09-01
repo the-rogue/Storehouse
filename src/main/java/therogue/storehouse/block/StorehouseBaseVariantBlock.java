@@ -30,7 +30,8 @@ import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 
 public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	
-	private final Map<Integer, SubBlock> blocks = new HashMap<Integer, SubBlock>();
+	private final Map<Integer, String> blocks = new HashMap<Integer, String>();
+	private final Map<Integer, ItemDrop> unique_drops = new HashMap<Integer, ItemDrop>();
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
 	
 	public StorehouseBaseVariantBlock (String name) {
@@ -39,25 +40,28 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	}
 	
 	public StorehouseBaseVariantBlock addSubBlock (int id, String name) {
-		blocks.put(id, new SubBlock(name));
+		blocks.put(id, name);
 		return this;
 	}
 	
-	public StorehouseBaseVariantBlock addSubBlock (int id, String name, ItemStack drop, int min_quantity, int max_quantity) {
-		blocks.put(id, new SubBlock(name, new ItemDrop(drop, min_quantity, max_quantity)));
-		return this;
+	public void addDrop (int id, ItemStack drop) {
+		unique_drops.put(id, new ItemDrop(drop));
+	}
+	
+	public void addDrop (int id, ItemStack drop, int min_quantity, int max_quantity) {
+		unique_drops.put(id, new ItemDrop(drop, min_quantity, max_quantity));
 	}
 	
 	@Override
 	public Item getItemDropped (IBlockState blockstate, Random random, int fortune) {
-		ItemDrop drop = blocks.get(getMetaFromState(blockstate)).drop;
+		ItemDrop drop = unique_drops.get(getMetaFromState(blockstate));
 		if (drop != null) return drop.stack.getItem();
 		return super.getItemDropped(blockstate, random, fortune);
 	}
 	
 	@Override
 	public int quantityDropped (IBlockState blockstate, int fortune, Random random) {
-		ItemDrop drop = blocks.get(getMetaFromState(blockstate)).drop;
+		ItemDrop drop = unique_drops.get(getMetaFromState(blockstate));
 		if (drop != null)
 		{
 			if (drop.min_quantity >= drop.max_quantity) return drop.min_quantity;
@@ -71,7 +75,7 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	 */
 	@Override
 	public int damageDropped (IBlockState state) {
-		ItemDrop drop = blocks.get(getMetaFromState(state)).drop;
+		ItemDrop drop = unique_drops.get(getMetaFromState(state));
 		if (drop != null) return drop.stack.getMetadata();
 		return getMetaFromState(state);
 	}
@@ -127,7 +131,7 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	@Override
 	@SideOnly (Side.CLIENT)
 	public void preInitClient () {
-		for (Entry<Integer, SubBlock> block : blocks.entrySet())
+		for (Entry<Integer, String> block : blocks.entrySet())
 		{
 			ModelBakery.registerItemVariants(ItemBlock.getItemFromBlock(this), new ResourceLocation(getUnlocalizedName().substring(5) + "_" + block.getValue()));
 		}
@@ -136,44 +140,23 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	@Override
 	@SideOnly (Side.CLIENT)
 	public void InitClient () {
-		for (Entry<Integer, SubBlock> block : blocks.entrySet())
+		for (Entry<Integer, String> block : blocks.entrySet())
 		{
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), block.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + block.getValue(), "inventory"));
 		}
 	}
 	
-	public static class SubBlock {
-		
-		public final String name;
-		public final ItemDrop drop;
-		
-		public SubBlock (String name) {
-			this.name = name;
-			this.drop = null;
-		}
-		
-		public SubBlock (String name, ItemDrop drop) {
-			this.name = name;
-			this.drop = drop;
-		}
-		
-		@Override
-		public String toString () {
-			return name;
-		}
-	}
-	
-	public static class ItemDrop {
+	private static class ItemDrop {
 		
 		public final ItemStack stack;
 		public final int min_quantity;
 		public final int max_quantity;
 		
-		public ItemDrop (ItemStack drop) {
+		private ItemDrop (ItemStack drop) {
 			this(drop, 1, 1);
 		}
 		
-		public ItemDrop (ItemStack stack, int min_quantity, int max_quantity) {
+		private ItemDrop (ItemStack stack, int min_quantity, int max_quantity) {
 			this.stack = stack;
 			this.min_quantity = min_quantity;
 			this.max_quantity = max_quantity;

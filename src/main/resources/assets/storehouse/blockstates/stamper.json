@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "storehouse:machine/stamper",
+			"y": 180
+		},
+		"facing=south": {
+			"model": "storehouse:machine/stamper"
+		},
+		"facing=west": {
+			"model": "storehouse:machine/stamper",
+			"y": 90
+		},
+		"facing=east": {
+			"model": "storehouse:machine/stamper",
+			"y": 270
+		}
+	}
+}

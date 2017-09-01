@@ -24,7 +24,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 	
@@ -82,10 +81,5 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 		{
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, material.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + material.getValue(), "inventory"));
 		}
-	}
-	
-	public StorehouseBaseItem setOredictEntry (String oredictEntry, int meta) {
-		OreDictionary.registerOre(oredictEntry, new ItemStack(this, 1, meta));
-		return this;
 	}
 }
