@@ -33,11 +33,17 @@ public class TileStamper extends StorehouseBaseMachine implements ICrafter {
 				if (!this.getStackInSlot(0).isEmpty()) return false;
 				return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
 			}
+			
 			@Override
 			public int getSlotLimit (int slot) {
 				return 1;
 			}
 		};
+	}
+	
+	@Override
+	public boolean hasFastRenderer () {
+		return false;
 	}
 	
 	// -------------------------ITickable-----------------------------------------------------------------

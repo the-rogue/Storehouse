@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -37,5 +38,24 @@ public class BlockStamper extends StorehouseBaseFacingMachine {
 			testamp.getContainerCapability().setStackInSlot(0, machineStack);
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean isOpaqueCube (IBlockState state) {
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube (IBlockState state) {
+		return false;
+	}
+	
+	/**
+	 * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only, LIQUID for vanilla liquids, INVISIBLE to skip all rendering
+	 */
+	@Override
+	@Deprecated
+	public EnumBlockRenderType getRenderType (IBlockState state) {
+		return EnumBlockRenderType.MODEL;
 	}
 }

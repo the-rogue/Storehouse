@@ -1,19 +1,18 @@
 {
+	"forge_marker": 1,
+	"defaults": {
+        "model": "storehouse:machine/test.obj"
+     },
 	"variants": {
-		"facing=north": {
-			"model": "storehouse:machine/stamper",
-			"y": 180
-		},
-		"facing=south": {
-			"model": "storehouse:machine/stamper"
-		},
-		"facing=west": {
-			"model": "storehouse:machine/stamper",
-			"y": 90
-		},
-		"facing=east": {
-			"model": "storehouse:machine/stamper",
-			"y": 270
-		}
-	}
+        "normal": [{}],
+        "inventory": [{
+            "transform": "forge:default-block"
+        }],
+        "facing": {
+            "north": {"y": 180},
+            "south": {},
+            "west": {"y": 90},
+            "east": {"y": 270}
+        }
+    }
 }

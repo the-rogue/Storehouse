@@ -55,11 +55,6 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 		};
 	}
 	
-	@Override
-	public boolean hasFastRenderer () {
-		return false;
-	}
-	
 	// -------------------------ITickable-----------------------------------------------------------------
 	@Override
 	public void update () {
