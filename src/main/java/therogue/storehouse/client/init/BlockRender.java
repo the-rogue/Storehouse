@@ -14,22 +14,17 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.client.render.ForgeTESR;
 import therogue.storehouse.client.render.ThermalPressTESR;
 import therogue.storehouse.init.ModBlocks;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.IDs;
+import therogue.storehouse.tile.machine.TileForge;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class BlockRender {
 	
 	public static void preInit () {
-		OBJLoader.INSTANCE.addDomain(General.MOD_ID);
-		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(ModBlocks.stamper), 0, new ModelResourceLocation(IDs.RESOURCENAMEPREFIX + ModBlocks.stamper.getName(), "inventory"));
 		for (IStorehouseBaseBlock block : ModBlocks.blocklist)
 		{
 			block.preInitClient();
@@ -60,6 +55,6 @@ public class BlockRender {
 	
 	public static void registerTESRS () {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileThermalPress.class, new ThermalPressTESR());
-		// ClientRegistry.bindTileEntitySpecialRenderer(TileStamper.class, new StamperTESR());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileForge.class, new ForgeTESR());
 	}
 }

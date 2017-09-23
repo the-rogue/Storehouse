@@ -14,7 +14,7 @@ import therogue.storehouse.init.grouped.Materials;
 import therogue.storehouse.init.grouped.Ores;
 import therogue.storehouse.init.grouped.Resources;
 import therogue.storehouse.tile.machine.TileCrystaliser;
-import therogue.storehouse.tile.machine.TileStamper;
+import therogue.storehouse.tile.machine.TileForge;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.util.RecipeHelper;
 
@@ -32,7 +32,7 @@ public class Recipes {
 				new MachineRecipe(MachineRecipe.ALWAYSMODE, 80, new ItemStackComponent(Resources.AZURITE_CRYSTAL.createStack()), new ItemStackComponent(Resources.AZURITE_DUST.createStack()), new FluidStackComponent(new FluidStack(FluidRegistry.WATER, 1000))));
 		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, 40, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(Resources.AZURITE_DUST.createStack()), new ItemStackComponent(Resources.AZURITE_DUST.createStack()),
 				new ItemStackComponent(Items.IRON_INGOT), new ItemStackComponent(Items.REDSTONE), new ItemStackComponent(Items.REDSTONE)));
-		MachineCraftingHandler.register(TileStamper.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 20, new ItemStackComponent(Materials.COPPER_PLATE.createStack()), new ItemStackComponent(Resources.COPPER_INGOT.createStack())));
-		MachineCraftingHandler.register(TileStamper.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 20, new ItemStackComponent(Materials.IRON_PLATE.createStack()), new ItemStackComponent(Items.IRON_INGOT)));
+		MachineCraftingHandler.register(TileForge.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 20, new ItemStackComponent(Materials.COPPER_PLATE.createStack()), new ItemStackComponent(Resources.COPPER_INGOT.createStack())));
+		MachineCraftingHandler.register(TileForge.class, new MachineRecipe(MachineRecipe.ALWAYSMODE, 20, new ItemStackComponent(Materials.IRON_PLATE.createStack()), new ItemStackComponent(Items.IRON_INGOT)));
 	}
 }

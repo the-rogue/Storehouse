@@ -20,13 +20,13 @@ import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.GeneralUtils;
 
-public class TileStamper extends StorehouseBaseMachine implements ICrafter {
+public class TileForge extends StorehouseBaseMachine implements ICrafter {
 	
 	public static final int RFPerTick = MachineStats.STAMPERPERTICK;
 	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newCrafter(this);
 	
-	public TileStamper () {
-		super(ModBlocks.stamper);
+	public TileForge () {
+		super(ModBlocks.forge);
 		inventory = new InventoryManager(this, 2, new Integer[0], new Integer[] { 1 }, new Integer[0]) {
 			
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
@@ -39,11 +39,6 @@ public class TileStamper extends StorehouseBaseMachine implements ICrafter {
 				return 1;
 			}
 		};
-	}
-	
-	@Override
-	public boolean hasFastRenderer () {
-		return false;
 	}
 	
 	// -------------------------ITickable-----------------------------------------------------------------
@@ -99,6 +94,6 @@ public class TileStamper extends StorehouseBaseMachine implements ICrafter {
 	
 	@Override
 	public String getGuiID () {
-		return "storehouse:" + ModBlocks.stamper.getName();
+		return "storehouse:" + ModBlocks.forge.getName();
 	}
 }
