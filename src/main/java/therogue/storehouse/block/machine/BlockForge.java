@@ -1,18 +1,22 @@
 
 package therogue.storehouse.block.machine;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import therogue.storehouse.tile.machine.TileForge;
-import therogue.storehouse.util.ItemUtils;
 
 public class BlockForge extends StorehouseBaseFacingMachine {
+	
+	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.21875D, 0.0D, 0.21875D, 0.78125D, 0.5875D, 0.78125D);
 	
 	public BlockForge (String name) {
 		super(name);
@@ -30,21 +34,10 @@ public class BlockForge extends StorehouseBaseFacingMachine {
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileForge)
 		{
-			TileForge testamp = (TileForge) te;
-			ItemStack newStack = testamp.getContainerCapability().insertItem(1, player.getHeldItem(hand), false);
-			if (!newStack.isItemEqual(player.getHeldItem(hand)))
-			{
-				player.setHeldItem(hand, newStack);
-			}
-			ItemStack machineStack = testamp.getContainerCapability().getStackInSlot(0);
-			ItemStack newStack1 = ItemUtils.mergeStacks(64, false, player.getHeldItem(hand), machineStack);
-			if (!newStack1.isItemEqual(player.getHeldItem(hand)))
-			{
-				player.setHeldItem(hand, ItemUtils.mergeStacks(64, true, player.getHeldItem(hand), machineStack));
-				testamp.getContainerCapability().setStackInSlot(0, machineStack);
-			}
+			TileForge teforge = (TileForge) te;
+			return teforge.onBlockActivated(player, hand);
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -55,5 +48,16 @@ public class BlockForge extends StorehouseBaseFacingMachine {
 	@Override
 	public boolean isFullCube (IBlockState state) {
 		return false;
+	}
+	
+	@Override
+	@Nullable
+	public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+		return AABB;
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess source, BlockPos pos) {
+		return AABB;
 	}
 }

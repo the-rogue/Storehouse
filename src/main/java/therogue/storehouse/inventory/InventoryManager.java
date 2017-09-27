@@ -245,6 +245,7 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 	 * @param nbt The nbt tag to read from.
 	 */
 	public void readFromNBT (NBTTagCompound nbt) {
+		inventory.clear();
 		NBTTagList list = nbt.getTagList("Items", 10);
 		for (int i = 0; i < list.tagCount(); ++i)
 		{

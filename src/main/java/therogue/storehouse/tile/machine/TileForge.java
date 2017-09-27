@@ -5,9 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.CraftingManager;
@@ -15,14 +20,20 @@ import therogue.storehouse.crafting.inventory.IRecipeInventory;
 import therogue.storehouse.crafting.inventory.RangedItemInventory;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.ModItems;
+import therogue.storehouse.inventory.IInventoryCapability;
 import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.network.GuiUpdateTEPacket;
+import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.reference.MachineStats;
-import therogue.storehouse.tile.StorehouseBaseMachine;
+import therogue.storehouse.tile.StorehouseBaseTileEntity;
 import therogue.storehouse.util.GeneralUtils;
+import therogue.storehouse.util.ItemUtils;
 
-public class TileForge extends StorehouseBaseMachine implements ICrafter {
+public class TileForge extends StorehouseBaseTileEntity implements IInventoryCapability, ICrafter {
 	
 	public static final int RFPerTick = MachineStats.STAMPERPERTICK;
+	protected InventoryManager inventory;
 	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newCrafter(this);
 	
 	public TileForge () {
@@ -41,13 +52,36 @@ public class TileForge extends StorehouseBaseMachine implements ICrafter {
 		};
 	}
 	
-	// -------------------------ITickable-----------------------------------------------------------------
-	@Override
-	public void update () {
-		if (GeneralUtils.isServerSide(world))
+	// -------------------------Tile Specific Utility Methods-------------------------------------------
+	public boolean onBlockActivated (EntityPlayer player, EnumHand hand) {
+		IItemHandlerModifiable containerCapability = getContainerCapability();
+		if (!containerCapability.getStackInSlot(1).isEmpty() && player.getHeldItem(hand).getItem() == ModItems.hammer && !(player instanceof FakePlayer))
 		{
-			theCrafter.updateCraftingStatus();
+			if (theCrafter.craft())
+			{
+				ItemStack heldStack = player.getHeldItem(hand);
+				heldStack.setItemDamage(heldStack.getItemDamage() + 1);
+			}
 		}
+		if (containerCapability.getStackInSlot(1).isEmpty())
+		{
+			ItemStack newStack = containerCapability.insertItem(1, player.getHeldItem(hand), false);
+			if (!ItemStack.areItemStacksEqual(newStack, player.getHeldItem(hand)))
+			{
+				player.setHeldItem(hand, newStack);
+			}
+		}
+		if (!containerCapability.getStackInSlot(0).isEmpty())
+		{
+			ItemStack machineStack = containerCapability.getStackInSlot(0);
+			ItemStack newStack1 = ItemUtils.mergeStacks(64, false, player.getHeldItem(hand), machineStack);
+			if (!ItemStack.areItemStacksEqual(newStack1, player.getHeldItem(hand)))
+			{
+				player.setHeldItem(hand, ItemUtils.mergeStacks(64, true, player.getHeldItem(hand), machineStack));
+				containerCapability.setStackInSlot(0, machineStack);
+			}
+		}
+		return true;
 	}
 	
 	// -------------------------ICrafter Methods-----------------------------------
@@ -68,32 +102,73 @@ public class TileForge extends StorehouseBaseMachine implements ICrafter {
 	
 	@Override
 	public boolean isRunning () {
-		return energyStorage.getEnergyStored() >= RFPerTick;
+		return true;
 	}
 	
 	@Override
 	public void doRunTick () {
-		if (isRunning())
-		{
-			energyStorage.modifyEnergyStored(-RFPerTick);
-		}
 	}
 	
 	// -------------------------Inventory Methods-----------------------------------
 	@Override
+	public IItemHandlerModifiable getInventory () {
+		if (inventory == null) { throw new NullPointerException("inventory is null for machine: " + getName()); }
+		return inventory;
+	}
+	
+	@Override
+	public IItemHandlerModifiable getContainerCapability () {
+		if (inventory == null) { throw new NullPointerException("inventory is null for machine: " + getName()); }
+		return inventory.containerCapability;
+	}
+	
+	@Override
 	public void onInventoryChange () {
-		super.onInventoryChange();
+		this.markDirty();
 		theCrafter.checkRecipes();
+		if (GeneralUtils.isServerSide(world))
+		{
+			StorehousePacketHandler.INSTANCE.sendToAll(this.getGUIPacket());
+		}
 	}
 	
-	// -------------------------IInteractionObject-----------------------------------------------------------------
+	// -------------------------Standard TE methods-----------------------------------
 	@Override
-	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return null;
+	public GuiUpdateTEPacket getGUIPacket () {
+		GuiUpdateTEPacket packet = super.getGUIPacket();
+		inventory.writeToNBT(packet.getNbt());
+		return packet;
 	}
 	
 	@Override
-	public String getGuiID () {
-		return "storehouse:" + ModBlocks.forge.getName();
+	public void processGUIPacket (GuiUpdateTEPacket packet) {
+		super.processGUIPacket(packet);
+		inventory.readFromNBT(packet.getNbt());
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT (NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		inventory.writeToNBT(nbt);
+		return nbt;
+	}
+	
+	@Override
+	public void readFromNBT (NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		inventory.readFromNBT(nbt);
+	}
+	
+	@Override
+	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
+		return super.hasCapability(capability, facing);
+	}
+	
+	@SuppressWarnings ("unchecked")
+	@Override
+	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) inventory;
+		return super.getCapability(capability, facing);
 	}
 }

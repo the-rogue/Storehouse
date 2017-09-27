@@ -138,29 +138,8 @@ public class MachineCraftingHandler {
 					if (attachedTile.isRunning())
 					{
 						attachedTile.doRunTick();
-						if (craftingTime <= 1)
-						{
-							IRecipeInventory outputInventory = attachedTile.getOutputInventory();
-							Map<Integer, Integer> outputMap = CraftingHelper.getCorrespondingInventorySlots(currentCrafting.getResults(), outputInventory, CraftingHelper.getSlotLimitsList(outputInventory));
-							if (CraftingHelper.checkMatchingSlots(outputMap))
-							{
-								craftingLock = true;
-								if (currentCrafting.craft(attachedTile))
-								{
-									List<IRecipeWrapper> results = currentCrafting.getWrappedResults();
-									for (int i = 0; i < results.size(); i++)
-									{
-										outputInventory.insertComponent(outputMap.get(i), results.get(i));
-									}
-								}
-								resetCraftingStatus();
-								checkRecipes();
-							}
-						}
-						else
-						{
-							--craftingTime;
-						}
+						if (craftingTime <= 1) craft();
+						else--craftingTime;
 					}
 				}
 				else
@@ -168,6 +147,35 @@ public class MachineCraftingHandler {
 					resetCraftingStatus();
 				}
 			}
+		}
+		
+		public boolean craft () {
+			boolean crafted = false;
+			if (currentCrafting.matches(attachedTile))
+			{
+				IRecipeInventory outputInventory = attachedTile.getOutputInventory();
+				Map<Integer, Integer> outputMap = CraftingHelper.getCorrespondingInventorySlots(currentCrafting.getResults(), outputInventory, CraftingHelper.getSlotLimitsList(outputInventory));
+				if (CraftingHelper.checkMatchingSlots(outputMap))
+				{
+					craftingLock = true;
+					if (currentCrafting.craft(attachedTile))
+					{
+						List<IRecipeWrapper> results = currentCrafting.getWrappedResults();
+						for (int i = 0; i < results.size(); i++)
+						{
+							outputInventory.insertComponent(outputMap.get(i), results.get(i));
+						}
+						crafted = true;
+					}
+					resetCraftingStatus();
+					checkRecipes();
+				}
+			}
+			else
+			{
+				resetCraftingStatus();
+			}
+			return crafted;
 		}
 	}
 }

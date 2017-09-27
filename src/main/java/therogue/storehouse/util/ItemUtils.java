@@ -60,7 +60,9 @@ public class ItemUtils {
 				}
 				else
 				{
-					stacks[i].setCount(0);
+					if (modifyStacks){
+						stacks[i].setCount(0);
+					}
 				}
 				continue;
 			}

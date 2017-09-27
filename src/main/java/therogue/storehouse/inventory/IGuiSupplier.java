@@ -12,7 +12,6 @@ package therogue.storehouse.inventory;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 public interface IGuiSupplier {
 	
@@ -24,6 +23,4 @@ public interface IGuiSupplier {
 	
 	@SideOnly (Side.CLIENT)
 	public int getFieldCount ();
-	
-	public IItemHandlerModifiable getContainerCapability ();
 }

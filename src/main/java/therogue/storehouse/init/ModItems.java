@@ -16,6 +16,7 @@ import therogue.storehouse.init.grouped.Materials;
 import therogue.storehouse.init.grouped.Resources;
 import therogue.storehouse.init.grouped.Upgrades;
 import therogue.storehouse.item.IStorehouseBaseItem;
+import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.tool.NetworkInspector;
 
 public class ModItems {
@@ -30,7 +31,10 @@ public class ModItems {
 		 * Tools
 		 */
 		network_Inspector = new NetworkInspector("network_inspector");
+		hammer = new StorehouseBaseItem("hammer");
+		hammer.setMaxDamage(20).setNoRepair();
 		itemlist.add(network_Inspector);
+		itemlist.add(hammer);
 		/*
 		 * network_configurer = new NetworkConfigurer("network_configurer"); itemlist.add(network_configurer); network_requester = new NetworkRequester("network_requester"); itemlist.add(network_requester); network_tinkerer = new NetworkTinkerer("network_tinkerer"); itemlist.add(network_tinkerer);
 		 * personal_stocker = new PersonalStocker("personal_stocker"); itemlist.add(personal_stocker); black_hole_starter = new BlackHoleStarter("black_hole_starter"); itemlist.add(black_hole_starter);
@@ -74,6 +78,7 @@ public class ModItems {
 	 * Items
 	 */
 	public static NetworkInspector network_Inspector;
+	public static StorehouseBaseItem hammer;
 	/*
 	 * public static NetworkConfigurer network_configurer; public static NetworkRequester network_requester; public static NetworkTinkerer network_tinkerer; public static PersonalStocker personal_stocker; public static BlackHoleStarter black_hole_starter;
 	 */

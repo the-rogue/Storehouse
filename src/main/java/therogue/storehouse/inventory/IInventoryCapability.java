@@ -17,4 +17,6 @@ public interface IInventoryCapability {
 	public IItemHandlerModifiable getInventory ();
 	
 	public void onInventoryChange ();
+	
+	public IItemHandlerModifiable getContainerCapability ();
 }
