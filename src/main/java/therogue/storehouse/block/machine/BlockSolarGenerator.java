@@ -141,15 +141,6 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 	}
 	
 	@Override
-	@SideOnly (Side.CLIENT)
-	public void InitClient () {/*
-								 * for (MachineTier g : MachineTier.values()) {
-								 * 
-								 * Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), GeneratorUtils.getMeta(g), new ModelResourceLocation(getUnlocalizedName().substring(5), "type=" + g.getName() + ",item=true")); }
-								 */
-	}
-	
-	@Override
 	@Nullable
 	public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		return NULL_AABB;
@@ -176,7 +167,8 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
 		MachineTier tier = GeneratorUtils.getTypeFromMeta(meta);
-		switch (tier) {
+		switch (tier)
+		{
 			case advanced:
 				return new TileSolarGenerator.TileSolarGeneratorAdvanced();
 			case basic:

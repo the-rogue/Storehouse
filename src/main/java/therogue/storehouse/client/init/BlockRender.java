@@ -11,9 +11,9 @@
 package therogue.storehouse.client.init;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.ForgeTESR;
@@ -48,7 +48,7 @@ public class BlockRender {
 	 * Useful Helper method to register the texture for each block, that most blocks use
 	 */
 	public static void blockTexture (Block block) {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getUnlocalizedName().substring(5), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(block), 0, new ModelResourceLocation(block.getUnlocalizedName().substring(5)));
 	}
 	
 	public static void registerTESRS () {

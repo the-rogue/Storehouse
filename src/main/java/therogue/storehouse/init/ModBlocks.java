@@ -22,7 +22,9 @@ import therogue.storehouse.block.machine.BlockForge;
 import therogue.storehouse.block.machine.BlockLiquidGenerator;
 import therogue.storehouse.block.machine.BlockSolarGenerator;
 import therogue.storehouse.block.machine.BlockThermalPress;
+import therogue.storehouse.init.grouped.CraftingBlocks;
 import therogue.storehouse.init.grouped.DecorativeBlockContainer;
+import therogue.storehouse.init.grouped.Ores;
 
 public class ModBlocks {
 	
@@ -39,30 +41,30 @@ public class ModBlocks {
 		 * Adds Decorative blocks
 		 */
 		azurite_dust_block = new DecorativeBlockContainer("azurite_dust_block");
-		//azurite_crystal_block = new DecorativeBlockContainer("azurite_crystal_block");
+		azurite_crystal_block = new DecorativeBlockContainer("azurite_crystal_block");
 		azurite_crystal_block_chiseled = new StorehouseBaseBlock("azurite_crystal_block_chiseled");
-		//azurite_crystal_block_pillar = new StorehouseBaseRotatedBlock(azurite_crystal_block.block, "pillar");
+		azurite_crystal_block_pillar = new StorehouseBaseRotatedBlock(azurite_crystal_block.block, "pillar");
 		blocklist.addAll(azurite_dust_block.returnAll());
-		//blocklist.addAll(azurite_crystal_block.returnAll());
+		blocklist.addAll(azurite_crystal_block.returnAll());
 		blocklist.add(azurite_crystal_block_chiseled);
-		//blocklist.add(azurite_crystal_block_pillar);
+		blocklist.add(azurite_crystal_block_pillar);
 		/**
 		 * Add Materials
 		 */
-		// Ores.addMaterials();
-		// CraftingBlocks.addMaterials();
+		Ores.addMaterials();
+		CraftingBlocks.addMaterials();
 		/**
 		 * Add Machines
 		 */
 		solar_generator = new BlockSolarGenerator("solar_generator");
-		// combustion_generator = new BlockCombustionGenerator("combustion_generator");
-		// liquid_generator = new BlockLiquidGenerator("liquid_generator");
+		combustion_generator = new BlockCombustionGenerator("combustion_generator");
+		liquid_generator = new BlockLiquidGenerator("liquid_generator");
 		thermal_press = new BlockThermalPress("thermal_press");
 		crystaliser = new BlockCrystaliser("crystaliser");
 		forge = new BlockForge("forge");
 		blocklist.add(solar_generator);
-		// blocklist.add(combustion_generator);
-		// blocklist.add(liquid_generator);
+		blocklist.add(combustion_generator);
+		blocklist.add(liquid_generator);
 		blocklist.add(thermal_press);
 		blocklist.add(crystaliser);
 		blocklist.add(forge);
@@ -86,11 +88,11 @@ public class ModBlocks {
 		/**
 		 * Register Ore Dictionary Names
 		 */
-		// Ores.Init();
-		// CraftingBlocks.Init();
-		//OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block.block);
-		//OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_chiseled);
-		//OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_pillar);
+		Ores.Init();
+		CraftingBlocks.Init();
+		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block.block);
+		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_chiseled);
+		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_pillar);
 	}
 	
 	public static void postInit () {

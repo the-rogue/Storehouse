@@ -104,7 +104,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	 */
 	@Override
 	@SideOnly (Side.CLIENT)
-	public void InitClient () {
+	public void preInitClient () {
 		BlockRender.blockTexture(this);
 	}
 	

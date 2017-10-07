@@ -13,13 +13,14 @@ package therogue.storehouse.block.Decorative;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
@@ -67,7 +68,6 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	 */
 	@Override
 	public void preInit () {
-		LOG.log("trace", "Registering StorehouseBaseRotatedBlock: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
@@ -77,9 +77,8 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	 */
 	@SideOnly (Side.CLIENT)
 	@Override
-	public void InitClient () {
-		LOG.log("trace", "Registering StorehouseBaseRotatedBlock Texture: " + getName());
-		BlockRender.blockTexture(this);
+	public void preInitClient () {
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "axis=y"));
 	}
 	
 	/**

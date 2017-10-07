@@ -38,7 +38,7 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>, IInit 
 	}
 	
 	@SideOnly (Side.CLIENT)
-	public default void preInitClient () {
+	public default void InitClient () {
 	};
 	
 	public default void Init () {

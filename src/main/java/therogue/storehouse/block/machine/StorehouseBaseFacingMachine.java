@@ -5,13 +5,18 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class StorehouseBaseFacingMachine extends StorehouseBaseMachine {
 	
@@ -51,5 +56,14 @@ public abstract class StorehouseBaseFacingMachine extends StorehouseBaseMachine 
 	@Override
 	public IBlockState getStateFromMeta (int meta) {
 		return this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta));
+	}
+	
+	/**
+	 * Registers the texture for this block easily
+	 */
+	@Override
+	@SideOnly (Side.CLIENT)
+	public void preInitClient () {
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "facing=north"));
 	}
 }

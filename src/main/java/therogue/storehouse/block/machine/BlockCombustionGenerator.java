@@ -18,8 +18,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,11 +28,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -131,23 +129,15 @@ public class BlockCombustionGenerator extends StorehouseBaseMachine {
 	public void preInitClient () {
 		for (MachineTier g : MachineTier.values())
 		{
-			ModelBakery.registerItemVariants(ItemBlock.getItemFromBlock(this), new ResourceLocation(getUnlocalizedName().substring(5) + "_" + g.getName()));
-		}
-	}
-	
-	@Override
-	@SideOnly (Side.CLIENT)
-	public void InitClient () {
-		for (MachineTier g : MachineTier.values())
-		{
-			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(this), GeneratorUtils.getMeta(g), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + g.toString(), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), g.ordinal(), new ModelResourceLocation(getUnlocalizedName().substring(5), "type=" + g.getName()));
 		}
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
 		MachineTier tier = GeneratorUtils.getTypeFromMeta(meta);
-		switch (tier) {
+		switch (tier)
+		{
 			case advanced:
 				return new TileCombustionGenerator.TileCombustionGeneratorAdvanced();
 			case basic:

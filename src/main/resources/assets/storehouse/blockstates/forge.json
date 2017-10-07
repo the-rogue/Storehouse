@@ -1,26 +1,19 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "storehouse:machine/forge"
+		"model": "storehouse:machine/forge",
+		"transform": "forge:default-block"
 	},
 	"variants": {
-		"inventory": [
-			{
-				"transform": "forge:default-block"
-			}
-		],
 		"facing": {
 			"north": {
-				"y": 180
 			},
 			"south": {
 				
 			},
 			"west": {
-				"y": 90
 			},
 			"east": {
-				"y": 270
 			}
 		}
 	}

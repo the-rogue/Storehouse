@@ -1,17 +1,16 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "storehouse:decorative/azurite_crystal_block_half_slab"
+		"transform": "forge:default-block"
 	},
 	"variants": {
-		"inventory": [
-			{
-				"transform": "forge:default-block"
+		"variant": {
+			"default": {
 			}
-		],
+		},
 		"half": {
 			"bottom": {
-				
+				"model": "storehouse:decorative/azurite_crystal_block_half_slab"
 			},
 			"top": {
 				"model": "storehouse:decorative/azurite_crystal_block_upper_slab"

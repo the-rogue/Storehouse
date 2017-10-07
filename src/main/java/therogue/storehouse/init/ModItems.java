@@ -12,6 +12,9 @@ package therogue.storehouse.init;
 
 import java.util.ArrayList;
 
+import therogue.storehouse.init.grouped.Materials;
+import therogue.storehouse.init.grouped.Resources;
+import therogue.storehouse.init.grouped.Upgrades;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.StorehouseBaseItem;
 import therogue.storehouse.item.tool.NetworkInspector;
@@ -36,9 +39,9 @@ public class ModItems {
 		 * network_configurer = new NetworkConfigurer("network_configurer"); itemlist.add(network_configurer); network_requester = new NetworkRequester("network_requester"); itemlist.add(network_requester); network_tinkerer = new NetworkTinkerer("network_tinkerer"); itemlist.add(network_tinkerer);
 		 * personal_stocker = new PersonalStocker("personal_stocker"); itemlist.add(personal_stocker); black_hole_starter = new BlackHoleStarter("black_hole_starter"); itemlist.add(black_hole_starter);
 		 */
-		// Resources.addMaterials();
-		// Materials.addMaterials();
-		// Upgrades.addMaterials();
+		Resources.addMaterials();
+		Materials.addMaterials();
+		Upgrades.addMaterials();
 		/**
 		 * PreInit Items
 		 */
@@ -56,9 +59,9 @@ public class ModItems {
 		{
 			item.Init();
 		}
-		// Resources.Init();
-		// Materials.Init();
-		// Upgrades.Init();
+		Resources.Init();
+		Materials.Init();
+		Upgrades.Init();
 	}
 	
 	public static void postInit () {

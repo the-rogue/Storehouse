@@ -15,15 +15,16 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
@@ -72,7 +73,6 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	 */
 	@Override
 	public void preInit () {
-		LOG.log("trace", "Registering StorehouseBaseStair: " + getName());
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
@@ -82,9 +82,8 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	 */
 	@Override
 	@SideOnly (Side.CLIENT)
-	public void InitClient () {
-		LOG.log("trace", "Registering StorehouseBaseStair Texture: " + getName());
-		BlockRender.blockTexture(this);
+	public void preInitClient () {
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "facing=east,half=bottom,shape=straight"));
 	}
 	
 	/**

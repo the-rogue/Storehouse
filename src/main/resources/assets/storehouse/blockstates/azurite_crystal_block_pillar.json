@@ -1,14 +1,10 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "storehouse:decorative/azurite_crystal_block_pillar"
+		"model": "storehouse:decorative/azurite_crystal_block_pillar",
+		"transform": "forge:default-block"
 	},
 	"variants": {
-		"inventory": [
-			{
-				"transform": "forge:default-block"
-			}
-		],
 		"axis": {
 			"y": {
 				

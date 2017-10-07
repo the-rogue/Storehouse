@@ -1,13 +1,11 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "storehouse:decorative/azurite_crystal_block_chiseled"
+		"transform": "forge:default-block"
 	},
 	"variants": {
-		"inventory": [
-			{
-				"transform": "forge:default-block"
-			}
-		]
+		"normal": {
+			"model": "storehouse:decorative/azurite_crystal_block_chiseled"
+		}
 	}
 }

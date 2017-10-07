@@ -22,19 +22,21 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
@@ -125,16 +127,6 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	 */
 	private String getUnwrappedUnlocalizedName (String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-	}
-	
-	/**
-	 * Registers the texture for this block easily
-	 */
-	@Override
-	@SideOnly (Side.CLIENT)
-	public void InitClient () {
-		LOG.log("trace", "Registering StorehouseBaseSlab Texture: " + getName());
-		BlockRender.blockTexture(this);
 	}
 	
 	/**
@@ -262,9 +254,13 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		 */
 		@Override
 		public void preInit () {
-			LOG.log("trace", "Registering StorehouseBaseSlab.Double: " + getName());
 			GameRegistry.register(this);
 			GameRegistry.register(new ItemSlab(halfslab, halfslab, this).setRegistryName(General.MOD_ID, halfslab.getName()));
+		}
+		
+		@Override
+		@SideOnly (Side.CLIENT)
+		public void preInitClient () {
 		}
 	}
 	
@@ -295,16 +291,23 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		 */
 		@Override
 		public void preInit () {
-			LOG.log("trace", "Registering StorehouseBaseSlab.Half: " + getName());
 			GameRegistry.register(this);
+		}
+		
+		/**
+		 * Registers the texture for this block easily
+		 */
+		@Override
+		@SideOnly (Side.CLIENT)
+		public void preInitClient () {
+			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "half=bottom,variant=default"));
 		}
 	}
 	
 	/**
 	 * Required Enum Property for some of the required BlockSlab methods to use
 	 */
-	static enum Variant implements IStringSerializable
-	{
+	static enum Variant implements IStringSerializable {
 		DEFAULT;
 		
 		public String getName () {
