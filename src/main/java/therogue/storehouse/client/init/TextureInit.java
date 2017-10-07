@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import therogue.storehouse.reference.General;
 
 public class TextureInit {
 	
@@ -25,7 +24,6 @@ public class TextureInit {
 	
 	public static void init (TextureStitchEvent.Pre event) {
 		TextureMap theMap = event.getMap();
-		registerSprite(theMap, "storehouse_iron", new ResourceLocation(General.MOD_ID, "blocks/machine/storehouse_iron"));
 	}
 	
 	private static void registerSprite (TextureMap map, String name, ResourceLocation location) {

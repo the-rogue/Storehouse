@@ -17,10 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.client.render.ForgeTESR;
-import therogue.storehouse.client.render.ThermalPressTESR;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.machine.TileForge;
-import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class BlockRender {
 	
@@ -54,7 +52,6 @@ public class BlockRender {
 	}
 	
 	public static void registerTESRS () {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileThermalPress.class, new ThermalPressTESR());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileForge.class, new ForgeTESR());
 	}
 }

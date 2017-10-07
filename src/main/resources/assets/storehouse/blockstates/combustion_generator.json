@@ -1,9 +1,44 @@
 {
-    "variants": {
-        "type=basic": { "model": "storehouse:generator/solar/basic" },
-        "type=advanced": { "model": "storehouse:generator/solar/advanced" },
-        "type=infused": { "model": "storehouse:generator/solar/infused" },
-        "type=ender": { "model": "storehouse:generator/solar/ender" },
-        "type=ultimate": { "model": "storehouse:generator/solar/ultimate" }
-    }
+	"forge_marker": 1,
+	"variants": {
+		"inventory": [
+			{
+				"transform": "forge:default-block",
+				"type": {
+					"basic": {
+						"model": "storehouse:generator/solar/basic"
+					},
+					"advanced": {
+						"model": "storehouse:generator/solar/advanced"
+					},
+					"infused": {
+						"model": "storehouse:generator/solar/infused"
+					},
+					"ender": {
+						"model": "storehouse:generator/solar/ender"
+					},
+					"ultimate": {
+						"model": "storehouse:generator/solar/ultimate"
+					}
+				}
+			}
+		],
+		"type": {
+			"basic": {
+				"model": "storehouse:generator/solar/basic"
+			},
+			"advanced": {
+				"model": "storehouse:generator/solar/advanced"
+			},
+			"infused": {
+				"model": "storehouse:generator/solar/infused"
+			},
+			"ender": {
+				"model": "storehouse:generator/solar/ender"
+			},
+			"ultimate": {
+				"model": "storehouse:generator/solar/ultimate"
+			}
+		}
+	}
 }

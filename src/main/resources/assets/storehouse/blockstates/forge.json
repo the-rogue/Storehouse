@@ -4,11 +4,6 @@
 		"model": "storehouse:machine/forge"
 	},
 	"variants": {
-		"normal": [
-			{
-				
-			}
-		],
 		"inventory": [
 			{
 				"transform": "forge:default-block"

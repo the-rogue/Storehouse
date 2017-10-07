@@ -10,19 +10,13 @@
 
 package therogue.storehouse.block.machine;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.reference.IDs;
 import therogue.storehouse.tile.machine.TileThermalPress;
@@ -47,32 +41,5 @@ public class BlockThermalPress extends StorehouseBaseFacingMachine {
 			player.openGui(Storehouse.instance, IDs.THERMALPRESSGUI, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
-	}
-	
-	// --------------------Render Methods-------------------------------------------------
-	@Override
-	public boolean isOpaqueCube (IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public boolean isFullCube (IBlockState state) {
-		return false;
-	}
-	
-	/**
-	 * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only, LIQUID for vanilla liquids, INVISIBLE to skip all rendering
-	 */
-	@Override
-	@Deprecated
-	public EnumBlockRenderType getRenderType (IBlockState state) {
-		return EnumBlockRenderType.MODEL;
-	}
-	
-	@SideOnly (Side.CLIENT)
-	@Nonnull
-	@Override
-	public BlockRenderLayer getBlockLayer () {
-		return BlockRenderLayer.TRANSLUCENT;
 	}
 }

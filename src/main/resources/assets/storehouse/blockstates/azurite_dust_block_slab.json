@@ -1,6 +1,21 @@
 {
-    "variants": {
-        "half=bottom,variant=default": { "model": "storehouse:decorative/azurite_dust_block_half_slab" },
-        "half=top,variant=default": { "model": "storehouse:decorative/azurite_dust_block_upper_slab" }
-    }
+	"forge_marker": 1,
+	"defaults": {
+		"model": "storehouse:decorative/azurite_dust_block_half_slab"
+	},
+	"variants": {
+		"inventory": [
+			{
+				"transform": "forge:default-block"
+			}
+		],
+		"half": {
+			"bottom": {
+				
+			},
+			"top": {
+				"model": "storehouse:decorative/azurite_dust_block_upper_slab"
+			}
+		}
+	}
 }

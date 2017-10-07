@@ -1,5 +1,13 @@
 {
-    "variants": {
-        "normal": { "model": "storehouse:decorative/azurite_dust_block" }
-    }
+	"forge_marker": 1,
+	"defaults": {
+		"model": "storehouse:decorative/azurite_dust_block"
+	},
+	"variants": {
+		"inventory": [
+			{
+				"transform": "forge:default-block"
+			}
+		]
+	}
 }

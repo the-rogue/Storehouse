@@ -1,5 +1,16 @@
 {
-    "variants": {
-        "normal": { "model": "storehouse:machine/thermal_press_box" }
-    }
+	"forge_marker": 1,
+	"defaults": {
+		"model": "storehouse:machine/thermal_press"
+	},
+	"variants": {
+		"inventory": [
+			{
+				"transform": "forge:default-block"
+			}
+		],
+		"normal": {
+			"model": "storehouse:machine/thermal_press"
+		}
+	}
 }

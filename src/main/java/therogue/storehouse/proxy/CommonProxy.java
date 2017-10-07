@@ -50,8 +50,8 @@ public abstract class CommonProxy implements IProxy {
 		LOG.debug("Common Proxy Started Initialisation");
 		ModItems.Init();
 		ModBlocks.Init();
-		Recipes.Init();
-		StorehouseWorldGen.init();
+		//Recipes.Init();
+		//StorehouseWorldGen.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Storehouse.instance, GuiHandler.INSTANCE);
 		LOG.debug("Common Proxy Finished Initialisation");
 	}
