@@ -14,14 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -70,16 +68,7 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 	public void preInitClient () {
 		for (Entry<Integer, String> material : materials.entrySet())
 		{
-			ModelBakery.registerItemVariants(this, new ResourceLocation(getUnlocalizedName().substring(5) + "_" + material.getValue()));
-		}
-	}
-	
-	@Override
-	@SideOnly (Side.CLIENT)
-	public void InitClient () {
-		for (Entry<Integer, String> material : materials.entrySet())
-		{
-			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, material.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "_" + material.getValue(), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(this, material.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "/" + material.getValue()));
 		}
 	}
 }

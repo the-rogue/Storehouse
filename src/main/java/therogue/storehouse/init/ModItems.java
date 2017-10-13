@@ -60,8 +60,8 @@ public class ModItems {
 			item.Init();
 		}
 		Resources.Init();
-		Materials.Init();
-		Upgrades.Init();
+		// Materials.Init();
+		// Upgrades.Init();
 	}
 	
 	public static void postInit () {

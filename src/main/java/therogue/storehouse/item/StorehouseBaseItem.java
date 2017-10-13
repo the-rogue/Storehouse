@@ -13,12 +13,13 @@ package therogue.storehouse.item;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.init.ItemRender;
 import therogue.storehouse.reference.General;
 import therogue.storehouse.reference.IDs;
-import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	
@@ -27,7 +28,6 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	 */
 	public StorehouseBaseItem (String name) {
 		super();
-		LOG.log("trace", "Creating new StorehouseBaseItem: " + name);
 		this.setUnlocalizedName(name);
 		this.setRegistryName(General.MOD_ID, name);
 		this.setCreativeTab(Storehouse.CREATIVE_TAB);
@@ -75,7 +75,8 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	 * Registers the texture for this item easily
 	 */
 	@Override
-	public void InitClient () {
+	@SideOnly (Side.CLIENT)
+	public void preInitClient () {
 		ItemRender.itemTexture(this);
 	}
 	

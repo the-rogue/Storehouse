@@ -26,7 +26,7 @@ public interface IStorehouseBaseItem extends IForgeRegistryEntry<Item>, IInit {
 	public String getName ();
 	
 	@SideOnly (Side.CLIENT)
-	public default void preInitClient () {
+	public default void InitClient () {
 	};
 	
 	public default void Init () {
