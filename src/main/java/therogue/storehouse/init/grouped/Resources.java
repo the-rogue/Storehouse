@@ -4,10 +4,10 @@ package therogue.storehouse.init.grouped;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.init.ModItems;
+import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 
-public enum Resources
-{
+public enum Resources {
 	AZURITE_DUST,
 	AZURITE_CRYSTAL,
 	COPPER_INGOT,
@@ -31,12 +31,12 @@ public enum Resources
 		return new ItemStack(resources, amount, this.ordinal());
 	}
 	
-	public static void addMaterials () {
+	public static IStorehouseBaseItem addMaterials () {
 		resources = new ItemStorehouseBaseMaterial("resources");
 		ModItems.itemlist.add(resources);
 		for (Resources r : Resources.values())
 			resources.addMaterial(r.ordinal(), r.name().toLowerCase());
-
+		return resources;
 	}
 	
 	public static void Init () {
@@ -50,6 +50,6 @@ public enum Resources
 		OreDictionary.registerOre("ingotSteel", STEEL_INGOT.createStack());
 		OreDictionary.registerOre("ingotBrass", BRASS_INGOT.createStack());
 		OreDictionary.registerOre("ingotBronze", BRONZE_INGOT.createStack());
-		OreDictionary.registerOre("ingotDuralium", DURALIUM_INGOT.createStack());
+		OreDictionary.registerOre("ingotDuralumin", DURALIUM_INGOT.createStack());
 	}
 }

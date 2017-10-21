@@ -51,8 +51,8 @@ public class ModBlocks {
 		/**
 		 * Add Materials
 		 */
-		Ores.addMaterials();
-		CraftingBlocks.addMaterials();
+		blocklist.add(Ores.addMaterials());
+		blocklist.add(CraftingBlocks.addMaterials());
 		/**
 		 * Add Machines
 		 */

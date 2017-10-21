@@ -4,10 +4,10 @@ package therogue.storehouse.init.grouped;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.init.ModItems;
+import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 
-public enum Materials
-{
+public enum Materials {
 	EXTRUSION_TOOL,
 	PLATE_TOOL,
 	CUTTER_TOOL,
@@ -23,13 +23,11 @@ public enum Materials
 	COPPER_WIRE,
 	GOLD_WIRE,
 	SOLDER,
-	DIAMOND_EDGED_STEEL_PLATE,
-	SINGULARITY_CORE,
-	NITROGEL,
-	TRANSFER_UNIT,
-	FAN_BLADE,
-	REFRIGERANT_PARTS;
+	DIAMOND_EDGED_STEEL_PLATE;
 	
+	/*
+	 * SINGULARITY_CORE, NITROGEL, TRANSFER_UNIT, FAN_BLADE, REFRIGERANT_PARTS;
+	 */
 	public static ItemStorehouseBaseMaterial materials;
 	
 	public ItemStack createStack () {
@@ -40,11 +38,12 @@ public enum Materials
 		return new ItemStack(materials, amount, this.ordinal());
 	}
 	
-	public static void addMaterials () {
+	public static IStorehouseBaseItem addMaterials () {
 		materials = new ItemStorehouseBaseMaterial("material");
 		ModItems.itemlist.add(materials);
 		for (Materials m : Materials.values())
 			materials.addMaterial(m.ordinal(), m.name().toLowerCase());
+		return materials;
 	}
 	
 	public static void Init () {

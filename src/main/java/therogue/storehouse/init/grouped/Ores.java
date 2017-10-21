@@ -26,11 +26,12 @@ public enum Ores
 		return new ItemStack(ore_block, amount, this.ordinal());
 	}
 	
-	public static void addMaterials () {
+	public static StorehouseBaseVariantBlock addMaterials () {
 		ore_block = new StorehouseBaseVariantBlock("ore_block");
 		ModBlocks.blocklist.add(ore_block);
 		for (Ores o : Ores.values())
 			ore_block.addSubBlock(o.ordinal(), o.name().toLowerCase());
+		return ore_block;
 	}
 	
 	public static void Init () {
