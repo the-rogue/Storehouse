@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.util.GuiHelper;
-import therogue.storehouse.util.TextureHelper;
+import therogue.storehouse.client.gui.GuiHelper;
 
 public class ElementEnergyBar extends ElementProgressBar {
 	
@@ -31,7 +30,7 @@ public class ElementEnergyBar extends ElementProgressBar {
 	
 	@Override
 	public float getMinV (float progress) {
-		return 1 - TextureHelper.scalePercentageToLength(height, progress);
+		return 1 - GuiHelper.scalePercentageToLength(height, progress);
 	}
 	
 	@Override
@@ -41,7 +40,7 @@ public class ElementEnergyBar extends ElementProgressBar {
 	
 	@Override
 	public int getHeight (float progress) {
-		return TextureHelper.calculateLength(height, progress);
+		return GuiHelper.calculateLength(height, progress);
 	}
 	
 	@Override

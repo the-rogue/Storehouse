@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import therogue.storehouse.tile.IClientPacketReciever;
 import therogue.storehouse.util.LOG;
-import therogue.storehouse.util.NetworkUtils;
 
 public class GuiClientUpdatePacket implements IMessage {
 	

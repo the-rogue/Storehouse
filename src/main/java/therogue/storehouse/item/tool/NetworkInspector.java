@@ -20,9 +20,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
+import therogue.storehouse.config.ConfigValues;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
 import therogue.storehouse.item.StorehouseBaseActiveItem;
-import therogue.storehouse.reference.ConfigValues;
 
 public class NetworkInspector extends StorehouseBaseActiveItem {
 	

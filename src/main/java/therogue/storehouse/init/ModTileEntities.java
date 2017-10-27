@@ -11,34 +11,36 @@
 package therogue.storehouse.init;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.reference.IDs;
+import therogue.storehouse.Storehouse;
+import therogue.storehouse.tile.machine.TileAlloyFurnace;
+import therogue.storehouse.tile.machine.TileCombustionGenerator;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 import therogue.storehouse.tile.machine.TileForge;
+import therogue.storehouse.tile.machine.TileLiquidGenerator;
+import therogue.storehouse.tile.machine.TileSolarGenerator;
 import therogue.storehouse.tile.machine.TileThermalPress;
-import therogue.storehouse.tile.machine.generator.TileCombustionGenerator;
-import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
-import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
 
 public class ModTileEntities {
 	
 	public static void preInit () {
-		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorBasic.class, IDs.RESOURCENAMEPREFIX + "solar_generator_basic");
-		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorAdvanced.class, IDs.RESOURCENAMEPREFIX + "solar_generator_advanced");
-		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorInfused.class, IDs.RESOURCENAMEPREFIX + "solar_generator_infused");
-		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorEnder.class, IDs.RESOURCENAMEPREFIX + "solar_generator_ender");
-		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorUltimate.class, IDs.RESOURCENAMEPREFIX + "solar_generator_ultimate");
-		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorBasic.class, IDs.RESOURCENAMEPREFIX + "combustion_generator_basic");
-		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorAdvanced.class, IDs.RESOURCENAMEPREFIX + "combustion_generator_advanced");
-		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorInfused.class, IDs.RESOURCENAMEPREFIX + "combustion_generator_infused");
-		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorEnder.class, IDs.RESOURCENAMEPREFIX + "combustion_generator_ender");
-		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorUltimate.class, IDs.RESOURCENAMEPREFIX + "combustion_generator_ultimate");
-		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorBasic.class, IDs.RESOURCENAMEPREFIX + "liquid_generator_basic");
-		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorAdvanced.class, IDs.RESOURCENAMEPREFIX + "liquid_generator_advanced");
-		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorInfused.class, IDs.RESOURCENAMEPREFIX + "liquid_generator_infused");
-		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorEnder.class, IDs.RESOURCENAMEPREFIX + "liquid_generator_ender");
-		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorUltimate.class, IDs.RESOURCENAMEPREFIX + "liquid_generator_ultimate");
-		GameRegistry.registerTileEntity(TileThermalPress.class, IDs.RESOURCENAMEPREFIX + "thermal_press");
-		GameRegistry.registerTileEntity(TileCrystaliser.class, IDs.RESOURCENAMEPREFIX + "crystaliser");
-		GameRegistry.registerTileEntity(TileForge.class, IDs.RESOURCENAMEPREFIX + "stamper");
+		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorBasic.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_basic");
+		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorAdvanced.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_advanced");
+		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorInfused.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_infused");
+		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorEnder.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_ender");
+		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorUltimate.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_ultimate");
+		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorBasic.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_basic");
+		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorAdvanced.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_advanced");
+		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorInfused.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_infused");
+		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorEnder.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_ender");
+		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorUltimate.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_ultimate");
+		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorBasic.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_basic");
+		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorAdvanced.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_advanced");
+		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorInfused.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_infused");
+		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorEnder.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_ender");
+		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorUltimate.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_ultimate");
+		GameRegistry.registerTileEntity(TileThermalPress.class, Storehouse.RESOURCENAMEPREFIX + "thermal_press");
+		GameRegistry.registerTileEntity(TileCrystaliser.class, Storehouse.RESOURCENAMEPREFIX + "crystaliser");
+		GameRegistry.registerTileEntity(TileForge.class, Storehouse.RESOURCENAMEPREFIX + "stamper");
+		GameRegistry.registerTileEntity(TileAlloyFurnace.class, Storehouse.RESOURCENAMEPREFIX + "alloy_furnace");
 	}
 }

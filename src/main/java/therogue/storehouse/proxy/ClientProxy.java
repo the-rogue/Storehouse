@@ -16,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.client.init.ItemRender;
-import therogue.storehouse.handlers.EventHandlerClient;
 import therogue.storehouse.util.LOG;
 
 public class ClientProxy extends CommonProxy {

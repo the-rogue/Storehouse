@@ -20,6 +20,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -38,15 +39,13 @@ import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiUpdateTEPacket;
-import therogue.storehouse.reference.IDs;
-import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.ItemUtils;
+import therogue.storehouse.util.ItemStackUtils;
 
-public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
+public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter, ITickable {
 	
-	public static final int RFPerTick = MachineStats.CRYSTALISERPERTICK;
+	public static final int RFPerTick = 10;
 	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newCrafter(this);
 	protected FluidTank tank = new FluidTank(10000) {
 		
@@ -74,7 +73,8 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 			
 			@Override
 			public int getSlotLimit (int slot) {
-				switch (slot) {
+				switch (slot)
+				{
 					case 0:
 					case 1:
 						return 1;
@@ -90,6 +90,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 		tank.setCanDrain(false);
 	}
 	
+	// -------------------------ITickable-----------------------------------------------------------------
 	@Override
 	public void update () {
 		if (GeneralUtils.isServerSide(world))
@@ -99,13 +100,12 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 				ItemStack tankItem = inventory.getStackInSlot(2);
 				ItemStack outputSlot = inventory.getStackInSlot(3);
 				ItemStack result = FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, false).result;
-				if (ItemUtils.areStacksMergableWithLimit(inventory.getSlotLimit(3), result, outputSlot))
+				if (ItemStackUtils.areStacksMergableWithLimit(inventory.getSlotLimit(3), result, outputSlot))
 				{
 					inventory.setStackInSlot(2, ItemStack.EMPTY);
-					inventory.setStackInSlot(3, ItemUtils.mergeStacks(inventory.getSlotLimit(3), true, outputSlot, FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, true).result));
+					inventory.setStackInSlot(3, ItemStackUtils.mergeStacks(inventory.getSlotLimit(3), true, outputSlot, FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, true).result));
 				}
 			}
-			theCrafter.updateCraftingStatus();
 		}
 	}
 	
@@ -148,7 +148,8 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	// -------------------------Gui Methods----------------------------------------------------
 	@Override
 	public int getField (int id) {
-		switch (id) {
+		switch (id)
+		{
 			case 4:
 				return theCrafter.totalCraftingTime - theCrafter.craftingTime;
 			case 5:
@@ -160,7 +161,8 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	
 	@Override
 	public void setField (int id, int value) {
-		switch (id) {
+		switch (id)
+		{
 			default:
 				super.setField(id, value);
 		}
@@ -179,7 +181,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter {
 	
 	@Override
 	public String getGuiID () {
-		return IDs.RESOURCENAMEPREFIX + ModBlocks.crystaliser.getName();
+		return ModBlocks.crystaliser.getUnlocalizedName();
 	}
 	// -------------------------Standard TE methods-----------------------------------
 	

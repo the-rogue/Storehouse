@@ -2,10 +2,49 @@
 command.storehouse:rlogger.usage=Command that allows debug logging - Useless for most users
 
 //Items
-item.storehouse:azurite_dust.name=Azurite Dust
-item.storehouse:azurite_crystal.name=Azurite Crystal
+item.storehouse:hammer.name=Hammer
 item.storehouse:network_inspector.name=Network Inspector
+//Resources
+item.storehouse:resources_azurite_dust.name=Azurite Dust
+item.storehouse:resources_azurite_crystal.name=Azurite Crystal
+item.storehouse:resources_copper_ingot.name=Copper Ingot
+item.storehouse:resources_tin_ingot.name=Tin Ingot
+item.storehouse:resources_aluminium_ingot.name=Aluminium Ingot
+item.storehouse:resources_silver_ingot.name=Silver Ingot
+item.storehouse:resources_lead_ingot.name=Lead Ingot
+item.storehouse:resources_titanium_ingot.name=Titanium Ingot
+item.storehouse:resources_steel_ingot.name=Steel Ingot
+item.storehouse:resources_brass_ingot.name=Brass Ingot
+item.storehouse:resources_bronze_ingot.name=Bronze Ingot
+item.storehouse:resources_duralumin_ingot.name=Duralumin Ingot
+//Materials
+item.storehouse:material_extrusion_tool.name=Extrusion Tool
+item.storehouse:material_plate_tool.name=Plate Tool
+item.storehouse:material_cutter_tool.name=Cutter Tool
+item.storehouse:material_circuit_chip.name=Circuit Chip
+item.storehouse:material_iron_plate.name=Iron Plate
+item.storehouse:material_copper_plate.name=Copper Plate
+item.storehouse:material_tin_plate.name=Tin Plate
+item.storehouse:material_gold_plate.name=Gold Plate
+item.storehouse:material_steel_plate.name=Steel Plate
+item.storehouse:material_diamond_edged_steel_plate.name=Diamond Edged Steel Plate
+item.storehouse:material_diamond_edging.name=Diamond Edging
+item.storehouse:material_silicon.name=Silicon
+item.storehouse:material_integrated_chip.name=Integrated Chip
+item.storehouse:material_copper_wire.name=Copper Wire
+item.storehouse:material_gold_wire.name=Gold Wire
+item.storehouse:material_solder.name=Solder
+//Upgrades
+item.storehouse:upgrades_timer_upgrade.name=Timer Upgrade
+item.storehouse:upgrades_chance_upgrade.name=Chance Upgrade
+item.storehouse:upgrades_speed_upgrade.name=Speed Upgrade
+item.storehouse:upgrades_crafting_loop_upgrade.name=Crafting Loop Upgrade
+item.storehouse:upgrades_wireless_redstone_upgrade.name=Wireless Redstone Upgrade
+item.storehouse:upgrades_ejection_upgrade.name=Ejection Upgrade
+item.storehouse:upgrades_suction_upgrade.name=Suction Upgrade
+item.storehouse:upgrades_interdimentional_upgrade.name=Inter-Dimentional Upgrade
 
+//Blocks
 //Decorative Blocks
 tile.storehouse:azurite_dust_block.name=Azurite Dust Block
 tile.storehouse:azurite_dust_block_stair.name=Azurite Dust Block Stairs
@@ -15,8 +54,17 @@ tile.storehouse:azurite_crystal_block_stair.name=Crystalised Azurite Block Stair
 tile.storehouse:azurite_crystal_block_slab.name=Crystalised Azurite Block Slab
 tile.storehouse:azurite_crystal_block_chiseled.name=Chiseled Crystalised Azurite Block
 tile.storehouse:azurite_crystal_block_pillar.name=Pillar Crystalised Azurite Block
-tile.storehouse:azurite_ore_block.name=Azurite Ore
-
+//Ores
+tile.storehouse:ore_block_azurite.name=Azurite Ore
+tile.storehouse:ore_block_copper.name=Copper Ore
+tile.storehouse:ore_block_tin.name=Tin Ore
+tile.storehouse:ore_block_aluminium.name=Aluminium Ore
+tile.storehouse:ore_block_silver.name=Silver Ore
+tile.storehouse:ore_block_lead.name=Lead Ore
+tile.storehouse:ore_block_titanium.name=Titanium Ore
+//Crafting Blocks
+tile.storehouse:crafting_block_machine_casing.name=Basic Machine Casing
+tile.storehouse:crafting_block_advanced_machine_casing.name=Advanced Machine Casing
 //Generators
 tile.storehouse:solar_generator_basic.name=Basic Solar Panel
 tile.storehouse:solar_generator_advanced.name=Advanced Solar Panel
@@ -33,7 +81,8 @@ tile.storehouse:liquid_generator_advanced.name=Advanced Liquid Generator
 tile.storehouse:liquid_generator_infused.name=Infused Liquid Generator
 tile.storehouse:liquid_generator_ender.name=Ender Liquid Generator
 tile.storehouse:liquid_generator_ultimate.name=Ultimate Liquid Generator
-
 //Machines
 tile.storehouse:thermal_press.name=Thermal Press
 tile.storehouse:crystaliser.name=Crystaliser
+tile.storehouse:forge.name=Forge
+tile.storehouse:alloy_furnace.name=Alloy Furnace

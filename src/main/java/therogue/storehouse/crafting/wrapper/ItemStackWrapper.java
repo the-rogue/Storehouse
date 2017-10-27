@@ -11,7 +11,7 @@
 package therogue.storehouse.crafting.wrapper;
 
 import net.minecraft.item.ItemStack;
-import therogue.storehouse.util.ItemUtils;
+import therogue.storehouse.util.ItemStackUtils;
 
 public class ItemStackWrapper implements IRecipeWrapper {
 	
@@ -33,26 +33,26 @@ public class ItemStackWrapper implements IRecipeWrapper {
 	@Override
 	public boolean mergable (IRecipeWrapper component, int limit) {
 		if (!(component instanceof ItemStackWrapper)) return false;
-		return ItemUtils.areStacksMergableWithLimit(limit, ((ItemStackWrapper) component).getStack(), stack);
+		return ItemStackUtils.areStacksMergableWithLimit(limit, ((ItemStackWrapper) component).getStack(), stack);
 	}
 	
 	@Override
 	public IRecipeWrapper merge (IRecipeWrapper component, int limit) {
 		if (!mergable(component, limit)) return this;
-		stack = ItemUtils.mergeStacks(limit, true, stack, ((ItemStackWrapper) component).getStack());
+		stack = ItemStackUtils.mergeStacks(limit, true, stack, ((ItemStackWrapper) component).getStack());
 		return this;
 	}
 	
 	@Override
 	public boolean canAddComponent (IRecipeComponent component, int limit) {
 		if (!(component instanceof ItemStackComponent)) return false;
-		return ItemUtils.areStacksMergableWithLimit(limit, ((ItemStackComponent) component).getInput(), stack);
+		return ItemStackUtils.areStacksMergableWithLimit(limit, ((ItemStackComponent) component).getInput(), stack);
 	}
 	
 	@Override
 	public IRecipeWrapper addComponent (IRecipeComponent component, int limit) {
 		if (!canAddComponent(component, limit)) return this;
-		return new ItemStackWrapper(ItemUtils.mergeStacks(limit, true, stack, ((ItemStackComponent) component).getInput()));
+		return new ItemStackWrapper(ItemStackUtils.mergeStacks(limit, true, stack, ((ItemStackComponent) component).getInput()));
 	}
 	
 	@Override

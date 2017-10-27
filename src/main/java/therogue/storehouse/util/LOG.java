@@ -16,8 +16,8 @@ import java.util.Set;
 import org.apache.logging.log4j.Level;
 
 import net.minecraftforge.fml.common.FMLLog;
-import therogue.storehouse.reference.ConfigValues;
-import therogue.storehouse.reference.General;
+import therogue.storehouse.Storehouse;
+import therogue.storehouse.config.ConfigValues;
 
 public class LOG {
 	
@@ -29,86 +29,86 @@ public class LOG {
 	public static void log (String logLevel, Object object) {
 		if (logLevel.equals("all"))
 		{
-			FMLLog.log(General.MOD_NAME, Level.ALL, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.ALL, String.valueOf(object));
 		}
 		else if (logLevel.equals("off"))
 		{
-			FMLLog.log(General.MOD_NAME, Level.OFF, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.OFF, String.valueOf(object));
 		}
 		else if (logLevel.equals("fatal"))
 		{
-			FMLLog.log(General.MOD_NAME, Level.FATAL, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.FATAL, String.valueOf(object));
 		}
 		else if (logLevel.equals("error"))
 		{
-			FMLLog.log(General.MOD_NAME, Level.ERROR, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.ERROR, String.valueOf(object));
 		}
 		else if (logLevel.equals("warn"))
 		{
-			FMLLog.log(General.MOD_NAME, Level.WARN, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.WARN, String.valueOf(object));
 		}
 		else if (logLevel.equals("info"))
 		{
-			FMLLog.log(General.MOD_NAME, Level.INFO, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.INFO, String.valueOf(object));
 		}
 		// Since FML doesn't print these to the console by default this is a good way to print debug/trace information when a config option is selected
 		else if (logLevel.equals("debug"))
 		{
 			if (ConfigValues.debuglogging)
 			{
-				FMLLog.log(General.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(object));
+				FMLLog.log(Storehouse.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(object));
 			}
-			FMLLog.log(General.MOD_NAME, Level.DEBUG, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.DEBUG, String.valueOf(object));
 		}
 		else if (logLevel.equals("trace"))
 		{
 			if (ConfigValues.debuglogging)
 			{
-				FMLLog.log(General.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(object));
+				FMLLog.log(Storehouse.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(object));
 			}
-			FMLLog.log(General.MOD_NAME, Level.TRACE, String.valueOf(object));
+			FMLLog.log(Storehouse.MOD_NAME, Level.TRACE, String.valueOf(object));
 		}
 	}
 	
 	public static void all (Object message) {
-		FMLLog.log(General.MOD_NAME, Level.ALL, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.ALL, String.valueOf(message));
 	}
 	
 	public static void off (Object message) {
-		FMLLog.log(General.MOD_NAME, Level.OFF, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.OFF, String.valueOf(message));
 	}
 	
 	public static void fatal (Object message) {
-		FMLLog.log(General.MOD_NAME, Level.FATAL, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.FATAL, String.valueOf(message));
 	}
 	
 	public static void error (Object message) {
-		FMLLog.log(General.MOD_NAME, Level.ERROR, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.ERROR, String.valueOf(message));
 	}
 	
 	public static void warn (Object message) {
-		FMLLog.log(General.MOD_NAME, Level.WARN, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.WARN, String.valueOf(message));
 	}
 	
 	public static void info (Object message) {
-		FMLLog.log(General.MOD_NAME, Level.INFO, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.INFO, String.valueOf(message));
 	}
 	
 	// Since FML doesn't print these to the console by default this is a good way to print debug/trace information when a config option is selected
 	public static void debug (Object message) {
 		if (ConfigValues.debuglogging)
 		{
-			FMLLog.log(General.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(message));
+			FMLLog.log(Storehouse.MOD_NAME, Level.INFO, "DEBUG: " + String.valueOf(message));
 		}
-		FMLLog.log(General.MOD_NAME, Level.DEBUG, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.DEBUG, String.valueOf(message));
 	}
 	
 	public static void trace (Object message) {
 		if (ConfigValues.debuglogging)
 		{
-			FMLLog.log(General.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(message));
+			FMLLog.log(Storehouse.MOD_NAME, Level.INFO, "TRACE: " + String.valueOf(message));
 		}
-		FMLLog.log(General.MOD_NAME, Level.TRACE, String.valueOf(message));
+		FMLLog.log(Storehouse.MOD_NAME, Level.TRACE, String.valueOf(message));
 	}
 	
 	public static void logSetTimes (String key, int startvalue, Object object) {

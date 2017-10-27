@@ -13,10 +13,10 @@ package therogue.storehouse.container.machine;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.items.SlotItemHandler;
+import therogue.storehouse.client.gui.GuiHelper.XYCoords;
 import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.tile.machine.TileThermalPress.Mode;
-import therogue.storehouse.util.GuiHelper.XYCoords;
 
 public class ContainerThermalPress extends ContainerBase {
 	
@@ -33,6 +33,7 @@ public class ContainerThermalPress extends ContainerBase {
 		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 3, 65, 64));
 		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 4, Integer.MIN_VALUE, Integer.MIN_VALUE));
 		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 5, Integer.MIN_VALUE, Integer.MIN_VALUE));
+		this.detectAndSendChanges();
 		update();
 	}
 	

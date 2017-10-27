@@ -20,15 +20,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
-import therogue.storehouse.util.ItemUtils;
+import therogue.storehouse.util.ItemStackUtils;
 
 public class ItemStackComponent implements IRecipeComponent {
 	
 	public static final ItemStackComponent EMPTY = new ItemStackComponent(ItemStack.EMPTY, false, false);
-	private ItemStack input;
-	private boolean useMeta;
-	private boolean useOreDict;
-	private static Map<ItemStack, NonNullList<ItemStack>> oreEntries = new HashMap<ItemStack, NonNullList<ItemStack>>();
+	protected ItemStack input;
+	protected boolean useMeta;
+	protected boolean useOreDict;
+	protected static Map<ItemStack, NonNullList<ItemStack>> oreEntries = new HashMap<ItemStack, NonNullList<ItemStack>>();
 	
 	public ItemStackComponent (@Nonnull Block input) {
 		this(new ItemStack(input));
@@ -52,12 +52,29 @@ public class ItemStackComponent implements IRecipeComponent {
 		this.useOreDict = useOreDict;
 	}
 	
+	public static ItemStackComponent[] convert (ItemStack[] stacks) {
+		return convert(stacks, true);
+	}
+	
+	public static ItemStackComponent[] convert (ItemStack[] stacks, boolean useMeta) {
+		return convert(stacks, useMeta, true);
+	}
+	
+	public static ItemStackComponent[] convert (ItemStack[] stacks, boolean useMeta, boolean useOreDict) {
+		ItemStackComponent[] components = new ItemStackComponent[stacks.length];
+		for (int i = 0; i < stacks.length; i++)
+		{
+			components[i] = new ItemStackComponent(stacks[i], useMeta, useOreDict);
+		}
+		return components;
+	}
+	
 	@Override
 	public boolean matches (@Nonnull IRecipeWrapper comparison) {
 		if (comparison.isUnUsed() || !(comparison instanceof ItemStackWrapper)) return false;
 		for (ItemStack test : getOreDictEntries(input, useOreDict))
 		{
-			if (ItemUtils.areStacksEqual(test, ((ItemStackWrapper) comparison).getStack(), useMeta) && ((ItemStackWrapper) comparison).getStack().getCount() >= test.getCount()) return true;
+			if (ItemStackUtils.areStacksEqual(test, ((ItemStackWrapper) comparison).getStack(), useMeta) && ((ItemStackWrapper) comparison).getStack().getCount() >= test.getCount()) return true;
 		}
 		return false;
 	}
@@ -113,5 +130,33 @@ public class ItemStackComponent implements IRecipeComponent {
 	@Override
 	public String toString () {
 		return input.toString() + " (Uses meta: " + useMeta + ", Uses OreDict: " + useOreDict + ") ";
+	}
+	
+	public static class ItemStackRemainComponent extends ItemStackComponent {
+		
+		public ItemStackRemainComponent (@Nonnull Block input) {
+			this(new ItemStack(input));
+		}
+		
+		public ItemStackRemainComponent (@Nonnull Item input) {
+			this(new ItemStack(input));
+		}
+		
+		public ItemStackRemainComponent (@Nonnull ItemStack input) {
+			this(input, false);
+		}
+		
+		public ItemStackRemainComponent (@Nonnull ItemStack input, boolean useMeta) {
+			this(input, useMeta, true);
+		}
+		
+		public ItemStackRemainComponent (@Nonnull ItemStack input, boolean useMeta, boolean useOreDict) {
+			super(input, useMeta, useOreDict);
+		}
+		
+		@Override
+		public IRecipeWrapper getResidue () {
+			return new ItemStackWrapper(this.input);
+		}
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"parent": "storehouse:item/_standard_item",
 	"textures": {
-		"layer0": "storehouse:items/tin_ingot"
+		"layer0": "storehouse:items/resources/tin_ingot"
 	}
 }

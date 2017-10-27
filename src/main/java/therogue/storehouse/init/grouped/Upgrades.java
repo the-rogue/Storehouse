@@ -2,7 +2,6 @@
 package therogue.storehouse.init.grouped;
 
 import net.minecraft.item.ItemStack;
-import therogue.storehouse.init.ModItems;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 
@@ -28,7 +27,6 @@ public enum Upgrades {
 	
 	public static IStorehouseBaseItem addMaterials () {
 		upgrades = new ItemStorehouseBaseMaterial("upgrades");
-		ModItems.itemlist.add(upgrades);
 		for (Upgrades u : Upgrades.values())
 			upgrades.addMaterial(u.ordinal(), u.name().toLowerCase());
 		return upgrades;

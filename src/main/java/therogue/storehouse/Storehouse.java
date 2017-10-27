@@ -12,6 +12,7 @@ package therogue.storehouse;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -22,15 +23,27 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import therogue.storehouse.command.DebugResetLogger;
-import therogue.storehouse.handlers.ConfigHandler;
+import therogue.storehouse.config.ConfigHandler;
 import therogue.storehouse.init.grouped.Resources;
 import therogue.storehouse.proxy.IProxy;
-import therogue.storehouse.reference.General;
 import therogue.storehouse.util.LOG;
 
-@Mod (modid = General.MOD_ID, name = General.MOD_NAME, version = General.VERSION, acceptedMinecraftVersions = General.MC_VERSIONS, useMetadata = true, guiFactory = General.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json", dependencies = "before:guideapi")
+@Mod (modid = Storehouse.MOD_ID, name = Storehouse.MOD_NAME, version = Storehouse.VERSION, acceptedMinecraftVersions = Storehouse.MC_VERSIONS, useMetadata = true, guiFactory = Storehouse.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json", dependencies = "before:guideapi")
 public class Storehouse {
 	
+	/**
+	 * General values for the mod
+	 */
+	public static final String MOD_ID = "storehouse";
+	public static final String MOD_NAME = "Storehouse";
+	public static final String VERSION = "1.11.2-0.1.0";
+	public static final String MC_VERSIONS = "[1.11.2]";
+	public static final String FINGERPRINT = "";
+	public static final String SERVER_PROXY_CLASS = "therogue.storehouse.proxy.ServerProxy";
+	public static final String CLIENT_PROXY_CLASS = "therogue.storehouse.proxy.ClientProxy";
+	public static final String GUI_FACTORY = "therogue.storehouse.client.gui.StorehouseGuiFactory";
+	public static final String SHIFTINFO = TextFormatting.WHITE + "" + TextFormatting.ITALIC + "Hold Shift For More Info";
+	public static final String RESOURCENAMEPREFIX = MOD_ID + ":";
 	/**
 	 * Creates an instance of Storehouse so I can reference it later
 	 */
@@ -39,7 +52,7 @@ public class Storehouse {
 	/**
 	 * Initiates a Proxy
 	 */
-	@SidedProxy (clientSide = General.CLIENT_PROXY_CLASS, serverSide = General.SERVER_PROXY_CLASS)
+	@SidedProxy (clientSide = CLIENT_PROXY_CLASS, serverSide = SERVER_PROXY_CLASS)
 	public static IProxy proxy;
 	
 	/**
@@ -81,7 +94,7 @@ public class Storehouse {
 	/**
 	 * This mod's creative tab
 	 */
-	public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(General.MOD_ID) {
+	public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(MOD_ID) {
 		
 		@Override
 		public ItemStack getTabIconItem () {
@@ -90,7 +103,7 @@ public class Storehouse {
 		
 		@Override
 		public String getTranslatedTabLabel () {
-			return General.MOD_NAME;
+			return MOD_NAME;
 		}
 	};
 }

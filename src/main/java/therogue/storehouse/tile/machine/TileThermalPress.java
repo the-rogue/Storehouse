@@ -21,6 +21,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import therogue.storehouse.client.gui.GuiHelper.XYCoords;
 import therogue.storehouse.container.machine.ContainerThermalPress;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
@@ -33,15 +34,13 @@ import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiClientUpdatePacket;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.network.StorehousePacketHandler;
-import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.IClientPacketReciever;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.GuiHelper.XYCoords;
 
 public class TileThermalPress extends StorehouseBaseMachine implements IClientPacketReciever, ICrafter {
 	
-	public static final int RFPerTick = MachineStats.THERMALPRESSPERTICK;
+	public static final int RFPerTick = 40;
 	private Mode mode = Mode.PRESS;
 	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newCrafter(this);
 	
@@ -53,15 +52,6 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 				return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
 			}
 		};
-	}
-	
-	// -------------------------ITickable-----------------------------------------------------------------
-	@Override
-	public void update () {
-		if (GeneralUtils.isServerSide(world))
-		{
-			theCrafter.updateCraftingStatus();
-		}
 	}
 	
 	// -------------------------Tile Specific Utility Methods-------------------------------------------
@@ -107,7 +97,8 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	@Override
 	public void processGUIPacket (GuiClientUpdatePacket message, EntityPlayerMP from) {
 		NBTTagCompound nbt = message.getNbt();
-		switch (nbt.getInteger("type")) {
+		switch (nbt.getInteger("type"))
+		{
 			case 0:
 				modeUpdate(message.getNbt().getInteger("mode"));
 				break;
@@ -124,7 +115,8 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	// -------------------------Gui Methods----------------------------------------------------
 	@Override
 	public int getField (int id) {
-		switch (id) {
+		switch (id)
+		{
 			case 4:
 				return mode.ordinal();
 			case 5:
@@ -138,7 +130,8 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	
 	@Override
 	public void setField (int id, int value) {
-		switch (id) {
+		switch (id)
+		{
 			case 4:
 				modeUpdate(value);
 				NBTTagCompound sendtag = new NBTTagCompound();
@@ -163,7 +156,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	
 	@Override
 	public String getGuiID () {
-		return "storehouse:" + ModBlocks.thermal_press.getName();
+		return ModBlocks.thermal_press.getUnlocalizedName();
 	}
 	
 	// -------------------------Standard TE methods-----------------------------------
@@ -198,8 +191,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	}
 	
 	// ------------------Thermal Press Mode Enum-------------------------------------------------------
-	public static enum Mode
-	{
+	public static enum Mode {
 		PRESS (3, new Predicate<ICrafter>() {
 			
 			@Override

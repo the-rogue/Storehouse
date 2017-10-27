@@ -17,19 +17,19 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.GuiHelper;
+import therogue.storehouse.client.gui.Icons;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.ElementFadingProgressBar;
 import therogue.storehouse.client.gui.element.ElementFluidTank;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.reference.Icons;
 import therogue.storehouse.tile.machine.TileCrystaliser;
-import therogue.storehouse.util.TextureHelper;
 
 public class GuiCrystaliser extends GuiBase {
 	
 	public GuiCrystaliser (ContainerBase inventory, TileCrystaliser linked) {
-		super(NORMAL_TEXTURE, inventory);
+		super(NORMAL_TEXTURE, inventory, linked.getGuiID());
 		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
 		elements.add(new ElementFluidTank(this, Icons.FluidTank.getLocation(), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), linked));
 		elements.add(new ProgressHandler(this, linked, 4, 5, new ElementFadingProgressBar(46, 18, 54, 54, new Color(15, 26, 95)) {
@@ -40,12 +40,12 @@ public class GuiCrystaliser extends GuiBase {
 				if (progress != 0.0F)
 				{
 					GlStateManager.color((FluidRegistry.WATER.getColor() >> 16 & 255) / 255, (FluidRegistry.WATER.getColor() >> 8 & 255) / 255, (FluidRegistry.WATER.getColor() & 255) / 255);
-					TextureHelper.drawFluid(new FluidStack(FluidRegistry.WATER, 1000), x, y, width, height);
+					GuiHelper.drawFluid(new FluidStack(FluidRegistry.WATER, 1000), x, y, width, height);
 					GlStateManager.color(becomeColour.getRed() / 255.0F, becomeColour.getGreen() / 255.0F, becomeColour.getBlue() / 255.0F, progress);
-					TextureHelper.drawFluid(new FluidStack(FluidRegistry.WATER, 1000), x, y, width, height);
+					GuiHelper.drawFluid(new FluidStack(FluidRegistry.WATER, 1000), x, y, width, height);
 				}
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-				TextureHelper.bindTexture(gui, Icons.CrystaliserProgressIcon.getLocation());
+				GuiHelper.bindTexture(gui, Icons.CrystaliserProgressIcon.getLocation());
 				gui.drawTexturedModalRect(x, y, width, height);
 			}
 		}));

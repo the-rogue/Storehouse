@@ -2,6 +2,6 @@
 	"parent": "storehouse:item/_standard_item",
 	"textures": 
 	{
-		"layer0": "storehouse:items/azurite_crystal"
+		"layer0": "storehouse:items/resources/azurite_crystal"
 	}
 }

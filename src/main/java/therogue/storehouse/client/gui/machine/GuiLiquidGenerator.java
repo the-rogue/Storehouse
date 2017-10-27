@@ -12,20 +12,20 @@ package therogue.storehouse.client.gui.machine;
 
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.TierIcons;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.ElementFluidTank;
 import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.reference.TierIcons;
 import therogue.storehouse.tile.MachineTier;
-import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
+import therogue.storehouse.tile.machine.TileLiquidGenerator;
 import therogue.storehouse.util.GeneralUtils;
 
 public class GuiLiquidGenerator extends GuiBase {
 	
 	public GuiLiquidGenerator (ContainerBase inventory, TileLiquidGenerator linked) {
-		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory);
+		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory, linked.getGuiID());
 		elements.add(new ProgressHandler(this, linked, 7, 8, new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(linked.getField(1)))));
 		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
 		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));

@@ -15,12 +15,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import therogue.storehouse.reference.General;
+import therogue.storehouse.Storehouse;
 
 public class StorehousePacketHandler {
 	
 	private static int ID = 0;
-	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(General.MOD_ID);
+	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Storehouse.MOD_ID);
 	
 	public static <REQ extends IMessage, REPLY extends IMessage> void registerPacket (Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {
 		StorehousePacketHandler.INSTANCE.registerMessage(messageHandler, requestMessageType, ID++, side);

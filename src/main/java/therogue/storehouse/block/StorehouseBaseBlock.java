@@ -18,8 +18,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.init.BlockRender;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
@@ -61,7 +59,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 		super(material);
 		LOG.log("trace", "Creating new StorehouseBaseBlock: " + name);
 		this.setUnlocalizedName(name);
-		this.setRegistryName(General.MOD_ID, name);
+		this.setRegistryName(Storehouse.MOD_ID, name);
 		this.setHardness(hardness);
 		this.setResistance(resistance);
 		this.setCreativeTab(Storehouse.CREATIVE_TAB);
@@ -72,7 +70,7 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	 */
 	@Override
 	public String getUnlocalizedName () {
-		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Storehouse.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 	
 	/**

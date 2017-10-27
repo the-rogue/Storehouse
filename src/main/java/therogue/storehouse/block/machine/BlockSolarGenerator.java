@@ -41,13 +41,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
+import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.IDs;
-import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.MachineTier;
-import therogue.storehouse.tile.machine.generator.GeneratorUtils;
-import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
+import therogue.storehouse.tile.machine.TileSolarGenerator;
+import therogue.storehouse.util.GeneralUtils;
 import therogue.storehouse.util.LOG;
 
 public class BlockSolarGenerator extends StorehouseBaseMachine {
@@ -65,7 +63,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 	public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean debug) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 		{
-			list.add(TextFormatting.WHITE + "This machine generates " + GeneratorUtils.getRecieve(itemStack.getMetadata(), MachineStats.SOLARGENPERTICK) + " RF/t");
+			list.add(TextFormatting.WHITE + "This machine generates " + TileSolarGenerator.RFPerTick[itemStack.getMetadata()] + " RF/t");
 			for (String s : getShiftInfo())
 			{
 				list.add(s);
@@ -73,7 +71,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 		}
 		else
 		{
-			list.add(General.SHIFTINFO);
+			list.add(Storehouse.SHIFTINFO);
 		}
 	}
 	
@@ -84,19 +82,19 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 	
 	@Override
 	public int getMetaFromState (IBlockState state) {
-		return GeneratorUtils.getMeta(state.getValue(TYPE));
+		return state.getValue(TYPE).ordinal();
 	}
 	
 	@Override
 	public IBlockState getStateFromMeta (int meta) {
-		return this.getDefaultState().withProperty(TYPE, GeneratorUtils.getTypeFromMeta(meta));
+		return this.getDefaultState().withProperty(TYPE, GeneralUtils.getEnumFromNumber(MachineTier.class, meta));
 	}
 	
 	@Override
 	public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (MachineTier g : MachineTier.values())
 		{
-			list.add(new ItemStack(item, 1, GeneratorUtils.getMeta(g)));
+			list.add(new ItemStack(item, 1, g.ordinal()));
 		}
 	}
 	
@@ -115,7 +113,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 	 */
 	@Override
 	public String getUnlocalizedName (ItemStack stack) {
-		return super.getUnlocalizedName() + "_" + GeneratorUtils.getTypeFromMeta(stack.getMetadata()).toString();
+		return super.getUnlocalizedName() + "_" + GeneralUtils.getEnumFromNumber(MachineTier.class, stack.getMetadata()).toString();
 	}
 	
 	/**
@@ -166,7 +164,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 	
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
-		MachineTier tier = GeneratorUtils.getTypeFromMeta(meta);
+		MachineTier tier = GeneralUtils.getEnumFromNumber(MachineTier.class, meta);
 		switch (tier)
 		{
 			case advanced:
@@ -188,7 +186,7 @@ public class BlockSolarGenerator extends StorehouseBaseMachine {
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote)
 		{
-			player.openGui(Storehouse.instance, IDs.SOLARGENERATORGUI, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(Storehouse.instance, GuiHandler.SOLARGENERATOR, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}

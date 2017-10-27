@@ -37,10 +37,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.IDs;
+import therogue.storehouse.crafting.RecipeHelper;
 import therogue.storehouse.util.LOG;
-import therogue.storehouse.util.RecipeHelper;
 
 public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehouseBaseBlock {
 	
@@ -112,14 +110,14 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	public String getUnlocalizedName (int meta) {
-		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Storehouse.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 	
 	/**
 	 * Returns the Properly Formatted Unlocalised Name
 	 */
 	public String getUnlocalizedName () {
-		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Storehouse.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 	
 	/**
@@ -223,7 +221,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 			LOG.log("trace", "Creating new StorehouseBaseSlab.Double: " + blocktype.getName() + "_double_slab");
 			this.halfslab = halfslab;
 			super.setUnlocalizedName(blocktype.getName() + "_double_slab");
-			this.setRegistryName(General.MOD_ID, blocktype.getName() + "_double_slab");
+			this.setRegistryName(Storehouse.MOD_ID, blocktype.getName() + "_double_slab");
 		}
 		
 		/**
@@ -255,7 +253,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		@Override
 		public void preInit () {
 			GameRegistry.register(this);
-			GameRegistry.register(new ItemSlab(halfslab, halfslab, this).setRegistryName(General.MOD_ID, halfslab.getName()));
+			GameRegistry.register(new ItemSlab(halfslab, halfslab, this).setRegistryName(Storehouse.MOD_ID, halfslab.getName()));
 		}
 		
 		@Override
@@ -276,7 +274,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 			super(blocktype);
 			LOG.log("trace", "Creating new StorehouseBaseSlab.Half: " + blocktype.getName() + "_slab");
 			super.setUnlocalizedName(blocktype.getName() + "_slab");
-			this.setRegistryName(General.MOD_ID, blocktype.getName() + "_slab");
+			this.setRegistryName(Storehouse.MOD_ID, blocktype.getName() + "_slab");
 		}
 		
 		/**

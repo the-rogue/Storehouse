@@ -18,7 +18,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.reference.IDs;
+import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class BlockThermalPress extends StorehouseBaseFacingMachine {
@@ -38,7 +38,7 @@ public class BlockThermalPress extends StorehouseBaseFacingMachine {
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote)
 		{
-			player.openGui(Storehouse.instance, IDs.THERMALPRESSGUI, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(Storehouse.instance, GuiHandler.THERMALPRESS, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}

@@ -1,0 +1,6 @@
+{
+    "parent": "storehouse:item/_standard_item",
+    "textures": {
+        "layer0": "storehouse:items/resources/aluminium_ingot"
+    }
+}

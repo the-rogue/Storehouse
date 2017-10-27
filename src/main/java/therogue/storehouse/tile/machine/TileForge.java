@@ -25,16 +25,14 @@ import therogue.storehouse.inventory.IInventoryCapability;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.network.StorehousePacketHandler;
-import therogue.storehouse.reference.MachineStats;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
 import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.ItemUtils;
+import therogue.storehouse.util.ItemStackUtils;
 
 public class TileForge extends StorehouseBaseTileEntity implements IInventoryCapability, ICrafter {
 	
-	public static final int RFPerTick = MachineStats.STAMPERPERTICK;
 	protected InventoryManager inventory;
-	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newCrafter(this);
+	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(this.getClass()).newNonTickingCrafter(this);
 	
 	public TileForge () {
 		super(ModBlocks.forge);
@@ -74,10 +72,10 @@ public class TileForge extends StorehouseBaseTileEntity implements IInventoryCap
 		if (!containerCapability.getStackInSlot(0).isEmpty())
 		{
 			ItemStack machineStack = containerCapability.getStackInSlot(0);
-			ItemStack newStack1 = ItemUtils.mergeStacks(64, false, player.getHeldItem(hand), machineStack);
+			ItemStack newStack1 = ItemStackUtils.mergeStacks(64, false, player.getHeldItem(hand), machineStack);
 			if (!ItemStack.areItemStacksEqual(newStack1, player.getHeldItem(hand)))
 			{
-				player.setHeldItem(hand, ItemUtils.mergeStacks(64, true, player.getHeldItem(hand), machineStack));
+				player.setHeldItem(hand, ItemStackUtils.mergeStacks(64, true, player.getHeldItem(hand), machineStack));
 				containerCapability.setStackInSlot(0, machineStack);
 			}
 		}

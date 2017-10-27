@@ -13,7 +13,7 @@ package therogue.storehouse.container.machine;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.tile.machine.generator.TileLiquidGenerator;
+import therogue.storehouse.tile.machine.TileLiquidGenerator;
 
 public class ContainerLiquidGenerator extends ContainerBase {
 	

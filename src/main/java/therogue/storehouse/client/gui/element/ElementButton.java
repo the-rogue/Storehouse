@@ -13,9 +13,8 @@ package therogue.storehouse.client.gui.element;
 import java.util.Arrays;
 
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.GuiHelper;
 import therogue.storehouse.inventory.IGuiSupplier;
-import therogue.storehouse.util.GuiHelper;
-import therogue.storehouse.util.TextureHelper;
 
 public class ElementButton extends ElementBase {
 	
@@ -44,18 +43,18 @@ public class ElementButton extends ElementBase {
 		int currentMode = stateChanger.getField(modeField);
 		if (!pressed)
 		{
-			TextureHelper.bindTexture(this, mainIcon.icon);
+			GuiHelper.bindTexture(this, mainIcon.icon);
 			gui.drawTexturedModalRect(mainIcon.x, mainIcon.y, 0.0F, 0.0F, 0.5F, 1.0F, mainIcon.width, mainIcon.height);
 		}
 		else
 		{
-			TextureHelper.bindTexture(this, mainIcon.icon);
+			GuiHelper.bindTexture(this, mainIcon.icon);
 			gui.drawTexturedModalRect(mainIcon.x, mainIcon.y, 0.5F, 0.0F, 1.0F, 1.0F, mainIcon.width, mainIcon.height);
 		}
 		if (currentMode < innerIcons.length && innerIcons[currentMode] != null)
 		{
 			IconDefinition innerIcon = innerIcons[currentMode];
-			TextureHelper.bindTexture(this, innerIcon.icon);
+			GuiHelper.bindTexture(this, innerIcon.icon);
 			gui.drawTexturedModalRect(innerIcon.x, innerIcon.y, innerIcon.width, innerIcon.height);
 		}
 	}

@@ -12,7 +12,6 @@ package therogue.storehouse.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -25,7 +24,7 @@ import therogue.storehouse.inventory.IInventoryCapability;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 
-public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements ITickable, IInventoryCapability, IGuiSupplier, IInteractionObject {
+public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements IInventoryCapability, IGuiSupplier, IInteractionObject {
 	
 	protected InventoryManager inventory;
 	protected EnergyStorageAdv energyStorage = new EnergyStorageAdv(8000, 100, 0);
@@ -52,7 +51,8 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	 */
 	@Override
 	public int getField (int id) {
-		switch (id) {
+		switch (id)
+		{
 			case 2:
 				return energyStorage.getEnergyStored();
 			case 3:
@@ -64,7 +64,8 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	
 	@Override
 	public void setField (int id, int value) {
-		switch (id) {
+		switch (id)
+		{
 		}
 	}
 	

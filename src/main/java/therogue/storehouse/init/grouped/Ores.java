@@ -4,14 +4,12 @@ package therogue.storehouse.init.grouped;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.block.StorehouseBaseVariantBlock;
-import therogue.storehouse.init.ModBlocks;
 
-public enum Ores
-{
+public enum Ores {
 	AZURITE,
 	COPPER,
 	TIN,
-	ALUMINUM,
+	ALUMINIUM,
 	SILVER,
 	LEAD,
 	TITANIUM;
@@ -28,7 +26,6 @@ public enum Ores
 	
 	public static StorehouseBaseVariantBlock addMaterials () {
 		ore_block = new StorehouseBaseVariantBlock("ore_block");
-		ModBlocks.blocklist.add(ore_block);
 		for (Ores o : Ores.values())
 			ore_block.addSubBlock(o.ordinal(), o.name().toLowerCase());
 		return ore_block;
@@ -39,7 +36,7 @@ public enum Ores
 		OreDictionary.registerOre("oreAzurite", AZURITE.createStack());
 		OreDictionary.registerOre("oreCopper", COPPER.createStack());
 		OreDictionary.registerOre("oreTin", TIN.createStack());
-		OreDictionary.registerOre("oreAluminum", ALUMINUM.createStack());
+		OreDictionary.registerOre("oreAluminum", ALUMINIUM.createStack());
 		OreDictionary.registerOre("oreSilver", SILVER.createStack());
 		OreDictionary.registerOre("oreLead", LEAD.createStack());
 		OreDictionary.registerOre("oreTitanium", TITANIUM.createStack());

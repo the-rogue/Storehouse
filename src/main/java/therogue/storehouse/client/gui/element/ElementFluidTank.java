@@ -19,9 +19,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.GuiHelper;
 import therogue.storehouse.inventory.IGuiSupplier;
-import therogue.storehouse.util.GuiHelper;
-import therogue.storehouse.util.TextureHelper;
 
 public class ElementFluidTank extends ElementBase {
 	
@@ -35,7 +34,7 @@ public class ElementFluidTank extends ElementBase {
 	public ElementFluidTank (GuiBase gui, ResourceLocation location, int x, int y, IFluidHandler tank, IGuiSupplier stateChanger) {
 		super(gui);
 		this.iconLocation = location;
-		this.icon = TextureHelper.getImageAt(iconLocation);
+		this.icon = GuiHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
 		this.tank = tank;
@@ -51,11 +50,11 @@ public class ElementFluidTank extends ElementBase {
 		{
 			int capacity = tank.getTankProperties()[0].getCapacity();
 			float percentage = (float) contents.amount / (float) capacity;
-			int height = TextureHelper.calculateLength(icon.getHeight() - 2, percentage);
-			TextureHelper.drawFluid(contents, x + 1, y + icon.getHeight() - 1 - height, icon.getWidth() - 2, height);
+			int height = GuiHelper.calculateLength(icon.getHeight() - 2, percentage);
+			GuiHelper.drawFluid(contents, x + 1, y + icon.getHeight() - 1 - height, icon.getWidth() - 2, height);
 		}
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		TextureHelper.bindTexture(this, iconLocation);
+		GuiHelper.bindTexture(this, iconLocation);
 		gui.drawTexturedModalRect(x, y, 0.0F, 0.0F, 1.0F, 1.0F, icon.getWidth(), icon.getHeight());
 	}
 	

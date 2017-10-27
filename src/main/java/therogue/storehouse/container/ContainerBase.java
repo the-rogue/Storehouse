@@ -20,11 +20,11 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
-import therogue.storehouse.util.BlockUtils;
 import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.ItemUtils;
+import therogue.storehouse.util.ItemStackUtils;
 
 public class ContainerBase extends Container {
 	
@@ -112,9 +112,9 @@ public class ContainerBase extends Container {
 		{
 			Slot slot = (Slot) this.inventorySlots.get(i);
 			ItemStack itemstack = slot.getStack();
-			if (ItemUtils.areStacksMergable(stack, itemstack) && slot.isItemValid(ItemUtils.mergeStacks(slot.getSlotStackLimit(), false, stack, itemstack)))
+			if (ItemStackUtils.areStacksMergable(stack, itemstack) && slot.isItemValid(ItemStackUtils.mergeStacks(slot.getSlotStackLimit(), false, stack, itemstack)))
 			{
-				slot.putStack(ItemUtils.mergeStacks(slot.getSlotStackLimit(), true, itemstack, stack));
+				slot.putStack(ItemStackUtils.mergeStacks(slot.getSlotStackLimit(), true, itemstack, stack));
 				slot.onSlotChanged();
 				flag = true;
 			}

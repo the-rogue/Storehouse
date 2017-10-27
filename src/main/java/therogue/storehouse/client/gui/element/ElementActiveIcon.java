@@ -15,8 +15,8 @@ import java.awt.image.BufferedImage;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.GuiHelper;
 import therogue.storehouse.inventory.IGuiSupplier;
-import therogue.storehouse.util.TextureHelper;
 
 public class ElementActiveIcon extends ElementBase {
 	
@@ -30,7 +30,7 @@ public class ElementActiveIcon extends ElementBase {
 	public ElementActiveIcon (GuiBase gui, int x, int y, ResourceLocation iconLocation, IGuiSupplier stateChanger, int activeField) {
 		super(gui);
 		this.iconLocation = iconLocation;
-		this.icon = TextureHelper.getImageAt(iconLocation);
+		this.icon = GuiHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
 		this.stateChanger = stateChanger;
@@ -42,11 +42,11 @@ public class ElementActiveIcon extends ElementBase {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		if (icon != null)
 		{
-			TextureHelper.bindTexture(this, iconLocation);
+			GuiHelper.bindTexture(this, iconLocation);
 			gui.drawTexturedModalRect(x, y, 0.5F, 0.0F, 1.0F, 1.0F, icon.getWidth() / 2, icon.getHeight());
 			if (stateChanger.getField(activeField) == 1)
 			{
-				TextureHelper.bindTexture(this, iconLocation);
+				GuiHelper.bindTexture(this, iconLocation);
 				gui.drawTexturedModalRect(x, y, 0.0F, 0.0F, 0.5F, 1.0F, icon.getWidth() / 2, icon.getHeight());
 			}
 		}

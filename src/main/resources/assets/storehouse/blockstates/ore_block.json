@@ -23,22 +23,22 @@
 			},
 			"3": {
 				"textures": {
-					"all": "storehouse:blocks/ore/azurite"
+					"all": "storehouse:blocks/ore/aluminium"
 				}
 			},
 			"4": {
 				"textures": {
-					"all": "storehouse:blocks/ore/azurite"
+					"all": "storehouse:blocks/ore/silver"
 				}
 			},
 			"5": {
 				"textures": {
-					"all": "storehouse:blocks/ore/azurite"
+					"all": "storehouse:blocks/ore/lead"
 				}
 			},
 			"6": {
 				"textures": {
-					"all": "storehouse:blocks/ore/azurite"
+					"all": "storehouse:blocks/ore/titanium"
 				}
 			},
 			"7": {

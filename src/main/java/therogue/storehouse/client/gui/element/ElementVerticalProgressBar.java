@@ -11,7 +11,7 @@
 package therogue.storehouse.client.gui.element;
 
 import net.minecraft.util.ResourceLocation;
-import therogue.storehouse.util.TextureHelper;
+import therogue.storehouse.client.gui.GuiHelper;
 
 public class ElementVerticalProgressBar extends ElementProgressBar {
 	
@@ -42,14 +42,14 @@ public class ElementVerticalProgressBar extends ElementProgressBar {
 	
 	@Override
 	public float getMinV (float progress) {
-		if (upwards) return 1.0F - TextureHelper.scalePercentageToLength(height, progress);
+		if (upwards) return 1.0F - GuiHelper.scalePercentageToLength(height, progress);
 		return 0.0F;
 	}
 	
 	@Override
 	public float getMaxV (float progress) {
 		if (upwards) return 1.0F;
-		return TextureHelper.scalePercentageToLength(height, progress);
+		return GuiHelper.scalePercentageToLength(height, progress);
 	}
 	
 	@Override
@@ -60,6 +60,6 @@ public class ElementVerticalProgressBar extends ElementProgressBar {
 	
 	@Override
 	public int getHeight (float progress) {
-		return TextureHelper.calculateLength(height, progress);
+		return GuiHelper.calculateLength(height, progress);
 	}
 }

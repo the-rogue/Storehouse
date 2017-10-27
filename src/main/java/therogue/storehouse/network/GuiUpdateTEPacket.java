@@ -21,7 +21,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
-import therogue.storehouse.util.NetworkUtils;
 import therogue.storehouse.util.LOG;
 
 public class GuiUpdateTEPacket implements IMessage {

@@ -3,7 +3,6 @@ package therogue.storehouse.init.grouped;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import therogue.storehouse.init.ModItems;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 
@@ -17,13 +16,13 @@ public enum Materials {
 	TIN_PLATE,
 	GOLD_PLATE,
 	STEEL_PLATE,
+	DIAMOND_EDGED_STEEL_PLATE,
 	DIAMOND_EDGING,
 	SILICON,
 	INTEGRATED_CHIP,
 	COPPER_WIRE,
 	GOLD_WIRE,
-	SOLDER,
-	DIAMOND_EDGED_STEEL_PLATE;
+	SOLDER;
 	
 	/*
 	 * SINGULARITY_CORE, NITROGEL, TRANSFER_UNIT, FAN_BLADE, REFRIGERANT_PARTS;
@@ -40,7 +39,6 @@ public enum Materials {
 	
 	public static IStorehouseBaseItem addMaterials () {
 		materials = new ItemStorehouseBaseMaterial("material");
-		ModItems.itemlist.add(materials);
 		for (Materials m : Materials.values())
 			materials.addMaterial(m.ordinal(), m.name().toLowerCase());
 		return materials;

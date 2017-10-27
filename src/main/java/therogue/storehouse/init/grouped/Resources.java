@@ -3,7 +3,6 @@ package therogue.storehouse.init.grouped;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import therogue.storehouse.init.ModItems;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 
@@ -12,14 +11,14 @@ public enum Resources {
 	AZURITE_CRYSTAL,
 	COPPER_INGOT,
 	TIN_INGOT,
-	ALUMINUM_INGOT,
+	ALUMINIUM_INGOT,
 	SILVER_INGOT,
 	LEAD_INGOT,
 	TITANIUM_INGOT,
 	STEEL_INGOT,
 	BRASS_INGOT,
 	BRONZE_INGOT,
-	DURALIUM_INGOT;
+	DURALUMIN_INGOT;
 	
 	public static ItemStorehouseBaseMaterial resources;
 	
@@ -33,7 +32,6 @@ public enum Resources {
 	
 	public static IStorehouseBaseItem addMaterials () {
 		resources = new ItemStorehouseBaseMaterial("resources");
-		ModItems.itemlist.add(resources);
 		for (Resources r : Resources.values())
 			resources.addMaterial(r.ordinal(), r.name().toLowerCase());
 		return resources;
@@ -43,13 +41,13 @@ public enum Resources {
 		OreDictionary.registerOre("dustAzurite", AZURITE_DUST.createStack());
 		OreDictionary.registerOre("ingotCopper", COPPER_INGOT.createStack());
 		OreDictionary.registerOre("ingotTin", TIN_INGOT.createStack());
-		OreDictionary.registerOre("ingotAluminum", ALUMINUM_INGOT.createStack());
+		OreDictionary.registerOre("ingotAluminum", ALUMINIUM_INGOT.createStack());
 		OreDictionary.registerOre("ingotSilver", SILVER_INGOT.createStack());
 		OreDictionary.registerOre("ingotLead", LEAD_INGOT.createStack());
 		OreDictionary.registerOre("ingotTitanium", TITANIUM_INGOT.createStack());
 		OreDictionary.registerOre("ingotSteel", STEEL_INGOT.createStack());
 		OreDictionary.registerOre("ingotBrass", BRASS_INGOT.createStack());
 		OreDictionary.registerOre("ingotBronze", BRONZE_INGOT.createStack());
-		OreDictionary.registerOre("ingotDuralumin", DURALIUM_INGOT.createStack());
+		OreDictionary.registerOre("ingotDuralumin", DURALUMIN_INGOT.createStack());
 	}
 }

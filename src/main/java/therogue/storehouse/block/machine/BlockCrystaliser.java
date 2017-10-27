@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.reference.IDs;
+import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 
 public class BlockCrystaliser extends StorehouseBaseMachine {
@@ -52,7 +52,7 @@ public class BlockCrystaliser extends StorehouseBaseMachine {
 		}
 		if (!world.isRemote)
 		{
-			player.openGui(Storehouse.instance, IDs.CRYSTALISERGUI, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(Storehouse.instance, GuiHandler.CRYSTALISER, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}

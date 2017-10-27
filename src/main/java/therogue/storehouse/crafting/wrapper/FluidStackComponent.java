@@ -10,12 +10,21 @@
 
 package therogue.storehouse.crafting.wrapper;
 
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import therogue.storehouse.util.FluidUtils;
 
 public class FluidStackComponent implements IRecipeComponent {
 	
 	private FluidStack stack;
+	
+	public FluidStackComponent (Fluid fluid) {
+		this(fluid, 1000);
+	}
+	
+	public FluidStackComponent (Fluid fluid, int amount) {
+		this(new FluidStack(fluid, amount));
+	}
 	
 	public FluidStackComponent (FluidStack stack) {
 		this.stack = stack;

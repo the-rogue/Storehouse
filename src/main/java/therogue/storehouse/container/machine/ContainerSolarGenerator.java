@@ -13,7 +13,7 @@ package therogue.storehouse.container.machine;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.tile.machine.generator.TileSolarGenerator;
+import therogue.storehouse.tile.machine.TileSolarGenerator;
 
 public class ContainerSolarGenerator extends ContainerBase {
 	

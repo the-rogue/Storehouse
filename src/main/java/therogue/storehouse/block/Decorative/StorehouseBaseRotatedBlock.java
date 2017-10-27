@@ -21,8 +21,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.IDs;
 import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock {
@@ -34,7 +32,7 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 		super(blocktype.getblockMaterial());
 		LOG.log("trace", "Creating new StorehouseBaseRotatedBlock: " + blocktype.getName() + "_" + namesuffix);
 		this.setUnlocalizedName(blocktype.getName() + "_" + namesuffix);
-		this.setRegistryName(General.MOD_ID, blocktype.getName() + "_" + namesuffix);
+		this.setRegistryName(Storehouse.MOD_ID, blocktype.getName() + "_" + namesuffix);
 		this.setCreativeTab(Storehouse.CREATIVE_TAB);
 		this.setHardness(blocktype.getblockHardness());
 		this.setResistance(blocktype.getblockResistance());
@@ -45,7 +43,7 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	 */
 	@Override
 	public String getUnlocalizedName () {
-		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Storehouse.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 	
 	/**

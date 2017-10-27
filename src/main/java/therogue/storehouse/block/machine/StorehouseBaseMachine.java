@@ -23,10 +23,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import therogue.storehouse.Storehouse;
+import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.StorehouseBaseBlock;
-import therogue.storehouse.reference.General;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
-import therogue.storehouse.util.BlockUtils;
 
 public abstract class StorehouseBaseMachine extends StorehouseBaseBlock implements ITileEntityProvider {
 	
@@ -62,7 +62,7 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseBlock implemen
 		}
 		else
 		{
-			list.add(General.SHIFTINFO);
+			list.add(Storehouse.SHIFTINFO);
 		}
 	}
 	

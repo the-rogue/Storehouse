@@ -25,10 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.IDs;
+import therogue.storehouse.crafting.RecipeHelper;
 import therogue.storehouse.util.LOG;
-import therogue.storehouse.util.RecipeHelper;
 
 public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock {
 	
@@ -42,7 +40,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 		LOG.log("trace", "Creating new StorehouseBaseStair: " + block.getName() + "_stair");
 		this.blocktype = block;
 		this.setUnlocalizedName(block.getName() + "_stair");
-		this.setRegistryName(General.MOD_ID, block.getName() + "_stair");
+		this.setRegistryName(Storehouse.MOD_ID, block.getName() + "_stair");
 		this.setCreativeTab(Storehouse.CREATIVE_TAB);
 	}
 	
@@ -51,7 +49,7 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	 */
 	@Override
 	public String getUnlocalizedName () {
-		return String.format("tile.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("tile.%s%s", Storehouse.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 	
 	/**

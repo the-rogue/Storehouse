@@ -16,6 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
+import therogue.storehouse.block.machine.BlockAlloyFurnace;
 import therogue.storehouse.block.machine.BlockCombustionGenerator;
 import therogue.storehouse.block.machine.BlockCrystaliser;
 import therogue.storehouse.block.machine.BlockForge;
@@ -62,12 +63,14 @@ public class ModBlocks {
 		thermal_press = new BlockThermalPress("thermal_press");
 		crystaliser = new BlockCrystaliser("crystaliser");
 		forge = new BlockForge("forge");
+		alloy_furnace = new BlockAlloyFurnace("alloy_furnace");
 		blocklist.add(solar_generator);
 		blocklist.add(combustion_generator);
 		blocklist.add(liquid_generator);
 		blocklist.add(thermal_press);
 		blocklist.add(crystaliser);
 		blocklist.add(forge);
+		blocklist.add(alloy_furnace);
 		/**
 		 * PreInit Blocks
 		 */
@@ -117,16 +120,18 @@ public class ModBlocks {
 	public static BlockLiquidGenerator liquid_generator;
 	public static BlockThermalPress thermal_press;
 	public static BlockCrystaliser crystaliser;
-	public static BlockForge forge;/**
-									 * public static BlockPainter painter; public static BlockAlloySmelter alloy_smelter; public static BlockCarbonCompressor carbon_compressor; public static BlockBioMachine bio_machine; public static BlockPotionBrewer potion_brewer; public static BlockPotionInjector
-									 * potion_injector; public static BlockCraftingController crafting_controller; public static BlockCraftingCable crafting_cable; public static BlockShelfStocker shelf_stocker; public static BlockStockController stock_controller; public static BlockStockRequester
-									 * stock_requester; public static BlockStockTransfer stock_transfer; public static BlockPlayerStocker player_stocker; public static BlockPlayerUnstocker player_unstocker; public static BlockPlayerRemoteFeeder player_remote_feeder; public static
-									 * BlockPlayerHealthRegenerator player_health_regenerator; public static BlockAirConUnit air_con_unit; public static BlockFan fan; public static BlockInterDimensionalProvider inter_dimensional_provider; public static BlockWirelessRedstoneManager
-									 * wireless_redstone_manager; public static BlockWirelessTransmitter wireless_transmitter; public static BlockWirelessReciever wireless_reciever; public static BlockBlackHoleStabiliser black_hole_stabiliser; public static BlockSingularityCore singularity_core;
-									 * public static BlockBlackHoleEnergyGatherer black_hole_energy_gatherer; public static BlockBlackHoleEnergyTap black_hole_energy_tap; public static BlockBlackHoleContainmentFieldGenerator black_hole_containment_field_generator; public static
-									 * BlockBlackHoleContainmentController black_hole_containment_controller; public static BlockBlackHoleMatterExtractor black_hole_matter_extractor; public static BlockBlackHoleMatterShaper black_hole_matter_shaper; public static BlockBlackHoleMatterConverter
-									 * black_hole_matter_converter; public static BlockBlackHoleEnergyCannon black_hole_energy_cannon; public static BlockDragonAttractor dragon_attractor; public static BlockDragonContainmentField dragon_containment_field; public static BlockDragonGrinder
-									 * dragon_grinder; public static BlockEnderVacuum ender_vacuum; public static BlockResourceConstructor resource_constructor; public static BlockForceField force_field; public static BlockPlacer block_placer; public static BlockWoodStorehouse wood_storehouse;
-									 * public static BlockStoneStorehouse stone_storehouse; public static BlockIronStorehouse iron_storhouse; public static BlockSteelStorehouse steel_storehouse; public static BlockTitaniumStorehouse titanium_storehouse;
-									 */
+	public static BlockForge forge;
+	public static BlockAlloyFurnace alloy_furnace;/**
+													 * public static BlockPainter painter; public static BlockCarbonCompressor carbon_compressor; public static BlockBioMachine bio_machine; public static BlockPotionBrewer potion_brewer; public static BlockPotionInjector potion_injector; public static
+													 * BlockCraftingController crafting_controller; public static BlockCraftingCable crafting_cable; public static BlockShelfStocker shelf_stocker; public static BlockStockController stock_controller; public static BlockStockRequester stock_requester;
+													 * public static BlockStockTransfer stock_transfer; public static BlockPlayerStocker player_stocker; public static BlockPlayerUnstocker player_unstocker; public static BlockPlayerRemoteFeeder player_remote_feeder; public static
+													 * BlockPlayerHealthRegenerator player_health_regenerator; public static BlockAirConUnit air_con_unit; public static BlockFan fan; public static BlockInterDimensionalProvider inter_dimensional_provider; public static BlockWirelessRedstoneManager
+													 * wireless_redstone_manager; public static BlockWirelessTransmitter wireless_transmitter; public static BlockWirelessReciever wireless_reciever; public static BlockBlackHoleStabiliser black_hole_stabiliser; public static BlockSingularityCore
+													 * singularity_core; public static BlockBlackHoleEnergyGatherer black_hole_energy_gatherer; public static BlockBlackHoleEnergyTap black_hole_energy_tap; public static BlockBlackHoleContainmentFieldGenerator black_hole_containment_field_generator;
+													 * public static BlockBlackHoleContainmentController black_hole_containment_controller; public static BlockBlackHoleMatterExtractor black_hole_matter_extractor; public static BlockBlackHoleMatterShaper black_hole_matter_shaper; public static
+													 * BlockBlackHoleMatterConverter black_hole_matter_converter; public static BlockBlackHoleEnergyCannon black_hole_energy_cannon; public static BlockDragonAttractor dragon_attractor; public static BlockDragonContainmentField
+													 * dragon_containment_field; public static BlockDragonGrinder dragon_grinder; public static BlockEnderVacuum ender_vacuum; public static BlockResourceConstructor resource_constructor; public static BlockForceField force_field; public static
+													 * BlockPlacer block_placer; public static BlockWoodStorehouse wood_storehouse; public static BlockStoneStorehouse stone_storehouse; public static BlockIronStorehouse iron_storhouse; public static BlockSteelStorehouse steel_storehouse; public
+													 * static BlockTitaniumStorehouse titanium_storehouse;
+													 */
 }

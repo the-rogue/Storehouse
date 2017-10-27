@@ -16,7 +16,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.util.TextureHelper;
+import therogue.storehouse.client.gui.GuiHelper;
 
 public abstract class ElementProgressBar implements IProgressBar {
 	
@@ -30,7 +30,7 @@ public abstract class ElementProgressBar implements IProgressBar {
 	
 	public ElementProgressBar (int x, int y, ResourceLocation iconLocation) {
 		this.iconLocation = iconLocation;
-		BufferedImage icon = TextureHelper.getImageAt(iconLocation);
+		BufferedImage icon = GuiHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
 		if (icon != null)
@@ -58,9 +58,9 @@ public abstract class ElementProgressBar implements IProgressBar {
 		if (iconLocation != null)
 		{
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			TextureHelper.bindTexture(gui, iconLocation);
+			GuiHelper.bindTexture(gui, iconLocation);
 			gui.drawTexturedModalRect(getX(), getY(), getMinU(), getMinV(), getMaxU(), getMaxV(), getWidth(), getHeight());
-			TextureHelper.bindTexture(gui, iconLocation);
+			GuiHelper.bindTexture(gui, iconLocation);
 			gui.drawTexturedModalRect(getX(progress), getY(progress), getMinU(progress), getMinV(progress), getMaxU(progress), getMaxV(progress), getWidth(progress), getHeight(progress));
 		}
 		else

@@ -18,8 +18,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.init.ItemRender;
-import therogue.storehouse.reference.General;
-import therogue.storehouse.reference.IDs;
 
 public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	
@@ -29,7 +27,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	public StorehouseBaseItem (String name) {
 		super();
 		this.setUnlocalizedName(name);
-		this.setRegistryName(General.MOD_ID, name);
+		this.setRegistryName(Storehouse.MOD_ID, name);
 		this.setCreativeTab(Storehouse.CREATIVE_TAB);
 	}
 	
@@ -38,7 +36,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	 */
 	@Override
 	public String getUnlocalizedName () {
-		return String.format("item.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", Storehouse.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 	
 	/**
@@ -46,7 +44,7 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	 */
 	@Override
 	public String getUnlocalizedName (ItemStack stack) {
-		return String.format("item.%s%s", IDs.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", Storehouse.RESOURCENAMEPREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 	
 	/**

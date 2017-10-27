@@ -24,24 +24,26 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.gui.element.ElementBase;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.reference.IDs;
-import therogue.storehouse.util.TextureHelper;
 
 public class GuiBase extends GuiContainer {
 	
-	public static final ResourceLocation NORMAL_TEXTURE = new ResourceLocation(IDs.RESOURCENAMEPREFIX + "textures/gui/normal.png");
+	public static final ResourceLocation NORMAL_TEXTURE = new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/normal.png");
 	protected ResourceLocation texture;
 	protected List<ElementBase> elements = Lists.<ElementBase> newArrayList();
 	public final ContainerBase inventory;
+	public final String name;
 	
-	public GuiBase (ResourceLocation texture, ContainerBase inventory) {
+	public GuiBase (ResourceLocation texture, ContainerBase inventory, String name) {
 		super(inventory);
 		this.texture = texture;
 		this.xSize = 176;
 		this.ySize = 166;
 		this.inventory = inventory;
+		this.name = name + ".name";
 	}
 	
 	/**
@@ -54,7 +56,7 @@ public class GuiBase extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer (float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		TextureHelper.bindTexture(this, texture);
+		GuiHelper.bindTexture(this, texture);
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
@@ -76,6 +78,8 @@ public class GuiBase extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY) {
+		int nameWidth = fontRendererObj.getStringWidth(new TextComponentTranslation(name).getUnformattedComponentText());
+		fontRendererObj.drawString(new TextComponentTranslation(name).getFormattedText(), this.xSize / 2 - nameWidth / 2, 4, GuiHelper.GUI_TEXT_COLOUR);
 		GlStateManager.enableAlpha();
 		int x = mouseX - this.guiLeft, y = mouseY - this.guiTop;
 		for (ElementBase e : elements)

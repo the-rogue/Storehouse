@@ -13,46 +13,45 @@ package therogue.storehouse.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import therogue.storehouse.Storehouse;
 
-import org.lwjgl.input.Keyboard;
-
-import therogue.storehouse.reference.General;
-
-public abstract class StorehouseBaseActiveItem extends StorehouseBaseItem
-{
+public abstract class StorehouseBaseActiveItem extends StorehouseBaseItem {
+	
 	private List<String> shiftInfo = new ArrayList<String>();
-
-	public StorehouseBaseActiveItem(String name)
-	{
+	
+	public StorehouseBaseActiveItem (String name) {
 		super(name);
 	}
 	
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
-    {
-    	if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-    		for (String s : shiftInfo) {
-    			tooltip.add(s);
-    		}
-    	} else {
-    		tooltip.add(General.SHIFTINFO);
-    	}
-    }
-    
-    protected void addShiftInfo(String info) {
-    	shiftInfo.add(info);
-    }
-
-	public List<String> getShiftInfo()
-	{
-		return shiftInfo;
+	/**
+	 * allows items to add custom lines of information to the mouseover description
+	 */
+	@SideOnly (Side.CLIENT)
+	public void addInformation (ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		{
+			for (String s : shiftInfo)
+			{
+				tooltip.add(s);
+			}
+		}
+		else
+		{
+			tooltip.add(Storehouse.SHIFTINFO);
+		}
 	}
 	
+	protected void addShiftInfo (String info) {
+		shiftInfo.add(info);
+	}
+	
+	public List<String> getShiftInfo () {
+		return shiftInfo;
+	}
 }
