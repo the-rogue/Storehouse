@@ -43,6 +43,7 @@ public class GuiHandler implements IGuiHandler {
 	public static final int THERMALPRESS = 3;
 	public static final int CRYSTALISER = 4;
 	public static final int ALLOYFURNACE = 5;
+	public static final int CARBONCOMPRESSOR = 6;
 	
 	@Override
 	public Object getServerGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z) {

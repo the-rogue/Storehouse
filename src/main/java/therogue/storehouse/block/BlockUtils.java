@@ -16,10 +16,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import therogue.storehouse.tile.multiblock.IMultiBlockPart;
 
 public class BlockUtils {
 	
@@ -70,5 +73,15 @@ public class BlockUtils {
 				}
 			}
 		}
+	}
+	
+	public static boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntity te = world.getTileEntity(pos);
+		if (te instanceof IMultiBlockPart)
+		{
+			IMultiBlockPart mbpte = (IMultiBlockPart) te;
+			return mbpte.getController().onMultiBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+		}
+		return false;
 	}
 }
