@@ -95,24 +95,75 @@ public class MultiBlockFormationHandler {
 	
 	public static class MultiBlockBuilder {
 		
-		private List<List<IMultiBlockElement[]>> blocklist = new ArrayList<List<IMultiBlockElement[]>>();
+		public static final IMultiBlockElement ANY_BLOCK = new IMultiBlockElement() {
+			
+			@Override
+			public boolean isValidBlock (IBlockState block) {
+				return true;
+			}
+			
+			@Override
+			public String toString () {
+				return "ANY_BLOCK";
+			}
+		};
+		private List<List<List<IMultiBlockElement>>> blocklist = new ArrayList<List<List<IMultiBlockElement>>>();
 		private IMultiBlockElement[][][] blockarray;
 		private int yLevel = 0;
-		private int maxX = 0;
-		private int maxZ = 0;
 		
 		public MultiBlockBuilder () {
 		}
 		
-		public MultiBlockBuilder addRow (IMultiBlockElement... row) {
-			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
-			if (blocklist.get(yLevel) == null)
+		public static MultiBlockBuilder newBuilder () {
+			return new MultiBlockBuilder();
+		}
+		
+		/**
+		 * Should ONLY be used where the block's default state is used, null for any block in the specified position
+		 */
+		public MultiBlockBuilder addBlocksToRow (Block... row) {
+			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
+			for (int i = 0; i < row.length; i++)
 			{
-				blocklist.add(new ArrayList<IMultiBlockElement[]>());
+				if (row[i] == null) elements[i] = ANY_BLOCK;
+				else elements[i] = new NormalBlock(row[i]);
 			}
-			blocklist.get(yLevel).add(row);
-			if (maxZ > blocklist.get(yLevel).size()) maxZ = blocklist.get(yLevel).size();
-			if (maxX > row.length) maxX = row.length;
+			return addBlocksToRow(elements);
+		}
+		
+		/**
+		 * Add only one option for each slot specified, null for any block in the specified position
+		 */
+		public MultiBlockBuilder addBlocksToRow (IBlockState... row) {
+			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
+			for (int i = 0; i < row.length; i++)
+			{
+				if (row[i] == null) elements[i] = ANY_BLOCK;
+				else elements[i] = new NormalBlock(row[i]);
+			}
+			return addBlocksToRow(elements);
+		}
+		
+		public MultiBlockBuilder addBlocksToRow (IMultiBlockElement... row) {
+			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
+			while (blocklist.size() <= yLevel)
+			{
+				blocklist.add(new ArrayList<List<IMultiBlockElement>>());
+			}
+			List<IMultiBlockElement> rowlist = blocklist.get(yLevel).get(blocklist.get(yLevel).size() - 1);
+			for (IMultiBlockElement rowElement : row)
+			{
+				rowlist.add(rowElement);
+			}
+			return this;
+		}
+		
+		public MultiBlockBuilder newRow () {
+			while (blocklist.size() <= yLevel)
+			{
+				blocklist.add(new ArrayList<List<IMultiBlockElement>>());
+			}
+			blocklist.get(blocklist.size() - 1).add(new ArrayList<IMultiBlockElement>());
 			return this;
 		}
 		
@@ -122,10 +173,6 @@ public class MultiBlockFormationHandler {
 		
 		public MultiBlockBuilder goUp (int amount) {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
-			for (int i = 0; i < amount; i++)
-			{
-				blocklist.add(new ArrayList<IMultiBlockElement[]>());
-			}
 			yLevel += amount;
 			return this;
 		}
@@ -138,27 +185,47 @@ public class MultiBlockFormationHandler {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			for (int i = 0; i < amount; i++)
 			{
-				blocklist.get(yLevel).add(new IMultiBlockElement[] {});
+				blocklist.get(yLevel).add(new ArrayList<IMultiBlockElement>());
 			}
 			return this;
 		}
 		
 		public MultiBlockBuilder build () {
 			if (checkBlockArray("Error: Trying to rebuild blockarray\n")) return this;
-			Integer maxY = blocklist.size();
-			blockarray = new IMultiBlockElement[maxY][][];
-			for (int i = 0; i <= maxY; i++)
+			int maxX = 0, maxZ = 0;
+			for (List<List<IMultiBlockElement>> zlist : blocklist)
 			{
-				blockarray[i] = new IMultiBlockElement[maxZ][];
-				for (int j = 0; j < blocklist.get(i).size(); j++)
+				if (zlist.size() > maxZ) maxZ = zlist.size();
+				for (List<IMultiBlockElement> xlist : zlist)
 				{
-					blockarray[i][j] = new IMultiBlockElement[maxX];
-					if (blocklist.get(i).get(j) != null)
+					if (xlist.size() > maxX) maxX = xlist.size();
+				}
+			}
+			for (List<List<IMultiBlockElement>> zlist : blocklist)
+			{
+				while (zlist.size() <= maxZ)
+				{
+					zlist.add(new ArrayList<IMultiBlockElement>());
+				}
+				for (List<IMultiBlockElement> e : zlist)
+				{
+					while (e.size() <= maxX)
 					{
-						for (int k = 0; k < blocklist.get(i).get(j).length; k++)
-						{
-							blockarray[i][j][k] = blocklist.get(i).get(j)[k];
-						}
+						e.add(ANY_BLOCK);
+					}
+				}
+			}
+			int maxY = blocklist.size();
+			blockarray = new IMultiBlockElement[maxX][][];
+			for (int x = 0; x < maxX; x++)
+			{
+				blockarray[x] = new IMultiBlockElement[maxY][];
+				for (int y = 0; y < maxY; y++)
+				{
+					blockarray[x][y] = new IMultiBlockElement[maxZ];
+					for (int z = 0; z < maxZ; z++)
+					{
+						blockarray[x][y][z] = blocklist.get(y).get(z).get(x);
 					}
 				}
 			}
@@ -205,6 +272,11 @@ public class MultiBlockFormationHandler {
 		public boolean isValidBlock (IBlockState block) {
 			return this.block == block;
 		}
+		
+		@Override
+		public String toString () {
+			return block.getBlock().toString();
+		}
 	}
 	
 	public static class ChoiceBlock implements IMultiBlockElement {
@@ -221,6 +293,11 @@ public class MultiBlockFormationHandler {
 				if (test == block) return true;
 			}
 			return false;
+		}
+		
+		@Override
+		public String toString () {
+			return blocks.toString();
 		}
 	}
 }

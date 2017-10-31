@@ -11,11 +11,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import therogue.storehouse.Storehouse;
-import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseMachine;
+import therogue.storehouse.util.LOG;
 
 public class TileCarbonCompressor extends StorehouseBaseMachine implements IMultiBlockController {
 	
@@ -36,24 +35,25 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 			}
 		};
 	}
-	//-----------------------IMultiBlockController Methods-----------------------------------
+	
+	// -----------------------IMultiBlockController Methods-----------------------------------
 	@Override
 	public boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!isFormed)
 		{
-			tryFormMultiBlock();
+			tryFormMultiBlock(world, pos, state);
 			return true;
-		}
+		}/*
 		if (!world.isRemote)
 		{
 			// TODO Container and GUI
 			player.openGui(Storehouse.instance, GuiHandler.CARBONCOMPRESSOR, world, pos.getX(), pos.getY(), pos.getZ());
-		}
+		}*/
 		return true;
 	}
 	
-	private void tryFormMultiBlock () {
-		// TODO
+	private void tryFormMultiBlock (World world, BlockPos pos, IBlockState state) {
+		LOG.info(MultiBlockFormationHandler.checkStructure(state, ModBlocks.carbon_compressor.getMultiBlockStructure(), world, pos));
 	}
 	
 	@Override
