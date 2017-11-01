@@ -8,12 +8,19 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
 
 public interface IMultiBlockController extends IMultiBlockPart {
 	
+	public World getPositionWorld ();
+	
 	public BlockPos getPosition ();
 	
-	public boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ);
+	public IMultiBlockElement[][][] getStructure ();
+	
+	public void checkStructure ();
+	
+	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side);
 	
 	public boolean hasCapability (Capability<?> capability, EnumFacing facing);
 	

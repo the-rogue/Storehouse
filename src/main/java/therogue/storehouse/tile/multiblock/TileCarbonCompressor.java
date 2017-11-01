@@ -14,11 +14,11 @@ import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseMachine;
-import therogue.storehouse.util.LOG;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
 
 public class TileCarbonCompressor extends StorehouseBaseMachine implements IMultiBlockController {
 	
-	private boolean isFormed;
+	private boolean isFormed = false;
 	
 	public TileCarbonCompressor () {
 		super(ModBlocks.carbon_compressor);
@@ -38,32 +38,42 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	
 	// -----------------------IMultiBlockController Methods-----------------------------------
 	@Override
-	public boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
 		if (!isFormed)
 		{
-			tryFormMultiBlock(world, pos, state);
+			tryFormMultiBlock();
 			return true;
-		}/*
-		if (!world.isRemote)
-		{
-			// TODO Container and GUI
-			player.openGui(Storehouse.instance, GuiHandler.CARBONCOMPRESSOR, world, pos.getX(), pos.getY(), pos.getZ());
-		}*/
+		} /*
+			 * if (!world.isRemote) { // TODO Container and GUI player.openGui(Storehouse.instance, GuiHandler.CARBONCOMPRESSOR, world, pos.getX(), pos.getY(), pos.getZ()); }
+			 */
 		return true;
 	}
 	
-	private void tryFormMultiBlock (World world, BlockPos pos, IBlockState state) {
-		LOG.info(MultiBlockFormationHandler.checkStructure(state, ModBlocks.carbon_compressor.getMultiBlockStructure(), world, pos));
-	}
-	
-	@Override
-	public String getGuiID () {
-		return ModBlocks.carbon_compressor.getUnlocalizedName();
+	private void tryFormMultiBlock () {
+		if (MultiBlockFormationHandler.formMultiBlock(getController()))
+		{
+			isFormed = true;
+		}
 	}
 	
 	@Override
 	public BlockPos getPosition () {
 		return getPos();
+	}
+	
+	@Override
+	public IMultiBlockElement[][][] getStructure () {
+		return ModBlocks.carbon_compressor.getMultiBlockStructure();
+	}
+	
+	@Override
+	public void checkStructure () {
+		if (isFormed) if (MultiBlockFormationHandler.checkStructure(this)) isFormed = false;
+	}
+	
+	@Override
+	public World getPositionWorld () {
+		return getWorld();
 	}
 	
 	@Override
@@ -80,5 +90,10 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	@Override
 	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
 		return null;
+	}
+	
+	@Override
+	public String getGuiID () {
+		return ModBlocks.carbon_compressor.getUnlocalizedName();
 	}
 }

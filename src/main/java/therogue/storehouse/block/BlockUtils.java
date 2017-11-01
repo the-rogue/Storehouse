@@ -75,12 +75,12 @@ public class BlockUtils {
 		}
 	}
 	
-	public static boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public static boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IMultiBlockPart)
 		{
 			IMultiBlockPart mbpte = (IMultiBlockPart) te;
-			return mbpte.getController().onMultiBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+			return mbpte.getController().onMultiBlockActivatedAt(world, pos, state, player, hand, side);
 		}
 		return false;
 	}

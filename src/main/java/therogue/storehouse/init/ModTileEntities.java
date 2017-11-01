@@ -19,6 +19,8 @@ import therogue.storehouse.tile.machine.TileForge;
 import therogue.storehouse.tile.machine.TileLiquidGenerator;
 import therogue.storehouse.tile.machine.TileSolarGenerator;
 import therogue.storehouse.tile.machine.TileThermalPress;
+import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
+import therogue.storehouse.tile.multiblock.TileMultiblockPlaceholder;
 
 public class ModTileEntities {
 	
@@ -42,5 +44,7 @@ public class ModTileEntities {
 		GameRegistry.registerTileEntity(TileCrystaliser.class, Storehouse.RESOURCENAMEPREFIX + "crystaliser");
 		GameRegistry.registerTileEntity(TileForge.class, Storehouse.RESOURCENAMEPREFIX + "stamper");
 		GameRegistry.registerTileEntity(TileAlloyFurnace.class, Storehouse.RESOURCENAMEPREFIX + "alloy_furnace");
+		GameRegistry.registerTileEntity(TileCarbonCompressor.class, Storehouse.RESOURCENAMEPREFIX + "carbon_compressor");
+		GameRegistry.registerTileEntity(TileMultiblockPlaceholder.class, Storehouse.RESOURCENAMEPREFIX + "generic_multiblock");
 	}
 }

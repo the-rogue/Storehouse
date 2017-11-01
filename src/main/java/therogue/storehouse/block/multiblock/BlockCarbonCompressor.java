@@ -34,7 +34,7 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		return BlockUtils.onMultiBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+		return BlockUtils.onMultiBlockActivated(world, pos, state, player, hand, side);
 	}
 	
 	@Override

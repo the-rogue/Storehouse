@@ -27,7 +27,6 @@ import therogue.storehouse.block.multiblock.BlockCarbonCompressor;
 import therogue.storehouse.init.grouped.CraftingBlocks;
 import therogue.storehouse.init.grouped.DecorativeBlockContainer;
 import therogue.storehouse.init.grouped.Ores;
-import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
 
 public class ModBlocks {
 	
