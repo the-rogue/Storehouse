@@ -11,13 +11,9 @@
 package therogue.storehouse.proxy;
 
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import therogue.storehouse.crafting.MachineCraftingHandler;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler;
 
 public class EventHandlerCommon {
 	
@@ -30,15 +26,5 @@ public class EventHandlerCommon {
 	@SubscribeEvent
 	public void onServerTick (TickEvent.ServerTickEvent event) {
 		MachineCraftingHandler.tickCrafters(event);
-	}
-	
-	@SubscribeEvent
-	public void onNeighbourNotified (BlockEvent.NeighborNotifyEvent event) {
-		MultiBlockFormationHandler.onNeighbourNotifiedEvent(event);
-	}
-	
-	@SubscribeEvent (priority = EventPriority.LOWEST)
-	public void onRightClickBlockEvent (PlayerInteractEvent.RightClickBlock event) {
-		MultiBlockFormationHandler.onRightClickBlockEvent(event);
 	}
 }

@@ -15,6 +15,7 @@ import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
+import therogue.storehouse.util.LOG;
 
 public class TileCarbonCompressor extends StorehouseBaseMachine implements IMultiBlockController {
 	
@@ -39,6 +40,7 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	// -----------------------IMultiBlockController Methods-----------------------------------
 	@Override
 	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
+		LOG.info("Activated at");
 		if (!isFormed)
 		{
 			tryFormMultiBlock();
@@ -46,6 +48,7 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 		} /*
 			 * if (!world.isRemote) { // TODO Container and GUI player.openGui(Storehouse.instance, GuiHandler.CARBONCOMPRESSOR, world, pos.getX(), pos.getY(), pos.getZ()); }
 			 */
+		LOG.info("MultiBlock clicked");
 		return true;
 	}
 	
@@ -84,6 +87,11 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	@Override
 	public IMultiBlockController getController () {
 		return this;
+	}
+	
+	@Override
+	public void setController (IMultiBlockController controller) {
+		// NOOP
 	}
 	
 	// -------------------------IInteractionObject-----------------------------------------------------------------

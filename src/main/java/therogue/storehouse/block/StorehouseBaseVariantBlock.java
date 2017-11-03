@@ -28,8 +28,8 @@ import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 
 public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	
-	private final Map<Integer, String> blocks = new HashMap<Integer, String>();
-	private final Map<Integer, ItemDrop> unique_drops = new HashMap<Integer, ItemDrop>();
+	protected final Map<Integer, String> blocks = new HashMap<Integer, String>();
+	protected final Map<Integer, ItemDrop> unique_drops = new HashMap<Integer, ItemDrop>();
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
 	
 	public StorehouseBaseVariantBlock (String name) {

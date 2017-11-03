@@ -22,9 +22,8 @@ public class TileMultiblockPlaceholder extends TileEntity implements IMultiBlock
 		return false;
 	}
 	
-	public TileMultiblockPlaceholder setController (IMultiBlockController controller) {
+	public void setController (IMultiBlockController controller) {
 		this.controller = controller;
-		return this;
 	}
 	
 	public IMultiBlockController getController () {

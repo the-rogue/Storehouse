@@ -25,9 +25,9 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	/**
 	 * Declares defaults
 	 */
-	private static Material default_material = Material.ROCK;
-	private static float default_hardness = 3.0F;
-	private static float default_resistance = 10.0F;
+	protected static Material default_material = Material.ROCK;
+	protected static float default_hardness = 3.0F;
+	protected static float default_resistance = 10.0F;
 	
 	/**
 	 * Initiates the block with various defaults
