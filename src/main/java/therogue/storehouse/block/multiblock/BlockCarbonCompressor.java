@@ -17,7 +17,6 @@ import therogue.storehouse.tile.multiblock.IMultiBlockPart;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockBuilder;
 import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
-import therogue.storehouse.util.LOG;
 
 public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	
@@ -37,18 +36,17 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		LOG.info("Activated");
 		return BlockUtils.onMultiBlockActivated(world, pos, state, player, hand, side);
 	}
 	
 	@Override
 	public void breakBlock (World worldIn, BlockPos pos, IBlockState state) {
-		super.breakBlock(worldIn, pos, state);
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te instanceof IMultiBlockPart)
 		{
 			((IMultiBlockPart) te).getController().checkStructure();
 		}
+		super.breakBlock(worldIn, pos, state);
 	}
 	
 	public IMultiBlockElement[][][] getMultiBlockStructure () {

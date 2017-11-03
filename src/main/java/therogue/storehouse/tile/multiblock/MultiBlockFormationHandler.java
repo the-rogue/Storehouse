@@ -86,7 +86,7 @@ public class MultiBlockFormationHandler {
 			{
 				for (int z = 0; z < blockarray[x][y].length; z++)
 				{
-					if (blockarray[x][y][z].isValidBlock(block))
+					if (blockarray[x][y][z].isValidBlock(block) && blockarray[x][y][z].getMultiBlockState() != null)
 					{
 						possibleLocations.add(new BlockPos(x, y, z));
 					}
@@ -138,7 +138,6 @@ public class MultiBlockFormationHandler {
 	public static MultiBlockCheckResult checkStructure (World world, BlockPos checkerPos, IMultiBlockElement[][][] array) {
 		for (BlockPos location : getPossibleLocations(world.getBlockState(checkerPos), array))
 		{
-			LOG.info(location);
 			MultiBlockCheckResult result = checkLocation(world, checkerPos, location, array);
 			if (result.valid) return result;
 		}
