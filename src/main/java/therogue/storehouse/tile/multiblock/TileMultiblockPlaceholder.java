@@ -15,17 +15,20 @@ public class TileMultiblockPlaceholder extends TileEntity implements IMultiBlock
 	public TileMultiblockPlaceholder () {
 	}
 	
+	@Override
 	public void setController (IMultiBlockController controller) {
 		this.controller = controller;
 	}
 	
+	@Override
 	public IMultiBlockController getController () {
-		if (controller == null && multiblockPos == null) throw new NoControllerException("The TileEntity at: " + this.getPos() + " could not find an IMultiblock");
+		if (world.isRemote) throw new NoControllerException("Trying to get a controller in a client world");
+		if (controller == null && multiblockPos == null) throw new NoControllerException("The TileEntity at: " + this.getPos() + " could not find an IMultiblockController");
 		if (controller == null)
 		{
 			TileEntity atPos = getWorld().getTileEntity(multiblockPos);
 			if (atPos instanceof IMultiBlockController) controller = (IMultiBlockController) atPos;
-			else throw new NoControllerException("The TileEntity at: " + this.getPos() + " contains a blockPos that is not an IMultiBlock");
+			else throw new NoControllerException("The TileEntity at: " + this.getPos() + " contains a blockPos that is not an IMultiBlockController");
 		}
 		return controller;
 	}

@@ -153,7 +153,7 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te instanceof IMultiBlockPart)
 		{
-			((IMultiBlockPart) te).getController().checkStructure();
+			((IMultiBlockPart) te).getController().onBlockBroken(pos);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

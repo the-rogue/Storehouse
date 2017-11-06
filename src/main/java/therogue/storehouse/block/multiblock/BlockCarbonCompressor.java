@@ -21,7 +21,7 @@ import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
 public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	
 	private IMultiBlockElement[][][] structure;
-	private BlockMultiBlockWrapper multiblockstates = new BlockMultiBlockWrapper("carbonCompressorMB", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
+	public BlockMultiBlockWrapper multiblockstates = new BlockMultiBlockWrapper("carbonCompressorMB", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
 	
 	public BlockCarbonCompressor (String name) {
 		super(name);
@@ -44,7 +44,7 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te instanceof IMultiBlockPart)
 		{
-			((IMultiBlockPart) te).getController().checkStructure();
+			((IMultiBlockPart) te).getController().onBlockBroken(pos);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

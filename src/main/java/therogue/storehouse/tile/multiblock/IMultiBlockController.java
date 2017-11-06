@@ -1,6 +1,8 @@
 
 package therogue.storehouse.tile.multiblock;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -18,7 +20,7 @@ public interface IMultiBlockController extends IMultiBlockPart {
 	
 	public IMultiBlockElement[][][] getStructure ();
 	
-	public void checkStructure ();
+	public void onBlockBroken (@Nullable BlockPos at);
 	
 	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side);
 	

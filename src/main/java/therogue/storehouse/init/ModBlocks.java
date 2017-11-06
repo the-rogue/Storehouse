@@ -74,6 +74,7 @@ public class ModBlocks {
 		blocklist.add(forge);
 		blocklist.add(alloy_furnace);
 		blocklist.add(carbon_compressor);
+		blocklist.add(carbon_compressor.multiblockstates);
 		/**
 		 * PreInit Blocks
 		 */

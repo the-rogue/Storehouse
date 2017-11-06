@@ -22,11 +22,9 @@ public class MultiBlockFormationHandler {
 	private static Map<IMultiBlockController, List<PositionStateChanger>> multiblocks = new HashMap<IMultiBlockController, List<PositionStateChanger>>();
 	
 	public static boolean formMultiBlock (IMultiBlockController controller) {
-		LOG.info("Trying to form a multiblock for controller: " + controller);
 		World controllerWorld = controller.getPositionWorld();
 		MultiBlockCheckResult result = checkStructure(controllerWorld, controller.getPosition(), controller.getStructure());
 		if (!result.valid) return false;
-		LOG.info("Forming MultiBlock for controller: " + controller);
 		List<PositionStateChanger> worldPositionStates = result.worldPositionsStates;
 		multiblocks.put(controller, worldPositionStates);
 		for (PositionStateChanger positionState : worldPositionStates)
@@ -41,26 +39,17 @@ public class MultiBlockFormationHandler {
 				}
 			}
 		}
-		LOG.info("Formed MultiBlock");
 		return true;
 	}
 	
-	public static void removeMultiBlock (IMultiBlockController controller) {
-		LOG.info("Removing MultiBlock for Controller: " + controller);
+	public static void removeMultiBlock (IMultiBlockController controller, @Nullable BlockPos at) {
 		World controllerWorld = controller.getPositionWorld();
 		List<PositionStateChanger> worldPositionStates = multiblocks.remove(controller);
 		if (worldPositionStates == null) return;
 		for (PositionStateChanger positionState : worldPositionStates)
 		{
-			if (positionState.nonMultiblockState != null) controllerWorld.setBlockState(positionState.position, positionState.nonMultiblockState);
+			if (positionState.nonMultiblockState != null && !positionState.position.equals(controller.getPosition()) && !positionState.position.equals(at)) controllerWorld.setBlockState(positionState.position, positionState.nonMultiblockState);
 		}
-		LOG.info("Removed MultiBlock");
-	}
-	
-	public static boolean checkStructure (IMultiBlockController controller) {
-		if (sameStructure(controller)) return false;
-		removeMultiBlock(controller);
-		return true;
 	}
 	
 	public static boolean sameStructure (IMultiBlockController controller) {
@@ -97,14 +86,14 @@ public class MultiBlockFormationHandler {
 	}
 	
 	public static boolean checkLocation (World world, BlockPos possibleLocationInWorld, Rotation rotation, BlockPos possibleLocationInArray, IMultiBlockElement[][][] blockarray) {
-		BlockPos arrayOriginInWorld = possibleLocationInWorld.add(possibleLocationInArray.rotate(rotation));
+		BlockPos arrayOriginInWorld = possibleLocationInWorld.subtract(possibleLocationInArray.rotate(rotation));
 		for (int x = 0; x < blockarray.length; x++)
 		{
 			for (int y = 0; y < blockarray[x].length; y++)
 			{
 				for (int z = 0; z < blockarray[x][y].length; z++)
 				{
-					if (!blockarray[x][y][z].isValidBlock(world.getBlockState(arrayOriginInWorld.add(x, y, z)))) return false;
+					if (!blockarray[x][y][z].isValidBlock(world.getBlockState(arrayOriginInWorld.add(new BlockPos(x, y, z).rotate(rotation))))) return false;
 				}
 			}
 		}
@@ -112,7 +101,7 @@ public class MultiBlockFormationHandler {
 	}
 	
 	public static MultiBlockCheckResult getPositions (BlockPos possibleLocationInWorld, Rotation rotation, BlockPos possibleLocationInArray, IMultiBlockElement[][][] blockarray) {
-		BlockPos arrayOriginInWorld = possibleLocationInWorld.add(possibleLocationInArray.rotate(rotation));
+		BlockPos arrayOriginInWorld = possibleLocationInWorld.subtract(possibleLocationInArray.rotate(rotation));
 		List<PositionStateChanger> worldPositionsStates = new ArrayList<PositionStateChanger>();
 		for (int x = 0; x < blockarray.length; x++)
 		{
@@ -120,7 +109,7 @@ public class MultiBlockFormationHandler {
 			{
 				for (int z = 0; z < blockarray[x][y].length; z++)
 				{
-					worldPositionsStates.add(new PositionStateChanger(arrayOriginInWorld.add(x, y, z), blockarray[x][y][z].getNonMultiBlockState(), blockarray[x][y][z].getMultiBlockState()));
+					worldPositionsStates.add(new PositionStateChanger(arrayOriginInWorld.add(new BlockPos(x, y, z).rotate(rotation)), blockarray[x][y][z].getNonMultiBlockState(), blockarray[x][y][z].getMultiBlockState()));
 				}
 			}
 		}

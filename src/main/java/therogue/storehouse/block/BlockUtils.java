@@ -79,8 +79,11 @@ public class BlockUtils {
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IMultiBlockPart)
 		{
-			IMultiBlockPart mbpte = (IMultiBlockPart) te;
-			return mbpte.getController().onMultiBlockActivatedAt(world, pos, state, player, hand, side);
+			if (!world.isRemote)
+			{
+				IMultiBlockPart mbpte = (IMultiBlockPart) te;
+				return mbpte.getController().onMultiBlockActivatedAt(world, pos, state, player, hand, side);
+			}
 		}
 		return false;
 	}
