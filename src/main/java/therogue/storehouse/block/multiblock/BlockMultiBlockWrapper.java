@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
@@ -21,8 +23,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -37,7 +41,8 @@ import therogue.storehouse.util.LOG;
 public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITileEntityProvider, IBlockWrapper {
 	
 	private final List<WrapperEntry> blocks = new ArrayList<WrapperEntry>();
-	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);;
+	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
+	public static final StorehouseBaseBlock placeholder = new StorehouseBaseBlock("placeholder");
 	
 	public BlockMultiBlockWrapper (String name, Block... subStates) {
 		super(name);
@@ -116,6 +121,40 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 	public String getUnlocalizedName (ItemStack stack) {
 		IBlockState subBlockState = getSubBlockState(getDefaultState().withProperty(META, stack.getMetadata()));
 		return subBlockState.getBlock().getUnlocalizedName();
+	}
+	
+	@Override
+	@Nullable
+	public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+		IBlockState subBlockState = getSubBlockState(blockState);
+		return subBlockState.getCollisionBoundingBox(worldIn, pos);
+	}
+	
+	/**
+	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 */
+	@Override
+	public boolean isOpaqueCube (IBlockState state) {
+		return false;
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess source, BlockPos pos) {
+		IBlockState subBlockState = getSubBlockState(state);
+		return subBlockState.getBoundingBox(source, pos);
+	}
+	
+	@Override
+	public boolean isFullCube (IBlockState state) {
+		IBlockState subBlockState = getSubBlockState(state);
+		return subBlockState.isFullCube();
+	}
+	
+	@Deprecated
+	@Override
+	public boolean isFullBlock (IBlockState state) {
+		IBlockState subBlockState = getSubBlockState(state);
+		return subBlockState.isFullBlock();
 	}
 	
 	/**

@@ -1,0 +1,58 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"meta": {
+			"0": {
+				"model": "minecraft:iron_block"
+			},
+			"1": {
+				"model": "minecraft:diamond_block"
+			},
+			"2": {
+				"model": "storehouse:machine/thermal_press"
+			},
+			"3": {
+				"model": "storehouse:generator/solar/advanced"
+			},
+			"4": {
+				"model": "minecraft:iron_block"
+			},
+			"5": {
+				"model": "minecraft:iron_block"
+			},
+			"6": {
+				"model": "minecraft:iron_block"
+			},
+			"7": {
+				"model": "minecraft:iron_block"
+			},
+			"8": {
+				"model": "minecraft:iron_block"
+			},
+			"9": {
+				"model": "minecraft:iron_block"
+			},
+			"10": {
+				"model": "minecraft:iron_block"
+			},
+			"11": {
+				"model": "minecraft:iron_block"
+			},
+			"12": {
+				"model": "minecraft:iron_block"
+			},
+			"13": {
+				"model": "minecraft:iron_block"
+			},
+			"14": {
+				"model": "minecraft:iron_block"
+			},
+			"15": {
+				"model": "minecraft:iron_block"
+			}
+		}
+	}
+}

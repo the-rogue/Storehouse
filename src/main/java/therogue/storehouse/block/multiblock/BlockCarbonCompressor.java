@@ -21,7 +21,7 @@ import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
 public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	
 	private IMultiBlockElement[][][] structure;
-	public BlockMultiBlockWrapper multiblockstates = new BlockMultiBlockWrapper("carbonCompressorMB", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
+	public BlockMultiBlockWrapper multiblockstates = new BlockMultiBlockWrapper("carbon_compressor_mb", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
 	
 	public BlockCarbonCompressor (String name) {
 		super(name);
