@@ -1,7 +1,7 @@
 
 package therogue.storehouse.tile.multiblock;
 
-public interface IMultiBlockPart {
+public interface IMultiBlockTile {
 	
 	public boolean isFormed ();
 	

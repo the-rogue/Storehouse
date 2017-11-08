@@ -13,9 +13,10 @@ import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.machine.StorehouseBaseFacingMachine;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.MachineTier;
-import therogue.storehouse.tile.multiblock.IMultiBlockPart;
+import therogue.storehouse.tile.multiblock.IMultiBlockTile;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.ChoiceBlock;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockBuilder;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockPartBuilder;
 import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
 
 public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
@@ -42,9 +43,9 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	@Override
 	public void breakBlock (World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity te = worldIn.getTileEntity(pos);
-		if (te instanceof IMultiBlockPart)
+		if (te instanceof IMultiBlockTile)
 		{
-			((IMultiBlockPart) te).getController().onBlockBroken(pos);
+			((IMultiBlockTile) te).getController().onBlockBroken(pos);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}
@@ -55,9 +56,9 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	
 	@Override
 	public void Init () {
-		MultiBlockBuilder carbon_compressor = MultiBlockBuilder.newBuilder();
+		MultiBlockPartBuilder carbon_compressor = MultiBlockPartBuilder.newBuilder();
 		carbon_compressor.newRow().addBlocksToRow(multiblockstates, Blocks.IRON_BLOCK, this, Blocks.IRON_BLOCK);
-		carbon_compressor.newRow().addBlocksToRow(multiblockstates, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press, Blocks.DIAMOND_BLOCK).goUp();
+		carbon_compressor.newRow().addBlocksToRow(multiblockstates, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addBlocksToRow(new ChoiceBlock(multiblockstates, Blocks.DIAMOND_BLOCK, Blocks.IRON_BLOCK)).goUp();
 		carbon_compressor.newRow().addBlocksToRow(multiblockstates, null, ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
 		carbon_compressor.build();
 		structure = carbon_compressor.getBlockArray();

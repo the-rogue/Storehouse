@@ -7,7 +7,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class TileMultiblockPlaceholder extends TileEntity implements IMultiBlockPart {
+public class TileMultiblockPlaceholder extends TileEntity implements IMultiBlockTile {
 	
 	private IMultiBlockController controller;
 	private BlockPos multiblockPos;

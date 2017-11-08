@@ -13,11 +13,9 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -28,13 +26,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.StorehouseBaseBlock;
-import therogue.storehouse.tile.multiblock.IMultiBlockPart;
+import therogue.storehouse.tile.multiblock.IMultiBlockTile;
 import therogue.storehouse.tile.multiblock.TileMultiblockPlaceholder;
 import therogue.storehouse.util.LOG;
 
@@ -171,10 +168,6 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 	@Override
 	@SideOnly (Side.CLIENT)
 	public void preInitClient () {
-		for (int i = 0; i < blocks.size(); i++)
-		{
-			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), i, new ModelResourceLocation(getUnlocalizedName().substring(5), "meta=" + i));
-		}
 	}
 	
 	@Override
@@ -190,9 +183,9 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 	@Override
 	public void breakBlock (World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity te = worldIn.getTileEntity(pos);
-		if (te instanceof IMultiBlockPart)
+		if (te instanceof IMultiBlockTile)
 		{
-			((IMultiBlockPart) te).getController().onBlockBroken(pos);
+			((IMultiBlockTile) te).getController().onBlockBroken(pos);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

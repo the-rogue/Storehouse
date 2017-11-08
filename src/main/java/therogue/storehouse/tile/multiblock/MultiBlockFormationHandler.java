@@ -33,9 +33,9 @@ public class MultiBlockFormationHandler {
 			{
 				controllerWorld.setBlockState(positionState.position, positionState.inMultiblockState);
 				TileEntity te = controllerWorld.getTileEntity(positionState.position);
-				if (te != null && te instanceof IMultiBlockPart)
+				if (te != null && te instanceof IMultiBlockTile)
 				{
-					((IMultiBlockPart) te).setController(controller);
+					((IMultiBlockTile) te).setController(controller);
 				}
 			}
 		}
@@ -75,7 +75,7 @@ public class MultiBlockFormationHandler {
 			{
 				for (int z = 0; z < blockarray[x][y].length; z++)
 				{
-					if (blockarray[x][y][z].isValidBlock(block) && blockarray[x][y][z].getMultiBlockState() != null)
+					if (blockarray[x][y][z].isValidBlock(block) && blockarray[x][y][z].getMultiBlockState(block) != null)
 					{
 						possibleLocations.add(new BlockPos(x, y, z));
 					}
@@ -100,7 +100,7 @@ public class MultiBlockFormationHandler {
 		return true;
 	}
 	
-	public static MultiBlockCheckResult getPositions (BlockPos possibleLocationInWorld, Rotation rotation, BlockPos possibleLocationInArray, IMultiBlockElement[][][] blockarray) {
+	public static MultiBlockCheckResult getPositions (World world, BlockPos possibleLocationInWorld, Rotation rotation, BlockPos possibleLocationInArray, IMultiBlockElement[][][] blockarray) {
 		BlockPos arrayOriginInWorld = possibleLocationInWorld.subtract(possibleLocationInArray.rotate(rotation));
 		List<PositionStateChanger> worldPositionsStates = new ArrayList<PositionStateChanger>();
 		for (int x = 0; x < blockarray.length; x++)
@@ -109,7 +109,9 @@ public class MultiBlockFormationHandler {
 			{
 				for (int z = 0; z < blockarray[x][y].length; z++)
 				{
-					worldPositionsStates.add(new PositionStateChanger(arrayOriginInWorld.add(new BlockPos(x, y, z).rotate(rotation)), blockarray[x][y][z].getNonMultiBlockState(), blockarray[x][y][z].getMultiBlockState()));
+					BlockPos worldPosition = arrayOriginInWorld.add(new BlockPos(x, y, z).rotate(rotation));
+					IBlockState worldBlockState = world.getBlockState(worldPosition);
+					worldPositionsStates.add(new PositionStateChanger(worldPosition, worldBlockState, blockarray[x][y][z].getMultiBlockState(worldBlockState)));
 				}
 			}
 		}
@@ -119,7 +121,7 @@ public class MultiBlockFormationHandler {
 	public static MultiBlockCheckResult checkLocation (World world, BlockPos possibleLocationInWorld, BlockPos possibleLocationInArray, IMultiBlockElement[][][] blockarray) {
 		for (Rotation rotation : Rotation.values())
 		{
-			if (checkLocation(world, possibleLocationInWorld, rotation, possibleLocationInArray, blockarray)) return getPositions(possibleLocationInWorld, rotation, possibleLocationInArray, blockarray);
+			if (checkLocation(world, possibleLocationInWorld, rotation, possibleLocationInArray, blockarray)) return getPositions(world, possibleLocationInWorld, rotation, possibleLocationInArray, blockarray);
 		}
 		return new MultiBlockCheckResult(false, null);
 	}
@@ -158,7 +160,7 @@ public class MultiBlockFormationHandler {
 		}
 	}
 	
-	public static class MultiBlockBuilder {
+	public static class MultiBlockPartBuilder {
 		
 		public static final IMultiBlockElement ANY_BLOCK = new IMultiBlockElement() {
 			
@@ -173,12 +175,7 @@ public class MultiBlockFormationHandler {
 			}
 			
 			@Override
-			public IBlockState getNonMultiBlockState () {
-				return null;
-			}
-			
-			@Override
-			public IBlockState getMultiBlockState () {
+			public IBlockState getMultiBlockState (IBlockState originalState) {
 				return null;
 			}
 		};
@@ -186,17 +183,17 @@ public class MultiBlockFormationHandler {
 		private IMultiBlockElement[][][] blockarray;
 		private int yLevel = 0;
 		
-		public MultiBlockBuilder () {
+		public MultiBlockPartBuilder () {
 		}
 		
-		public static MultiBlockBuilder newBuilder () {
-			return new MultiBlockBuilder();
+		public static MultiBlockPartBuilder newBuilder () {
+			return new MultiBlockPartBuilder();
 		}
 		
 		/**
 		 * Should ONLY be used where the block's default state is used, null for any block in the specified position
 		 */
-		public MultiBlockBuilder addBlocksToRow (IBlockWrapper wrapper, Block... row) {
+		public MultiBlockPartBuilder addBlocksToRow (IBlockWrapper wrapper, Block... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
 			for (int i = 0; i < row.length; i++)
 			{
@@ -209,7 +206,7 @@ public class MultiBlockFormationHandler {
 		/**
 		 * Add only one option for each slot specified, null for any block in the specified position
 		 */
-		public MultiBlockBuilder addBlocksToRow (IBlockWrapper wrapper, IBlockState... row) {
+		public MultiBlockPartBuilder addBlocksToRow (IBlockWrapper wrapper, IBlockState... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
 			for (int i = 0; i < row.length; i++)
 			{
@@ -222,7 +219,7 @@ public class MultiBlockFormationHandler {
 		/**
 		 * Should ONLY be used where the block's default state is used, null for any block in the specified position
 		 */
-		public MultiBlockBuilder addBlocksToRow (List<Block> multiblockStates, Block... row) {
+		public MultiBlockPartBuilder addBlocksToRow (List<Block> multiblockStates, Block... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
 			for (int i = 0; i < row.length; i++)
 			{
@@ -235,7 +232,7 @@ public class MultiBlockFormationHandler {
 		/**
 		 * Add only one option for each slot specified, null for any block in the specified position
 		 */
-		public MultiBlockBuilder addBlocksToRow (List<IBlockState> multiblockStates, IBlockState... row) {
+		public MultiBlockPartBuilder addBlocksToRow (List<IBlockState> multiblockStates, IBlockState... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
 			for (int i = 0; i < row.length; i++)
 			{
@@ -245,7 +242,7 @@ public class MultiBlockFormationHandler {
 			return addBlocksToRow(elements);
 		}
 		
-		public MultiBlockBuilder addBlocksToRow (IMultiBlockElement... row) {
+		public MultiBlockPartBuilder addBlocksToRow (IMultiBlockElement... row) {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			while (blocklist.size() <= yLevel)
 			{
@@ -259,7 +256,7 @@ public class MultiBlockFormationHandler {
 			return this;
 		}
 		
-		public MultiBlockBuilder newRow () {
+		public MultiBlockPartBuilder newRow () {
 			while (blocklist.size() <= yLevel)
 			{
 				blocklist.add(new ArrayList<List<IMultiBlockElement>>());
@@ -268,21 +265,21 @@ public class MultiBlockFormationHandler {
 			return this;
 		}
 		
-		public MultiBlockBuilder goUp () {
+		public MultiBlockPartBuilder goUp () {
 			return goUp(1);
 		}
 		
-		public MultiBlockBuilder goUp (int amount) {
+		public MultiBlockPartBuilder goUp (int amount) {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			yLevel += amount;
 			return this;
 		}
 		
-		public MultiBlockBuilder goAcross () {
+		public MultiBlockPartBuilder goAcross () {
 			return goAcross(1);
 		}
 		
-		public MultiBlockBuilder goAcross (int amount) {
+		public MultiBlockPartBuilder goAcross (int amount) {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			for (int i = 0; i < amount; i++)
 			{
@@ -291,7 +288,7 @@ public class MultiBlockFormationHandler {
 			return this;
 		}
 		
-		public MultiBlockBuilder build () {
+		public MultiBlockPartBuilder build () {
 			if (checkBlockArray("Error: Trying to rebuild blockarray\n")) return this;
 			int maxX = 0, maxZ = 0;
 			for (List<List<IMultiBlockElement>> zlist : blocklist)
@@ -356,9 +353,7 @@ public class MultiBlockFormationHandler {
 		
 		public boolean isValidBlock (IBlockState block);
 		
-		public IBlockState getNonMultiBlockState ();
-		
-		public IBlockState getMultiBlockState ();
+		public IBlockState getMultiBlockState (IBlockState originalState);
 	}
 	
 	public static class NormalBlock implements IMultiBlockElement {
@@ -403,12 +398,7 @@ public class MultiBlockFormationHandler {
 		}
 		
 		@Override
-		public IBlockState getNonMultiBlockState () {
-			return nonMultiBlockPart;
-		}
-		
-		@Override
-		public IBlockState getMultiBlockState () {
+		public IBlockState getMultiBlockState (IBlockState originalState) {
 			return multiblockPart;
 		}
 		
@@ -421,34 +411,89 @@ public class MultiBlockFormationHandler {
 	public static class ChoiceBlock implements IMultiBlockElement {
 		
 		private final IBlockState[] nonMultiBlockParts;
-		private final IBlockState multiblockPart;
+		private final IBlockState[] multiblockPart;
+		private final boolean matchState;
 		
-		public ChoiceBlock (IBlockState multiblockPart, IBlockState... nonMultiBlockParts) {
-			this.nonMultiBlockParts = nonMultiBlockParts;
-			this.multiblockPart = multiblockPart;
+		public ChoiceBlock (IBlockWrapper multiblockpartGetter, Block... nonMultiBlockParts) {
+			this.nonMultiBlockParts = new IBlockState[nonMultiBlockParts.length];
+			this.multiblockPart = new IBlockState[nonMultiBlockParts.length];
+			for (int i = 0; i < nonMultiBlockParts.length; i++)
+			{
+				this.nonMultiBlockParts[i] = nonMultiBlockParts[i].getDefaultState();
+				this.multiblockPart[i] = multiblockpartGetter.getWrappedState(nonMultiBlockParts[i].getDefaultState());
+			}
+			matchState = false;
+		}
+		
+		public ChoiceBlock (IBlockWrapper multiblockpartGetter, IBlockState... nonMultiBlockParts) {
+			this.nonMultiBlockParts = new IBlockState[nonMultiBlockParts.length];
+			this.multiblockPart = new IBlockState[nonMultiBlockParts.length];
+			for (int i = 0; i < nonMultiBlockParts.length; i++)
+			{
+				this.nonMultiBlockParts[i] = nonMultiBlockParts[i];
+				this.multiblockPart[i] = multiblockpartGetter.getWrappedState(nonMultiBlockParts[i]);
+			}
+			matchState = true;
+		}
+		
+		public ChoiceBlock (Block[] multiblockParts, Block... nonMultiBlockParts) {
+			this.nonMultiBlockParts = new IBlockState[nonMultiBlockParts.length];
+			this.multiblockPart = new IBlockState[nonMultiBlockParts.length];
+			for (int i = 0; i < nonMultiBlockParts.length; i++)
+			{
+				this.nonMultiBlockParts[i] = nonMultiBlockParts[i].getDefaultState();
+				this.multiblockPart[i] = multiblockParts[i].getDefaultState();
+			}
+			matchState = false;
+		}
+		
+		public ChoiceBlock (IBlockState[] multiblockParts, Block... nonMultiBlockParts) {
+			this.nonMultiBlockParts = new IBlockState[nonMultiBlockParts.length];
+			this.multiblockPart = new IBlockState[nonMultiBlockParts.length];
+			for (int i = 0; i < nonMultiBlockParts.length; i++)
+			{
+				this.nonMultiBlockParts[i] = nonMultiBlockParts[i].getDefaultState();
+				this.multiblockPart[i] = multiblockParts[i];
+			}
+			matchState = false;
+		}
+		
+		public ChoiceBlock (IBlockState[] multiblockParts, IBlockState... nonMultiBlockParts) {
+			this.nonMultiBlockParts = new IBlockState[nonMultiBlockParts.length];
+			this.multiblockPart = new IBlockState[nonMultiBlockParts.length];
+			for (int i = 0; i < nonMultiBlockParts.length; i++)
+			{
+				this.nonMultiBlockParts[i] = nonMultiBlockParts[i];
+				this.multiblockPart[i] = multiblockParts[i];
+			}
+			matchState = true;
 		}
 		
 		public boolean isValidBlock (IBlockState block) {
 			for (IBlockState test : nonMultiBlockParts)
 			{
-				if (test == block) return true;
+				if (matchState ? test == block : test.getBlock() == block.getBlock()) return true;
 			}
 			return false;
 		}
 		
 		@Override
-		public IBlockState getNonMultiBlockState () {
-			return nonMultiBlockParts[0];
-		}
-		
-		@Override
-		public IBlockState getMultiBlockState () {
-			return multiblockPart;
+		public IBlockState getMultiBlockState (IBlockState originalState) {
+			for (int i = 0; i < nonMultiBlockParts.length; i++)
+			{
+				if (nonMultiBlockParts[i] == originalState) return multiblockPart[i];
+			}
+			throw new IllegalArgumentException("You (the modder) obviously didnt check if it was a valid block before calling this method");
 		}
 		
 		@Override
 		public String toString () {
 			return nonMultiBlockParts.toString();
 		}
+	}
+	
+	public static interface IMultiBlockPart {
+		
+		public boolean isValidPart (IMultiBlockPart part);
 	}
 }

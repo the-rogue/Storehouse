@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
 
-public interface IMultiBlockController extends IMultiBlockPart {
+public interface IMultiBlockController extends IMultiBlockTile {
 	
 	public World getPositionWorld ();
 	

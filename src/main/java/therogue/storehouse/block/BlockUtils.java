@@ -22,7 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import therogue.storehouse.tile.multiblock.IMultiBlockPart;
+import therogue.storehouse.tile.multiblock.IMultiBlockTile;
 
 public class BlockUtils {
 	
@@ -77,11 +77,11 @@ public class BlockUtils {
 	
 	public static boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof IMultiBlockPart)
+		if (te instanceof IMultiBlockTile)
 		{
 			if (!world.isRemote)
 			{
-				IMultiBlockPart mbpte = (IMultiBlockPart) te;
+				IMultiBlockTile mbpte = (IMultiBlockTile) te;
 				return mbpte.getController().onMultiBlockActivatedAt(world, pos, state, player, hand, side);
 			}
 		}
