@@ -10,7 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
 
 public interface IMultiBlockController extends IMultiBlockTile {
 	
@@ -18,7 +18,7 @@ public interface IMultiBlockController extends IMultiBlockTile {
 	
 	public BlockPos getPosition ();
 	
-	public IMultiBlockElement[][][] getStructure ();
+	public MultiBlockStructure getStructure ();
 	
 	public void onBlockBroken (@Nullable BlockPos at);
 	

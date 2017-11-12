@@ -15,13 +15,13 @@ import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.multiblock.IMultiBlockTile;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.ChoiceBlock;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockPartBuilder;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
 import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
 
 public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	
-	private IMultiBlockElement[][][] structure;
+	private MultiBlockStructure structure;
 	public BlockMultiBlockWrapper multiblockstates = new BlockMultiBlockWrapper("carbon_compressor_mb", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
 	
 	public BlockCarbonCompressor (String name) {
@@ -50,7 +50,7 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 		super.breakBlock(worldIn, pos, state);
 	}
 	
-	public IMultiBlockElement[][][] getMultiBlockStructure () {
+	public MultiBlockStructure getMultiBlockStructure () {
 		return structure;
 	}
 	
@@ -61,6 +61,6 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 		carbon_compressor.newRow().addBlocksToRow(multiblockstates, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addBlocksToRow(new ChoiceBlock(multiblockstates, Blocks.DIAMOND_BLOCK, Blocks.IRON_BLOCK)).goUp();
 		carbon_compressor.newRow().addBlocksToRow(multiblockstates, null, ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
 		carbon_compressor.build();
-		structure = carbon_compressor.getBlockArray();
+		structure = new MultiBlockStructure(carbon_compressor.getNormalPart(new BlockPos(0, 0, 0)));
 	}
 }

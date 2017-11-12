@@ -18,7 +18,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseMachine;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.IMultiBlockElement;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
 
 public class TileCarbonCompressor extends StorehouseBaseMachine implements IMultiBlockController {
 	
@@ -71,7 +71,7 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	}
 	
 	@Override
-	public IMultiBlockElement[][][] getStructure () {
+	public MultiBlockStructure getStructure () {
 		return ModBlocks.carbon_compressor.getMultiBlockStructure();
 	}
 	
