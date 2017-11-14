@@ -1,6 +1,7 @@
 
 package therogue.storehouse.block.multiblock;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -14,7 +15,7 @@ import therogue.storehouse.block.machine.StorehouseBaseFacingMachine;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.multiblock.IMultiBlockTile;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.ChoiceBlock;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.ChoicePart;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockPartBuilder;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
 import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
@@ -58,9 +59,17 @@ public class BlockCarbonCompressor extends StorehouseBaseFacingMachine {
 	public void Init () {
 		MultiBlockPartBuilder carbon_compressor = MultiBlockPartBuilder.newBuilder();
 		carbon_compressor.newRow().addBlocksToRow(multiblockstates, Blocks.IRON_BLOCK, this, Blocks.IRON_BLOCK);
-		carbon_compressor.newRow().addBlocksToRow(multiblockstates, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press).addBlocksToRow(new ChoiceBlock(multiblockstates, Blocks.DIAMOND_BLOCK, Blocks.IRON_BLOCK)).goUp();
+		carbon_compressor.newRow().addBlocksToRow(multiblockstates, null, ModBlocks.thermal_press, null).goUp();
 		carbon_compressor.newRow().addBlocksToRow(multiblockstates, null, ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
 		carbon_compressor.build();
-		structure = new MultiBlockStructure(carbon_compressor.getNormalPart(new BlockPos(0, 0, 0)));
+		MultiBlockPartBuilder backBlocks1 = MultiBlockPartBuilder.newBuilder();
+		backBlocks1.newRow().addBlocksToRow(multiblockstates, (Block) null, null, null);
+		backBlocks1.newRow().addBlocksToRow(multiblockstates, Blocks.IRON_BLOCK, null, Blocks.IRON_BLOCK);
+		backBlocks1.build();
+		MultiBlockPartBuilder backBlocks2 = MultiBlockPartBuilder.newBuilder();
+		backBlocks2.newRow().addBlocksToRow(multiblockstates, (Block) null, null, null);
+		backBlocks2.newRow().addBlocksToRow(multiblockstates, Blocks.DIAMOND_BLOCK, null, Blocks.DIAMOND_BLOCK);
+		backBlocks2.build();
+		structure = new MultiBlockStructure(carbon_compressor.getNormalPart(new BlockPos(0, 0, 0)), new ChoicePart(new BlockPos(0, 0, 0), backBlocks1, backBlocks2));
 	}
 }

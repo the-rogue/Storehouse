@@ -2,6 +2,7 @@
 package therogue.storehouse.tile.multiblock;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,6 +172,7 @@ public class MultiBlockFormationHandler {
 		private List<List<List<IMultiBlockElement>>> blocklist = new ArrayList<List<List<IMultiBlockElement>>>();
 		private IMultiBlockElement[][][] blockarray;
 		private BlockPos endPos;
+		private List<BlockPos> importantBlocks = new ArrayList<BlockPos>();
 		private int yLevel = 0;
 		
 		public MultiBlockPartBuilder () {
@@ -239,9 +241,14 @@ public class MultiBlockFormationHandler {
 				blocklist.add(new ArrayList<List<IMultiBlockElement>>());
 			}
 			List<IMultiBlockElement> rowlist = blocklist.get(yLevel).get(blocklist.get(yLevel).size() - 1);
-			for (IMultiBlockElement rowElement : row)
+			for (int i = 0; i < row.length; i++)
 			{
-				rowlist.add(rowElement);
+				if (!row[i].toString().equals("ANY_BLOCK"))
+				{
+					importantBlocks.add(new BlockPos(i, yLevel, blocklist.get(yLevel).size() - 1));
+					LOG.info("Inclusion" + i + " " + yLevel + " " + (blocklist.get(yLevel).size() - 1));
+				}
+				rowlist.add(row[i]);
 			}
 			return this;
 		}
@@ -339,8 +346,17 @@ public class MultiBlockFormationHandler {
 			return endPos;
 		}
 		
+		public List<BlockPos> getImportantBlocks () {
+			if (importantBlocks == null)
+			{
+				build();
+				LOG.warn("Error: Block Array Not Already Built\n" + Thread.currentThread().getStackTrace());
+			}
+			return importantBlocks;
+		}
+		
 		public IMultiBlockPart getNormalPart (BlockPos startPos) {
-			return new NormalMultiBlockPart(startPos, startPos.add(getEndBlockPos()), getBlockArray());
+			return new NormalMultiBlockPart(startPos, startPos.add(getEndBlockPos()), getImportantBlocks(), getBlockArray());
 		}
 		
 		private boolean checkBlockArray (String message) {
@@ -506,14 +522,19 @@ public class MultiBlockFormationHandler {
 		public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z);
 		
 		/**
-		 * The position where this block starts exclusive
+		 * The position where this block starts inclusive
 		 */
 		public BlockPos getStartPosition ();
 		
 		/**
-		 * The position where this block ends exclusive
+		 * The position where this block ends inclusive
 		 */
 		public BlockPos getEndPosition ();
+		
+		/**
+		 * Any Positions that are blank to this part
+		 */
+		public List<BlockPos> getImportantBlocks ();
 	}
 	
 	public static class NormalMultiBlockPart implements IMultiBlockPart {
@@ -521,16 +542,18 @@ public class MultiBlockFormationHandler {
 		private final IMultiBlockElement[][][] part;
 		private final BlockPos startPosition;
 		private final BlockPos endPosition;
+		private final List<BlockPos> importantBlocks;
 		
-		public NormalMultiBlockPart (BlockPos startPosition, BlockPos endPosition, IMultiBlockElement[][][] part) {
+		public NormalMultiBlockPart (BlockPos startPosition, BlockPos endPosition, List<BlockPos> importantBlocks, IMultiBlockElement[][][] part) {
 			this.part = part;
 			this.startPosition = startPosition;
 			this.endPosition = endPosition;
+			this.importantBlocks = importantBlocks;
 		}
 		
 		@Override
 		public boolean isValidBlock (List<Integer> validParts, IBlockState state, int x, int y, int z, boolean sameBlock) {
-			return part[x][y][z].isValidBlock(state, sameBlock);
+			return part[x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].isValidBlock(state, sameBlock);
 		}
 		
 		@Override
@@ -549,8 +572,13 @@ public class MultiBlockFormationHandler {
 		}
 		
 		@Override
+		public List<BlockPos> getImportantBlocks () {
+			return importantBlocks;
+		}
+		
+		@Override
 		public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z) {
-			return part[x][y][z].getMultiBlockState(originalState);
+			return part[x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getMultiBlockState(originalState);
 		}
 	}
 	
@@ -559,24 +587,43 @@ public class MultiBlockFormationHandler {
 		private final IMultiBlockElement[][][][] parts;
 		private final BlockPos startPosition;
 		private final BlockPos endPosition;
+		private final List<BlockPos> importantBlocks;
 		
-		public ChoicePart (BlockPos startPosition, BlockPos endPosition, IMultiBlockElement[][][]... parts) {
+		public ChoicePart (BlockPos startPosition, MultiBlockPartBuilder... parts) {
+			this(startPosition, parts[0].getEndBlockPos(), parts);
+		}
+		
+		public ChoicePart (BlockPos startPosition, BlockPos endPosition, MultiBlockPartBuilder... parts) {
+			this.parts = new IMultiBlockElement[parts.length][][][];
+			this.importantBlocks = new ArrayList<BlockPos>();
+			for (int i = 0; i < parts.length; i++)
+			{
+				List<BlockPos> importantBlocks = parts[i].getImportantBlocks();
+				this.parts[i] = parts[i].getBlockArray();
+				this.importantBlocks.addAll(importantBlocks);
+			}
+			this.startPosition = startPosition;
+			this.endPosition = endPosition;
+		}
+		
+		public ChoicePart (BlockPos startPosition, BlockPos endPosition, List<BlockPos> importantBlocks, IMultiBlockElement[][][]... parts) {
 			this.parts = parts;
 			this.startPosition = startPosition;
 			this.endPosition = endPosition;
+			this.importantBlocks = importantBlocks;
 		}
 		
 		@Override
 		public boolean isValidBlock (List<Integer> validParts, IBlockState state, int x, int y, int z, boolean sameBlock) {
 			Boolean matches = false;
-			for (Integer part : validParts)
+			for (int i = 0; i < validParts.size(); i++)
 			{
-				if (parts[part][x][y][z].isValidBlock(state, sameBlock))
+				if (parts[validParts.get(i)][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].isValidBlock(state, sameBlock))
 				{
 					matches = true;
 					continue;
 				}
-				validParts.remove(part);
+				validParts.remove(validParts.get(i));
 			}
 			return matches;
 		}
@@ -602,8 +649,13 @@ public class MultiBlockFormationHandler {
 		}
 		
 		@Override
+		public List<BlockPos> getImportantBlocks () {
+			return importantBlocks;
+		}
+		
+		@Override
 		public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z) {
-			return parts[partNo][x][y][z].getMultiBlockState(originalState);
+			return parts[partNo][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getMultiBlockState(originalState);
 		}
 	}
 	
@@ -635,6 +687,11 @@ public class MultiBlockFormationHandler {
 			public BlockPos getEndPosition () {
 				return new BlockPos(0, 0, 0);
 			}
+			
+			@Override
+			public List<BlockPos> getImportantBlocks () {
+				return Collections.emptyList();
+			}
 		};
 		private final Integer[][][] partPointers;
 		public final List<IMultiBlockPart> parts;
@@ -651,16 +708,16 @@ public class MultiBlockFormationHandler {
 				if (partEndPosition.getY() > maxY) maxY = partEndPosition.getY();
 				if (partEndPosition.getZ() > maxZ) maxZ = partEndPosition.getZ();
 			}
-			partPointers = new Integer[maxX][][];
-			for (Integer[][] yPart : partPointers)
+			partPointers = new Integer[maxX + 1][][];
+			for (int x = 0; x < partPointers.length; x++)
 			{
-				yPart = new Integer[maxY][];
-				for (Integer[] zPart : yPart)
+				partPointers[x] = new Integer[maxY + 1][];
+				for (int y = 0; y < partPointers[x].length; y++)
 				{
-					zPart = new Integer[maxZ];
-					for (int i = 0; i < zPart.length; i++)
+					partPointers[x][y] = new Integer[maxZ + 1];
+					for (int z = 0; z < partPointers[x][y].length; z++)
 					{
-						zPart[i] = 0;
+						partPointers[x][y][z] = 0;
 					}
 				}
 			}
@@ -669,14 +726,18 @@ public class MultiBlockFormationHandler {
 				IMultiBlockPart part = parts.get(i);
 				BlockPos startPos = part.getStartPosition();
 				BlockPos endPos = part.getEndPosition();
+				List<BlockPos> importantBlocks = part.getImportantBlocks();
 				for (int x = startPos.getX(); x < endPos.getX(); x++)
 				{
 					for (int y = startPos.getY(); y < endPos.getY(); y++)
 					{
 						for (int z = startPos.getZ(); z < endPos.getZ(); z++)
 						{
-							LOG.info("X: " + x + " Y: " + y + " Z: " + z);
-							partPointers[x][y][z] = i;
+							if (importantBlocks.contains(new BlockPos(x, y, z)))
+							{
+								if (partPointers[x][y][z] == 0) partPointers[x][y][z] = i;
+								else throw new RuntimeException("The position at: " + x + ", " + y + ", " + z + " has already been assigned to a part");
+							}
 						}
 					}
 				}
@@ -712,7 +773,7 @@ public class MultiBlockFormationHandler {
 			}
 			
 			public IBlockState getMultiBlockState (IBlockState originalState) {
-				if (currentPartNo.size() != 1) throw new IllegalStateException("Cannot be 2 parts that match the same world configuration, " + "either 2 identical parts were registered, or this class was not used to check the world previously");
+				if (currentPartNo.size() != 1) throw new IllegalStateException("Cannot be > 1 parts that match the same world configuration, " + "either 2 identical parts were registered, or this class was not used to check the world previously");
 				return part.getMultiBlockState(originalState, currentPartNo.get(0), x, y, z);
 			}
 			
@@ -735,6 +796,11 @@ public class MultiBlockFormationHandler {
 				x = nextX;
 				y = nextY;
 				z = nextZ;
+				if (part instanceof ChoicePart)
+				{
+					LOG.info(currentPartNo);
+					LOG.info(partNos.get(part));
+				}
 				part = parts.get(partPointers[x][y][z]);
 				currentPartNo = partNos.get(part);
 				if (nextX == maxX && nextY == maxY && nextZ == maxZ) return false;
