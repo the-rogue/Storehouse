@@ -15,10 +15,10 @@
 				"model": "storehouse:machine/thermal_press"
 			},
 			"3": {
-				"model": "storehouse:generator/solar/advanced"
+				"model": "none"
 			},
 			"4": {
-				"model": "minecraft:iron_block"
+				"model": "storehouse:generator/solar/advanced"
 			},
 			"5": {
 				"model": "minecraft:iron_block"

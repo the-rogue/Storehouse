@@ -86,7 +86,12 @@ public class MultiBlockFormationHandler {
 		BlockPos arrayOriginInWorld = possibleLocationInWorld.subtract(possibleLocationInArray.rotate(rotation));
 		while (blocktest.next())
 		{
-			if (!blocktest.isValidBlock(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))), false)) return false;
+			if (!blocktest.isValidBlock(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))), false))
+			{
+				LOG.debug("Failed: " + arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation)));
+				LOG.debug(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))));
+				return false;
+			}
 		}
 		return true;
 	}
@@ -173,17 +178,61 @@ public class MultiBlockFormationHandler {
 		private IMultiBlockElement[][][] blockarray;
 		private BlockPos endPos;
 		private List<BlockPos> importantBlocks = new ArrayList<BlockPos>();
+		private IBlockWrapper currentWrapper;
 		private int yLevel = 0;
 		
 		public MultiBlockPartBuilder () {
+		}
+		
+		public MultiBlockPartBuilder (IBlockWrapper wrapper) {
+			setWrapper(wrapper);
 		}
 		
 		public static MultiBlockPartBuilder newBuilder () {
 			return new MultiBlockPartBuilder();
 		}
 		
+		public static MultiBlockPartBuilder newBuilder (IBlockWrapper wrapper) {
+			return new MultiBlockPartBuilder(wrapper);
+		}
+		
+		public MultiBlockPartBuilder setWrapper (IBlockWrapper wrapper) {
+			if (wrapper == null) throw new NullPointerException("The wrapper passed to setWrapper was null");
+			currentWrapper = wrapper;
+			return this;
+		}
+		
 		/**
-		 * Should ONLY be used where the block's default state is used, null for any block in the specified position
+		 * Should ONLY be used where the block's default state is used, null for any block in the specified position Add blocks to the current row, which is in the x direction.
+		 * Uses the current Wrapper
+		 */
+		public MultiBlockPartBuilder addBlocksToRow (Block... row) {
+			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
+			for (int i = 0; i < row.length; i++)
+			{
+				if (row[i] == null) elements[i] = ANY_BLOCK;
+				else elements[i] = new NormalBlock(row[i], currentWrapper);
+			}
+			return addBlocksToRow(elements);
+		}
+		
+		/**
+		 * Add only one option for each slot specified, null for any block in the specified position Add blocks to the current row, which is in the x direction.
+		 * Uses the current Wrapper
+		 */
+		public MultiBlockPartBuilder addBlocksToRow (IBlockState... row) {
+			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
+			for (int i = 0; i < row.length; i++)
+			{
+				if (row[i] == null) elements[i] = ANY_BLOCK;
+				else elements[i] = new NormalBlock(row[i], currentWrapper);
+			}
+			return addBlocksToRow(elements);
+		}
+		
+		/**
+		 * Should ONLY be used where the block's default state is used, null for any block in the specified position.
+		 * Adds blocks to the current row, which is in the x direction
 		 */
 		public MultiBlockPartBuilder addBlocksToRow (IBlockWrapper wrapper, Block... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
@@ -196,7 +245,8 @@ public class MultiBlockFormationHandler {
 		}
 		
 		/**
-		 * Add only one option for each slot specified, null for any block in the specified position
+		 * Add only one option for each slot specified, null for any block in the specified position.
+		 * Adds blocks to the current row, which is in the x direction
 		 */
 		public MultiBlockPartBuilder addBlocksToRow (IBlockWrapper wrapper, IBlockState... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
@@ -209,7 +259,8 @@ public class MultiBlockFormationHandler {
 		}
 		
 		/**
-		 * Should ONLY be used where the block's default state is used, null for any block in the specified position
+		 * Should ONLY be used where the block's default state is used, null for any block in the specified position.
+		 * Add blocks to the current row, which is in the x direction
 		 */
 		public MultiBlockPartBuilder addBlocksToRow (List<Block> multiblockStates, Block... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
@@ -222,7 +273,8 @@ public class MultiBlockFormationHandler {
 		}
 		
 		/**
-		 * Add only one option for each slot specified, null for any block in the specified position
+		 * Add only one option for each slot specified, null for any block in the specified position.
+		 * Add blocks to the current row, which is in the x direction
 		 */
 		public MultiBlockPartBuilder addBlocksToRow (List<IBlockState> multiblockStates, IBlockState... row) {
 			IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
@@ -234,6 +286,9 @@ public class MultiBlockFormationHandler {
 			return addBlocksToRow(elements);
 		}
 		
+		/**
+		 * Add blocks to the current row, which is in the x direction
+		 */
 		public MultiBlockPartBuilder addBlocksToRow (IMultiBlockElement... row) {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			while (blocklist.size() <= yLevel)
@@ -246,14 +301,17 @@ public class MultiBlockFormationHandler {
 				if (!row[i].toString().equals("ANY_BLOCK"))
 				{
 					importantBlocks.add(new BlockPos(i, yLevel, blocklist.get(yLevel).size() - 1));
-					LOG.info("Inclusion" + i + " " + yLevel + " " + (blocklist.get(yLevel).size() - 1));
 				}
 				rowlist.add(row[i]);
 			}
 			return this;
 		}
 		
+		/**
+		 * Adds a new row (increases the z by 1)
+		 */
 		public MultiBlockPartBuilder newRow () {
+			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			while (blocklist.size() <= yLevel)
 			{
 				blocklist.add(new ArrayList<List<IMultiBlockElement>>());
@@ -262,25 +320,30 @@ public class MultiBlockFormationHandler {
 			return this;
 		}
 		
+		/**
+		 * Increases the y by 1
+		 */
 		public MultiBlockPartBuilder goUp () {
 			return goUp(1);
 		}
 		
+		/**
+		 * Increases the y by the set amount
+		 */
 		public MultiBlockPartBuilder goUp (int amount) {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			yLevel += amount;
 			return this;
 		}
 		
-		public MultiBlockPartBuilder goAcross () {
-			return goAcross(1);
-		}
-		
-		public MultiBlockPartBuilder goAcross (int amount) {
+		/**
+		 * Adds a set number of new rows (increases the z by amount)
+		 */
+		public MultiBlockPartBuilder newRow (int amount) {
 			if (checkBlockArray("Error: Trying to add to a built blockarray")) return this;
 			for (int i = 0; i < amount; i++)
 			{
-				blocklist.get(yLevel).add(new ArrayList<IMultiBlockElement>());
+				newRow();
 			}
 			return this;
 		}
@@ -353,10 +416,6 @@ public class MultiBlockFormationHandler {
 				LOG.warn("Error: Block Array Not Already Built\n" + Thread.currentThread().getStackTrace());
 			}
 			return importantBlocks;
-		}
-		
-		public IMultiBlockPart getNormalPart (BlockPos startPos) {
-			return new NormalMultiBlockPart(startPos, startPos.add(getEndBlockPos()), getImportantBlocks(), getBlockArray());
 		}
 		
 		private boolean checkBlockArray (String message) {
@@ -537,14 +596,26 @@ public class MultiBlockFormationHandler {
 		public List<BlockPos> getImportantBlocks ();
 	}
 	
-	public static class NormalMultiBlockPart implements IMultiBlockPart {
+	public static class NormalPart implements IMultiBlockPart {
 		
 		private final IMultiBlockElement[][][] part;
 		private final BlockPos startPosition;
 		private final BlockPos endPosition;
 		private final List<BlockPos> importantBlocks;
 		
-		public NormalMultiBlockPart (BlockPos startPosition, BlockPos endPosition, List<BlockPos> importantBlocks, IMultiBlockElement[][][] part) {
+		public NormalPart (int x, int y, int z, MultiBlockPartBuilder part) {
+			this(new BlockPos(x, y, z), part.getEndBlockPos(), part);
+		}
+		
+		public NormalPart (BlockPos startPosition, MultiBlockPartBuilder part) {
+			this(startPosition, part.getEndBlockPos(), part);
+		}
+		
+		public NormalPart (BlockPos startPosition, BlockPos endPosition, MultiBlockPartBuilder part) {
+			this(startPosition, endPosition, part.getImportantBlocks(), part.getBlockArray());
+		}
+		
+		public NormalPart (BlockPos startPosition, BlockPos endPosition, List<BlockPos> importantBlocks, IMultiBlockElement[][][] part) {
 			this.part = part;
 			this.startPosition = startPosition;
 			this.endPosition = endPosition;
@@ -589,6 +660,10 @@ public class MultiBlockFormationHandler {
 		private final BlockPos endPosition;
 		private final List<BlockPos> importantBlocks;
 		
+		public ChoicePart (int x, int y, int z, MultiBlockPartBuilder... parts) {
+			this(new BlockPos(x, y, z), parts[0].getEndBlockPos(), parts);
+		}
+		
 		public ChoicePart (BlockPos startPosition, MultiBlockPartBuilder... parts) {
 			this(startPosition, parts[0].getEndBlockPos(), parts);
 		}
@@ -616,14 +691,19 @@ public class MultiBlockFormationHandler {
 		@Override
 		public boolean isValidBlock (List<Integer> validParts, IBlockState state, int x, int y, int z, boolean sameBlock) {
 			Boolean matches = false;
-			for (int i = 0; i < validParts.size(); i++)
+			List<Integer> invalidParts = new ArrayList<Integer>();
+			for (Integer part : validParts)
 			{
-				if (parts[validParts.get(i)][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].isValidBlock(state, sameBlock))
+				if (parts[part][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].isValidBlock(state, sameBlock))
 				{
 					matches = true;
 					continue;
 				}
-				validParts.remove(validParts.get(i));
+				invalidParts.add(part);
+			}
+			for (Integer invalidPart : invalidParts)
+			{
+				validParts.remove(invalidPart);
 			}
 			return matches;
 		}
@@ -656,6 +736,33 @@ public class MultiBlockFormationHandler {
 		@Override
 		public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z) {
 			return parts[partNo][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getMultiBlockState(originalState);
+		}
+	}
+	
+	public static class StructureHolder {
+		
+		List<IMultiBlockPart> parts = new ArrayList<IMultiBlockPart>();
+		
+		public StructureHolder () {
+		}
+		
+		public static StructureHolder newHolder () {
+			return new StructureHolder();
+		}
+		
+		public StructureHolder addPart (IMultiBlockPart part) {
+			parts.add(part);
+			return this;
+		}
+		
+		public MultiBlockStructure getStructure () {
+			if (parts.size() < 1)
+			{
+				LOG.warn("Error: Structure size < 1, this is probably not intended\n" + Thread.currentThread().getStackTrace());
+			}
+			MultiBlockStructure structure = new MultiBlockStructure(parts.toArray(new IMultiBlockPart[] {}));
+			parts.clear();
+			return structure;
 		}
 	}
 	
@@ -796,11 +903,6 @@ public class MultiBlockFormationHandler {
 				x = nextX;
 				y = nextY;
 				z = nextZ;
-				if (part instanceof ChoicePart)
-				{
-					LOG.info(currentPartNo);
-					LOG.info(partNos.get(part));
-				}
 				part = parts.get(partPointers[x][y][z]);
 				currentPartNo = partNos.get(part);
 				if (nextX == maxX && nextY == maxY && nextZ == maxZ) return false;

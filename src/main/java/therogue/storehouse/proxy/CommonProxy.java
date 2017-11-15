@@ -20,6 +20,7 @@ import therogue.storehouse.config.ConfigHandler;
 import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
+import therogue.storehouse.init.ModMultiBlocks;
 import therogue.storehouse.init.ModTileEntities;
 import therogue.storehouse.init.Recipes;
 import therogue.storehouse.util.LOG;
@@ -37,6 +38,7 @@ public abstract class CommonProxy implements IProxy {
 		ModItems.preInit();
 		ModBlocks.preInit();
 		ModTileEntities.preInit();
+		ModMultiBlocks.preInit();
 		ConfigHandler.preInit(event.getSuggestedConfigurationFile());
 		LOG.debug("Common Proxy Finished PreInitialisation");
 	}
@@ -49,6 +51,7 @@ public abstract class CommonProxy implements IProxy {
 		LOG.debug("Common Proxy Started Initialisation");
 		ModItems.Init();
 		ModBlocks.Init();
+		ModMultiBlocks.Init();
 		Recipes.Init();
 		StorehouseWorldGen.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Storehouse.instance, GuiHandler.INSTANCE);
@@ -63,6 +66,7 @@ public abstract class CommonProxy implements IProxy {
 		LOG.debug("Common Proxy Started PostInitialisation");
 		ModItems.postInit();
 		ModBlocks.Init();
+		ModMultiBlocks.postInit();
 		LOG.debug("Common Proxy Finished PostInitialisation");
 	}
 }

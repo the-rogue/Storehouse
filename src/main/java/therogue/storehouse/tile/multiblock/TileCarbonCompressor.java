@@ -16,9 +16,11 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.ModMultiBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
+import therogue.storehouse.util.LOG;
 
 public class TileCarbonCompressor extends StorehouseBaseMachine implements IMultiBlockController {
 	
@@ -46,6 +48,7 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
 		if (!world.isRemote)
 		{
+			LOG.info("Activated");
 			if (!isFormed)
 			{
 				if (tryFormMultiBlock()) player.sendStatusMessage(new TextComponentTranslation("chatmessage.storehouse:multiblock_formed"), false);
@@ -72,7 +75,7 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	
 	@Override
 	public MultiBlockStructure getStructure () {
-		return ModBlocks.carbon_compressor.getMultiBlockStructure();
+		return ModMultiBlocks.carbonCompressorStructure;
 	}
 	
 	@Override
