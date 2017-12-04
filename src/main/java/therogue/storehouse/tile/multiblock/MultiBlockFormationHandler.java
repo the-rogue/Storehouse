@@ -4,8 +4,10 @@ package therogue.storehouse.tile.multiblock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -14,27 +16,30 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import therogue.storehouse.block.multiblock.IBlockWrapper;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure.StructureTest;
 import therogue.storehouse.util.LOG;
 
 public class MultiBlockFormationHandler {
 	
-	private static Map<IMultiBlockController, List<PositionStateChanger>> multiblocks = new HashMap<IMultiBlockController, List<PositionStateChanger>>();
-	
-	public static boolean formMultiBlock (IMultiBlockController controller) {
+	public static MultiBlockFormationResult formMultiBlock (IMultiBlockController controller) {
 		World controllerWorld = controller.getPositionWorld();
 		MultiBlockCheckResult result = checkStructure(controllerWorld, controller.getPosition(), controller.getStructure());
-		if (!result.valid) return false;
+		if (!result.valid) return new MultiBlockFormationResult(false, null);
 		List<PositionStateChanger> worldPositionStates = result.worldPositionsStates;
-		multiblocks.put(controller, worldPositionStates);
 		for (PositionStateChanger positionState : worldPositionStates)
 		{
-			if (positionState.inMultiblockState != null)
+			if (positionState.inMultiblockState != null && !positionState.position.equals(controller.getPosition()))
 			{
 				controllerWorld.setBlockState(positionState.position, positionState.inMultiblockState);
 				TileEntity te = controllerWorld.getTileEntity(positionState.position);
@@ -44,22 +49,36 @@ public class MultiBlockFormationHandler {
 				}
 			}
 		}
-		return true;
+		return new MultiBlockFormationResult(true, worldPositionStates);
+	}
+	
+	public static class MultiBlockFormationResult {
+		
+		public final boolean formed;
+		public final List<PositionStateChanger> components;
+		
+		public MultiBlockFormationResult (boolean formed, List<PositionStateChanger> components) {
+			this.formed = formed;
+			this.components = components;
+		}
 	}
 	
 	public static void removeMultiBlock (IMultiBlockController controller, @Nullable BlockPos at) {
 		World controllerWorld = controller.getPositionWorld();
-		List<PositionStateChanger> worldPositionStates = multiblocks.remove(controller);
+		List<PositionStateChanger> worldPositionStates = controller.getComponents();
 		if (worldPositionStates == null) return;
 		for (PositionStateChanger positionState : worldPositionStates)
 		{
-			if (positionState.nonMultiblockState != null && !positionState.position.equals(controller.getPosition()) && !positionState.position.equals(at)) controllerWorld.setBlockState(positionState.position, positionState.nonMultiblockState);
+			if (positionState.nonMultiblockState != null && !positionState.position.equals(controller.getPosition()) && !positionState.position.equals(at))
+			{
+				controllerWorld.setBlockState(positionState.position, positionState.nonMultiblockState);
+			}
 		}
 	}
 	
 	public static boolean sameStructure (IMultiBlockController controller) {
 		MultiBlockCheckResult result = checkStructure(controller.getPositionWorld(), controller.getPosition(), controller.getStructure());
-		if (result.valid && getPositionsFromPSCList(result.worldPositionsStates).equals(getPositionsFromPSCList(multiblocks.get(controller)))) return true;
+		if (result.valid && getPositionsFromPSCList(result.worldPositionsStates).equals(getPositionsFromPSCList(controller.getComponents()))) return true;
 		return false;
 	}
 	
@@ -86,12 +105,7 @@ public class MultiBlockFormationHandler {
 		BlockPos arrayOriginInWorld = possibleLocationInWorld.subtract(possibleLocationInArray.rotate(rotation));
 		while (blocktest.next())
 		{
-			if (!blocktest.isValidBlock(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))), false))
-			{
-				LOG.debug("Failed: " + arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation)));
-				LOG.debug(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))));
-				return false;
-			}
+			if (!blocktest.isValidBlock(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))), false)) return false;
 		}
 		return true;
 	}
@@ -142,8 +156,9 @@ public class MultiBlockFormationHandler {
 		}
 	}
 	
-	private static class PositionStateChanger {
+	public static class PositionStateChanger {
 		
+		private static IForgeRegistry<Block> blockRegistry;
 		public final BlockPos position;
 		public final IBlockState nonMultiblockState;
 		public final IBlockState inMultiblockState;
@@ -152,6 +167,64 @@ public class MultiBlockFormationHandler {
 			this.position = position;
 			this.nonMultiblockState = nonMultiblockState;
 			this.inMultiblockState = inMultiblockState;
+		}
+		
+		@Override
+		public String toString () {
+			return "PositionStateChanger at: " + position;
+		}
+		
+		public static NBTTagList writeToNBT (List<PositionStateChanger> states) {
+			if (blockRegistry == null) init();
+			NBTTagList tag = new NBTTagList();
+			for (PositionStateChanger state : states)
+			{
+				NBTTagCompound stateTag = new NBTTagCompound();
+				stateTag.setLong("Position", state.position.toLong());
+				if (state.nonMultiblockState != null)
+				{
+					stateTag.setString("NMBName", state.nonMultiblockState.getBlock().getRegistryName().toString());
+					stateTag.setByte("NMBMeta", (byte) state.nonMultiblockState.getBlock().getMetaFromState(state.nonMultiblockState));
+				}
+				if (state.inMultiblockState != null)
+				{
+					stateTag.setString("MBName", state.inMultiblockState.getBlock().getRegistryName().toString());
+					stateTag.setByte("MBMeta", (byte) state.inMultiblockState.getBlock().getMetaFromState(state.inMultiblockState));
+				}
+				tag.appendTag(stateTag);
+			}
+			return tag;
+		}
+		
+		@SuppressWarnings ("deprecation")
+		public static List<PositionStateChanger> readFromNBT (NBTTagList nbt) {
+			if (blockRegistry == null) init();
+			List<PositionStateChanger> states = new ArrayList<PositionStateChanger>();
+			for (int i = 0; i < nbt.tagCount(); i++)
+			{
+				NBTTagCompound stateTag = nbt.getCompoundTagAt(i);
+				BlockPos position = BlockPos.fromLong(stateTag.getLong("Position"));
+				ResourceLocation NMBName = new ResourceLocation(stateTag.getString("NMBName"));
+				IBlockState nonMultiBlockState = Blocks.AIR.getDefaultState();
+				if (blockRegistry.containsKey(NMBName))
+				{
+					nonMultiBlockState = blockRegistry.getValue(NMBName).getStateFromMeta((int) stateTag.getByte("NMBMeta"));
+				}
+				ResourceLocation MBName = new ResourceLocation(stateTag.getString("MBName"));
+				IBlockState inMultiBlockState = Blocks.AIR.getDefaultState();
+				if (blockRegistry.containsKey(MBName))
+				{
+					inMultiBlockState = blockRegistry.getValue(MBName).getStateFromMeta((int) stateTag.getByte("MBMeta"));
+				}
+				states.add(new PositionStateChanger(position, nonMultiBlockState, inMultiBlockState));
+			}
+			return states;
+		}
+		
+		private static void init () {
+			if (blockRegistry != null) return;
+			blockRegistry = GameRegistry.findRegistry(Block.class);
+			if (blockRegistry == null) throw new IllegalStateException("Block Registry CANNOT be null when reading NBT");
 		}
 	}
 	
@@ -203,7 +276,8 @@ public class MultiBlockFormationHandler {
 		}
 		
 		/**
-		 * Should ONLY be used where the block's default state is used, null for any block in the specified position Add blocks to the current row, which is in the x direction.
+		 * Should ONLY be used where the block's default state is used, null for any block in the specified position
+		 * Add blocks to the current row, which is in the x direction.
 		 * Uses the current Wrapper
 		 */
 		public MultiBlockPartBuilder addBlocksToRow (Block... row) {
@@ -217,7 +291,8 @@ public class MultiBlockFormationHandler {
 		}
 		
 		/**
-		 * Add only one option for each slot specified, null for any block in the specified position Add blocks to the current row, which is in the x direction.
+		 * Add only one option for each slot specified, null for any block in the specified position
+		 * Add blocks to the current row, which is in the x direction.
 		 * Uses the current Wrapper
 		 */
 		public MultiBlockPartBuilder addBlocksToRow (IBlockState... row) {
@@ -591,7 +666,7 @@ public class MultiBlockFormationHandler {
 		public BlockPos getEndPosition ();
 		
 		/**
-		 * Any Positions that are blank to this part
+		 * Any Positions that are not blank to this part
 		 */
 		public List<BlockPos> getImportantBlocks ();
 	}
@@ -661,22 +736,26 @@ public class MultiBlockFormationHandler {
 		private final List<BlockPos> importantBlocks;
 		
 		public ChoicePart (int x, int y, int z, MultiBlockPartBuilder... parts) {
-			this(new BlockPos(x, y, z), parts[0].getEndBlockPos(), parts);
+			this(new BlockPos(x, y, z), parts[0].getEndBlockPos().add(x, y, z), parts);
 		}
 		
 		public ChoicePart (BlockPos startPosition, MultiBlockPartBuilder... parts) {
-			this(startPosition, parts[0].getEndBlockPos(), parts);
+			this(startPosition, parts[0].getEndBlockPos().add(startPosition), parts);
 		}
 		
 		public ChoicePart (BlockPos startPosition, BlockPos endPosition, MultiBlockPartBuilder... parts) {
 			this.parts = new IMultiBlockElement[parts.length][][][];
 			this.importantBlocks = new ArrayList<BlockPos>();
+			Set<BlockPos> setImportantBlocks = new HashSet<BlockPos>();
 			for (int i = 0; i < parts.length; i++)
 			{
-				List<BlockPos> importantBlocks = parts[i].getImportantBlocks();
+				for (BlockPos p : parts[i].getImportantBlocks())
+				{
+					setImportantBlocks.add(p.add(startPosition));
+				}
 				this.parts[i] = parts[i].getBlockArray();
-				this.importantBlocks.addAll(importantBlocks);
 			}
+			this.importantBlocks.addAll(setImportantBlocks);
 			this.startPosition = startPosition;
 			this.endPosition = endPosition;
 		}
@@ -815,13 +894,13 @@ public class MultiBlockFormationHandler {
 				if (partEndPosition.getY() > maxY) maxY = partEndPosition.getY();
 				if (partEndPosition.getZ() > maxZ) maxZ = partEndPosition.getZ();
 			}
-			partPointers = new Integer[maxX + 1][][];
+			partPointers = new Integer[maxX][][];
 			for (int x = 0; x < partPointers.length; x++)
 			{
-				partPointers[x] = new Integer[maxY + 1][];
+				partPointers[x] = new Integer[maxY][];
 				for (int y = 0; y < partPointers[x].length; y++)
 				{
-					partPointers[x][y] = new Integer[maxZ + 1];
+					partPointers[x][y] = new Integer[maxZ];
 					for (int z = 0; z < partPointers[x][y].length; z++)
 					{
 						partPointers[x][y][z] = 0;
@@ -905,11 +984,11 @@ public class MultiBlockFormationHandler {
 				z = nextZ;
 				part = parts.get(partPointers[x][y][z]);
 				currentPartNo = partNos.get(part);
-				if (nextX == maxX && nextY == maxY && nextZ == maxZ) return false;
-				if (nextZ == maxZ)
+				if (nextX == (maxX - 1) && nextY == (maxY - 1) && nextZ == (maxZ - 1)) return false;
+				if (nextZ == (maxZ - 1))
 				{
 					nextZ = 0;
-					if (nextY == maxY)
+					if (nextY == (maxY - 1))
 					{
 						nextY = 0;
 						nextX++;

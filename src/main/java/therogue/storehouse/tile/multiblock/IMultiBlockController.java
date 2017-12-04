@@ -1,6 +1,8 @@
 
 package therogue.storehouse.tile.multiblock;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.state.IBlockState;
@@ -11,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.PositionStateChanger;
 
 public interface IMultiBlockController extends IMultiBlockTile {
 	
@@ -19,6 +22,8 @@ public interface IMultiBlockController extends IMultiBlockTile {
 	public BlockPos getPosition ();
 	
 	public MultiBlockStructure getStructure ();
+	
+	public List<PositionStateChanger> getComponents ();
 	
 	public void onBlockBroken (@Nullable BlockPos at);
 	

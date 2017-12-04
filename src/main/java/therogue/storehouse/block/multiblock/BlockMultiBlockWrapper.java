@@ -33,6 +33,7 @@ import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.tile.multiblock.IMultiBlockTile;
 import therogue.storehouse.tile.multiblock.TileMultiblockPlaceholder;
+import therogue.storehouse.tile.multiblock.TileMultiblockPlaceholder.NoControllerException;
 import therogue.storehouse.util.LOG;
 
 public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITileEntityProvider, IBlockWrapper {
@@ -185,7 +186,14 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te instanceof IMultiBlockTile)
 		{
-			((IMultiBlockTile) te).getController().onBlockBroken(pos);
+			try
+			{
+				((IMultiBlockTile) te).getController().onBlockBroken(pos);
+			}
+			catch (NoControllerException e)
+			{
+				LOG.warn("Could not Notify the controller of block at: " + pos + " broken");
+			}
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

@@ -1,6 +1,8 @@
 
 package therogue.storehouse.tile.multiblock;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.state.IBlockState;
@@ -9,6 +11,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -19,13 +22,15 @@ import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModMultiBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.StorehouseBaseMachine;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockFormationResult;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
-import therogue.storehouse.util.LOG;
+import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.PositionStateChanger;
 
 public class TileCarbonCompressor extends StorehouseBaseMachine implements IMultiBlockController {
 	
 	private boolean isFormed = false;
 	private boolean breaking = false;
+	private List<PositionStateChanger> components = null;
 	
 	public TileCarbonCompressor () {
 		super(ModBlocks.carbon_compressor);
@@ -48,7 +53,6 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
 		if (!world.isRemote)
 		{
-			LOG.info("Activated");
 			if (!isFormed)
 			{
 				if (tryFormMultiBlock()) player.sendStatusMessage(new TextComponentTranslation("chatmessage.storehouse:multiblock_formed"), false);
@@ -61,9 +65,14 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	}
 	
 	private boolean tryFormMultiBlock () {
-		if (!world.isRemote && MultiBlockFormationHandler.formMultiBlock(getController()))
+		if (!world.isRemote)
 		{
-			isFormed = true;
+			MultiBlockFormationResult result = MultiBlockFormationHandler.formMultiBlock(getController());
+			if (result.formed)
+			{
+				isFormed = true;
+				components = result.components;
+			}
 		}
 		return isFormed;
 	}
@@ -86,6 +95,7 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 			MultiBlockFormationHandler.removeMultiBlock(this, at);
 			breaking = false;
 			isFormed = false;
+			components = null;
 		}
 	}
 	
@@ -110,9 +120,15 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	}
 	
 	@Override
+	public List<PositionStateChanger> getComponents () {
+		return components;
+	}
+	
+	@Override
 	public NBTTagCompound writeToNBT (NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setBoolean("formed", isFormed);
+		if (isFormed) nbt.setTag("PositionStateChangers", MultiBlockFormationHandler.PositionStateChanger.writeToNBT(components));
 		return nbt;
 	}
 	
@@ -120,6 +136,7 @@ public class TileCarbonCompressor extends StorehouseBaseMachine implements IMult
 	public void readFromNBT (NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		isFormed = nbt.getBoolean("formed");
+		if (isFormed) components = MultiBlockFormationHandler.PositionStateChanger.readFromNBT((NBTTagList) nbt.getTag("PositionStateChangers"));
 	}
 	
 	// -------------------------IInteractionObject-----------------------------------------------------------------
