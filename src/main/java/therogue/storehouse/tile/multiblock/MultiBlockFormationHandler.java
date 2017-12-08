@@ -63,9 +63,8 @@ public class MultiBlockFormationHandler {
 		}
 	}
 	
-	public static void removeMultiBlock (IMultiBlockController controller, @Nullable BlockPos at) {
+	public static void removeMultiBlock (IMultiBlockController controller, List<PositionStateChanger> worldPositionStates, @Nullable BlockPos at) {
 		World controllerWorld = controller.getPositionWorld();
-		List<PositionStateChanger> worldPositionStates = controller.getComponents();
 		if (worldPositionStates == null) return;
 		for (PositionStateChanger positionState : worldPositionStates)
 		{
@@ -76,9 +75,9 @@ public class MultiBlockFormationHandler {
 		}
 	}
 	
-	public static boolean sameStructure (IMultiBlockController controller) {
+	public static boolean sameStructure (IMultiBlockController controller, List<PositionStateChanger> worldPositionStates) {
 		MultiBlockCheckResult result = checkStructure(controller.getPositionWorld(), controller.getPosition(), controller.getStructure());
-		if (result.valid && getPositionsFromPSCList(result.worldPositionsStates).equals(getPositionsFromPSCList(controller.getComponents()))) return true;
+		if (result.valid && getPositionsFromPSCList(result.worldPositionsStates).equals(getPositionsFromPSCList(worldPositionStates))) return true;
 		return false;
 	}
 	

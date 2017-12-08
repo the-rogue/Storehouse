@@ -51,12 +51,12 @@ public class TileMultiblockPlaceholder extends TileEntity implements IMultiBlock
 	
 	@Override
 	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-		return getController().hasCapability(capability, facing);
+		return getController().hasCapability(this.pos, capability, facing);
 	}
 	
 	@Override
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
-		return getController().getCapability(capability, facing);
+		return getController().getCapability(this.pos, capability, facing);
 	}
 	
 	public class NoControllerException extends RuntimeException {

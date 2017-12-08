@@ -20,18 +20,21 @@ import therogue.storehouse.client.gui.machine.GuiCrystaliser;
 import therogue.storehouse.client.gui.machine.GuiLiquidGenerator;
 import therogue.storehouse.client.gui.machine.GuiSolarGenerator;
 import therogue.storehouse.client.gui.machine.GuiThermalPress;
+import therogue.storehouse.client.gui.multiblock.GuiCarbonCompressor;
 import therogue.storehouse.container.machine.ContainerAlloyFurnace;
 import therogue.storehouse.container.machine.ContainerCombustionGenerator;
 import therogue.storehouse.container.machine.ContainerCrystaliser;
 import therogue.storehouse.container.machine.ContainerLiquidGenerator;
 import therogue.storehouse.container.machine.ContainerSolarGenerator;
 import therogue.storehouse.container.machine.ContainerThermalPress;
+import therogue.storehouse.container.multiblock.ContainerCarbonCompressor;
 import therogue.storehouse.tile.machine.TileAlloyFurnace;
 import therogue.storehouse.tile.machine.TileCombustionGenerator;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 import therogue.storehouse.tile.machine.TileLiquidGenerator;
 import therogue.storehouse.tile.machine.TileSolarGenerator;
 import therogue.storehouse.tile.machine.TileThermalPress;
+import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
 
 public class GuiHandler implements IGuiHandler {
 	
@@ -61,6 +64,8 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerCrystaliser(player.inventory, (TileCrystaliser) world.getTileEntity(new BlockPos(x, y, z)));
 			case ALLOYFURNACE:
 				return new ContainerAlloyFurnace(player.inventory, (TileAlloyFurnace) world.getTileEntity(new BlockPos(x, y, z)));
+			case CARBONCOMPRESSOR:
+				return new ContainerCarbonCompressor(player.inventory, (TileCarbonCompressor) world.getTileEntity(new BlockPos(x, y, z)));
 			default:
 				return null;
 		}
@@ -88,6 +93,9 @@ public class GuiHandler implements IGuiHandler {
 			case ALLOYFURNACE:
 				TileAlloyFurnace mach3 = (TileAlloyFurnace) world.getTileEntity(new BlockPos(x, y, z));
 				return new GuiAlloyFurnace(new ContainerAlloyFurnace(player.inventory, mach3), mach3);
+			case CARBONCOMPRESSOR:
+				TileCarbonCompressor mach4 = (TileCarbonCompressor) world.getTileEntity(new BlockPos(x, y, z));
+				return new GuiCarbonCompressor(new ContainerCarbonCompressor(player.inventory, mach4), mach4);
 			default:
 				return null;
 		}
