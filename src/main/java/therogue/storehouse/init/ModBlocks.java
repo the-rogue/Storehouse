@@ -134,8 +134,6 @@ public class ModBlocks {
 	public static BlockForge forge;
 	public static BlockAlloyFurnace alloy_furnace;
 	public static BlockCarbonCompressor carbon_compressor; /*
-															 * public static BlockRegulator regulator;
-															 * public static BlockGrill grill
 															 * public static BlockPainter painter; public static BlockBioMachine bio_machine; public static BlockPotionBrewer potion_brewer; public static BlockPotionInjector potion_injector; public static BlockCraftingController crafting_controller;
 															 * public static BlockCraftingCable crafting_cable; public static BlockShelfStocker shelf_stocker; public static BlockStockController stock_controller; public static BlockStockRequester stock_requester; public static BlockStockTransfer
 															 * stock_transfer; public static BlockPlayerStocker player_stocker; public static BlockPlayerUnstocker player_unstocker; public static BlockPlayerRemoteFeeder player_remote_feeder; public static BlockPlayerHealthRegenerator

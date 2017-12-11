@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
@@ -210,6 +211,7 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 	
 	public class WrapperEntry {
 		
+		@Nonnull
 		public final IBlockState state;
 		public final boolean matchState;
 		

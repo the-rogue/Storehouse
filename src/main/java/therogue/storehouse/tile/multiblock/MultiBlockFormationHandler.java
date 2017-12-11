@@ -24,9 +24,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import therogue.storehouse.block.multiblock.IBlockWrapper;
+import therogue.storehouse.block.multiblock.ICapabilityMultiblock;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure.StructureTest;
 import therogue.storehouse.util.LOG;
 
@@ -52,12 +54,27 @@ public class MultiBlockFormationHandler {
 		return new MultiBlockFormationResult(true, worldPositionStates);
 	}
 	
+	public static Map<BlockPos, List<Capability<?>>> getWorldMultiblockCapabilities (List<PositionStateChanger> worldPositionStates) {
+		Map<BlockPos, List<Capability<?>>> capabilities = new HashMap<BlockPos, List<Capability<?>>>();
+		for (PositionStateChanger positionState : worldPositionStates)
+		{
+			IBlockState prevState = positionState.nonMultiblockState;
+			if (prevState != null && prevState.getBlock() instanceof ICapabilityMultiblock)
+			{
+				Block prevBlock = prevState.getBlock();
+				capabilities.put(positionState.position, ((ICapabilityMultiblock) prevBlock).getCapabilities(prevBlock.getMetaFromState(prevState)));
+			}
+		}
+		return capabilities;
+	}
+	
 	public static class MultiBlockFormationResult {
 		
 		public final boolean formed;
+		@Nullable
 		public final List<PositionStateChanger> components;
 		
-		public MultiBlockFormationResult (boolean formed, List<PositionStateChanger> components) {
+		public MultiBlockFormationResult (boolean formed, @Nullable List<PositionStateChanger> components) {
 			this.formed = formed;
 			this.components = components;
 		}

@@ -11,6 +11,7 @@
 package therogue.storehouse.tile;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -24,6 +25,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.tile.multiblock.IMultiBlockController;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler;
@@ -35,6 +37,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	private boolean isFormed = false;
 	private boolean breaking = false;
 	protected List<PositionStateChanger> components = null;
+	protected Map<BlockPos, List<Capability<?>>> multiblockCapabilites;
 	
 	public StorehouseBaseTileMultiBlock (IStorehouseBaseBlock block) {
 		super(block);
@@ -53,6 +56,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 			{
 				isFormed = true;
 				components = result.components;
+				multiblockCapabilites = MultiBlockFormationHandler.getWorldMultiblockCapabilities(components);
 				player.sendStatusMessage(new TextComponentTranslation("chatmessage.storehouse:multiblock_formed"), false);
 			}
 			return isFormed;
@@ -72,6 +76,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 			breaking = false;
 			isFormed = false;
 			components = null;
+			multiblockCapabilites = null;
 		}
 	}
 	
@@ -105,5 +110,21 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 		super.readFromNBT(nbt);
 		isFormed = nbt.getBoolean("formed");
 		if (isFormed) components = MultiBlockFormationHandler.PositionStateChanger.readFromNBT((NBTTagList) nbt.getTag("PositionStateChangers"));
+	}
+	
+	@Override
+	public boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing) {
+		if (multiblockCapabilites == null)
+		{
+			multiblockCapabilites = MultiBlockFormationHandler.getWorldMultiblockCapabilities(components);
+		}
+		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).contains(capability)) return super.hasCapability(capability, facing);
+		return false;
+	}
+	
+	@Override
+	public <T> T getCapability (BlockPos pos, Capability<T> capability, EnumFacing facing) {
+		if (!hasCapability(pos, capability, facing)) return null;
+		return getTile().getCapability(capability, facing);
 	}
 }

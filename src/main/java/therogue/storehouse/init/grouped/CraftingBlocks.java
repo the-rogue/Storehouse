@@ -7,7 +7,10 @@ import therogue.storehouse.block.StorehouseBaseVariantBlock;
 
 public enum CraftingBlocks {
 	MACHINE_CASING,
-	ADVANCED_MACHINE_CASING;
+	ADVANCED_MACHINE_CASING,
+	REGULATOR,
+	GRILL,
+	CONTROL_CIRCUITRY;
 	
 	public static StorehouseBaseVariantBlock crafting_block;
 	
