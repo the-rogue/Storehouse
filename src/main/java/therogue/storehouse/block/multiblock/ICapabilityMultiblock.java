@@ -10,11 +10,12 @@
 
 package therogue.storehouse.block.multiblock;
 
-import java.util.List;
+import java.util.Map;
 
 import net.minecraftforge.common.capabilities.Capability;
+import therogue.storehouse.tile.multiblock.ICapabilityWrapper;
 
 public interface ICapabilityMultiblock {
 	
-	public List<Capability<?>> getCapabilities (int meta);
+	public Map<Capability<?>, ICapabilityWrapper<?>> getCapabilities (int meta);
 }

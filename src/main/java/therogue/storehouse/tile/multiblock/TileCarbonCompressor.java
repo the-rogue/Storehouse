@@ -44,7 +44,7 @@ public class TileCarbonCompressor extends StorehouseBaseTileMultiBlock implement
 		if (super.onMultiBlockActivatedAt(world, pos, state, player, hand, side)) return true;
 		if (!world.isRemote)
 		{
-			player.openGui(Storehouse.instance, GuiHandler.CARBONCOMPRESSOR, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(Storehouse.instance, GuiHandler.CARBONCOMPRESSOR, world, this.pos.getX(), this.pos.getY(), this.pos.getZ());
 		}
 		return true;
 	}

@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.multiblock.BlockMultiBlockWrapper;
+import therogue.storehouse.init.grouped.MultiblockBlocks;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.ChoicePart;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockPartBuilder;
@@ -27,7 +28,8 @@ public class ModMultiBlocks {
 	 * Adds all the blocks to the array
 	 */
 	public static void preInit () {
-		carbonCompressorMultiblockstates = new BlockMultiBlockWrapper("carbon_compressor_mb", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press, ModBlocks.carbon_compressor).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
+		carbonCompressorMultiblockstates = new BlockMultiBlockWrapper("carbon_compressor_mb", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press, ModBlocks.carbon_compressor).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()),
+				MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()));
 		blocklist.add(carbonCompressorMultiblockstates);
 		/**
 		 * PreInit Blocks
@@ -69,7 +71,7 @@ public class ModMultiBlocks {
 		carbon_compressor.newRow().addBlocksToRow(Blocks.IRON_BLOCK, ModBlocks.carbon_compressor, Blocks.IRON_BLOCK);
 		carbon_compressor.newRow().addBlocksToRow((Block) null, ModBlocks.thermal_press, null).goUp();
 		carbon_compressor.newRow().addBlocksToRow((Block) null, ModBlocks.carbon_compressor, null).goUp();
-		carbon_compressor.newRow().addBlocksToRow((IBlockState) null, ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal())).build();
+		carbon_compressor.newRow().addBlocksToRow((IBlockState) MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()), ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal())).build();
 		holder.addPart(new NormalPart(0, 0, 0, carbon_compressor));
 		// Optional Part
 		MultiBlockPartBuilder backBlocks1 = MultiBlockPartBuilder.newBuilder().setWrapper(carbonCompressorMultiblockstates);

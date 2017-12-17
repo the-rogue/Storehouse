@@ -85,6 +85,6 @@ public class BlockUtils {
 				return mbpte.getController().onMultiBlockActivatedAt(world, pos, state, player, hand, side);
 			}
 		}
-		return false;
+		return true;
 	}
 }

@@ -2,6 +2,7 @@
 package therogue.storehouse.tile.multiblock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,8 +55,8 @@ public class MultiBlockFormationHandler {
 		return new MultiBlockFormationResult(true, worldPositionStates);
 	}
 	
-	public static Map<BlockPos, List<Capability<?>>> getWorldMultiblockCapabilities (List<PositionStateChanger> worldPositionStates) {
-		Map<BlockPos, List<Capability<?>>> capabilities = new HashMap<BlockPos, List<Capability<?>>>();
+	public static Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> getWorldMultiblockCapabilities (List<PositionStateChanger> worldPositionStates) {
+		Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> capabilities = new HashMap<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>>();
 		for (PositionStateChanger positionState : worldPositionStates)
 		{
 			IBlockState prevState = positionState.nonMultiblockState;
@@ -389,10 +390,6 @@ public class MultiBlockFormationHandler {
 			List<IMultiBlockElement> rowlist = blocklist.get(yLevel).get(blocklist.get(yLevel).size() - 1);
 			for (int i = 0; i < row.length; i++)
 			{
-				if (!row[i].toString().equals("ANY_BLOCK"))
-				{
-					importantBlocks.add(new BlockPos(i, yLevel, blocklist.get(yLevel).size() - 1));
-				}
 				rowlist.add(row[i]);
 			}
 			return this;
@@ -474,7 +471,12 @@ public class MultiBlockFormationHandler {
 					blockarray[x][y] = new IMultiBlockElement[maxZ];
 					for (int z = 0; z < maxZ; z++)
 					{
-						blockarray[x][y][z] = blocklist.get(y).get(z).get(x);
+						IMultiBlockElement m = blocklist.get(y).get(z).get(maxX - x - 1);
+						blockarray[x][y][z] = m;
+						if (!m.equals(ANY_BLOCK))
+						{
+							importantBlocks.add(new BlockPos(x, y, z));
+						}
 					}
 				}
 			}
@@ -742,6 +744,11 @@ public class MultiBlockFormationHandler {
 		public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z) {
 			return part[x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getMultiBlockState(originalState);
 		}
+		
+		@Override
+		public String toString () {
+			return "Part: " + Arrays.deepToString(part);
+		}
 	}
 	
 	public static class ChoicePart implements IMultiBlockPart {
@@ -831,6 +838,11 @@ public class MultiBlockFormationHandler {
 		@Override
 		public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z) {
 			return parts[partNo][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getMultiBlockState(originalState);
+		}
+		
+		@Override
+		public String toString () {
+			return "Part: " + Arrays.deepToString(parts);
 		}
 	}
 	

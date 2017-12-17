@@ -26,6 +26,7 @@ import therogue.storehouse.block.machine.BlockThermalPress;
 import therogue.storehouse.block.multiblock.BlockCarbonCompressor;
 import therogue.storehouse.init.grouped.CraftingBlocks;
 import therogue.storehouse.init.grouped.DecorativeBlockContainer;
+import therogue.storehouse.init.grouped.MultiblockBlocks;
 import therogue.storehouse.init.grouped.Ores;
 
 public class ModBlocks {
@@ -55,6 +56,7 @@ public class ModBlocks {
 		 */
 		blocklist.add(Ores.addMaterials());
 		blocklist.add(CraftingBlocks.addMaterials());
+		blocklist.add(MultiblockBlocks.addMaterials());
 		/**
 		 * Add Machines
 		 */
@@ -96,6 +98,7 @@ public class ModBlocks {
 		 */
 		Ores.Init();
 		CraftingBlocks.Init();
+		MultiblockBlocks.Init();
 		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block.block);
 		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_chiseled);
 		OreDictionary.registerOre("blockazuritecrystal", azurite_crystal_block_pillar);

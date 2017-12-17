@@ -27,6 +27,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.tile.multiblock.ICapabilityWrapper;
 import therogue.storehouse.tile.multiblock.IMultiBlockController;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler;
 import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockFormationResult;
@@ -37,7 +38,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	private boolean isFormed = false;
 	private boolean breaking = false;
 	protected List<PositionStateChanger> components = null;
-	protected Map<BlockPos, List<Capability<?>>> multiblockCapabilites;
+	protected Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> multiblockCapabilites;
 	
 	public StorehouseBaseTileMultiBlock (IStorehouseBaseBlock block) {
 		super(block);
@@ -113,18 +114,32 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	}
 	
 	@Override
+	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+		if (isFormed) return hasCapability(this.pos, capability, facing);
+		return false;
+	}
+	
+	@Override
+	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
+		if (isFormed) return getCapability(this.pos, capability, facing);
+		return null;
+	}
+	
+	@Override
 	public boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing) {
 		if (multiblockCapabilites == null)
 		{
 			multiblockCapabilites = MultiBlockFormationHandler.getWorldMultiblockCapabilities(components);
 		}
-		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).contains(capability)) return super.hasCapability(capability, facing);
+		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).containsKey(capability)) return super.hasCapability(capability, facing);
 		return false;
 	}
 	
 	@Override
 	public <T> T getCapability (BlockPos pos, Capability<T> capability, EnumFacing facing) {
 		if (!hasCapability(pos, capability, facing)) return null;
-		return getTile().getCapability(capability, facing);
+		@SuppressWarnings ("unchecked")
+		ICapabilityWrapper<T> wrapper = (ICapabilityWrapper<T>) multiblockCapabilites.get(pos).get(capability);
+		return wrapper.getWrappedCapability(super.getCapability(capability, facing));
 	}
 }
