@@ -8,12 +8,11 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.capabilityWrapper;
+package therogue.storehouse.capabilitywrapper;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import therogue.storehouse.tile.multiblock.ICapabilityWrapper;
 
 public class EnergyWrapper implements ICapabilityWrapper<IEnergyStorage> {
 	
