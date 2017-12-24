@@ -37,6 +37,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
+import therogue.storehouse.block.StorehouseBaseMachine;
 import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 import therogue.storehouse.tile.MachineTier;

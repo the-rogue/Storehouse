@@ -1,5 +1,5 @@
 
-package therogue.storehouse.tile.multiblock;
+package therogue.storehouse.multiblock.tile;
 
 import javax.annotation.Nullable;
 
@@ -11,7 +11,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 
 public interface IMultiBlockController extends IMultiBlockTile {
 	

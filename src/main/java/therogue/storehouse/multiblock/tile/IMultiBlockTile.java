@@ -1,5 +1,5 @@
 
-package therogue.storehouse.tile.multiblock;
+package therogue.storehouse.multiblock.tile;
 
 public interface IMultiBlockTile {
 	

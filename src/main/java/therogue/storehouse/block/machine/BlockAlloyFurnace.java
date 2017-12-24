@@ -18,6 +18,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import therogue.storehouse.Storehouse;
+import therogue.storehouse.block.StorehouseBaseFacingMachine;
 import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.tile.machine.TileAlloyFurnace;
 

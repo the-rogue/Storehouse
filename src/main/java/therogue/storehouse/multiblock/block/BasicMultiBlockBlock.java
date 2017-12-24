@@ -1,5 +1,5 @@
 
-package therogue.storehouse.block.multiblock;
+package therogue.storehouse.multiblock.block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,29 +32,43 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.StorehouseBaseBlock;
-import therogue.storehouse.tile.multiblock.IMultiBlockTile;
-import therogue.storehouse.tile.multiblock.TileMultiblockPlaceholder;
-import therogue.storehouse.tile.multiblock.TileMultiblockPlaceholder.NoControllerException;
+import therogue.storehouse.multiblock.tile.BasicMultiBlockTile;
+import therogue.storehouse.multiblock.tile.BasicMultiBlockTile.NoControllerException;
+import therogue.storehouse.multiblock.tile.IMultiBlockTile;
 import therogue.storehouse.util.LOG;
 
-public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITileEntityProvider, IBlockWrapper {
+public class BasicMultiBlockBlock extends StorehouseBaseBlock implements ITileEntityProvider, IMultiBlockStateMapper {
 	
 	private final List<WrapperEntry> blocks = new ArrayList<WrapperEntry>();
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
 	public static final StorehouseBaseBlock placeholder = new StorehouseBaseBlock("placeholder");
 	
-	public BlockMultiBlockWrapper (String name, Block... subStates) {
+	public BasicMultiBlockBlock (String name) {
 		super(name);
-		if (subStates.length > 16) throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + name);
-		for (Block subState : subStates)
-		{
-			if (subState == null) throw new IllegalArgumentException("Tried to register a null Block to a multiblockstate wrapper");
-			blocks.add(new WrapperEntry(subState.getDefaultState(), false));
-		}
 		this.setDefaultState(this.getBlockState().getBaseState().withProperty(META, 0));
 	}
 	
-	public BlockMultiBlockWrapper addMatchStates (IBlockState... states) {
+	public BasicMultiBlockBlock (String name, Block... subStates) {
+		this(name);
+		addBlocks();
+	}
+	
+	public BasicMultiBlockBlock addBlocks (Block... states) {
+		if (blocks.size() + states.length > 16)
+			throw new IllegalArgumentException(
+				"The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
+		for (Block subState : states)
+		{
+			if (subState == null) throw new IllegalArgumentException("Tried to register a null Block to a multiblockstate wrapper");
+			blocks.add(new WrapperEntry(subState.getDefaultState(), true));
+		}
+		return this;
+	}
+	
+	public BasicMultiBlockBlock addMatchStates (IBlockState... states) {
+		if (blocks.size() + states.length > 16)
+			throw new IllegalArgumentException(
+				"The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
 		for (IBlockState subState : states)
 		{
 			if (subState == null) throw new IllegalArgumentException("Tried to register a null IBlockState to a multiblockstate wrapper");
@@ -174,11 +188,12 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 	
 	@Override
 	public TileEntity createNewTileEntity (World worldIn, int meta) {
-		return new TileMultiblockPlaceholder();
+		return new BasicMultiBlockTile();
 	}
 	
 	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+		float hitY, float hitZ) {
 		return BlockUtils.onMultiBlockActivated(world, pos, state, player, hand, side);
 	}
 	
@@ -200,10 +215,11 @@ public class BlockMultiBlockWrapper extends StorehouseBaseBlock implements ITile
 	}
 	
 	@Override
-	public IBlockState getWrappedState (IBlockState state) {
+	public IBlockState getMultiBlockState (IBlockState state) {
 		for (WrapperEntry element : blocks)
 		{
-			if (element.matchState ? element.state == state : element.state.getBlock() == state.getBlock()) return this.getDefaultState().withProperty(META, blocks.indexOf(element));
+			if (element.matchState ? element.state == state : element.state.getBlock() == state.getBlock())
+				return this.getDefaultState().withProperty(META, blocks.indexOf(element));
 		}
 		LOG.debug("Failed to get a wrapped state for state: " + state.getBlock() + " BlockWrapper: " + this);
 		return state;

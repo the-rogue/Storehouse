@@ -2,35 +2,47 @@
 package therogue.storehouse.init;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.block.multiblock.BlockMultiBlockWrapper;
 import therogue.storehouse.init.grouped.MultiblockBlocks;
+import therogue.storehouse.multiblock.block.BasicMultiBlockBlock;
+import therogue.storehouse.multiblock.structure.MultiBlockPartBuilder;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure.Builder;
+import therogue.storehouse.multiblock.structure.NormalPart;
+import therogue.storehouse.multiblock.structure.VariablePart;
 import therogue.storehouse.tile.MachineTier;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.ChoicePart;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockPartBuilder;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockStructure;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.NormalPart;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.StructureHolder;
 
 public class ModMultiBlocks {
 	
 	/**
 	 * Initialises a new array to hold all the blocks
 	 */
-	public static ArrayList<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
+	public static List<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
+	private static ArrayList<NormalPart> variablePartList = new ArrayList<NormalPart>();
+	/**
+	 * MultiBlockBlockStates
+	 */
+	public static BasicMultiBlockBlock burnerMultiblockstates;
+	public static BasicMultiBlockBlock carbonCompressorMultiBlockStates;
+	/**
+	 * MultiBlockStructures
+	 */
+	public static MultiBlockStructure burnerStructure;
+	public static MultiBlockStructure carbonCompressorStructure;
 	
 	/**
 	 * Adds all the blocks to the array
 	 */
 	public static void preInit () {
-		carbonCompressorMultiblockstates = new BlockMultiBlockWrapper("carbon_compressor_mb", Blocks.IRON_BLOCK, Blocks.DIAMOND_BLOCK, ModBlocks.thermal_press, ModBlocks.carbon_compressor).addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()),
-				MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()));
-		blocklist.add(carbonCompressorMultiblockstates);
+		burnerMultiblockstates = getBurnerStates();
+		blocklist.add(burnerMultiblockstates);
+		carbonCompressorMultiBlockStates = getCarbonCompressorStates ();
+		blocklist.add(carbonCompressorMultiBlockStates);
 		/**
 		 * PreInit Blocks
 		 */
@@ -41,7 +53,11 @@ public class ModMultiBlocks {
 	}
 	
 	public static void Init () {
-		assembleCarbonCompresser();
+		final Builder multiblockbuilder = Builder.newBuilder();
+		assembleBurner(multiblockbuilder);
+		burnerStructure = multiblockbuilder.getStructure();
+		assembleCarbonCompressor(multiblockbuilder);
+		carbonCompressorStructure = multiblockbuilder.getStructure();
 		/**
 		 * Init Blocks
 		 */
@@ -61,25 +77,49 @@ public class ModMultiBlocks {
 		}
 	}
 	
-	public static BlockMultiBlockWrapper carbonCompressorMultiblockstates;
-	public static MultiBlockStructure carbonCompressorStructure;
+	private static BasicMultiBlockBlock getBurnerStates () {
+		BasicMultiBlockBlock block = new BasicMultiBlockBlock("burner_mb");
+		block.addBlocks(Blocks.IRON_BLOCK);
+		block.addBlocks(Blocks.DIAMOND_BLOCK);
+		block.addBlocks(ModBlocks.thermal_press);
+		block.addBlocks(ModBlocks.burner);
+		block.addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
+		block.addMatchStates(MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()));
+		return block;
+	}
 	
-	private static void assembleCarbonCompresser () {
-		StructureHolder holder = StructureHolder.newHolder();
+	private static BasicMultiBlockBlock getCarbonCompressorStates () {
+		BasicMultiBlockBlock block = new BasicMultiBlockBlock("carbonCompressor_mb");
+		block.addBlocks(Blocks.DIAMOND_BLOCK);
+		block.addBlocks(ModBlocks.carbonCompressor);
+		block.addMatchStates(MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()));
+		return block;
+	}
+	
+	private static void assembleBurner (Builder multiblockbuilder) {
 		// Main Part
-		MultiBlockPartBuilder carbon_compressor = MultiBlockPartBuilder.newBuilder().setWrapper(carbonCompressorMultiblockstates);
-		carbon_compressor.newRow().addBlocksToRow(Blocks.IRON_BLOCK, ModBlocks.carbon_compressor, Blocks.IRON_BLOCK);
-		carbon_compressor.newRow().addBlocksToRow((Block) null, ModBlocks.thermal_press, null).goUp();
-		carbon_compressor.newRow().addBlocksToRow((Block) null, ModBlocks.carbon_compressor, null).goUp();
-		carbon_compressor.newRow().addBlocksToRow((IBlockState) MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()), ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal())).build();
-		holder.addPart(new NormalPart(0, 0, 0, carbon_compressor));
+		MultiBlockPartBuilder burner = MultiBlockPartBuilder.newBuilder().setWrapper(burnerMultiblockstates);
+		burner.newRow().addBlocksToRow(Blocks.IRON_BLOCK, ModBlocks.burner, Blocks.IRON_BLOCK);
+		burner.newRow().addBlocksToRow((Block) null, ModBlocks.thermal_press, null).goUp();
+		burner.newRow().addBlocksToRow((Block) null, ModBlocks.burner, null).goUp();
+		burner.newRow().addBlocksToRow(
+			(IBlockState) MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()),
+			ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
+		multiblockbuilder.addPart(burner.build());
 		// Optional Part
-		MultiBlockPartBuilder backBlocks1 = MultiBlockPartBuilder.newBuilder().setWrapper(carbonCompressorMultiblockstates);
-		backBlocks1.newRow().addBlocksToRow(Blocks.IRON_BLOCK, null, Blocks.IRON_BLOCK).build();
-		MultiBlockPartBuilder backBlocks2 = MultiBlockPartBuilder.newBuilder().setWrapper(carbonCompressorMultiblockstates);
-		backBlocks2.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, null, Blocks.DIAMOND_BLOCK).build();
-		holder.addPart(new ChoicePart(new BlockPos(0, 0, 1), backBlocks1, backBlocks2));
-		// Final Structure
-		carbonCompressorStructure = holder.getStructure();
+		burner.setStart(0, 0, 1);
+		variablePartList.add(burner.newRow().addBlocksToRow(Blocks.IRON_BLOCK, null, Blocks.IRON_BLOCK).build());
+		variablePartList.add(burner.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, null, Blocks.DIAMOND_BLOCK).build());
+		multiblockbuilder.addPart(new VariablePart(variablePartList));
+		variablePartList.clear();
+	}
+	private static void assembleCarbonCompressor (Builder multiblockbuilder) {
+		// Main Part
+		MultiBlockPartBuilder carbonCompressor = MultiBlockPartBuilder.newBuilder().setWrapper(carbonCompressorMultiBlockStates);
+		carbonCompressor.newRow().addBlocksToRow(ModBlocks.carbonCompressor, ModBlocks.carbonCompressor);
+		carbonCompressor.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_BLOCK).goUp();
+		carbonCompressor.newRow().addBlocksToRow(ModBlocks.carbonCompressor, ModBlocks.carbonCompressor);
+		carbonCompressor.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_BLOCK);
+		multiblockbuilder.addPart(carbonCompressor.build());
 	}
 }

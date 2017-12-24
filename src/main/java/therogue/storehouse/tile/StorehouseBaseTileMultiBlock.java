@@ -27,17 +27,17 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.tile.multiblock.ICapabilityWrapper;
-import therogue.storehouse.tile.multiblock.IMultiBlockController;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.MultiBlockFormationResult;
-import therogue.storehouse.tile.multiblock.MultiBlockFormationHandler.PositionStateChanger;
+import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
+import therogue.storehouse.multiblock.tile.IMultiBlockController;
+import therogue.storehouse.multiblock.tile.InWorldUtils;
+import therogue.storehouse.multiblock.tile.WorldStates;
+import therogue.storehouse.multiblock.tile.InWorldUtils.MultiBlockFormationResult;
 
 public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine implements IMultiBlockController {
 	
 	private boolean isFormed = false;
 	private boolean breaking = false;
-	protected List<PositionStateChanger> components = null;
+	protected List<WorldStates> components = null;
 	protected Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> multiblockCapabilites;
 	
 	public StorehouseBaseTileMultiBlock (IStorehouseBaseBlock block) {
@@ -52,12 +52,12 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
 		if (!world.isRemote && !isFormed)
 		{
-			MultiBlockFormationResult result = MultiBlockFormationHandler.formMultiBlock(getController());
+			MultiBlockFormationResult result = InWorldUtils.formMultiBlock(getController());
 			if (result.formed)
 			{
 				isFormed = true;
 				components = result.components;
-				multiblockCapabilites = MultiBlockFormationHandler.getWorldMultiblockCapabilities(components);
+				multiblockCapabilites = InWorldUtils.getWorldMultiblockCapabilities(components);
 				player.sendStatusMessage(new TextComponentTranslation("chatmessage.storehouse:multiblock_formed"), false);
 			}
 			return isFormed;
@@ -73,7 +73,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 		if (!world.isRemote && isFormed && !breaking)
 		{
 			breaking = true;
-			MultiBlockFormationHandler.removeMultiBlock(this, components, at);
+			InWorldUtils.removeMultiBlock(this, components, at);
 			breaking = false;
 			isFormed = false;
 			components = null;
@@ -102,7 +102,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	public NBTTagCompound writeToNBT (NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setBoolean("formed", isFormed);
-		if (isFormed) nbt.setTag("PositionStateChangers", MultiBlockFormationHandler.PositionStateChanger.writeToNBT(components));
+		if (isFormed) nbt.setTag("PositionStateChangers", WorldStates.writeToNBT(components));
 		return nbt;
 	}
 	
@@ -110,7 +110,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	public void readFromNBT (NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		isFormed = nbt.getBoolean("formed");
-		if (isFormed) components = MultiBlockFormationHandler.PositionStateChanger.readFromNBT((NBTTagList) nbt.getTag("PositionStateChangers"));
+		if (isFormed) components = WorldStates.readFromNBT((NBTTagList) nbt.getTag("PositionStateChangers"));
 	}
 	
 	@Override
@@ -129,7 +129,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	public boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing) {
 		if (multiblockCapabilites == null)
 		{
-			multiblockCapabilites = MultiBlockFormationHandler.getWorldMultiblockCapabilities(components);
+			multiblockCapabilites = InWorldUtils.getWorldMultiblockCapabilities(components);
 		}
 		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).containsKey(capability)) return super.hasCapability(capability, facing);
 		return false;

@@ -6,7 +6,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.item.IStorehouseBaseItem;
 import therogue.storehouse.item.ItemStorehouseBaseMaterial;
 
-public enum Materials {
+public enum Materials
+{
 	EXTRUSION_TOOL,
 	PLATE_TOOL,
 	CUTTER_TOOL,
@@ -22,7 +23,8 @@ public enum Materials {
 	INTEGRATED_CHIP,
 	COPPER_WIRE,
 	GOLD_WIRE,
-	SOLDER;
+	SOLDER,
+	CARBON;
 	
 	/*
 	 * SINGULARITY_CORE, NITROGEL, TRANSFER_UNIT, FAN_BLADE, REFRIGERANT_PARTS;

@@ -1,20 +1,22 @@
 
 package therogue.storehouse.init.grouped;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.block.multiblock.BlockSpecialMultiblock;
-import therogue.storehouse.block.multiblock.IMultiblockCapabilityProvider;
-import therogue.storehouse.capabilityWrapper.EnergyWrapper;
-import therogue.storehouse.capabilityWrapper.FluidWrapper;
-import therogue.storehouse.capabilityWrapper.ItemWrapper;
-import therogue.storehouse.tile.multiblock.ICapabilityWrapper;
+import therogue.storehouse.block.StorehouseBaseCapabilityVariantBlock;
+import therogue.storehouse.capabilitywrapper.EnergyWrapper;
+import therogue.storehouse.capabilitywrapper.FluidWrapper;
+import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
+import therogue.storehouse.capabilitywrapper.ItemWrapper;
 
-public enum MultiblockBlocks implements IMultiblockCapabilityProvider {
+public enum MultiblockBlocks
+{
 	TAP (FluidWrapper.DRAIN),
 	TANK (FluidWrapper.FILL),
 	EJECTOR (ItemWrapper.EXTRACT),
@@ -22,7 +24,7 @@ public enum MultiblockBlocks implements IMultiblockCapabilityProvider {
 	POWER_SUPPLY (EnergyWrapper.EXTRACT),
 	POWER_CONNECTOR (EnergyWrapper.RECIEVE);
 	
-	public static BlockSpecialMultiblock crafting_block;
+	public static StorehouseBaseCapabilityVariantBlock crafting_block;
 	public Map<Capability<?>, ICapabilityWrapper<?>> capabilities = new HashMap<Capability<?>, ICapabilityWrapper<?>>();
 	
 	private MultiblockBlocks (ICapabilityWrapper<?>... capabilities) {
@@ -41,17 +43,15 @@ public enum MultiblockBlocks implements IMultiblockCapabilityProvider {
 	}
 	
 	public static IStorehouseBaseBlock addMaterials () {
-		crafting_block = new BlockSpecialMultiblock("multiblock_blocks", MultiblockBlocks.values());
+		List<Map<Capability<?>, ICapabilityWrapper<?>>> capabilites = new ArrayList<Map<Capability<?>, ICapabilityWrapper<?>>>();
+		for (MultiblockBlocks c : MultiblockBlocks.values())
+			capabilites.add(c.capabilities);
+		crafting_block = new StorehouseBaseCapabilityVariantBlock("multiblock_blocks", capabilites);
 		for (MultiblockBlocks c : MultiblockBlocks.values())
 			crafting_block.addSubBlock(c.ordinal(), c.name().toLowerCase());
 		return crafting_block;
 	}
 	
 	public static void Init () {
-	}
-	
-	@Override
-	public Map<Capability<?>, ICapabilityWrapper<?>> getCapabilities () {
-		return capabilities;
 	}
 }

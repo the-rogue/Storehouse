@@ -8,25 +8,13 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.block.multiblock;
-
-import java.util.Map;
+package therogue.storehouse.capabilitywrapper;
 
 import net.minecraftforge.common.capabilities.Capability;
-import therogue.storehouse.block.StorehouseBaseVariantBlock;
-import therogue.storehouse.tile.multiblock.ICapabilityWrapper;
 
-public class BlockSpecialMultiblock extends StorehouseBaseVariantBlock implements ICapabilityMultiblock {
+public interface ICapabilityWrapper<T> {
 	
-	private IMultiblockCapabilityProvider[] blocks;
+	public T getWrappedCapability (T wrappable);
 	
-	public BlockSpecialMultiblock (String name, IMultiblockCapabilityProvider[] blocks) {
-		super(name);
-		this.blocks = blocks;
-	}
-	
-	public Map<Capability<?>, ICapabilityWrapper<?>> getCapabilities (int meta) {
-		if (meta < 0 || meta >= blocks.length) throw new RuntimeException("Cannot get the right tile, meta out of range given to BlockSpecialMultiblock");
-		return blocks[meta].getCapabilities();
-	}
+	public Capability<T> getSupportedCapability ();
 }

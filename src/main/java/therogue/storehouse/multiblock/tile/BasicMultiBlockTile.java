@@ -1,5 +1,5 @@
 
-package therogue.storehouse.tile.multiblock;
+package therogue.storehouse.multiblock.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -7,12 +7,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class TileMultiblockPlaceholder extends TileEntity implements IMultiBlockTile {
+public class BasicMultiBlockTile extends TileEntity implements IMultiBlockTile {
 	
 	private IMultiBlockController controller;
 	private BlockPos multiblockPos;
 	
-	public TileMultiblockPlaceholder () {
+	public BasicMultiBlockTile () {
 	}
 	
 	@Override

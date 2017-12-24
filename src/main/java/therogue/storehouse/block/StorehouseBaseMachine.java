@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.block.machine;
+package therogue.storehouse.block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.block.BlockUtils;
-import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
 
 public abstract class StorehouseBaseMachine extends StorehouseBaseBlock implements ITileEntityProvider {

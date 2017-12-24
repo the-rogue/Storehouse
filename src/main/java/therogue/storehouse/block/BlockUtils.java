@@ -22,7 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import therogue.storehouse.tile.multiblock.IMultiBlockTile;
+import therogue.storehouse.multiblock.tile.IMultiBlockTile;
 
 public class BlockUtils {
 	

@@ -8,14 +8,15 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.block.multiblock;
+package therogue.storehouse.multiblock.block;
 
 import java.util.Map;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import therogue.storehouse.tile.multiblock.ICapabilityWrapper;
+import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
 
-public interface IMultiblockCapabilityProvider {
+public interface IMultiBlockCapabilityBlock {
 	
-	public Map<Capability<?>, ICapabilityWrapper<?>> getCapabilities ();
+	public Map<Capability<?>, ICapabilityWrapper<?>> getCapabilities (IBlockState state);
 }

@@ -1,5 +1,5 @@
 
-package therogue.storehouse.block.machine;
+package therogue.storehouse.block;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;

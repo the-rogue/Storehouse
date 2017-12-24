@@ -8,19 +8,30 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.client.gui.multiblock;
+package therogue.storehouse.client.gui.machine;
 
 import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.GuiHelper;
 import therogue.storehouse.client.gui.Icons;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
+import therogue.storehouse.client.gui.element.ElementHorizontalProgressBar;
+import therogue.storehouse.client.gui.element.IProgressBar;
+import therogue.storehouse.client.gui.element.JoinProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.tile.multiblock.TileCarbonCompressor;
+import therogue.storehouse.tile.machine.TileBurner;
 
-public class GuiCarbonCompressor extends GuiBase {
+public class GuiBurner extends GuiBase {
 	
-	public GuiCarbonCompressor (ContainerBase inventory, TileCarbonCompressor linked) {
+	public GuiBurner (ContainerBase inventory, TileBurner linked) {
 		super(NORMAL_TEXTURE, inventory, linked.getGuiID());
 		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ProgressHandler(this, linked, 4, 5, createProgressBar()));
+	}
+	
+	private static IProgressBar createProgressBar () {
+		IProgressBar pointerright = new ElementHorizontalProgressBar(104, 39, Icons.ProgressRight.getLocation());
+		IProgressBar barright = new ElementHorizontalProgressBar(92, 44, 12, 2, GuiHelper.WHITE, GuiHelper.NORMAL_COLOUR);
+		return new JoinProgressBar(barright, pointerright);
 	}
 }
