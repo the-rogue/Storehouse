@@ -166,7 +166,14 @@ public class MultiBlockPartBuilder {
 		List<IMultiBlockElement> rowlist = blocklist.get(yLevel).get(blocklist.get(yLevel).size() - 1);
 		for (int i = 0; i < row.length; i++)
 		{
-			rowlist.add(row[i]);
+			if (row[i] != null)
+			{
+				rowlist.add(row[i]);
+			}
+			else
+			{
+				rowlist.add(ANY_BLOCK);
+			}
 		}
 		return this;
 	}

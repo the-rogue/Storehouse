@@ -151,9 +151,14 @@ public class MultiBlockStructure {
 			x = nextX;
 			y = nextY;
 			z = nextZ;
+			if (nextX == maxX && nextY == (maxY - 1) && nextZ == (maxZ - 1)) return false;
 			part = parts.get(partPointers[x][y][z]);
 			currentPartNo = partNos.get(part);
-			if (nextX == (maxX - 1) && nextY == (maxY - 1) && nextZ == (maxZ - 1)) return false;
+			if (nextX == (maxX - 1) && nextY == (maxY - 1) && nextZ == (maxZ - 1))
+			{
+				nextX++;
+				return true;
+			}
 			if (nextZ == (maxZ - 1))
 			{
 				nextZ = 0;
@@ -165,9 +170,17 @@ public class MultiBlockStructure {
 				else nextY++;
 			}
 			else nextZ++;
+			try
+			{
+			}
+			catch (ArrayIndexOutOfBoundsException e)
+			{
+				LOG.info("X: " + x + " Y: " + y + " Z: " + z + " NextX: " + nextX + " NextY: " + nextY + " NextZ: " + nextZ);
+			}
 			return true;
 		}
 	}
+	
 	public static class Builder {
 		
 		List<IMultiBlockPart> parts = new ArrayList<IMultiBlockPart>();

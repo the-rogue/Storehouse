@@ -127,6 +127,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	
 	@Override
 	public boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing) {
+		if (!isFormed) return false;
 		if (multiblockCapabilites == null)
 		{
 			multiblockCapabilites = InWorldUtils.getWorldMultiblockCapabilities(components);

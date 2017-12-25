@@ -35,7 +35,6 @@ public class VariablePart implements IMultiBlockPart {
 			this.parts[i] = parts.get(i).part;
 		}
 		this.importantBlocks.addAll(setImportantBlocks);
-		parts.clear();
 	}
 	
 	public VariablePart (BlockPos startPosition, BlockPos endPosition, List<BlockPos> importantBlocks, IMultiBlockElement[][][]... parts) {

@@ -1,6 +1,7 @@
 
 package therogue.storehouse.init.grouped;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.block.StorehouseBaseVariantBlock;
@@ -22,6 +23,10 @@ public enum Ores {
 	
 	public ItemStack createStack (int amount) {
 		return new ItemStack(ore_block, amount, this.ordinal());
+	}
+	
+	public IBlockState getState () {
+		return ore_block.getStateFromMeta(this.ordinal());
 	}
 	
 	public static StorehouseBaseVariantBlock addMaterials () {

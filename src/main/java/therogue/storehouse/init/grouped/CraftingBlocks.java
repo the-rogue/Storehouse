@@ -1,6 +1,7 @@
 
 package therogue.storehouse.init.grouped;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseVariantBlock;
@@ -10,7 +11,8 @@ public enum CraftingBlocks {
 	ADVANCED_MACHINE_CASING,
 	REGULATOR,
 	GRILL,
-	CONTROL_CIRCUITRY;
+	CONTROL_CIRCUITRY,
+	FAN;
 	
 	public static StorehouseBaseVariantBlock crafting_block;
 	
@@ -20,6 +22,10 @@ public enum CraftingBlocks {
 	
 	public ItemStack createStack (int amount) {
 		return new ItemStack(crafting_block, amount, this.ordinal());
+	}
+	
+	public IBlockState getState () {
+		return crafting_block.getStateFromMeta(this.ordinal());
 	}
 	
 	public static IStorehouseBaseBlock addMaterials () {

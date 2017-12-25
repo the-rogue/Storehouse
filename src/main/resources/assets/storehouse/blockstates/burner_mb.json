@@ -1,24 +1,21 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "cube_all",
 		"transform": "forge:default-block"
 	},
 	"variants": {
 		"meta": {
 			"0": {
-				"model": "minecraft:diamond_block"
+				"model": "minecraft:iron_block"
 			},
 			"1": {
-				"model": "none"
+				"model": "minecraft:iron_block"
 			},
 			"2": {
-				"model": "none"
+				"model": "minecraft:iron_block"
 			},
 			"3": {
-				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing"
-				}
+				"model": "minecraft:iron_block"
 			},
 			"4": {
 				"model": "minecraft:iron_block"

@@ -4,18 +4,18 @@ package therogue.storehouse.init;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.init.grouped.CraftingBlocks;
 import therogue.storehouse.init.grouped.MultiblockBlocks;
 import therogue.storehouse.multiblock.block.BasicMultiBlockBlock;
+import therogue.storehouse.multiblock.block.IMultiBlockStateMapper;
 import therogue.storehouse.multiblock.structure.MultiBlockPartBuilder;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure.Builder;
+import therogue.storehouse.multiblock.structure.NormalBlock;
 import therogue.storehouse.multiblock.structure.NormalPart;
-import therogue.storehouse.multiblock.structure.VariablePart;
-import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.multiblock.structure.VariableBlock;
 
 public class ModMultiBlocks {
 	
@@ -23,11 +23,13 @@ public class ModMultiBlocks {
 	 * Initialises a new array to hold all the blocks
 	 */
 	public static List<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
+	@SuppressWarnings ("unused")
 	private static ArrayList<NormalPart> variablePartList = new ArrayList<NormalPart>();
 	/**
 	 * MultiBlockBlockStates
 	 */
 	public static BasicMultiBlockBlock burnerMultiblockstates;
+	public static BasicMultiBlockBlock IOMultiBlockStates;
 	public static BasicMultiBlockBlock carbonCompressorMultiBlockStates;
 	/**
 	 * MultiBlockStructures
@@ -41,7 +43,9 @@ public class ModMultiBlocks {
 	public static void preInit () {
 		burnerMultiblockstates = getBurnerStates();
 		blocklist.add(burnerMultiblockstates);
-		carbonCompressorMultiBlockStates = getCarbonCompressorStates ();
+		IOMultiBlockStates = getIOStates();
+		blocklist.add(IOMultiBlockStates);
+		carbonCompressorMultiBlockStates = getCarbonCompressorStates();
 		blocklist.add(carbonCompressorMultiBlockStates);
 		/**
 		 * PreInit Blocks
@@ -79,47 +83,104 @@ public class ModMultiBlocks {
 	
 	private static BasicMultiBlockBlock getBurnerStates () {
 		BasicMultiBlockBlock block = new BasicMultiBlockBlock("burner_mb");
-		block.addBlocks(Blocks.IRON_BLOCK);
-		block.addBlocks(Blocks.DIAMOND_BLOCK);
-		block.addBlocks(ModBlocks.thermal_press);
 		block.addBlocks(ModBlocks.burner);
-		block.addMatchStates(ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
-		block.addMatchStates(MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()));
+		block.addMatchStates(CraftingBlocks.MACHINE_CASING.getState());
+		block.addMatchStates(CraftingBlocks.CONTROL_CIRCUITRY.getState());
+		block.addBlocks(Blocks.NETHER_BRICK);
+		block.addBlocks(Blocks.NETHERRACK);
+		block.addBlocks(Blocks.DIAMOND_BLOCK);
+		block.addBlocks(Blocks.STAINED_HARDENED_CLAY);
+		block.addBlocks(Blocks.HARDENED_CLAY);
+		block.addMatchStates(MultiblockBlocks.EJECTOR.getState());
+		block.addBlocks(Blocks.FIRE);
+		block.addBlocks(Blocks.MAGMA);
+		block.addMatchStates(CraftingBlocks.FAN.getState());
+		block.addMatchStates(CraftingBlocks.REGULATOR.getState());
+		return block;
+	}
+	
+	private static BasicMultiBlockBlock getIOStates () {
+		BasicMultiBlockBlock block = new BasicMultiBlockBlock("io_mb");
+		block.addMatchStates(CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.POWER_CONNECTOR.getState(), MultiblockBlocks.CHUTE.getState(), MultiblockBlocks.EJECTOR.getState(), MultiblockBlocks.ITEM_IO.getState(), MultiblockBlocks.ADVANCED_CONNECTOR.getState());
 		return block;
 	}
 	
 	private static BasicMultiBlockBlock getCarbonCompressorStates () {
-		BasicMultiBlockBlock block = new BasicMultiBlockBlock("carbonCompressor_mb");
+		BasicMultiBlockBlock block = new BasicMultiBlockBlock("carbon_compressor_mb");
 		block.addBlocks(Blocks.DIAMOND_BLOCK);
 		block.addBlocks(ModBlocks.carbonCompressor);
 		block.addMatchStates(MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()));
+		block.addMatchStates(CraftingBlocks.MACHINE_CASING.getState());
 		return block;
 	}
 	
 	private static void assembleBurner (Builder multiblockbuilder) {
-		// Main Part
+		IMultiBlockStateMapper BMBS = burnerMultiblockstates;
+		NormalBlock B = new NormalBlock(ModBlocks.burner, BMBS);
+		NormalBlock MC = new NormalBlock(CraftingBlocks.MACHINE_CASING.getState(), BMBS);
+		NormalBlock CC = new NormalBlock(CraftingBlocks.CONTROL_CIRCUITRY.getState(), BMBS);
+		NormalBlock NB = new NormalBlock(Blocks.NETHER_BRICK, BMBS);
+		NormalBlock NR = new NormalBlock(Blocks.NETHERRACK, BMBS);
+		NormalBlock DB = new NormalBlock(Blocks.DIAMOND_BLOCK, BMBS);
+		VariableBlock HC = new VariableBlock(BMBS, Blocks.STAINED_HARDENED_CLAY, Blocks.HARDENED_CLAY);
+		NormalBlock EJ = new NormalBlock(MultiblockBlocks.EJECTOR.getState(), BMBS);
+		NormalBlock FR = new NormalBlock(Blocks.FIRE, BMBS);
+		NormalBlock MB = new NormalBlock(Blocks.MAGMA, BMBS);
+		NormalBlock FN = new NormalBlock(CraftingBlocks.FAN.getState(), BMBS);
+		NormalBlock RG = new NormalBlock(CraftingBlocks.REGULATOR.getState(), BMBS);
+		VariableBlock IO = new VariableBlock(IOMultiBlockStates, CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.POWER_CONNECTOR.getState(), MultiblockBlocks.CHUTE.getState(), MultiblockBlocks.EJECTOR.getState(), MultiblockBlocks.ITEM_IO.getState(),
+				MultiblockBlocks.ADVANCED_CONNECTOR.getState());
 		MultiBlockPartBuilder burner = MultiBlockPartBuilder.newBuilder().setWrapper(burnerMultiblockstates);
-		burner.newRow().addBlocksToRow(Blocks.IRON_BLOCK, ModBlocks.burner, Blocks.IRON_BLOCK);
-		burner.newRow().addBlocksToRow((Block) null, ModBlocks.thermal_press, null).goUp();
-		burner.newRow().addBlocksToRow((Block) null, ModBlocks.burner, null).goUp();
-		burner.newRow().addBlocksToRow(
-			(IBlockState) MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()),
-			ModBlocks.solar_generator.getStateFromMeta(MachineTier.advanced.ordinal()));
+		for (int i = 0; i < 7; i++)
+		{
+			burner.newRow();
+			for (int j = 0; j < 7; j++)
+			{
+				burner.addBlocksToRow(Blocks.IRON_BLOCK);
+			}
+		}
+		burner.goUp().newRow().addBlocksToRow(MC, MC, CC, B, CC, MC, MC);
+		burner.newRow().addBlocksToRow(MC, NB, NB, NB, NB, NB, MC);
+		burner.newRow().addBlocksToRow(IO, NB, NR, DB, NR, NB, IO);
+		burner.newRow().addBlocksToRow(CC, NB, DB, NR, DB, NB, CC);
+		burner.newRow().addBlocksToRow(IO, NB, NR, DB, NR, NB, IO);
+		burner.newRow().addBlocksToRow(MC, NB, NB, NB, NB, NB, MC);
+		burner.newRow().addBlocksToRow(MC, MC, IO, CC, IO, MC, MC);
+		burner.goUp().newRow().addBlocksToRow(null, MC, CC, B, CC, MC, null);
+		burner.newRow().addBlocksToRow(MC, HC, HC, EJ, HC, HC, MC);
+		burner.newRow().addBlocksToRow(IO, HC, FR, null, FR, HC, IO);
+		burner.newRow().addBlocksToRow(CC, EJ, null, FR, null, EJ, CC);
+		burner.newRow().addBlocksToRow(IO, HC, FR, null, FR, HC, IO);
+		burner.newRow().addBlocksToRow(MC, HC, HC, EJ, HC, HC, MC);
+		burner.newRow().addBlocksToRow(null, MC, IO, CC, IO, MC, null);
+		burner.goUp().newRow().addBlocksToRow(null, null, MC, MC, MC, null, null);
+		burner.newRow().addBlocksToRow(null, MC, HC, MB, HC, MC, null);
+		burner.newRow().addBlocksToRow(MC, HC, null, null, null, HC, MC);
+		burner.newRow().addBlocksToRow(MC, MB, null, null, null, MB, MC);
+		burner.newRow().addBlocksToRow(MC, HC, null, null, null, HC, MC);
+		burner.newRow().addBlocksToRow(null, MC, HC, MB, HC, MC, null);
+		burner.newRow().addBlocksToRow(null, null, MC, MC, MC, null, null);
+		burner.goUp().newRow(2).addBlocksToRow(null, null, MC, MC, MC, null, null);
+		burner.newRow().addBlocksToRow(null, MC, null, null, null, MC, null);
+		burner.newRow().addBlocksToRow(null, MC, null, null, null, MC, null);
+		burner.newRow().addBlocksToRow(null, MC, null, null, null, MC, null);
+		burner.newRow().addBlocksToRow(null, null, MC, MC, MC, null, null);
+		burner.goUp().newRow(3).addBlocksToRow(null, null, FN, FN, FN, null, null);
+		burner.newRow().addBlocksToRow(null, null, FN, RG, FN, null, null);
+		burner.newRow().addBlocksToRow(null, null, FN, FN, FN, null, null);
 		multiblockbuilder.addPart(burner.build());
-		// Optional Part
-		burner.setStart(0, 0, 1);
-		variablePartList.add(burner.newRow().addBlocksToRow(Blocks.IRON_BLOCK, null, Blocks.IRON_BLOCK).build());
-		variablePartList.add(burner.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, null, Blocks.DIAMOND_BLOCK).build());
-		multiblockbuilder.addPart(new VariablePart(variablePartList));
-		variablePartList.clear();
 	}
+	
 	private static void assembleCarbonCompressor (Builder multiblockbuilder) {
 		// Main Part
 		MultiBlockPartBuilder carbonCompressor = MultiBlockPartBuilder.newBuilder().setWrapper(carbonCompressorMultiBlockStates);
 		carbonCompressor.newRow().addBlocksToRow(ModBlocks.carbonCompressor, ModBlocks.carbonCompressor);
 		carbonCompressor.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_BLOCK).goUp();
 		carbonCompressor.newRow().addBlocksToRow(ModBlocks.carbonCompressor, ModBlocks.carbonCompressor);
-		carbonCompressor.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_BLOCK);
+		carbonCompressor.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_BLOCK).goUp();
+		VariableBlock power = new VariableBlock(carbonCompressorMultiBlockStates, CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.POWER_CONNECTOR.getState());
+		carbonCompressor.newRow().addBlocksToRow(power, power);
+		carbonCompressor.newRow().addBlocksToRow(power, power);
 		multiblockbuilder.addPart(carbonCompressor.build());
 	}
 }

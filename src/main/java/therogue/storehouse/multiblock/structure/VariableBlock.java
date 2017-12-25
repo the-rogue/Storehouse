@@ -79,7 +79,7 @@ public class VariableBlock implements IMultiBlockElement {
 	public IBlockState getMultiBlockState (IBlockState originalState) {
 		for (int i = 0; i < nonMultiBlockParts.length; i++)
 		{
-			if (nonMultiBlockParts[i] == originalState) return multiblockPart[i];
+			if (matchState ? nonMultiBlockParts[i] == originalState : nonMultiBlockParts[i].getBlock() == originalState.getBlock()) return multiblockPart[i];
 		}
 		throw new IllegalArgumentException("The modder obviously didnt check if it was a valid block before calling this method");
 	}

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
@@ -15,14 +16,17 @@ import therogue.storehouse.capabilitywrapper.FluidWrapper;
 import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
 import therogue.storehouse.capabilitywrapper.ItemWrapper;
 
-public enum MultiblockBlocks
-{
+public enum MultiblockBlocks {
 	TAP (FluidWrapper.DRAIN),
 	TANK (FluidWrapper.FILL),
 	EJECTOR (ItemWrapper.EXTRACT),
 	CHUTE (ItemWrapper.INSERT),
 	POWER_SUPPLY (EnergyWrapper.EXTRACT),
-	POWER_CONNECTOR (EnergyWrapper.RECIEVE);
+	POWER_CONNECTOR (EnergyWrapper.RECIEVE),
+	ITEM_IO (ItemWrapper.BOTH),
+	FLUID_IO (FluidWrapper.BOTH),
+	ADVANCED_CONNECTOR (ItemWrapper.BOTH, FluidWrapper.BOTH, EnergyWrapper.RECIEVE),
+	ADVANCED_SUPPLY (ItemWrapper.BOTH, FluidWrapper.BOTH, EnergyWrapper.EXTRACT);
 	
 	public static StorehouseBaseCapabilityVariantBlock crafting_block;
 	public Map<Capability<?>, ICapabilityWrapper<?>> capabilities = new HashMap<Capability<?>, ICapabilityWrapper<?>>();
@@ -40,6 +44,10 @@ public enum MultiblockBlocks
 	
 	public ItemStack createStack (int amount) {
 		return new ItemStack(crafting_block, amount, this.ordinal());
+	}
+	
+	public IBlockState getState () {
+		return crafting_block.getStateFromMeta(this.ordinal());
 	}
 	
 	public static IStorehouseBaseBlock addMaterials () {

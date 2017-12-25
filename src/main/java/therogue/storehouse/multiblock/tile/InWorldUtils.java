@@ -19,6 +19,7 @@ import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
 import therogue.storehouse.multiblock.block.IMultiBlockCapabilityBlock;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure.StructureTest;
+import therogue.storehouse.util.LOG;
 
 public class InWorldUtils {
 	
@@ -102,6 +103,11 @@ public class InWorldUtils {
 	}
 	
 	public static Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> getWorldMultiblockCapabilities (List<WorldStates> worldPositionStates) {
+		if (worldPositionStates == null)
+		{
+			LOG.error("Could not load capabilities from a null list of world position states");
+			return new HashMap<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>>();
+		}
 		Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> capabilities = new HashMap<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>>();
 		for (WorldStates positionState : worldPositionStates)
 		{
