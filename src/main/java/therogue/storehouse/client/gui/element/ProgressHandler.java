@@ -11,18 +11,15 @@
 package therogue.storehouse.client.gui.element;
 
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.inventory.IGuiSupplier;
 
 public class ProgressHandler extends ElementBase {
 	
-	public final IGuiSupplier stateChanger;
 	public final int progressField;
 	public final int maxProgressField;
 	public final IProgressBar drawThing;
 	
-	public ProgressHandler (GuiBase gui, IGuiSupplier stateChanger, int progressField, int maxProgressField, IProgressBar drawThing) {
+	public ProgressHandler (GuiBase gui, int progressField, int maxProgressField, IProgressBar drawThing) {
 		super(gui);
-		this.stateChanger = stateChanger;
 		this.progressField = progressField;
 		this.maxProgressField = maxProgressField;
 		this.drawThing = drawThing;

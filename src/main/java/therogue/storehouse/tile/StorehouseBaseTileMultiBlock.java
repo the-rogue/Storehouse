@@ -13,8 +13,6 @@ package therogue.storehouse.tile;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,12 +24,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
 import therogue.storehouse.multiblock.tile.IMultiBlockController;
 import therogue.storehouse.multiblock.tile.InWorldUtils;
-import therogue.storehouse.multiblock.tile.WorldStates;
 import therogue.storehouse.multiblock.tile.InWorldUtils.MultiBlockFormationResult;
+import therogue.storehouse.multiblock.tile.WorldStates;
 
 public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine implements IMultiBlockController {
 	
@@ -39,6 +38,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	private boolean breaking = false;
 	protected List<WorldStates> components = null;
 	protected Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> multiblockCapabilites;
+	protected boolean activationLock = false;
 	
 	public StorehouseBaseTileMultiBlock (IStorehouseBaseBlock block) {
 		super(block);
@@ -49,7 +49,9 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	 * Forms the Multiblock
 	 */
 	@Override
-	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (activationLock) return false;
+		if (super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ)) return true;
 		if (!world.isRemote && !isFormed)
 		{
 			MultiBlockFormationResult result = InWorldUtils.formMultiBlock(getController());
@@ -62,6 +64,14 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 			}
 			return isFormed;
 		}
+		if (!pos.equals(this.pos))
+		{
+			activationLock = true;
+			IBlockState thisState = this.world.getBlockState(this.pos);
+			boolean flag = thisState.getBlock().onBlockActivated(this.world, this.pos, thisState, player, hand, side, hitX, hitY, hitZ);
+			activationLock = false;
+			if (flag) return true;
+		}
 		return false;
 	}
 	
@@ -69,7 +79,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	 * Breaks the MultiBlock
 	 */
 	@Override
-	public void onBlockBroken (@Nullable BlockPos at) {
+	public void breakBlock (World worldIn, BlockPos at, IBlockState state) {
 		if (!world.isRemote && isFormed && !breaking)
 		{
 			breaking = true;
@@ -79,6 +89,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 			components = null;
 			multiblockCapabilites = null;
 		}
+		super.breakBlock(worldIn, at, state);
 	}
 	
 	/**
@@ -95,6 +106,12 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	@Override
 	public TileEntity getTile () {
 		return this;
+	}
+	
+	// --------------------------IGuiSupplier Methods-----------------------------------
+	@Override
+	public String getGuiName () {
+		return "multiblock." + Storehouse.RESOURCENAMEPREFIX + block.getName() + ".name";
 	}
 	
 	// -------------------------Standard TE methods-----------------------------------
@@ -119,9 +136,17 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 		return false;
 	}
 	
+	public boolean hasAdditionalCapability (Capability<?> capability, EnumFacing facing) {
+		return false;
+	}
+	
 	@Override
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
 		if (isFormed) return getCapability(this.pos, capability, facing);
+		return null;
+	}
+	
+	public <T> T getAdditionalCapability (Capability<T> capability, EnumFacing facing) {
 		return null;
 	}
 	
@@ -132,7 +157,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 		{
 			multiblockCapabilites = InWorldUtils.getWorldMultiblockCapabilities(components);
 		}
-		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).containsKey(capability)) return super.hasCapability(capability, facing);
+		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).containsKey(capability)) return super.hasCapability(capability, facing) || hasAdditionalCapability(capability, facing);
 		return false;
 	}
 	
@@ -141,6 +166,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 		if (!hasCapability(pos, capability, facing)) return null;
 		@SuppressWarnings ("unchecked")
 		ICapabilityWrapper<T> wrapper = (ICapabilityWrapper<T>) multiblockCapabilites.get(pos).get(capability);
-		return wrapper.getWrappedCapability(super.getCapability(capability, facing));
+		T other = getAdditionalCapability(capability, facing);
+		return wrapper.getWrappedCapability(other != null ? other : super.getCapability(capability, facing));
 	}
 }

@@ -10,9 +10,6 @@
 
 package therogue.storehouse.tile.machine;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,10 +19,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import therogue.storehouse.container.machine.ContainerLiquidGenerator;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyUtils;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.TileBaseGenerator;
@@ -33,7 +31,8 @@ import therogue.storehouse.util.ItemStackUtils;
 
 public class TileLiquidGenerator extends TileBaseGenerator {
 	
-	public static final int[] RFPerTick = { 20, 160, 960, 4800, 48000 };
+	public static final int[] RFPerTick = { 20, 160, 4800 };
+	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.liquid_generator_basic, ModBlocks.liquid_generator_advanced, ModBlocks.liquid_generator_ender };
 	private int generatorburntime = 0;
 	private int maxruntime = 0;
 	protected FluidTank tank = new FluidTank(10000) {
@@ -46,7 +45,7 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 	};
 	
 	public TileLiquidGenerator (MachineTier tier) {
-		super(ModBlocks.liquid_generator, tier, RFPerTick[tier.ordinal()]);
+		super(BLOCKS[tier.ordinal()], tier, RFPerTick[tier.ordinal()]);
 		inventory = new InventoryManager(this, 4, new Integer[] { 0, 2 }, new Integer[] { 1, 3 }) {
 			
 			@Override
@@ -120,15 +119,10 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 		return maxruntime;
 	}
 	
-	// -------------------------IInteractionObject-----------------------------------------------------------------
+	// ----------------------IMultiBlockController-----------------------------------------------------------------
 	@Override
-	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return new ContainerLiquidGenerator(playerInventory, this);
-	}
-	
-	@Override
-	public String getGuiID () {
-		return ModBlocks.liquid_generator.getUnlocalizedName() + "_" + tier.toString();
+	public MultiBlockStructure getStructure () {
+		return null;
 	}
 	// -------------------------Standard TE methods-----------------------------------
 	
@@ -163,14 +157,14 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 	}
 	
 	@Override
-	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+	public boolean hasAdditionalCapability (Capability<?> capability, EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return true;
 		return super.hasCapability(capability, facing);
 	}
 	
 	@SuppressWarnings ("unchecked")
 	@Override
-	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
+	public <T> T getAdditionalCapability (Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return (T) tank;
 		return super.getCapability(capability, facing);
 	}
@@ -190,24 +184,10 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 		}
 	}
 	
-	public static class TileLiquidGeneratorInfused extends TileLiquidGenerator {
-		
-		public TileLiquidGeneratorInfused () {
-			super(MachineTier.infused);
-		}
-	}
-	
 	public static class TileLiquidGeneratorEnder extends TileLiquidGenerator {
 		
 		public TileLiquidGeneratorEnder () {
 			super(MachineTier.ender);
-		}
-	}
-	
-	public static class TileLiquidGeneratorUltimate extends TileLiquidGenerator {
-		
-		public TileLiquidGeneratorUltimate () {
-			super(MachineTier.ultimate);
 		}
 	}
 }

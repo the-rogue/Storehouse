@@ -18,22 +18,46 @@
 			},
 			"2": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"north": "storehouse:blocks/machine/crafting blocks/grill",
+					"east": "storehouse:blocks/machine/crafting blocks/regulator_1",
+					"west": "storehouse:blocks/machine/crafting blocks/regulator_2",
+					"south": "storehouse:blocks/machine/crafting blocks/grill",
+					"up": "storehouse:blocks/machine/steel_casing",
+					"down": "storehouse:blocks/machine/steel_casing",
+					"particle": "storehouse:blocks/machine/steel_casing"
 				}
 			},
 			"3": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"north": "storehouse:blocks/machine/crafting blocks/grill",
+					"east": "storehouse:blocks/machine/steel_casing",
+					"west": "storehouse:blocks/machine/steel_casing",
+					"south": "storehouse:blocks/machine/crafting blocks/grill",
+					"up": "storehouse:blocks/machine/steel_casing",
+					"down": "storehouse:blocks/machine/steel_casing",
+					"particle": "storehouse:blocks/machine/steel_casing"
 				}
 			},
 			"4": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"north": "storehouse:blocks/machine/crafting blocks/control_circuitry_2",
+					"east": "storehouse:blocks/machine/crafting blocks/control_circuitry_1",
+					"west": "storehouse:blocks/machine/crafting blocks/control_circuitry_1",
+					"south": "storehouse:blocks/machine/iron_casing",
+					"up": "storehouse:blocks/machine/iron_casing",
+					"down": "storehouse:blocks/machine/iron_casing",
+					"particle": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"5": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"north": "storehouse:blocks/machine/crafting blocks/fan",
+					"east": "storehouse:blocks/machine/iron_casing",
+					"west": "storehouse:blocks/machine/iron_casing",
+					"south": "storehouse:blocks/machine/crafting blocks/fan",
+					"up": "storehouse:blocks/machine/iron_casing",
+					"down": "storehouse:blocks/machine/iron_casing",
+					"particle": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"6": {

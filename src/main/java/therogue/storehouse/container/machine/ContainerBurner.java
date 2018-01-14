@@ -11,21 +11,19 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.container.SlotItemHandlerFix;
 import therogue.storehouse.tile.machine.TileBurner;
 
 public class ContainerBurner extends ContainerBase {
 	
 	public ContainerBurner (IInventory playerInv, TileBurner teInv) {
 		super(playerInv, teInv);
-		IItemHandlerModifiable tileCarbonCompressor = teInv.getContainerCapability();
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 0, 120, 37));
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 1, 50, 17));
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 2, 50, 37));
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 3, 50, 57));
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 4, 70, 27));
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 5, 70, 47));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 120, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 50, 17));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 2, 50, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 3, 50, 57));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 4, 70, 27));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 5, 70, 47));
 	}
 }

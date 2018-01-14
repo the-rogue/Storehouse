@@ -17,9 +17,7 @@ import therogue.storehouse.Storehouse;
 public enum MachineTier implements IStringSerializable {
 	basic (Storehouse.RESOURCENAMEPREFIX + "textures/gui/basic.png"),
 	advanced (Storehouse.RESOURCENAMEPREFIX + "textures/gui/advanced.png"),
-	infused (Storehouse.RESOURCENAMEPREFIX + "textures/gui/infused.png"),
-	ender (Storehouse.RESOURCENAMEPREFIX + "textures/gui/ender.png"),
-	ultimate (Storehouse.RESOURCENAMEPREFIX + "textures/gui/ultimate.png");
+	ender (Storehouse.RESOURCENAMEPREFIX + "textures/gui/ender.png");
 	
 	public final ResourceLocation guiLocation;
 	

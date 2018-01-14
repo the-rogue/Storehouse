@@ -25,10 +25,10 @@ import therogue.storehouse.util.GeneralUtils;
 public class GuiLiquidGenerator extends GuiBase {
 	
 	public GuiLiquidGenerator (ContainerBase inventory, TileLiquidGenerator linked) {
-		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory, linked.getGuiID());
-		elements.add(new ProgressHandler(this, linked, 7, 8, new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(linked.getField(1)))));
-		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
-		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
-		elements.add(new ElementFluidTank(this, TierIcons.FluidTank.getLocation(linked.getField(1)), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), linked));
+		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory, linked);
+		elements.add(new ProgressHandler(this, 7, 8, new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(linked.getField(1)))));
+		elements.add(new ProgressHandler(this, 5, 6, new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
+		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
+		elements.add(new ElementFluidTank(this, TierIcons.FluidTank.getLocation(linked.getField(1)), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
 	}
 }

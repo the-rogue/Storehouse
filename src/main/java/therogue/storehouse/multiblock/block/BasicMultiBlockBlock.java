@@ -30,14 +30,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile.NoControllerException;
+import therogue.storehouse.multiblock.tile.IMultiBlockController;
 import therogue.storehouse.multiblock.tile.IMultiBlockTile;
 import therogue.storehouse.util.LOG;
 
-public class BasicMultiBlockBlock extends StorehouseBaseBlock implements ITileEntityProvider, IMultiBlockStateMapper {
+public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiBlockStateMapper, ITileEntityProvider {
 	
 	private final List<WrapperEntry> blocks = new ArrayList<WrapperEntry>();
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
@@ -50,13 +50,11 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements ITileEn
 	
 	public BasicMultiBlockBlock (String name, Block... subStates) {
 		this(name);
-		addBlocks();
+		addBlocks(subStates);
 	}
 	
 	public BasicMultiBlockBlock addBlocks (Block... states) {
-		if (blocks.size() + states.length > 16)
-			throw new IllegalArgumentException(
-				"The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
+		if (blocks.size() + states.length > 16) throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
 		for (Block subState : states)
 		{
 			if (subState == null) throw new IllegalArgumentException("Tried to register a null Block to a multiblockstate wrapper");
@@ -66,9 +64,7 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements ITileEn
 	}
 	
 	public BasicMultiBlockBlock addMatchStates (IBlockState... states) {
-		if (blocks.size() + states.length > 16)
-			throw new IllegalArgumentException(
-				"The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
+		if (blocks.size() + states.length > 16) throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
 		for (IBlockState subState : states)
 		{
 			if (subState == null) throw new IllegalArgumentException("Tried to register a null IBlockState to a multiblockstate wrapper");
@@ -187,42 +183,54 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements ITileEn
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity (World worldIn, int meta) {
-		return new BasicMultiBlockTile();
-	}
-	
-	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
-		float hitY, float hitZ) {
-		return BlockUtils.onMultiBlockActivated(world, pos, state, player, hand, side);
-	}
-	
-	@Override
-	public void breakBlock (World worldIn, BlockPos pos, IBlockState state) {
-		TileEntity te = worldIn.getTileEntity(pos);
-		if (te instanceof IMultiBlockTile)
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntity te = world.getTileEntity(pos);
+		if (!world.isRemote && te instanceof IMultiBlockTile)
 		{
 			try
 			{
-				((IMultiBlockTile) te).getController().onBlockBroken(pos);
+				IMultiBlockController controller = ((IMultiBlockTile) te).getController();
+				return controller.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+			}
+			catch (NoControllerException e)
+			{
+				LOG.warn("Could not Notify the controller of block at: " + pos + " activated");
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public void breakBlock (World world, BlockPos pos, IBlockState state) {
+		TileEntity te = world.getTileEntity(pos);
+		if (!world.isRemote && te instanceof IMultiBlockTile)
+		{
+			try
+			{
+				IMultiBlockController controller = ((IMultiBlockTile) te).getController();
+				controller.breakBlock(world, pos, state);
 			}
 			catch (NoControllerException e)
 			{
 				LOG.warn("Could not Notify the controller of block at: " + pos + " broken");
 			}
 		}
-		super.breakBlock(worldIn, pos, state);
+		super.breakBlock(world, pos, state);
 	}
 	
 	@Override
 	public IBlockState getMultiBlockState (IBlockState state) {
 		for (WrapperEntry element : blocks)
 		{
-			if (element.matchState ? element.state == state : element.state.getBlock() == state.getBlock())
-				return this.getDefaultState().withProperty(META, blocks.indexOf(element));
+			if (element.matchState ? element.state == state : element.state.getBlock() == state.getBlock()) return this.getDefaultState().withProperty(META, blocks.indexOf(element));
 		}
 		LOG.debug("Failed to get a wrapped state for state: " + state.getBlock() + " BlockWrapper: " + this);
 		return state;
+	}
+	
+	@Override
+	public TileEntity createNewTileEntity (World world, int meta) {
+		return new BasicMultiBlockTile();
 	}
 	
 	public class WrapperEntry {

@@ -10,26 +10,25 @@
 
 package therogue.storehouse.tile.machine;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.block.BlockUtils;
-import therogue.storehouse.container.machine.ContainerSolarGenerator;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyUtils;
 import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.ModMultiBlocks;
 import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.TileBaseGenerator;
 
-public class TileSolarGenerator extends TileBaseGenerator implements ITickable {
+public class TileSolarGenerator extends TileBaseGenerator {
 	
-	public static final int[] RFPerTick = { 5, 40, 240, 1200, 12000 };
+	public static final int[] RFPerTick = { 5, 40, 1200 };
+	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.solar_generator_basic, ModBlocks.solar_generator_advanced, ModBlocks.solar_generator_ender };
 	
 	public TileSolarGenerator (MachineTier tier) {
-		super(ModBlocks.solar_generator, tier, RFPerTick[tier.ordinal()]);
+		super(BLOCKS[tier.ordinal()], tier, RFPerTick[tier.ordinal()]);
 		inventory = new InventoryManager(this, 2, new Integer[] { 0 }, new Integer[] { 1 }) {
 			
 			@Override
@@ -59,15 +58,20 @@ public class TileSolarGenerator extends TileBaseGenerator implements ITickable {
 	protected void doRunTick () {
 	}
 	
-	// -------------------------IInteractionObject-----------------------------------------------------------------
+	// ----------------------IMultiBlockController-----------------------------------------------------------------
 	@Override
-	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return new ContainerSolarGenerator(playerInventory, this);
-	}
-	
-	@Override
-	public String getGuiID () {
-		return ModBlocks.solar_generator.getUnlocalizedName() + "_" + tier.toString();
+	public MultiBlockStructure getStructure () {
+		switch (tier)
+		{
+			case basic:
+				return ModMultiBlocks.basicSolarGeneratorStructure;
+			case advanced:
+				return ModMultiBlocks.advancedSolarGeneratorStructure;
+			case ender:
+				return ModMultiBlocks.enderSolarGeneratorStructure;
+			default:
+				return null;
+		}
 	}
 	
 	// ------------------------PlaceHolder Classes------------------------------------------------------------------
@@ -85,24 +89,10 @@ public class TileSolarGenerator extends TileBaseGenerator implements ITickable {
 		}
 	}
 	
-	public static class TileSolarGeneratorInfused extends TileSolarGenerator {
-		
-		public TileSolarGeneratorInfused () {
-			super(MachineTier.infused);
-		}
-	}
-	
 	public static class TileSolarGeneratorEnder extends TileSolarGenerator {
 		
 		public TileSolarGeneratorEnder () {
 			super(MachineTier.ender);
-		}
-	}
-	
-	public static class TileSolarGeneratorUltimate extends TileSolarGenerator {
-		
-		public TileSolarGeneratorUltimate () {
-			super(MachineTier.ultimate);
 		}
 	}
 }

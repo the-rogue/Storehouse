@@ -29,10 +29,10 @@ import therogue.storehouse.tile.machine.TileCrystaliser;
 public class GuiCrystaliser extends GuiBase {
 	
 	public GuiCrystaliser (ContainerBase inventory, TileCrystaliser linked) {
-		super(NORMAL_TEXTURE, inventory, linked.getGuiID());
-		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
-		elements.add(new ElementFluidTank(this, Icons.FluidTank.getLocation(), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), linked));
-		elements.add(new ProgressHandler(this, linked, 4, 5, new ElementFadingProgressBar(46, 18, 54, 54, new Color(15, 26, 95)) {
+		super(NORMAL_TEXTURE, inventory, linked);
+		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ElementFluidTank(this, Icons.FluidTank.getLocation(), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
+		elements.add(new ProgressHandler(this, 4, 5, new ElementFadingProgressBar(46, 18, 54, 54, new Color(15, 26, 95)) {
 			
 			@Override
 			public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {

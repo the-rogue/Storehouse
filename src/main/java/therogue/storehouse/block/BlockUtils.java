@@ -13,16 +13,9 @@ package therogue.storehouse.block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import therogue.storehouse.multiblock.tile.IMultiBlockTile;
 
 public class BlockUtils {
 	
@@ -51,40 +44,5 @@ public class BlockUtils {
 	 */
 	public static boolean isUsableByPlayer (TileEntity te, EntityPlayer player) {
 		return te.getWorld().getTileEntity(te.getPos()) != te ? false : player.getDistanceSq((double) te.getPos().getX() + 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 64.0D;
-	}
-	
-	/**
-	 * Helper method to drop the inventory of a tileEntity using IItemHandler into the world
-	 * 
-	 * @param world the world to drop the contents into
-	 * @param pos the position to drop the contents at
-	 * @param tile the TileEntity to drop the contents of
-	 */
-	public static void dropInventory (World world, BlockPos pos, TileEntity tile) {
-		if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
-		{
-			IItemHandler inventory = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			for (int i = 0; i < inventory.getSlots(); ++i)
-			{
-				ItemStack itemstack = inventory.getStackInSlot(i);
-				if (!itemstack.isEmpty())
-				{
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemstack);
-				}
-			}
-		}
-	}
-	
-	public static boolean onMultiBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side) {
-		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof IMultiBlockTile)
-		{
-			if (!world.isRemote)
-			{
-				IMultiBlockTile mbpte = (IMultiBlockTile) te;
-				return mbpte.getController().onMultiBlockActivatedAt(world, pos, state, player, hand, side);
-			}
-		}
-		return true;
 	}
 }

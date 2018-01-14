@@ -10,15 +10,15 @@
 				"model": "minecraft:diamond_block"
 			},
 			"1": {
-				"model": "none"
+				"model": "storehouse:machine/carbon_compressor"
 			},
-			"2": {
-				"model": "none"
-			},
-			"3": {
+				"2": {
 				"textures": {
 					"all": "storehouse:blocks/machine/iron_casing"
 				}
+			},
+			"3": {
+				"model": "minecraft:iron_block"
 			},
 			"4": {
 				"model": "minecraft:iron_block"

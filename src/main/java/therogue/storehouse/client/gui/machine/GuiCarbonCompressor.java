@@ -24,9 +24,9 @@ import therogue.storehouse.tile.machine.TileCarbonCompressor;
 public class GuiCarbonCompressor extends GuiBase {
 	
 	public GuiCarbonCompressor (ContainerBase inventory, TileCarbonCompressor linked) {
-		super(NORMAL_TEXTURE, inventory, linked.getGuiID());
-		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
-		elements.add(new ProgressHandler(this, linked, 4, 5, createProgressBar()));
+		super(NORMAL_TEXTURE, inventory, linked);
+		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ProgressHandler(this, 4, 5, createProgressBar()));
 	}
 	
 	private static IProgressBar createProgressBar () {

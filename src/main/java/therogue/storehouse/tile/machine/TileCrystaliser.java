@@ -14,9 +14,6 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -27,7 +24,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import therogue.storehouse.container.machine.ContainerCrystaliser;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.CraftingManager;
@@ -173,18 +169,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter, 
 		return super.getFieldCount() + 2;
 	}
 	
-	// -------------------------IInteractionObject-----------------------------------------------------------------
-	@Override
-	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return new ContainerCrystaliser(playerInventory, this);
-	}
-	
-	@Override
-	public String getGuiID () {
-		return ModBlocks.crystaliser.getUnlocalizedName();
-	}
 	// -------------------------Standard TE methods-----------------------------------
-	
 	@Override
 	public GuiUpdateTEPacket getGUIPacket () {
 		GuiUpdateTEPacket packet = super.getGUIPacket();

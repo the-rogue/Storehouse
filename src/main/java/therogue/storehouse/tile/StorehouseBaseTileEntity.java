@@ -10,12 +10,18 @@
 
 package therogue.storehouse.tile;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorldNameable;
+import net.minecraft.world.World;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 
@@ -61,6 +67,13 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 	}
 	
 	// -------------------------Standard TE methods-----------------------------------
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		return false;
+	}
+	
+	public void breakBlock (World worldIn, BlockPos pos, IBlockState state) {
+	}
+	
 	public GuiUpdateTEPacket getGUIPacket () {
 		return new GuiUpdateTEPacket(this.getPos(), new NBTTagCompound());
 	}

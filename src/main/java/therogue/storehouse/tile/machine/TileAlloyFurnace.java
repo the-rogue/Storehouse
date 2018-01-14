@@ -14,11 +14,7 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import therogue.storehouse.container.machine.ContainerAlloyFurnace;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.CraftingManager;
@@ -49,7 +45,7 @@ public class TileAlloyFurnace extends StorehouseBaseMachine implements ICrafter 
 	// -------------------------ICrafter Methods-----------------------------------
 	@Override
 	public Set<Integer> getOrderMattersSlots () {
-		return Sets.newHashSet(0);
+		return Sets.newHashSet();
 	}
 	
 	@Override
@@ -110,18 +106,7 @@ public class TileAlloyFurnace extends StorehouseBaseMachine implements ICrafter 
 		return super.getFieldCount() + 2;
 	}
 	
-	// -------------------------IInteractionObject-----------------------------------------------------------------
-	@Override
-	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return new ContainerAlloyFurnace(playerInventory, this);
-	}
-	
-	@Override
-	public String getGuiID () {
-		return ModBlocks.alloy_furnace.getUnlocalizedName();
-	}
 	// -------------------------Standard TE methods-----------------------------------
-	
 	@Override
 	public GuiUpdateTEPacket getGUIPacket () {
 		GuiUpdateTEPacket packet = super.getGUIPacket();

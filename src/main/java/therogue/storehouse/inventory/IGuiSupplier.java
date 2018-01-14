@@ -23,4 +23,7 @@ public interface IGuiSupplier {
 	
 	@SideOnly (Side.CLIENT)
 	public int getFieldCount ();
+	
+	@SideOnly (Side.CLIENT)
+	public String getGuiName ();
 }

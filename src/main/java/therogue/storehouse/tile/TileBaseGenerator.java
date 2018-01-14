@@ -19,7 +19,7 @@ import therogue.storehouse.energy.EnergyStorageAdv;
 import therogue.storehouse.energy.EnergyUtils;
 import therogue.storehouse.util.GeneralUtils;
 
-public abstract class TileBaseGenerator extends StorehouseBaseMachine implements ITickable {
+public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock implements ITickable {
 	
 	protected int RFPerTick;
 	protected MachineTier tier;
@@ -34,7 +34,7 @@ public abstract class TileBaseGenerator extends StorehouseBaseMachine implements
 	// -------------------------ITickable-----------------------------------------------------------------
 	@Override
 	public void update () {
-		if (GeneralUtils.isServerSide(world))
+		if (isFormed() && GeneralUtils.isServerSide(world))
 		{
 			if (isRunning())
 			{

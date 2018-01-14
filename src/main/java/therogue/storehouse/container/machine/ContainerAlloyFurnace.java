@@ -11,19 +11,17 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.container.SlotItemHandlerFix;
 import therogue.storehouse.tile.machine.TileAlloyFurnace;
 
 public class ContainerAlloyFurnace extends ContainerBase {
 	
 	public ContainerAlloyFurnace (IInventory playerInv, TileAlloyFurnace teInv) {
 		super(playerInv, teInv);
-		IItemHandlerModifiable tileAlloyFurnace = teInv.getContainerCapability();
-		this.addTESlot(new SlotItemHandler(tileAlloyFurnace, 2, 60, 37));
-		this.addTESlot(new SlotItemHandler(tileAlloyFurnace, 3, 60, 57));
-		this.addTESlot(new SlotItemHandler(tileAlloyFurnace, 0, 120, 37));
-		this.addTESlot(new SlotItemHandler(tileAlloyFurnace, 1, 60, 17));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 2, 60, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 3, 60, 57));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 120, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 60, 17));
 	}
 }

@@ -10,6 +10,7 @@
 
 package therogue.storehouse.inventory;
 
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 public interface IInventoryCapability {
@@ -18,5 +19,5 @@ public interface IInventoryCapability {
 	
 	public void onInventoryChange ();
 	
-	public IItemHandlerModifiable getContainerCapability ();
+	public IItemHandler getContainerCapability ();
 }

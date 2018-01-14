@@ -11,17 +11,15 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.container.SlotItemHandlerFix;
 import therogue.storehouse.tile.machine.TileCarbonCompressor;
 
 public class ContainerCarbonCompressor extends ContainerBase {
 	
 	public ContainerCarbonCompressor (IInventory playerInv, TileCarbonCompressor teInv) {
 		super(playerInv, teInv);
-		IItemHandlerModifiable tileCarbonCompressor = teInv.getContainerCapability();
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 0, 120, 37));
-		this.addTESlot(new SlotItemHandler(tileCarbonCompressor, 1, 60, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 120, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 60, 37));
 	}
 }

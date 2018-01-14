@@ -1,8 +1,6 @@
 
 package therogue.storehouse.multiblock.tile;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -25,11 +23,11 @@ public interface IMultiBlockController extends IMultiBlockTile {
 		return getTile().getPos();
 	}
 	
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ);
+	
+	public void breakBlock (World worldIn, BlockPos pos, IBlockState state);
+	
 	public MultiBlockStructure getStructure ();
-	
-	public void onBlockBroken (@Nullable BlockPos at);
-	
-	public boolean onMultiBlockActivatedAt (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side);
 	
 	default boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing) {
 		return getTile().hasCapability(capability, facing);

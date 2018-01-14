@@ -5,7 +5,7 @@
 	},
 	"variants": {
 		"normal": {
-			"model": "storehouse:machine/thermal_press"
+			"model": "storehouse:machine/crystaliser"
 		}
 	}
 }

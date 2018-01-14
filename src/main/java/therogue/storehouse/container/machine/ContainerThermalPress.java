@@ -12,9 +12,9 @@ package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraftforge.items.SlotItemHandler;
 import therogue.storehouse.client.gui.GuiHelper.XYCoords;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.container.SlotItemHandlerFix;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.tile.machine.TileThermalPress.Mode;
 
@@ -27,12 +27,12 @@ public class ContainerThermalPress extends ContainerBase {
 		super(playerInv, teInv);
 		this.teInv = teInv;
 		// Add Thermal Press's Inventory Slot IDs 36-41
-		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 0, 120, 37));
-		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 1, 65, 37));
-		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 2, 65, 10));
-		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 3, 65, 64));
-		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 4, Integer.MIN_VALUE, Integer.MIN_VALUE));
-		this.addTESlot(new SlotItemHandler(teInv.getContainerCapability(), 5, Integer.MIN_VALUE, Integer.MIN_VALUE));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 120, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 65, 37));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 2, 65, 10));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 3, 65, 64));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 4, Integer.MIN_VALUE, Integer.MIN_VALUE));
+		this.addTESlot(new SlotItemHandlerFix(teInv, 5, Integer.MIN_VALUE, Integer.MIN_VALUE));
 		this.detectAndSendChanges();
 		update();
 	}

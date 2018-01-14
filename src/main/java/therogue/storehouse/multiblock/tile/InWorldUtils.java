@@ -73,7 +73,11 @@ public class InWorldUtils {
 		BlockPos arrayOriginInWorld = possibleLocationInWorld.subtract(possibleLocationInArray.rotate(rotation));
 		while (blocktest.next())
 		{
-			if (!blocktest.isValidBlock(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))), false)) return false;
+			if (!blocktest.isValidBlock(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))), false))
+			{
+				//LOG.info("MultiBlock Failed To Form at: " + "Pos: " + blocktest.getCurrentPosition() + " WorldPos: " + arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation)) + " State: " + world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))));
+				return false;
+			}
 		}
 		return true;
 	}

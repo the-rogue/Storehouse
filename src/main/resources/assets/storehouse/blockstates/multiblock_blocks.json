@@ -1,0 +1,91 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"meta": {
+			"0": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/tap"
+				}
+			},
+			"1": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/tank"
+				}
+			},
+			"2": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/ejector"
+				}
+			},
+			"3": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/chute"
+				}
+			},
+			"4": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/energy_supply"
+				}
+			},
+			"5": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/energy_connector"
+				}
+			},
+			"6": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/item_io"
+				}
+			},
+			"7": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/fluid_io"
+				}
+			},
+			"8": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/advanced_connector"
+				}
+			},
+			"9": {
+				"textures": {
+					"all": "storehouse:blocks/machine/multiblock/advanced_supply"
+				}
+			},
+			"10": {
+				"textures": {
+					"all": "storehouse:blocks/machine/iron_casing_down"
+				}
+			},
+			"11": {
+				"textures": {
+					"all": "storehouse:blocks/machine/iron_casing_down"
+				}
+			},
+			"12": {
+				"textures": {
+					"all": "storehouse:blocks/machine/iron_casing_down"
+				}
+			},
+			"13": {
+				"textures": {
+					"all": "storehouse:blocks/machine/iron_casing_down"
+				}
+			},
+			"14": {
+				"textures": {
+					"all": "storehouse:blocks/machine/iron_casing_down"
+				}
+			},
+			"15": {
+				"textures": {
+					"all": "storehouse:blocks/machine/iron_casing_down"
+				}
+			}
+		}
+	}
+}

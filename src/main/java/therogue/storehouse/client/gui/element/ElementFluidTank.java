@@ -20,7 +20,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
-import therogue.storehouse.inventory.IGuiSupplier;
 
 public class ElementFluidTank extends ElementBase {
 	
@@ -29,16 +28,14 @@ public class ElementFluidTank extends ElementBase {
 	public final int x;
 	public final int y;
 	public final IFluidHandler tank;
-	public final IGuiSupplier stateChanger;
 	
-	public ElementFluidTank (GuiBase gui, ResourceLocation location, int x, int y, IFluidHandler tank, IGuiSupplier stateChanger) {
+	public ElementFluidTank (GuiBase gui, ResourceLocation location, int x, int y, IFluidHandler tank) {
 		super(gui);
 		this.iconLocation = location;
 		this.icon = GuiHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
 		this.tank = tank;
-		this.stateChanger = stateChanger;
 	}
 	
 	@Override

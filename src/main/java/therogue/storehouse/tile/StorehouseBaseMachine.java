@@ -10,12 +10,13 @@
 
 package therogue.storehouse.tile;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyStorageAdv;
@@ -24,7 +25,7 @@ import therogue.storehouse.inventory.IInventoryCapability;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 
-public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements IInventoryCapability, IGuiSupplier, IInteractionObject {
+public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements IInventoryCapability, IGuiSupplier {
 	
 	protected InventoryManager inventory;
 	protected EnergyStorageAdv energyStorage = new EnergyStorageAdv(8000, 100, 0);
@@ -75,7 +76,12 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	}
 	
 	@Override
-	public IItemHandlerModifiable getContainerCapability () {
+	public String getGuiName () {
+		return block.getUnlocalizedName(ItemStack.EMPTY) + ".name";
+	}
+	
+	@Override
+	public IItemHandler getContainerCapability () {
 		if (inventory == null) { throw new NullPointerException("inventory is null for machine: " + getName()); }
 		return inventory.containerCapability;
 	}

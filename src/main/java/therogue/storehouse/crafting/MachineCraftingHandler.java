@@ -76,7 +76,7 @@ public class MachineCraftingHandler {
 	private boolean checkItemValidForSlot (ICrafter tile, int index, IRecipeWrapper stack) {
 		IRecipeInventory craftingInventory = tile.getCraftingInventory();
 		if (stack.mergable(craftingInventory.getComponent(index), craftingInventory.getComponentSlotLimit(index))) return true;
-		recipeloop: for (MachineRecipe recipe : RECIPES)
+		for (MachineRecipe recipe : RECIPES)
 		{
 			Set<Integer> matchedIngredients = new HashSet<Integer>();
 			int emptySlots = 0;
@@ -88,16 +88,12 @@ public class MachineCraftingHandler {
 					continue;
 				}
 				int ingredientIndex = matchesRecipeIngredient(recipe, tile, i, craftingInventory.getComponent(i), matchedIngredients);
-				if (ingredientIndex == -1)
-				{
-					continue recipeloop;
-				}
-				else
+				if (ingredientIndex != -1)
 				{
 					matchedIngredients.add(ingredientIndex);
 				}
 			}
-			if (matchedIngredients.size() + emptySlots > recipe.getAmountOfInputs() && matchesRecipeIngredient(recipe, tile, index, stack, null) != -1) return true;
+			if (matchedIngredients.size() + emptySlots >= recipe.getAmountOfInputs() && matchesRecipeIngredient(recipe, tile, index, stack, null) != -1) return true;
 			if (matchesRecipeIngredient(recipe, tile, index, stack, matchedIngredients) != -1) return true;
 		}
 		return false;
@@ -236,7 +232,7 @@ public class MachineCraftingHandler {
 				int index = getMachedCraftingIndex(availableIngredients, recipe.getInputComponent(i));
 				if (index != -1)
 				{
-					availableIngredients.get(index).increaseSize(-recipe.getInputComponent(index).getSize());
+					availableIngredients.get(index).increaseSize(-recipe.getInputComponent(i).getSize());
 					ingredientSlots.put(i, index);
 				}
 				else

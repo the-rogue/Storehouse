@@ -14,7 +14,6 @@ import java.util.Arrays;
 
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
-import therogue.storehouse.inventory.IGuiSupplier;
 
 public class ElementButton extends ElementBase {
 	
@@ -22,18 +21,16 @@ public class ElementButton extends ElementBase {
 	public final String commonToolTip;
 	public final IconDefinition[] innerIcons;
 	public final String[] toolTips;
-	public final IGuiSupplier stateChanger;
 	public final int modeField;
 	public final int numModes;
 	private boolean pressed = false;
 	
-	public ElementButton (GuiBase gui, IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, IGuiSupplier stateChanger, int modeField, int numModes) {
+	public ElementButton (GuiBase gui, IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, int modeField, int numModes) {
 		super(gui);
 		this.mainIcon = mainIcon;
 		this.commonToolTip = commonToolTip;
 		this.innerIcons = innerIcons;
 		this.toolTips = toolTips;
-		this.stateChanger = stateChanger;
 		this.modeField = modeField;
 		this.numModes = numModes;
 	}

@@ -31,11 +31,15 @@ public class ModMultiBlocks {
 	public static BasicMultiBlockBlock burnerMultiblockstates;
 	public static BasicMultiBlockBlock IOMultiBlockStates;
 	public static BasicMultiBlockBlock carbonCompressorMultiBlockStates;
+	public static BasicMultiBlockBlock solarGeneratorMultiBlockStates;
 	/**
 	 * MultiBlockStructures
 	 */
 	public static MultiBlockStructure burnerStructure;
 	public static MultiBlockStructure carbonCompressorStructure;
+	public static MultiBlockStructure basicSolarGeneratorStructure;
+	public static MultiBlockStructure advancedSolarGeneratorStructure;
+	public static MultiBlockStructure enderSolarGeneratorStructure;
 	
 	/**
 	 * Adds all the blocks to the array
@@ -47,6 +51,8 @@ public class ModMultiBlocks {
 		blocklist.add(IOMultiBlockStates);
 		carbonCompressorMultiBlockStates = getCarbonCompressorStates();
 		blocklist.add(carbonCompressorMultiBlockStates);
+		solarGeneratorMultiBlockStates = getSolarPanelStates();
+		blocklist.add(solarGeneratorMultiBlockStates);
 		/**
 		 * PreInit Blocks
 		 */
@@ -62,6 +68,7 @@ public class ModMultiBlocks {
 		burnerStructure = multiblockbuilder.getStructure();
 		assembleCarbonCompressor(multiblockbuilder);
 		carbonCompressorStructure = multiblockbuilder.getStructure();
+		processSolarGenerator(multiblockbuilder);
 		/**
 		 * Init Blocks
 		 */
@@ -101,7 +108,7 @@ public class ModMultiBlocks {
 	
 	private static BasicMultiBlockBlock getIOStates () {
 		BasicMultiBlockBlock block = new BasicMultiBlockBlock("io_mb");
-		block.addMatchStates(CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.POWER_CONNECTOR.getState(), MultiblockBlocks.CHUTE.getState(), MultiblockBlocks.EJECTOR.getState(), MultiblockBlocks.ITEM_IO.getState(), MultiblockBlocks.ADVANCED_CONNECTOR.getState());
+		block.addMatchStates(CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.ENERGY_CONNECTOR.getState(), MultiblockBlocks.CHUTE.getState(), MultiblockBlocks.EJECTOR.getState(), MultiblockBlocks.ITEM_IO.getState(), MultiblockBlocks.ADVANCED_CONNECTOR.getState());
 		return block;
 	}
 	
@@ -109,8 +116,16 @@ public class ModMultiBlocks {
 		BasicMultiBlockBlock block = new BasicMultiBlockBlock("carbon_compressor_mb");
 		block.addBlocks(Blocks.DIAMOND_BLOCK);
 		block.addBlocks(ModBlocks.carbonCompressor);
-		block.addMatchStates(MultiblockBlocks.crafting_block.getStateFromMeta(MultiblockBlocks.POWER_CONNECTOR.ordinal()));
 		block.addMatchStates(CraftingBlocks.MACHINE_CASING.getState());
+		return block;
+	}
+	
+	private static BasicMultiBlockBlock getSolarPanelStates () {
+		BasicMultiBlockBlock block = new BasicMultiBlockBlock("solar_panel_mb");
+		block.addBlocks(ModBlocks.solar_generator_basic);
+		block.addBlocks(ModBlocks.solar_generator_advanced);
+		block.addMatchStates(CraftingBlocks.MACHINE_CASING.getState());
+		block.addMatchStates(CraftingBlocks.CONTROL_CIRCUITRY.getState());
 		return block;
 	}
 	
@@ -128,7 +143,7 @@ public class ModMultiBlocks {
 		NormalBlock MB = new NormalBlock(Blocks.MAGMA, BMBS);
 		NormalBlock FN = new NormalBlock(CraftingBlocks.FAN.getState(), BMBS);
 		NormalBlock RG = new NormalBlock(CraftingBlocks.REGULATOR.getState(), BMBS);
-		VariableBlock IO = new VariableBlock(IOMultiBlockStates, CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.POWER_CONNECTOR.getState(), MultiblockBlocks.CHUTE.getState(), MultiblockBlocks.EJECTOR.getState(), MultiblockBlocks.ITEM_IO.getState(),
+		VariableBlock IO = new VariableBlock(IOMultiBlockStates, CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.ENERGY_CONNECTOR.getState(), MultiblockBlocks.CHUTE.getState(), MultiblockBlocks.EJECTOR.getState(), MultiblockBlocks.ITEM_IO.getState(),
 				MultiblockBlocks.ADVANCED_CONNECTOR.getState());
 		MultiBlockPartBuilder burner = MultiBlockPartBuilder.newBuilder().setWrapper(burnerMultiblockstates);
 		for (int i = 0; i < 7; i++)
@@ -178,9 +193,24 @@ public class ModMultiBlocks {
 		carbonCompressor.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_BLOCK).goUp();
 		carbonCompressor.newRow().addBlocksToRow(ModBlocks.carbonCompressor, ModBlocks.carbonCompressor);
 		carbonCompressor.newRow().addBlocksToRow(Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_BLOCK).goUp();
-		VariableBlock power = new VariableBlock(carbonCompressorMultiBlockStates, CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.POWER_CONNECTOR.getState());
+		VariableBlock power = new VariableBlock(IOMultiBlockStates, CraftingBlocks.MACHINE_CASING.getState(), MultiblockBlocks.ENERGY_CONNECTOR.getState());
 		carbonCompressor.newRow().addBlocksToRow(power, power);
 		carbonCompressor.newRow().addBlocksToRow(power, power);
 		multiblockbuilder.addPart(carbonCompressor.build());
+	}
+	
+	private static void processSolarGenerator (Builder multiblockbuilder) {
+		IMultiBlockStateMapper SGMBW = solarGeneratorMultiBlockStates;
+		MultiBlockPartBuilder solargen = MultiBlockPartBuilder.newBuilder().setWrapper(solarGeneratorMultiBlockStates);
+		solargen.newRow().addBlocksToRow(ModBlocks.solar_generator_basic);
+		basicSolarGeneratorStructure = multiblockbuilder.addPart(solargen.build()).getStructure();
+		NormalBlock advGen = new NormalBlock(ModBlocks.solar_generator_advanced, SGMBW);
+		NormalBlock MC = new NormalBlock(CraftingBlocks.MACHINE_CASING.getState(), SGMBW);
+		NormalBlock CC = new NormalBlock(CraftingBlocks.CONTROL_CIRCUITRY.getState(), SGMBW);
+		solargen.newRow().addBlocksToRow(MC, CC);
+		solargen.newRow().addBlocksToRow(CC, MC);
+		solargen.goUp().newRow().addBlocksToRow(advGen, advGen);
+		solargen.newRow().addBlocksToRow(advGen, advGen);
+		advancedSolarGeneratorStructure = multiblockbuilder.addPart(solargen.build()).getStructure();
 	}
 }

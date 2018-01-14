@@ -1,9 +1,17 @@
 //Commands
 command.storehouse:rlogger.usage=Command that allows debug logging - Useless for most users
 
+//Messages
+chatmessage.storehouse:multiblock_formed=MultiBlock Formed
+
+//MultiBlocks
+multiblock.storehouse:burner.name=Burner
+multiblock.storehouse:carbon_compressor.name=Carbon Compressor
+
 //Items
 item.storehouse:hammer.name=Hammer
 item.storehouse:network_inspector.name=Network Inspector
+item.storehouse:multiblock_assembler.name=MultiBlock Assembler
 //Resources
 item.storehouse:resources_azurite_dust.name=Azurite Dust
 item.storehouse:resources_azurite_crystal.name=Azurite Crystal
@@ -34,6 +42,7 @@ item.storehouse:material_integrated_chip.name=Integrated Chip
 item.storehouse:material_copper_wire.name=Copper Wire
 item.storehouse:material_gold_wire.name=Gold Wire
 item.storehouse:material_solder.name=Solder
+item.storehouse:material_carbon.name=Carbon
 //Upgrades
 item.storehouse:upgrades_timer_upgrade.name=Timer Upgrade
 item.storehouse:upgrades_chance_upgrade.name=Chance Upgrade
@@ -65,6 +74,21 @@ tile.storehouse:ore_block_titanium.name=Titanium Ore
 //Crafting Blocks
 tile.storehouse:crafting_block_machine_casing.name=Basic Machine Casing
 tile.storehouse:crafting_block_advanced_machine_casing.name=Advanced Machine Casing
+tile.storehouse:crafting_block_regulator.name=Regulator
+tile.storehouse:crafting_block_grill.name=Grill
+tile.storehouse:crafting_block_control_circuitry.name=Control Circuitry
+tile.storehouse:crafting_block_fan.name=Fan
+//MultiBlock Blocks
+tile.storehouse:multiblock_blocks_ejector.name=MultiBlock Ejector
+tile.storehouse:multiblock_blocks_chute.name=MultiBlock Chute
+tile.storehouse:multiblock_blocks_item_io.name=MultiBlock Item IO
+tile.storehouse:multiblock_blocks_tap.name=MultiBlock Tap
+tile.storehouse:multiblock_blocks_tank.name=MultiBlock Tank
+tile.storehouse:multiblock_blocks_fluid_io.name=MultiBlock Fluid IO
+tile.storehouse:multiblock_blocks_energy_tap.name=MultiBlock Energy Tap
+tile.storehouse:multiblock_blocks_energy_connector.name=MultiBlock Energy Connector
+tile.storehouse:multiblock_blocks_advanced_tap.name=Advanced MultiBlock Tap
+tile.storehouse:multiblock_blocks_advanced_connector.name=Advanced MultiBlock Connector
 //Generators
 tile.storehouse:solar_generator_basic.name=Basic Solar Panel
 tile.storehouse:solar_generator_advanced.name=Advanced Solar Panel
@@ -86,3 +110,5 @@ tile.storehouse:thermal_press.name=Thermal Press
 tile.storehouse:crystaliser.name=Crystaliser
 tile.storehouse:forge.name=Forge
 tile.storehouse:alloy_furnace.name=Alloy Furnace
+tile.storehouse:burner.name=Burner Controller
+tile.storehouse:carbon_compressor.name=Carbon Compressor Controller

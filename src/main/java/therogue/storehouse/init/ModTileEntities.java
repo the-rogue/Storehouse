@@ -28,19 +28,13 @@ public class ModTileEntities {
 	public static void preInit () {
 		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorBasic.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_basic");
 		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorAdvanced.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_advanced");
-		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorInfused.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_infused");
 		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorEnder.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_ender");
-		GameRegistry.registerTileEntity(TileSolarGenerator.TileSolarGeneratorUltimate.class, Storehouse.RESOURCENAMEPREFIX + "solar_generator_ultimate");
 		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorBasic.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_basic");
 		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorAdvanced.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_advanced");
-		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorInfused.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_infused");
 		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorEnder.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_ender");
-		GameRegistry.registerTileEntity(TileCombustionGenerator.TileCombustionGeneratorUltimate.class, Storehouse.RESOURCENAMEPREFIX + "combustion_generator_ultimate");
 		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorBasic.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_basic");
 		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorAdvanced.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_advanced");
-		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorInfused.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_infused");
 		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorEnder.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_ender");
-		GameRegistry.registerTileEntity(TileLiquidGenerator.TileLiquidGeneratorUltimate.class, Storehouse.RESOURCENAMEPREFIX + "liquid_generator_ultimate");
 		GameRegistry.registerTileEntity(TileThermalPress.class, Storehouse.RESOURCENAMEPREFIX + "thermal_press");
 		GameRegistry.registerTileEntity(TileCrystaliser.class, Storehouse.RESOURCENAMEPREFIX + "crystaliser");
 		GameRegistry.registerTileEntity(TileForge.class, Storehouse.RESOURCENAMEPREFIX + "stamper");

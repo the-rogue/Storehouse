@@ -121,9 +121,9 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 		ItemStack inSlot = ItemStackUtils.mergeStacks(Math.min(getSlotLimit(slot), stack.getMaxStackSize()), true, stackInSlot.copy(), returns);
 		if (!simulate)
 		{
-			setStackInSlot(slot, inSlot);
+			inventory.set(slot, inSlot);
+			owner.onInventoryChange();
 		}
-		owner.onInventoryChange();
 		return returns;
 	}
 	
@@ -148,7 +148,10 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 		}
 		int m = Math.min(stackInSlot.getMaxStackSize(), Math.min(stackInSlot.getCount(), amount));
 		ItemStack returns = stackInSlot.splitStack(m);
-		owner.onInventoryChange();
+		if (!simulate)
+		{
+			owner.onInventoryChange();
+		}
 		return returns;
 	}
 	
@@ -309,9 +312,9 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 			ItemStack inSlot = ItemStackUtils.mergeStacks(Math.min(getSlotLimit(slot), stack.getMaxStackSize()), true, stackInSlot.copy(), returns);
 			if (!simulate)
 			{
-				setStackInSlot(slot, inSlot);
+				inventory.set(slot, inSlot);
+				owner.onInventoryChange();
 			}
-			owner.onInventoryChange();
 			return returns;
 		}
 		
@@ -335,7 +338,10 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 			}
 			int m = Math.min(stackInSlot.getMaxStackSize(), Math.min(stackInSlot.getCount(), amount));
 			ItemStack returns = stackInSlot.splitStack(m);
-			owner.onInventoryChange();
+			if (!simulate)
+			{
+				owner.onInventoryChange();
+			}
 			return returns;
 		}
 		
@@ -360,7 +366,14 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 		 **/
 		@Override
 		public void setStackInSlot (int index, ItemStack stack) {
-			InventoryManager.this.setStackInSlot(index, stack);
+			if (checkIndex(index))
+			{
+				inventory.set(index, stack);
+			}
+			if (!stack.isEmpty() && stack.getCount() > this.getSlotLimit(index))
+			{
+				stack.setCount(this.getSlotLimit(index));
+			}
 		}
 	}
 }

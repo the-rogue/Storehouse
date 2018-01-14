@@ -28,6 +28,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.gui.element.ElementBase;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.inventory.IGuiSupplier;
 
 public class GuiBase extends GuiContainer {
 	
@@ -36,14 +37,16 @@ public class GuiBase extends GuiContainer {
 	protected List<ElementBase> elements = Lists.<ElementBase> newArrayList();
 	public final ContainerBase inventory;
 	public final String name;
+	public final IGuiSupplier tile;
 	
-	public GuiBase (ResourceLocation texture, ContainerBase inventory, String name) {
+	public GuiBase (ResourceLocation texture, ContainerBase inventory, IGuiSupplier tile) {
 		super(inventory);
 		this.texture = texture;
 		this.xSize = 176;
 		this.ySize = 166;
 		this.inventory = inventory;
-		this.name = name + ".name";
+		this.tile = tile;
+		this.name = tile.getGuiName();
 	}
 	
 	/**

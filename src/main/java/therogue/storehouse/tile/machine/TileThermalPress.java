@@ -15,10 +15,7 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import therogue.storehouse.client.gui.GuiHelper.XYCoords;
@@ -146,17 +143,6 @@ public class TileThermalPress extends StorehouseBaseMachine implements IClientPa
 	@Override
 	public int getFieldCount () {
 		return super.getFieldCount() + 3;
-	}
-	
-	// -------------------------IInteractionObject-----------------------------------------------------------------
-	@Override
-	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return new ContainerThermalPress(playerInventory, this);
-	}
-	
-	@Override
-	public String getGuiID () {
-		return ModBlocks.thermal_press.getUnlocalizedName();
 	}
 	
 	// -------------------------Standard TE methods-----------------------------------

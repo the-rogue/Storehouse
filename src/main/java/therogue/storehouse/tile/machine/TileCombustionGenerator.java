@@ -10,29 +10,28 @@
 
 package therogue.storehouse.tile.machine;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.energy.CapabilityEnergy;
-import therogue.storehouse.container.machine.ContainerCombustionGenerator;
+import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyUtils;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.TileBaseGenerator;
 
 public class TileCombustionGenerator extends TileBaseGenerator {
 	
-	public static final int[] RFPerTick = { 20, 160, 960, 4800, 48000 };
+	public static final int[] RFPerTick = { 20, 160, 4800 };
+	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.combustion_generator_basic, ModBlocks.combustion_generator_advanced, ModBlocks.combustion_generator_ender };
 	private int generatorburntime = 0;
 	private int maxruntime = 0;
 	
 	public TileCombustionGenerator (MachineTier tier) {
-		super(ModBlocks.combustion_generator, tier, RFPerTick[tier.ordinal()]);
+		super(BLOCKS[tier.ordinal()], tier, RFPerTick[tier.ordinal()]);
 		inventory = new InventoryManager(this, 3, new Integer[] { 0, 2 }, new Integer[] { 1 }) {
 			
 			@Override
@@ -98,15 +97,10 @@ public class TileCombustionGenerator extends TileBaseGenerator {
 		return maxruntime;
 	}
 	
-	// -------------------------IInteractionObject-----------------------------------------------------------------
+	// ----------------------IMultiBlockController-----------------------------------------------------------------
 	@Override
-	public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return new ContainerCombustionGenerator(playerInventory, this);
-	}
-	
-	@Override
-	public String getGuiID () {
-		return ModBlocks.combustion_generator.getUnlocalizedName() + "_" + tier.toString();
+	public MultiBlockStructure getStructure () {
+		return null;
 	}
 	
 	// -------------------------Standard TE methods-----------------------------------
@@ -140,24 +134,10 @@ public class TileCombustionGenerator extends TileBaseGenerator {
 		}
 	}
 	
-	public static class TileCombustionGeneratorInfused extends TileCombustionGenerator {
-		
-		public TileCombustionGeneratorInfused () {
-			super(MachineTier.infused);
-		}
-	}
-	
 	public static class TileCombustionGeneratorEnder extends TileCombustionGenerator {
 		
 		public TileCombustionGeneratorEnder () {
 			super(MachineTier.ender);
-		}
-	}
-	
-	public static class TileCombustionGeneratorUltimate extends TileCombustionGenerator {
-		
-		public TileCombustionGeneratorUltimate () {
-			super(MachineTier.ultimate);
 		}
 	}
 }

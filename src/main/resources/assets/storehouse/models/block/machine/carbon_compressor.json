@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "storehouse:blocks/machine/iron_casing_down",
+		"east": "storehouse:blocks/machine/iron_casing_down",
+		"west": "storehouse:blocks/machine/iron_casing_down",
+		"south": "storehouse:blocks/machine/iron_casing_down",
+		"north": "storehouse:blocks/machine/carbon_compressor",
+		"up": "storehouse:blocks/machine/iron_casing_down",
+		"down": "storehouse:blocks/machine/iron_casing_down"
+	}
+}

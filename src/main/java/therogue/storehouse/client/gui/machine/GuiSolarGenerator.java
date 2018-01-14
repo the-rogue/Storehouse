@@ -24,9 +24,9 @@ import therogue.storehouse.util.GeneralUtils;
 public class GuiSolarGenerator extends GuiBase {
 	
 	public GuiSolarGenerator (ContainerBase inventory, TileSolarGenerator linked) {
-		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory, linked.getGuiID());
-		elements.add(new ElementActiveIcon(this, 90, 23, TierIcons.SolarGenOn.getLocation(linked.getField(1)), linked, 4));
-		elements.add(new ProgressHandler(this, linked, 5, 6, new ElementVerticalProgressBar(33, 35, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
-		elements.add(new ProgressHandler(this, linked, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
+		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory, linked);
+		elements.add(new ElementActiveIcon(this, 90, 23, TierIcons.SolarGenOn.getLocation(linked.getField(1)), 4));
+		elements.add(new ProgressHandler(this, 5, 6, new ElementVerticalProgressBar(33, 35, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
+		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
 	}
 }

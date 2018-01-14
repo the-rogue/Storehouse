@@ -4,14 +4,18 @@ package therogue.storehouse.tile.machine;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
@@ -51,9 +55,11 @@ public class TileForge extends StorehouseBaseTileEntity implements IInventoryCap
 	}
 	
 	// -------------------------Tile Specific Utility Methods-------------------------------------------
-	public boolean onBlockActivated (EntityPlayer player, EnumHand hand) {
-		IItemHandlerModifiable containerCapability = getContainerCapability();
-		if (!containerCapability.getStackInSlot(1).isEmpty() && player.getHeldItem(hand).getItem() == ModItems.hammer && !(player instanceof FakePlayer))
+	@Override
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ)) return true;
+		IItemHandlerModifiable inventory = this.inventory.containerCapability;
+		if (!inventory.getStackInSlot(1).isEmpty() && player.getHeldItem(hand).getItem() == ModItems.hammer && !(player instanceof FakePlayer))
 		{
 			if (theCrafter.craft())
 			{
@@ -61,22 +67,22 @@ public class TileForge extends StorehouseBaseTileEntity implements IInventoryCap
 				heldStack.setItemDamage(heldStack.getItemDamage() + 1);
 			}
 		}
-		if (containerCapability.getStackInSlot(1).isEmpty())
+		if (inventory.getStackInSlot(1).isEmpty())
 		{
-			ItemStack newStack = containerCapability.insertItem(1, player.getHeldItem(hand), false);
+			ItemStack newStack = inventory.insertItem(1, player.getHeldItem(hand), false);
 			if (!ItemStack.areItemStacksEqual(newStack, player.getHeldItem(hand)))
 			{
 				player.setHeldItem(hand, newStack);
 			}
 		}
-		if (!containerCapability.getStackInSlot(0).isEmpty())
+		if (!inventory.getStackInSlot(0).isEmpty())
 		{
-			ItemStack machineStack = containerCapability.getStackInSlot(0);
+			ItemStack machineStack = inventory.getStackInSlot(0);
 			ItemStack newStack1 = ItemStackUtils.mergeStacks(64, false, player.getHeldItem(hand), machineStack);
 			if (!ItemStack.areItemStacksEqual(newStack1, player.getHeldItem(hand)))
 			{
 				player.setHeldItem(hand, ItemStackUtils.mergeStacks(64, true, player.getHeldItem(hand), machineStack));
-				containerCapability.setStackInSlot(0, machineStack);
+				inventory.setStackInSlot(0, machineStack);
 			}
 		}
 		return true;
@@ -115,7 +121,7 @@ public class TileForge extends StorehouseBaseTileEntity implements IInventoryCap
 	}
 	
 	@Override
-	public IItemHandlerModifiable getContainerCapability () {
+	public IItemHandler getContainerCapability () {
 		if (inventory == null) { throw new NullPointerException("inventory is null for machine: " + getName()); }
 		return inventory.containerCapability;
 	}

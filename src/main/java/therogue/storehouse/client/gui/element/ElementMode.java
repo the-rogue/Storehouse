@@ -11,22 +11,19 @@
 package therogue.storehouse.client.gui.element;
 
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.util.LOG;
 
 public class ElementMode extends ElementBase {
 	
 	private final ElementBase[] elements;
 	private ElementBase current;
-	public final IGuiSupplier stateChanger;
 	public final int modeField;
 	private long lastCheckTime;
 	
-	public ElementMode (GuiBase gui, IGuiSupplier stateChanger, int modeField, ElementBase... elements) {
+	public ElementMode (GuiBase gui, int modeField, ElementBase... elements) {
 		super(gui);
 		this.elements = elements;
 		this.current = elements[0];
-		this.stateChanger = stateChanger;
 		this.modeField = modeField;
 	}
 	
