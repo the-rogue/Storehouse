@@ -36,8 +36,8 @@ public class Storehouse {
 	 */
 	public static final String MOD_ID = "storehouse";
 	public static final String MOD_NAME = "Storehouse";
-	public static final String VERSION = "1.11.2-0.1.0";
-	public static final String MC_VERSIONS = "[1.11.2]";
+	public static final String VERSION = "1.12.2-0.1.0";
+	public static final String MC_VERSIONS = "[1.12.2]";
 	public static final String FINGERPRINT = "";
 	public static final String SERVER_PROXY_CLASS = "therogue.storehouse.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "therogue.storehouse.proxy.ClientProxy";
@@ -60,6 +60,7 @@ public class Storehouse {
 	 */
 	@EventHandler
 	public void preinit (FMLPreInitializationEvent event) {
+		LOG.LOG = event.getModLog();
 		LOG.log("debug", "Pre Initialization Started");
 		proxy.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());

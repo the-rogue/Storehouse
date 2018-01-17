@@ -11,11 +11,12 @@
 package therogue.storehouse.proxy;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import therogue.storehouse.client.init.BlockRender;
-import therogue.storehouse.client.init.ItemRender;
+import therogue.storehouse.client.render.ForgeTESR;
+import therogue.storehouse.tile.machine.TileForge;
 import therogue.storehouse.util.LOG;
 
 public class ClientProxy extends CommonProxy {
@@ -28,8 +29,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 		LOG.debug("Client Proxy Started PreInitialisation");
 		MinecraftForge.EVENT_BUS.register(EventHandlerClient.INSTANCE);
-		ItemRender.preInit();
-		BlockRender.preInit();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileForge.class, new ForgeTESR());
 		LOG.debug("Client Proxy Finished PreInitialisation");
 	}
 	
@@ -40,8 +40,6 @@ public class ClientProxy extends CommonProxy {
 	public void init (FMLInitializationEvent event) {
 		super.init(event);
 		LOG.debug("Client Proxy Started Initialisation");
-		ItemRender.Init();
-		BlockRender.Init();
 		LOG.debug("Client Proxy Finished Initialisation");
 	}
 	
@@ -52,8 +50,6 @@ public class ClientProxy extends CommonProxy {
 	public void postInit (FMLPostInitializationEvent event) {
 		super.postInit(event);
 		LOG.debug("Client Proxy Started PostInitialisation");
-		ItemRender.postInit();
-		BlockRender.postInit();
 		LOG.debug("Client Proxy Finished PostInitialisation");
 	}
 }

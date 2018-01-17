@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "decorative_stairs",
+	"pattern": [
+		"#  ",
+		"## ",
+		"###"
+	],
+	"key": {
+		"#": {
+			"item": "storehouse:azurite_dust_block"
+		}
+	},
+	"result": {
+		"item": "storehouse:azurite_dust_block_stair",
+		"count": 4
+	}
+}

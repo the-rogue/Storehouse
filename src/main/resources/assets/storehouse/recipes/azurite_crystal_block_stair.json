@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "decorative_stairs",
+	"pattern": [
+		"#  ",
+		"## ",
+		"###"
+	],
+	"key": {
+		"#": {
+			"type": "forge:ore_dict",
+			"ore": "blockazuritecrystal"
+		}
+	},
+	"result": {
+		"item": "storehouse:azurite_crystal_block_stair",
+		"count": 4
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "decorative",
+	"ingredients": [
+		{
+			"type": "forge:ore_dict",
+			"ore": "blockazuritecrystal"
+		}
+	],
+	"result": {
+		"item": "storehouse:resources",
+		"count": 9,
+		"data": 1
+	}
+}

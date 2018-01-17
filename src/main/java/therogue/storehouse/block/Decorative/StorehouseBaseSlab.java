@@ -10,7 +10,6 @@
 
 package therogue.storehouse.block.Decorative;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -31,13 +30,8 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.crafting.RecipeHelper;
 import therogue.storehouse.util.LOG;
 
 public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehouseBaseBlock {
@@ -173,36 +167,6 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		return blockMaterial;
 	}
 	
-	/**
-	 * Sets Generic Recipes for the Block Type
-	 */
-	@Override
-	public void Init () {
-		if (!isDouble())
-		{
-			if (RecipeHelper.getOreDictEntries(blocktype.getBlock()).equals(new ArrayList<String>()))
-			{
-				setrecipes(blocktype);
-			}
-			else
-			{
-				for (String s : RecipeHelper.getOreDictEntries(blocktype.getBlock()))
-				{
-					setrecipes(s);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Helper method to make code look cleaner
-	 */
-	private void setrecipes (Object s) {
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "ddd", "   ", "   ", 'd', s));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "ddd", "   ", 'd', s));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 6), "   ", "   ", "ddd", 'd', s));
-	}
-	
 	@Override
 	public Block getBlock () {
 		return this;
@@ -251,14 +215,12 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		 * Registers the block and the item, it is easiest to register the halfslab item here
 		 */
 		@Override
-		public void preInit () {
-			GameRegistry.register(this);
-			GameRegistry.register(new ItemSlab(halfslab, halfslab, this).setRegistryName(Storehouse.MOD_ID, halfslab.getName()));
+		public Item getItemBlock () {
+			return new ItemSlab(halfslab, halfslab, this).setRegistryName(Storehouse.MOD_ID, halfslab.getName());
 		}
 		
 		@Override
-		@SideOnly (Side.CLIENT)
-		public void preInitClient () {
+		public void registerModels () {
 		}
 	}
 	
@@ -288,16 +250,15 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		 * Only registers the block, because the halfslab item is registered with the doubleslab
 		 */
 		@Override
-		public void preInit () {
-			GameRegistry.register(this);
+		public Item getItemBlock () {
+			return null;
 		}
 		
 		/**
 		 * Registers the texture for this block easily
 		 */
 		@Override
-		@SideOnly (Side.CLIENT)
-		public void preInitClient () {
+		public void registerModels () {
 			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "half=bottom,variant=default"));
 		}
 	}

@@ -53,13 +53,6 @@ public class ModMultiBlocks {
 		blocklist.add(carbonCompressorMultiBlockStates);
 		solarGeneratorMultiBlockStates = getSolarPanelStates();
 		blocklist.add(solarGeneratorMultiBlockStates);
-		/**
-		 * PreInit Blocks
-		 */
-		for (IStorehouseBaseBlock block : blocklist)
-		{
-			block.preInit();
-		}
 	}
 	
 	public static void Init () {
@@ -69,23 +62,9 @@ public class ModMultiBlocks {
 		assembleCarbonCompressor(multiblockbuilder);
 		carbonCompressorStructure = multiblockbuilder.getStructure();
 		processSolarGenerator(multiblockbuilder);
-		/**
-		 * Init Blocks
-		 */
-		for (IStorehouseBaseBlock block : blocklist)
-		{
-			block.Init();
-		}
 	}
 	
 	public static void postInit () {
-		/**
-		 * PostInit Blocks
-		 */
-		for (IStorehouseBaseBlock block : blocklist)
-		{
-			block.postInit();
-		}
 	}
 	
 	private static BasicMultiBlockBlock getBurnerStates () {
@@ -103,6 +82,7 @@ public class ModMultiBlocks {
 		block.addBlocks(Blocks.MAGMA);
 		block.addMatchStates(CraftingBlocks.FAN.getState());
 		block.addMatchStates(CraftingBlocks.REGULATOR.getState());
+		block.addBlocks(Blocks.IRON_BLOCK);
 		return block;
 	}
 	

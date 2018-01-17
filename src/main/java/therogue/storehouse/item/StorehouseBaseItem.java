@@ -12,12 +12,8 @@ package therogue.storehouse.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.client.init.ItemRender;
 
 public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 	
@@ -61,21 +57,9 @@ public class StorehouseBaseItem extends Item implements IStorehouseBaseItem {
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
 	}
 	
-	/**
-	 * Registers this item easily
-	 */
 	@Override
-	public void preInit () {
-		GameRegistry.register(this);
-	}
-	
-	/**
-	 * Registers the texture for this item easily
-	 */
-	@Override
-	@SideOnly (Side.CLIENT)
-	public void preInitClient () {
-		ItemRender.itemTexture(this);
+	public Item getItem () {
+		return this;
 	}
 	
 	/**

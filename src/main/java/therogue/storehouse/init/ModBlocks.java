@@ -19,6 +19,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseFacingMachine;
+import therogue.storehouse.block.StorehouseBaseMachine;
 import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
 import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.init.grouped.CraftingBlocks;
@@ -72,7 +73,7 @@ public class ModBlocks {
 		/**
 		 * Add Machines
 		 */
-		solar_generator_basic = new StorehouseBaseFacingMachine<TileSolarGeneratorBasic>("solar_generator_basic", new BiFunction<World, Integer, TileSolarGeneratorBasic>() {
+		solar_generator_basic = new StorehouseBaseMachine<TileSolarGeneratorBasic>("solar_generator_basic", new BiFunction<World, Integer, TileSolarGeneratorBasic>() {
 			
 			@Override
 			public TileSolarGeneratorBasic apply (World world, Integer meta) {
@@ -80,7 +81,7 @@ public class ModBlocks {
 			}
 		}, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
 		solar_generator_basic.setGUI(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		solar_generator_advanced = new StorehouseBaseFacingMachine<TileSolarGeneratorAdvanced>("solar_generator_advanced", new BiFunction<World, Integer, TileSolarGeneratorAdvanced>() {
+		solar_generator_advanced = new StorehouseBaseMachine<TileSolarGeneratorAdvanced>("solar_generator_advanced", new BiFunction<World, Integer, TileSolarGeneratorAdvanced>() {
 			
 			@Override
 			public TileSolarGeneratorAdvanced apply (World world, Integer meta) {
@@ -88,7 +89,7 @@ public class ModBlocks {
 			}
 		}, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
 		solar_generator_advanced.setGUI(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		solar_generator_ender = new StorehouseBaseFacingMachine<TileSolarGeneratorEnder>("solar_generator_ender", new BiFunction<World, Integer, TileSolarGeneratorEnder>() {
+		solar_generator_ender = new StorehouseBaseMachine<TileSolarGeneratorEnder>("solar_generator_ender", new BiFunction<World, Integer, TileSolarGeneratorEnder>() {
 			
 			@Override
 			public TileSolarGeneratorEnder apply (World world, Integer meta) {
@@ -207,23 +208,9 @@ public class ModBlocks {
 		blocklist.add(alloy_furnace);
 		blocklist.add(burner);
 		blocklist.add(carbonCompressor);
-		/**
-		 * PreInit Blocks
-		 */
-		for (IStorehouseBaseBlock block : blocklist)
-		{
-			block.preInit();
-		}
 	}
 	
 	public static void Init () {
-		/**
-		 * Init Blocks
-		 */
-		for (IStorehouseBaseBlock block : blocklist)
-		{
-			block.Init();
-		}
 		/**
 		 * Register Ore Dictionary Names
 		 */
@@ -236,13 +223,6 @@ public class ModBlocks {
 	}
 	
 	public static void postInit () {
-		/**
-		 * PostInit Blocks
-		 */
-		for (IStorehouseBaseBlock block : blocklist)
-		{
-			block.postInit();
-		}
 	}
 	
 	/**
@@ -260,9 +240,9 @@ public class ModBlocks {
 	public static DecorativeBlockContainer azurite_crystal_block;
 	public static StorehouseBaseBlock azurite_crystal_block_chiseled;
 	public static StorehouseBaseRotatedBlock azurite_crystal_block_pillar;
-	public static StorehouseBaseFacingMachine<TileSolarGeneratorBasic> solar_generator_basic;
-	public static StorehouseBaseFacingMachine<TileSolarGeneratorAdvanced> solar_generator_advanced;
-	public static StorehouseBaseFacingMachine<TileSolarGeneratorEnder> solar_generator_ender;
+	public static StorehouseBaseMachine<TileSolarGeneratorBasic> solar_generator_basic;
+	public static StorehouseBaseMachine<TileSolarGeneratorAdvanced> solar_generator_advanced;
+	public static StorehouseBaseMachine<TileSolarGeneratorEnder> solar_generator_ender;
 	public static StorehouseBaseFacingMachine<TileCombustionGeneratorBasic> combustion_generator_basic;
 	public static StorehouseBaseFacingMachine<TileCombustionGeneratorAdvanced> combustion_generator_advanced;
 	public static StorehouseBaseFacingMachine<TileCombustionGeneratorEnder> combustion_generator_ender;

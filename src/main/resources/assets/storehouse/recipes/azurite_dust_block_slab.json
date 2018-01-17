@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "decorative_slabs",
+	"pattern": [
+		"###"
+	],
+	"key": {
+		"#": {
+			"item": "storehouse:azurite_dust_block"
+		}
+	},
+	"result": {
+		"item": "storehouse:azurite_dust_block_slab",
+		"count": 6,
+		"data": 0
+	}
+}

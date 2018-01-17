@@ -10,9 +10,6 @@
 
 package therogue.storehouse.util;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 /**
  * Initialiser for almost anything
  */
@@ -20,16 +17,13 @@ public interface IInit {
 	
 	public void preInit ();
 	
-	@SideOnly (Side.CLIENT)
 	public void preInitClient ();
 	
 	public void Init ();
 	
-	@SideOnly (Side.CLIENT)
 	public void InitClient ();
 	
 	public void postInit ();
 	
-	@SideOnly (Side.CLIENT)
 	public void postInitClient ();
 }

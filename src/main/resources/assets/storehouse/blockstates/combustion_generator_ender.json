@@ -1,12 +1,13 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"transform": "forge:default-block",
-		"model": "storehouse:machine/crystaliser"
+		"model": "storehouse:machine/alloy_furnace",
+		"transform": "forge:default-block"
 	},
 	"variants": {
 		"facing": {
 			"north": {
+				
 			},
 			"south": {
 				"y": 180

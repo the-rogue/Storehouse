@@ -21,9 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 
 public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
@@ -94,10 +91,10 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	}
 	
 	@Override
-	public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks (CreativeTabs itemIn, NonNullList<ItemStack> tab) {
 		for (int i = 0; i < blocks.size(); i++)
 		{
-			list.add(new ItemStack(item, 1, i));
+			tab.add(new ItemStack(this, 1, i));
 		}
 	}
 	
@@ -114,21 +111,16 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 		return super.getUnlocalizedName(stack) + "_" + blocks.get(stack.getMetadata());
 	}
 	
-	/**
-	 * Registers this block easily
-	 */
 	@Override
-	public void preInit () {
-		GameRegistry.register(this);
-		GameRegistry.register(new StorehouseBaseVariantItemBlock(blocks.size(), this).setRegistryName(getRegistryName()));
+	public Item getItemBlock () {
+		return new StorehouseBaseVariantItemBlock(blocks.size(), this).setRegistryName(getRegistryName());
 	}
 	
 	/**
 	 * Registers any Model variants
 	 */
 	@Override
-	@SideOnly (Side.CLIENT)
-	public void preInitClient () {
+	public void registerModels () {
 		for (Entry<Integer, String> block : blocks.entrySet())
 		{
 			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), block.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5), "meta=" + block.getKey()));

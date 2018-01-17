@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "decorative_slabs",
+	"pattern": [
+		"###"
+	],
+	"key": {
+		"#": {
+			"type": "forge:ore_dict",
+			"ore": "blockazuritecrystal"
+		}
+	},
+	"result": {
+		"item": "storehouse:azurite_crystal_block_slab",
+		"count": 6,
+		"data": 0
+	}
+}

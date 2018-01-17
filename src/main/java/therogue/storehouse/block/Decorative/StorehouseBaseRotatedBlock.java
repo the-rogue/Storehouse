@@ -16,9 +16,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.util.LOG;
@@ -62,20 +59,10 @@ public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IS
 	}
 	
 	/**
-	 * Registers this block easily
-	 */
-	@Override
-	public void preInit () {
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
-	}
-	
-	/**
 	 * Registers the texture for this block easily
 	 */
-	@SideOnly (Side.CLIENT)
 	@Override
-	public void preInitClient () {
+	public void registerModels () {
 		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "axis=y"));
 	}
 	

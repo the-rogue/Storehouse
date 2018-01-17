@@ -20,6 +20,7 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -31,6 +32,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.Storehouse;
@@ -139,17 +142,18 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 	}
 	
 	@Override
-	public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean debug) {
+	@SideOnly (Side.CLIENT)
+	public void addInformation (ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 		{
 			for (String s : shiftInfo)
 			{
-				list.add(s);
+				tooltip.add(s);
 			}
 		}
 		else
 		{
-			list.add(Storehouse.SHIFTINFO);
+			tooltip.add(Storehouse.SHIFTINFO);
 		}
 	}
 	

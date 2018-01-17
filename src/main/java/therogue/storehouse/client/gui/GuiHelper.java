@@ -25,10 +25,10 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -341,7 +341,7 @@ public class GuiHelper {
 			{
 				int drawHeight = Math.min(height - j, 16), drawY = y + j;
 				Tessellator tessellator = Tessellator.getInstance();
-				VertexBuffer vb = tessellator.getBuffer();
+				BufferBuilder vb = tessellator.getBuffer();
 				vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				vb.pos(drawX, drawY + drawHeight, 0.0D).tex(minU, minV + (maxV - minV) * drawHeight / 16.0F).endVertex();
 				vb.pos(drawX + drawWidth, drawY + drawHeight, 0.0D).tex(minU + (maxU - minU) * drawWidth / 16.0F, minV + (maxV - minV) * drawHeight / 16.0F).endVertex();

@@ -10,13 +10,14 @@
 
 package therogue.storehouse.item;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.util.IInit;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public interface IStorehouseBaseItem extends IForgeRegistryEntry<Item>, IInit {
+public interface IStorehouseBaseItem extends IForgeRegistryEntry<Item> {
+	
+	public Item getItem ();
 	
 	/**
 	 * Defines Methods that i need when referencing my item classes elsewhere
@@ -25,17 +26,7 @@ public interface IStorehouseBaseItem extends IForgeRegistryEntry<Item>, IInit {
 	// see IStorehouseBaseBlock for an example of this being used properly
 	public String getName ();
 	
-	@SideOnly (Side.CLIENT)
-	public default void InitClient () {
-	};
-	
-	public default void Init () {
-	};
-	
-	public default void postInit () {
+	public default void registerModels () {
+		ModelLoader.setCustomModelResourceLocation(getItem(), 0, new ModelResourceLocation(getItem().getUnlocalizedName().substring(5), "inventory"));
 	}
-	
-	@SideOnly (Side.CLIENT)
-	public default void postInitClient () {
-	};
 }

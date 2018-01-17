@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "decorative",
+	"pattern": [
+		"###",
+		"###",
+		"###"
+	],
+	"key": {
+		"#": {
+			"item": "storehouse:resources",
+			"data": 0
+		}
+	},
+	"result": {
+		"item": "storehouse:azurite_dust_block",
+		"count": 1
+	}
+}

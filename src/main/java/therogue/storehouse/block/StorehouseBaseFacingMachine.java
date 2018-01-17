@@ -19,8 +19,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class StorehouseBaseFacingMachine<T extends TileEntity> extends StorehouseBaseMachine<T> {
 	
@@ -71,8 +69,7 @@ public class StorehouseBaseFacingMachine<T extends TileEntity> extends Storehous
 	 * Registers the texture for this block easily
 	 */
 	@Override
-	@SideOnly (Side.CLIENT)
-	public void preInitClient () {
+	public void registerModels () {
 		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "facing=north"));
 	}
 }

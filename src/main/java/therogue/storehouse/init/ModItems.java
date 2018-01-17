@@ -45,36 +45,15 @@ public class ModItems {
 		itemlist.add(Resources.addMaterials());
 		itemlist.add(Materials.addMaterials());
 		itemlist.add(Upgrades.addMaterials());
-		/**
-		 * PreInit Items
-		 */
-		for (IStorehouseBaseItem item : itemlist)
-		{
-			item.preInit();
-		}
 	}
 	
 	public static void Init () {
-		/**
-		 * Init Items
-		 */
-		for (IStorehouseBaseItem item : itemlist)
-		{
-			item.Init();
-		}
 		Resources.Init();
 		Materials.Init();
 		Upgrades.Init();
 	}
 	
 	public static void postInit () {
-		/**
-		 * PostInit Items
-		 */
-		for (IStorehouseBaseItem item : itemlist)
-		{
-			item.postInit();
-		}
 	}
 	
 	/**

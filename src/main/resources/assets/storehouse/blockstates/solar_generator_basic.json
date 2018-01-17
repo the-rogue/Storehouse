@@ -5,7 +5,7 @@
 	},
 	"variants": {
 		"normal": {
-			"model": "storehouse:decorative/azurite_dust_block"
+			"model": "storehouse:generator/solar/basic"
 		}
 	}
 }

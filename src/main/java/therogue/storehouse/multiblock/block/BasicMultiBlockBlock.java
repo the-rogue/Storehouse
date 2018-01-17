@@ -27,9 +27,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile.NoControllerException;
@@ -114,7 +111,7 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	}
 	
 	@Override
-	public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks (CreativeTabs tab, NonNullList<ItemStack> list) {
 	}
 	
 	@Override
@@ -166,20 +163,16 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 		return subBlockState.isFullBlock();
 	}
 	
-	/**
-	 * Registers this block easily
-	 */
 	@Override
-	public void preInit () {
-		GameRegistry.register(this);
+	public Item getItemBlock () {
+		return null;
 	}
 	
 	/**
 	 * Registers any Model variants
 	 */
 	@Override
-	@SideOnly (Side.CLIENT)
-	public void preInitClient () {
+	public void registerModels () {
 	}
 	
 	@Override

@@ -10,22 +10,14 @@
 
 package therogue.storehouse.block.Decorative;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.crafting.RecipeHelper;
 import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseBlock {
@@ -67,20 +59,10 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	}
 	
 	/**
-	 * Registers this block easily
-	 */
-	@Override
-	public void preInit () {
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
-	}
-	
-	/**
 	 * Registers the texture for this block easily
 	 */
 	@Override
-	@SideOnly (Side.CLIENT)
-	public void preInitClient () {
+	public void registerModels () {
 		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "facing=east,half=bottom,shape=straight"));
 	}
 	
@@ -106,32 +88,6 @@ public class StorehouseBaseStair extends BlockStairs implements IStorehouseBaseB
 	@Override
 	public Material getblockMaterial () {
 		return blockMaterial;
-	}
-	
-	/**
-	 * Sets Generic Recipes for the Block Type
-	 */
-	@Override
-	public void Init () {
-		if (RecipeHelper.getOreDictEntries(blocktype.getBlock()).equals(new ArrayList<String>()))
-		{
-			setrecipes(blocktype);
-		}
-		else
-		{
-			for (String s : RecipeHelper.getOreDictEntries(blocktype.getBlock()))
-			{
-				setrecipes(s);
-			}
-		}
-	}
-	
-	/**
-	 * Helper method to make code look cleaner
-	 */
-	private void setrecipes (Object s) {
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 4), "  d", " dd", "ddd", 'd', s));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 4), "d  ", "dd ", "ddd", 'd', s));
 	}
 	
 	@Override

@@ -12,12 +12,7 @@ package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.client.init.BlockRender;
 import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
@@ -86,24 +81,6 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	@Override
 	public String getName () {
 		return getUnwrappedUnlocalizedName(super.getUnlocalizedName());
-	}
-	
-	/**
-	 * Registers this block easily
-	 */
-	@Override
-	public void preInit () {
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
-	}
-	
-	/**
-	 * Registers the texture for this block easily
-	 */
-	@Override
-	@SideOnly (Side.CLIENT)
-	public void preInitClient () {
-		BlockRender.blockTexture(this);
 	}
 	
 	/**

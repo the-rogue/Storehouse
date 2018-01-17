@@ -10,8 +10,14 @@
 
 package therogue.storehouse.proxy;
 
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.init.ModBlocks;
+import therogue.storehouse.init.ModItems;
+import therogue.storehouse.init.ModMultiBlocks;
+import therogue.storehouse.item.IStorehouseBaseItem;
 
 public class EventHandlerClient {
 	
@@ -19,5 +25,12 @@ public class EventHandlerClient {
 	
 	@SubscribeEvent
 	public void onTextureStitchEvent (TextureStitchEvent.Pre event) {
+	}
+	
+	@SubscribeEvent
+	public void onRegisterModelsEvent (ModelRegistryEvent event) {
+		ModBlocks.blocklist.forEach( (IStorehouseBaseBlock block) -> block.registerModels());
+		ModMultiBlocks.blocklist.forEach( (IStorehouseBaseBlock block) -> block.registerModels());
+		ModItems.itemlist.forEach( (IStorehouseBaseItem item) -> item.registerModels());
 	}
 }

@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.model.ModelLoader;
@@ -56,16 +55,15 @@ public class ItemStorehouseBaseMaterial extends StorehouseBaseItem {
 	 */
 	@Override
 	@SideOnly (Side.CLIENT)
-	public void getSubItems (Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+	public void getSubItems (CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		for (int i = 0; i < materials.size(); i++)
 		{
-			subItems.add(new ItemStack(itemIn, 1, i));
+			subItems.add(new ItemStack(this, 1, i));
 		}
 	}
 	
 	@Override
-	@SideOnly (Side.CLIENT)
-	public void preInitClient () {
+	public void registerModels () {
 		for (Entry<Integer, String> material : materials.entrySet())
 		{
 			ModelLoader.setCustomModelResourceLocation(this, material.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5) + "/" + material.getValue()));

@@ -18,9 +18,9 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
@@ -124,7 +124,7 @@ public class GuiBase extends GuiContainer {
 	 */
 	public void drawTexturedModalRect (int x, int y, float minU, float minV, float maxU, float maxV, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) this.zLevel).tex((double) minU, (double) maxV).endVertex();
 		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) this.zLevel).tex((double) maxU, (double) maxV).endVertex();
@@ -136,7 +136,7 @@ public class GuiBase extends GuiContainer {
 	public void drawTintedTexturedModalRect (int x, int y, float minU, float minV, float maxU, float maxV, int width, int height, Color color) {
 		GlStateManager.enableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) this.zLevel).tex((double) minU, (double) maxV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
 		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) this.zLevel).tex((double) maxU, (double) maxV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
@@ -151,7 +151,7 @@ public class GuiBase extends GuiContainer {
 	 */
 	public void drawTexturedModalRect (int x, int y, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		vertexbuffer.pos((double) (x + 0), (double) (y + height), 0.0D).tex(0.0D, 1.0D).endVertex();
 		vertexbuffer.pos((double) (x + width), (double) (y + height), 0.0D).tex(1.0D, 1.0D).endVertex();
@@ -169,7 +169,7 @@ public class GuiBase extends GuiContainer {
 		float green = (float) (color >> 8 & 255) / 255.0F;
 		float blue = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);

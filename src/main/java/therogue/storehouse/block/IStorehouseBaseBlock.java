@@ -12,13 +12,14 @@ package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import therogue.storehouse.util.IInit;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>, IInit {
+public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
 	
 	/**
 	 * Defines Methods that I need when referencing my block classes elsewhere
@@ -33,21 +34,15 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block>, IInit 
 	
 	public Material getblockMaterial ();
 	
+	public default void registerModels () {
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(getBlock()), 0, new ModelResourceLocation(getBlock().getUnlocalizedName().substring(5)));
+	}
+	
 	public default String getUnlocalizedName (ItemStack stack) {
 		return getBlock().getUnlocalizedName();
 	}
 	
-	@SideOnly (Side.CLIENT)
-	public default void InitClient () {
-	};
-	
-	public default void Init () {
-	};
-	
-	public default void postInit () {
+	public default Item getItemBlock () {
+		return new ItemBlock(getBlock()).setRegistryName(getBlock().getRegistryName());
 	}
-	
-	@SideOnly (Side.CLIENT)
-	public default void postInitClient () {
-	};
 }

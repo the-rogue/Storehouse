@@ -130,7 +130,7 @@ public class TileForge extends StorehouseBaseTileEntity implements IInventoryCap
 	public void onInventoryChange () {
 		this.markDirty();
 		theCrafter.checkRecipes();
-		if (GeneralUtils.isServerSide(world))
+		if (world != null && GeneralUtils.isServerSide(world))
 		{
 			StorehousePacketHandler.INSTANCE.sendToAll(this.getGUIPacket());
 		}

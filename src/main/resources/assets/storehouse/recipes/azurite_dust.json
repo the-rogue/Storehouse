@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "decorative",
+	"ingredients": [
+		{
+			"item": "storehouse:azurite_dust_block"
+		}
+	],
+	"result": {
+		"item": "storehouse:resources",
+		"count": 9,
+		"data": 0
+	}
+}

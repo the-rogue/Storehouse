@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "decorative",
+	"pattern": [
+		"#",
+		"#"
+	],
+	"key": {
+		"#": {
+			"item": "storehouse:azurite_crystal_block"
+		}
+	},
+	"result": {
+		"item": "storehouse:azurite_crystal_block_pillar",
+		"count": 2
+	}
+}
