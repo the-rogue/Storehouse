@@ -31,7 +31,7 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	
 	public StorehouseBaseVariantBlock (String name) {
 		super(name);
-		this.setDefaultState(this.getBlockState().getBaseState().withProperty(META, 0));
+		this.setDefaultState(this.getDefaultState().withProperty(META, 0));
 	}
 	
 	public StorehouseBaseVariantBlock addSubBlock (int id, String name) {
@@ -123,7 +123,8 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 	public void registerModels () {
 		for (Entry<Integer, String> block : blocks.entrySet())
 		{
-			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), block.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5), "meta=" + block.getKey()));
+			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), block.getKey(), new ModelResourceLocation(getUnlocalizedName().substring(5), "meta="
+					+ block.getKey()));
 		}
 	}
 	

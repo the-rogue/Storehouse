@@ -42,7 +42,7 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	
 	public BasicMultiBlockBlock (String name) {
 		super(name);
-		this.setDefaultState(this.getBlockState().getBaseState().withProperty(META, 0));
+		this.setDefaultState(this.getDefaultState().withProperty(META, 0));
 	}
 	
 	public BasicMultiBlockBlock (String name, Block... subStates) {
@@ -51,7 +51,9 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	}
 	
 	public BasicMultiBlockBlock addBlocks (Block... states) {
-		if (blocks.size() + states.length > 16) throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
+		if (blocks.size() + states.length > 16)
+			throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: "
+					+ this.getUnlocalizedName());
 		for (Block subState : states)
 		{
 			if (subState == null) throw new IllegalArgumentException("Tried to register a null Block to a multiblockstate wrapper");
@@ -61,7 +63,9 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	}
 	
 	public BasicMultiBlockBlock addMatchStates (IBlockState... states) {
-		if (blocks.size() + states.length > 16) throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: " + this.getUnlocalizedName());
+		if (blocks.size() + states.length > 16)
+			throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: "
+					+ this.getUnlocalizedName());
 		for (IBlockState subState : states)
 		{
 			if (subState == null) throw new IllegalArgumentException("Tried to register a null IBlockState to a multiblockstate wrapper");
@@ -176,7 +180,8 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	}
 	
 	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated (
+			World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity te = world.getTileEntity(pos);
 		if (!world.isRemote && te instanceof IMultiBlockTile)
 		{
@@ -215,7 +220,8 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	public IBlockState getMultiBlockState (IBlockState state) {
 		for (WrapperEntry element : blocks)
 		{
-			if (element.matchState ? element.state == state : element.state.getBlock() == state.getBlock()) return this.getDefaultState().withProperty(META, blocks.indexOf(element));
+			if (element.matchState ? element.state == state : element.state.getBlock() == state.getBlock())
+				return this.getDefaultState().withProperty(META, blocks.indexOf(element));
 		}
 		LOG.debug("Failed to get a wrapped state for state: " + state.getBlock() + " BlockWrapper: " + this);
 		return state;

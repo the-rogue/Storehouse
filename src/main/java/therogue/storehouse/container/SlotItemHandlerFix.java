@@ -16,6 +16,7 @@ public class SlotItemHandlerFix extends SlotItemHandler {
 	/**
 	 * Called when the stack in a Slot changes
 	 */
+	@Override
 	public void onSlotChanged () {
 		this.inventory.onInventoryChange();;
 	}

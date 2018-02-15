@@ -1,7 +1,7 @@
 {
     "parent": "storehouse:block/generator/solar/base",
     "textures": {
-        "top": "storehouse:blocks/machine/generator/solar/advanced",
+        "top": "storehouse:blocks/dots",
         "bottom": "storehouse:blocks/machine/storehouse_stone",
         "side": "storehouse:blocks/machine/storehouse_stone"
         

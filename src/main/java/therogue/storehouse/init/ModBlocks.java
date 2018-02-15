@@ -11,16 +11,23 @@
 package therogue.storehouse.init;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 
+import com.google.common.collect.Lists;
+
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseFacingMachine;
 import therogue.storehouse.block.StorehouseBaseMachine;
 import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
+import therogue.storehouse.client.connectedtextures.CTBlockRegistry;
+import therogue.storehouse.client.connectedtextures.IConnectedTextureLogic;
 import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.init.grouped.CraftingBlocks;
 import therogue.storehouse.init.grouped.DecorativeBlockContainer;
@@ -81,7 +88,7 @@ public class ModBlocks {
 			}
 		}, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
 		solar_generator_basic.setGUI(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		solar_generator_advanced = new StorehouseBaseMachine<TileSolarGeneratorAdvanced>("solar_generator_advanced", new BiFunction<World, Integer, TileSolarGeneratorAdvanced>() {
+		solar_generator_advanced = new StorehouseBaseMachine.CT<TileSolarGeneratorAdvanced>("solar_generator_advanced", new BiFunction<World, Integer, TileSolarGeneratorAdvanced>() {
 			
 			@Override
 			public TileSolarGeneratorAdvanced apply (World world, Integer meta) {
@@ -89,6 +96,18 @@ public class ModBlocks {
 			}
 		}, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
 		solar_generator_advanced.setGUI(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
+		CTBlockRegistry.INSTANCE.register(new IConnectedTextureLogic() {
+			
+			@Override
+			public ResourceLocation getModelLocation () {
+				return solar_generator_advanced.getRegistryName();
+			}
+			
+			@Override
+			public List<ResourceLocation> getTextures () {
+				return Lists.newArrayList(new ResourceLocation(Storehouse.MOD_ID, "blocks/machine/generator/solar/advanced"));
+			}
+		});
 		solar_generator_ender = new StorehouseBaseMachine<TileSolarGeneratorEnder>("solar_generator_ender", new BiFunction<World, Integer, TileSolarGeneratorEnder>() {
 			
 			@Override

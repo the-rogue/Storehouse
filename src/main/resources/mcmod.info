@@ -4,7 +4,7 @@
 		"name": "Storehouse",
 		"version": "${version}",
 		"description": "A mod that allows you to manipulate items, fluid and energy",
-		"credits": "Created by TheRogue, Credits to Personified for textures and sounds (If you haven't checked out his music you should)",
+		"credits": "Created by TheRogue, Team Chisel for way to create connected textures using code",
 		"logoFile": "assets/storehouse/logo.png",
 		"url": "TODO",
 		"updateJSON": "",

@@ -27,7 +27,7 @@ public class ItemOreNameComponent implements IRecipeComponent {
 		for (int id : IDs)
 		{
 			String name = OreDictionary.getOreName(id);
-			if (name.contains(oreName)) return true;
+			if (name.contains(oreName) && stack.getCount() >= amount) return true;
 		}
 		return false;
 	}

@@ -35,7 +35,8 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
 	public Material getblockMaterial ();
 	
 	public default void registerModels () {
-		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(getBlock()), 0, new ModelResourceLocation(getBlock().getUnlocalizedName().substring(5)));
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(getBlock()), 0, new ModelResourceLocation(
+				getBlock().getUnlocalizedName().substring(5)));
 	}
 	
 	public default String getUnlocalizedName (ItemStack stack) {

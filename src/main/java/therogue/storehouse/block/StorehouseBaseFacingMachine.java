@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -24,12 +25,12 @@ public class StorehouseBaseFacingMachine<T extends TileEntity> extends Storehous
 	
 	public StorehouseBaseFacingMachine (String name, BiFunction<World, Integer, T> createTile) {
 		super(name, createTile);
-		this.setDefaultState(this.getBlockState().getBaseState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+		this.setDefaultState(this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 	}
 	
 	public StorehouseBaseFacingMachine (String name, BiFunction<World, Integer, T> createTile, AxisAlignedBB boundingBox) {
 		super(name, createTile, boundingBox);
-		this.setDefaultState(this.getBlockState().getBaseState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+		this.setDefaultState(this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 	}
 	
 	/**
@@ -46,8 +47,9 @@ public class StorehouseBaseFacingMachine<T extends TileEntity> extends Storehous
 	 * @param hand The player hand used to place this block
 	 * @return The state to be placed in the world
 	 */
-	public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-		return this.getDefaultState().withProperty(BlockHorizontal.FACING, placer.getAdjustedHorizontalFacing().getOpposite());
+	public IBlockState getStateForPlacement (
+			World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand).withProperty(BlockHorizontal.FACING, placer.getAdjustedHorizontalFacing().getOpposite());
 	}
 	
 	@Override
@@ -63,6 +65,24 @@ public class StorehouseBaseFacingMachine<T extends TileEntity> extends Storehous
 	@Override
 	public IBlockState getStateFromMeta (int meta) {
 		return this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta));
+	}
+	
+	/**
+	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
+	 * blockstate.
+	 */
+	public IBlockState withRotation (IBlockState state, Rotation rot) {
+		switch (rot)
+		{
+			case CLOCKWISE_180:
+				return state.withProperty(BlockHorizontal.FACING, state.getValue(BlockHorizontal.FACING).rotateY().rotateY());
+			case COUNTERCLOCKWISE_90:
+				return state.withProperty(BlockHorizontal.FACING, state.getValue(BlockHorizontal.FACING).rotateYCCW());
+			case CLOCKWISE_90:
+				return state.withProperty(BlockHorizontal.FACING, state.getValue(BlockHorizontal.FACING).rotateY());
+			default:
+				return state;
+		}
 	}
 	
 	/**

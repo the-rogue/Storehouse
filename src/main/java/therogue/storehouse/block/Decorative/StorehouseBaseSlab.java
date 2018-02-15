@@ -48,7 +48,7 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		this.blocktype = blocktype;
 		this.setHardness(blocktype.getblockHardness());
 		this.setResistance(blocktype.getblockResistance());
-		IBlockState iblockstate = this.blockState.getBaseState();
+		IBlockState iblockstate = this.getDefaultState();
 		if (!this.isDouble())
 		{
 			iblockstate = iblockstate.withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM);
@@ -97,7 +97,8 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 	 * Creates the Block State
 	 */
 	protected BlockStateContainer createBlockState () {
-		return this.isDouble() ? new BlockStateContainer(this, new IProperty[] { VARIANT }) : new BlockStateContainer(this, new IProperty[] { HALF, VARIANT });
+		return this.isDouble() ? new BlockStateContainer(this, new IProperty[] { VARIANT }) : new BlockStateContainer(
+				this, new IProperty[] { HALF, VARIANT });
 	}
 	
 	/**
@@ -259,7 +260,8 @@ public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehous
 		 */
 		@Override
 		public void registerModels () {
-			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(getUnlocalizedName().substring(5), "half=bottom,variant=default"));
+			ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(this), 0, new ModelResourceLocation(
+					getUnlocalizedName().substring(5), "half=bottom,variant=default"));
 		}
 	}
 	

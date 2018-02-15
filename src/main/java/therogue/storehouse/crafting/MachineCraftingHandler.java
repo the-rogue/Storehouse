@@ -203,7 +203,7 @@ public class MachineCraftingHandler {
 				}
 			}
 		}
-		
+		//TODO : Make sure this recognises that there may be multiple items in an ingredient stack
 		private boolean matches (MachineRecipe recipe) {
 			if (!recipe.correctMode.test(attachedTile)) return false;
 			IRecipeInventory craftInventory = attachedTile.getCraftingInventory();

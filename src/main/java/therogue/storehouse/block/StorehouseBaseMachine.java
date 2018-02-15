@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,11 +33,16 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.Storehouse;
+import therogue.storehouse.client.connectedtextures.ConnectionState;
+import therogue.storehouse.client.connectedtextures.ConnectionState.RenderProperty;
 import therogue.storehouse.inventory.IInventoryCapability;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
 import therogue.storehouse.tile.TileUtils;
@@ -84,11 +90,14 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 	}
 	
 	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated (
+			World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (notifyTile)
 		{
 			TileEntity te = world.getTileEntity(pos);
-			if (te instanceof StorehouseBaseTileEntity && ((StorehouseBaseTileEntity) te).onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ)) return true;
+			if (te instanceof StorehouseBaseTileEntity
+					&& ((StorehouseBaseTileEntity) te).onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ))
+				return true;
 		}
 		if (fluidHandler)
 		{
@@ -206,5 +215,45 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 	public boolean isFullCube (IBlockState state) {
 		if (AABB != null) return false;
 		return true;
+	}
+	
+	/**
+	 * Should block use the brightest neighbor light value as its own
+	 */
+	@Override
+	public boolean getUseNeighborBrightness (IBlockState state) {
+		if (AABB != null) return true;
+		return this.useNeighborBrightness;
+	}
+	
+	public static class CT<T extends TileEntity> extends StorehouseBaseMachine<T> {
+		
+		public CT (String name, BiFunction<World, Integer, T> function) {
+			super(name, function);
+		}
+		
+		public CT (String name, BiFunction<World, Integer, T> function, AxisAlignedBB boundingBox) {
+			super(name, function, boundingBox);
+		}
+		
+		/**
+		 * Convert the BlockState into the correct metadata value
+		 */
+		public int getMetaFromState (IBlockState state) {
+			return 0;
+		}
+		
+		@Override
+		public ExtendedBlockState createBlockState () {
+			return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] { ConnectionState.RenderProperty.INSTANCE });
+		}
+		
+		/**
+		 * Can return IExtendedBlockState
+		 */
+		@Override
+		public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
+			return ((IExtendedBlockState) state).withProperty(RenderProperty.INSTANCE, new ConnectionState(world, pos));
+		}
 	}
 }

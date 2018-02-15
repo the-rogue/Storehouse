@@ -1,11 +1,18 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"transform": "forge:default-block"
+		"transform": "forge:default-block",
+		"model": "storehouse:generator/solar/base",
+		"textures": {
+			"top": "storehouse:blocks/machine/generator/solar/advanced",
+			"bottom": "storehouse:blocks/machine/storehouse_stone",
+			"side": "storehouse:blocks/machine/storehouse_stone"
+		}
 	},
 	"variants": {
-		"normal": {
-			"model": "storehouse:generator/solar/advanced"
-		}
+		"normal": [
+			{
+			}
+		]
 	}
 }

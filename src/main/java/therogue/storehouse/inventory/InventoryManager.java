@@ -140,7 +140,7 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 	public ItemStack extractItem (int slot, int amount, boolean simulate) {
 		if (!extractable_slots.contains(slot)) return ItemStack.EMPTY;
 		if (amount == 0) return ItemStack.EMPTY;
-		ItemStack stackInSlot = getStackInSlot(slot);
+		ItemStack stackInSlot = inventory.get(slot);
 		if (stackInSlot.isEmpty()) return ItemStack.EMPTY;
 		if (simulate)
 		{
@@ -204,10 +204,10 @@ public abstract class InventoryManager implements IItemHandlerModifiable {
 	// --------------------------------------INTERNAL METHODS------------------------------------------
 	// FOR USE BY THE TILE ENTITY ONLY
 	public void pushItems (int fromSlot, int toSlot) {
-		ItemStack fromStack = getStackInSlot(fromSlot);
+		ItemStack fromStack = inventory.get(fromSlot);
 		if (fromStack.isEmpty()) return;
 		if (!isItemValidForSlotChecks(toSlot, fromStack)) return;
-		ItemStack toStack = getStackInSlot(toSlot);
+		ItemStack toStack = inventory.get(toSlot);
 		if (!ItemStackUtils.areStacksMergable(fromStack, toStack)) return;
 		setStackInSlot(toSlot, ItemStackUtils.mergeStacks(Math.min(getSlotLimit(toSlot), fromStack.getMaxStackSize()), true, toStack, fromStack));
 		owner.onInventoryChange();

@@ -30,7 +30,8 @@ public class BlockUtils {
 		for (BlockPos blockpos = pos.up(); blockpos.getY() < world.getActualHeight(); blockpos = blockpos.up())
 		{
 			IBlockState iblockstate = world.getBlockState(blockpos);
-			if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 1 && iblockstate.getBlock() != Blocks.GLASS && !iblockstate.getMaterial().isLiquid()) { return false; }
+			if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 1 && iblockstate.getBlock() != Blocks.GLASS
+					&& !iblockstate.getMaterial().isLiquid()) { return false; }
 		}
 		return true;
 	}
@@ -43,6 +44,7 @@ public class BlockUtils {
 	 * @return Whether the TileEntity could be opened
 	 */
 	public static boolean isUsableByPlayer (TileEntity te, EntityPlayer player) {
-		return te.getWorld().getTileEntity(te.getPos()) != te ? false : player.getDistanceSq((double) te.getPos().getX() + 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 64.0D;
+		return te.getWorld().getTileEntity(te.getPos()) != te ? false : player.getDistanceSq((double) te.getPos().getX()
+				+ 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 64.0D;
 	}
 }

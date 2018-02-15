@@ -10,11 +10,13 @@
 
 package therogue.storehouse.proxy;
 
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import therogue.storehouse.client.model.StorehouseModelLoader;
 import therogue.storehouse.client.render.ForgeTESR;
 import therogue.storehouse.tile.machine.TileForge;
 import therogue.storehouse.util.LOG;
@@ -30,6 +32,8 @@ public class ClientProxy extends CommonProxy {
 		LOG.debug("Client Proxy Started PreInitialisation");
 		MinecraftForge.EVENT_BUS.register(EventHandlerClient.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileForge.class, new ForgeTESR());
+		ModelLoaderRegistry.registerLoader(StorehouseModelLoader.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(StorehouseModelLoader.INSTANCE);
 		LOG.debug("Client Proxy Finished PreInitialisation");
 	}
 	

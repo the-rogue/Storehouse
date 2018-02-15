@@ -8,52 +8,52 @@
 		"meta": {
 			"0": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/tap"
+					"all": "storehouse:blocks/machine/multiblock/ejector"
 				}
 			},
 			"1": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/tank"
+					"all": "storehouse:blocks/machine/multiblock/chute"
 				}
 			},
 			"2": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/ejector"
+					"all": "storehouse:blocks/machine/multiblock/item_io"
 				}
 			},
 			"3": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/chute"
+					"all": "storehouse:blocks/machine/multiblock/tap"
 				}
 			},
 			"4": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/energy_supply"
+					"all": "storehouse:blocks/machine/multiblock/tank"
 				}
 			},
 			"5": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/energy_connector"
+					"all": "storehouse:blocks/machine/multiblock/fluid_io"
 				}
 			},
 			"6": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/item_io"
+					"all": "storehouse:blocks/machine/multiblock/energy_supply"
 				}
 			},
 			"7": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/fluid_io"
+					"all": "storehouse:blocks/machine/multiblock/energy_connector"
 				}
 			},
 			"8": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/advanced_connector"
+					"all": "storehouse:blocks/machine/multiblock/advanced_supply"
 				}
 			},
 			"9": {
 				"textures": {
-					"all": "storehouse:blocks/machine/multiblock/advanced_supply"
+					"all": "storehouse:blocks/machine/multiblock/advanced_connector"
 				}
 			},
 			"10": {
