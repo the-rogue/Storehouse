@@ -14,15 +14,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class EnergyWrapper implements ICapabilityWrapper<IEnergyStorage> {
+public class EnergyCapabilityWrapper implements ICapabilityWrapper<IEnergyStorage> {
 	
-	public static final EnergyWrapper RECIEVE = new EnergyWrapper(true, false);
-	public static final EnergyWrapper EXTRACT = new EnergyWrapper(false, true);
-	public static final EnergyWrapper BOTH = new EnergyWrapper(true, true);
+	public static final EnergyCapabilityWrapper RECIEVE = new EnergyCapabilityWrapper(true, false);
+	public static final EnergyCapabilityWrapper EXTRACT = new EnergyCapabilityWrapper(false, true);
+	public static final EnergyCapabilityWrapper BOTH = new EnergyCapabilityWrapper(true, true);
 	public final boolean canRecieve;
 	public final boolean canExtract;
 	
-	public EnergyWrapper (boolean canRecieve, boolean canExtract) {
+	public EnergyCapabilityWrapper (boolean canRecieve, boolean canExtract) {
 		this.canRecieve = canRecieve;
 		this.canExtract = canExtract;
 	}

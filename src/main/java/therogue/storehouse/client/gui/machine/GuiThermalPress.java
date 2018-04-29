@@ -10,7 +10,11 @@
 
 package therogue.storehouse.client.gui.machine;
 
+import java.util.function.Supplier;
+
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
@@ -27,43 +31,53 @@ import therogue.storehouse.client.gui.element.IconDefinition;
 import therogue.storehouse.client.gui.element.JoinProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.crafting.MachineCraftingHandler.CapabilityCrafter;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
+import therogue.storehouse.tile.ClientButton.CapabilityButton;
+import therogue.storehouse.tile.IButton;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
 public class GuiThermalPress extends GuiBase {
 	
 	public GuiThermalPress (ContainerBase inventory, TileThermalPress linked) {
 		super(NORMAL_TEXTURE, inventory, linked);
-		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		Supplier<Integer> timeElapsed = () -> crafter.getTimeElapsed();
+		Supplier<Integer> totalTime = () -> crafter.getTotalCraftingTime();
+		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
+		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		IButton<?> button = linked.getCapability(CapabilityButton.BUTTON, null, ModuleContext.GUI);
 		IconDefinition[] innerIcons = new IconDefinition[] { new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/press_mode.png"), this.xSize - 17, 7, 10, 10),
 				new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/join_mode.png"), this.xSize - 17, 7, 10, 10),
 				new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/stamp_mode.png"), this.xSize - 17, 7, 10, 10),
 				new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/high_pressure_mode.png"), this.xSize - 17, 7, 10, 10), };
 		elements.add(new ElementButton(this, new IconDefinition(Icons.Button.getLocation(), this.xSize - 20, 4, 16, 16), "Click to change the mode of the Thermal Press", innerIcons,
-				new String[] { "Current Setting: Press", "Current Setting: Join", "Current Setting: Stamp", "Current Setting: High Pressure" }, 4, 4));
-		elements.add(new ElementMode(this, 4, createPressProgressBar(), createJoinProgressBar(), createStampProgressBar(), createHighPressureProgressBar()));
+				new String[] { "Current Setting: Press", "Current Setting: Join", "Current Setting: Stamp", "Current Setting: High Pressure" }, () -> button.getOrdinal(), () -> button.pressed()));
+		elements.add(new ElementMode(this,() -> button.getOrdinal(), createPressProgressBar(timeElapsed, totalTime), createJoinProgressBar(timeElapsed, totalTime), createStampProgressBar(timeElapsed, totalTime), createHighPressureProgressBar(timeElapsed, totalTime)));
 	}
 	
-	private ElementBase createPressProgressBar () {
+	private ElementBase createPressProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
 		IProgressBar pointerbottom = new ElementVerticalProgressBar(67, 55, Icons.ProgressUp.getLocation());
 		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
 		IProgressBar topbottom = new DoubleProgressBar(pointerbottom, pointertop);
 		IProgressBar bar = new JoinProgressBar(topbottom, createFinal());
-		return new ProgressHandler(this, 5, 6, bar);
+		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
 	}
 	
-	private ElementBase createJoinProgressBar () {
+	private ElementBase createJoinProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
 		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
 		IProgressBar bar = new JoinProgressBar(pointertop, createFinal());
-		return new ProgressHandler(this, 5, 6, bar);
+		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
 	}
 	
-	private ElementBase createStampProgressBar () {
+	private ElementBase createStampProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
 		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
 		IProgressBar bar = new JoinProgressBar(pointertop, createFinal());
-		return new ProgressHandler(this, 5, 6, bar);
+		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
 	}
 	
-	private ElementBase createHighPressureProgressBar () {
+	private ElementBase createHighPressureProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
 		IProgressBar rectupbottom = new ElementVerticalProgressBar(72, 63, 2, 2, GuiHelper.WHITE, GuiHelper.NORMAL_COLOUR);
 		IProgressBar leftbarbottom = new ElementHorizontalProgressBar(65, 65, 8, 2, GuiHelper.WHITE, GuiHelper.NORMAL_COLOUR, true);
 		IProgressBar rightbarbottom = new ElementHorizontalProgressBar(73, 65, 8, 2, GuiHelper.WHITE, GuiHelper.NORMAL_COLOUR, false);
@@ -80,7 +94,7 @@ public class GuiThermalPress extends GuiBase {
 		IProgressBar combo2top = new JoinProgressBar(combo1top, pointertop);
 		IProgressBar topbottom = new DoubleProgressBar(combo2top, combo2bottom);
 		IProgressBar bar = new JoinProgressBar(topbottom, createFinal());
-		return new ProgressHandler(this, 5, 6, bar);
+		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
 	}
 	
 	private IProgressBar createFinal () {

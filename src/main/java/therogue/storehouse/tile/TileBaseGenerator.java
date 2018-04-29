@@ -14,21 +14,39 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.energy.EnergyStorageAdv;
 import therogue.storehouse.energy.EnergyUtils;
+import therogue.storehouse.energy.TileEnergyStorage;
 import therogue.storehouse.util.GeneralUtils;
 
 public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock implements ITickable {
 	
 	protected int RFPerTick;
-	protected MachineTier tier;
+	protected int timeModifier;
+	public final MachineTier tier;
+	protected final TileData FIELDDATA = new TileData();
 	
-	public TileBaseGenerator (IStorehouseBaseBlock block, MachineTier tier, int RFPerTick) {
+	public TileBaseGenerator (IStorehouseBaseBlock block, MachineTier tier, int RFPerTick, int timeModifier) {
 		super(block);
+		modules.add(FIELDDATA);
 		this.tier = tier;
 		this.RFPerTick = RFPerTick;
-		energyStorage = new EnergyStorageAdv(RFPerTick * 3600, 0, RFPerTick * 9);
+		this.timeModifier = timeModifier;
+		this.setEnergyStorage(new TileEnergyStorage(RFPerTick * 3600, 0, RFPerTick * 9));
+		FIELDDATA.addField( () -> tier.ordinal());
+		FIELDDATA.addField( () -> {// Current item energy level
+			ItemStack stack = inventory.extractItem(0, -1, true, ModuleContext.INTERNAL);
+			if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
+				return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
+			return 0;
+		});
+		FIELDDATA.addField( () -> {// Max item energy level
+			ItemStack stack = inventory.extractItem(0, -1, true, ModuleContext.INTERNAL);
+			if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
+				return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
+			return 0;
+		});
 	}
 	
 	// -------------------------ITickable-----------------------------------------------------------------
@@ -36,12 +54,11 @@ public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock imp
 	public void update () {
 		if (isFormed() && GeneralUtils.isServerSide(world))
 		{
-			if (isRunning())
+			this.sendEnergyToItems(0);
+			if (EnergyUtils.isItemFull(inventory.extractItem(0, -1, true, ModuleContext.INTERNAL)))
 			{
-				doRunTick();
-				energyStorage.modifyEnergyStored(RFPerTick);
+				inventory.insertItem(0, inventory.insertItem(1, inventory.extractItem(0, -1, false, ModuleContext.INTERNAL), false, ModuleContext.INTERNAL), false, ModuleContext.INTERNAL);
 			}
-			tick();
 			this.sendEnergyToNeighbours();
 			if (world != null)
 			{
@@ -65,66 +82,8 @@ public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock imp
 	
 	protected void sendEnergyToItems (int slot) {
 		if (energyStorage.getEnergyStored() <= 0) return;
-		int sentRF = EnergyUtils.sendItemEnergy(inventory.getStackInSlot(slot), energyStorage.extractEnergy(energyStorage.getMaxExtract() / 4, true));
-		energyStorage.extractEnergy(sentRF, false);
-	}
-	
-	// -------------------------Customisable Generator Methods-------------------------------------------
-	public abstract boolean isRunning ();
-	
-	protected abstract void doRunTick ();
-	
-	protected abstract void tick ();
-	
-	public int runtimeLeft () {
-		return 0;
-	}
-	
-	public int maxruntime () {
-		return 0;
-	}
-	
-	// -------------------------Container/Gui Methods----------------------------------------------------
-	/**
-	 * Fields Used: #4 - Running? #5 - Current item energy level #6 - Max item energy level #7 - Current burn time left #8 - Max burn time for this fuel
-	 */
-	@Override
-	public int getField (int id) {
-		ItemStack stack;
-		switch (id)
-		{
-			case 1:
-				return tier.ordinal();
-			case 4:
-				return isRunning() ? 1 : 0;
-			case 5:
-				stack = inventory.getStackInSlot(0);
-				if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
-				return 0;
-			case 6:
-				stack = inventory.getStackInSlot(0);
-				if (stack != null && !stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return stack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
-				return 0;
-			case 7:
-				return runtimeLeft();
-			case 8:
-				return maxruntime();
-			default:
-				return super.getField(id);
-		}
-	}
-	
-	@Override
-	public void setField (int id, int value) {
-		super.setField(id, value);
-		switch (id)
-		{
-		}
-	}
-	
-	@Override
-	public int getFieldCount () {
-		return super.getFieldCount() + 5;
+		EnergyUtils.sendItemEnergy(energyStorage, inventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), slot, energyStorage.getMaxExtract()
+				/ 4);
 	}
 	
 	// -------------------------IWorldNamable Methods-----------------------------------------------------

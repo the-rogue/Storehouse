@@ -11,23 +11,15 @@
 package therogue.storehouse.init;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
 
-import com.google.common.collect.Lists;
-
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseFacingMachine;
 import therogue.storehouse.block.StorehouseBaseMachine;
 import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
 import therogue.storehouse.client.connectedtextures.CTBlockRegistry;
-import therogue.storehouse.client.connectedtextures.IConnectedTextureLogic;
 import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.init.grouped.CraftingBlocks;
 import therogue.storehouse.init.grouped.DecorativeBlockContainer;
@@ -44,6 +36,8 @@ import therogue.storehouse.tile.machine.TileForge;
 import therogue.storehouse.tile.machine.TileLiquidGenerator.TileLiquidGeneratorAdvanced;
 import therogue.storehouse.tile.machine.TileLiquidGenerator.TileLiquidGeneratorBasic;
 import therogue.storehouse.tile.machine.TileLiquidGenerator.TileLiquidGeneratorEnder;
+import therogue.storehouse.tile.machine.TilePotionBrewer;
+import therogue.storehouse.tile.machine.TilePotionInjector;
 import therogue.storehouse.tile.machine.TileSolarGenerator.TileSolarGeneratorAdvanced;
 import therogue.storehouse.tile.machine.TileSolarGenerator.TileSolarGeneratorBasic;
 import therogue.storehouse.tile.machine.TileSolarGenerator.TileSolarGeneratorEnder;
@@ -55,6 +49,7 @@ public class ModBlocks {
 	 * Initialises a new array to hold all the blocks
 	 */
 	public static ArrayList<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
+	private static final CTBlockRegistry ctRegistry = CTBlockRegistry.INSTANCE;
 	
 	/**
 	 * Adds all the blocks to the array
@@ -80,138 +75,51 @@ public class ModBlocks {
 		/**
 		 * Add Machines
 		 */
-		solar_generator_basic = new StorehouseBaseMachine<TileSolarGeneratorBasic>("solar_generator_basic", new BiFunction<World, Integer, TileSolarGeneratorBasic>() {
-			
-			@Override
-			public TileSolarGeneratorBasic apply (World world, Integer meta) {
-				return new TileSolarGeneratorBasic();
-			}
-		}, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
-		solar_generator_basic.setGUI(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		solar_generator_advanced = new StorehouseBaseMachine.CT<TileSolarGeneratorAdvanced>("solar_generator_advanced", new BiFunction<World, Integer, TileSolarGeneratorAdvanced>() {
-			
-			@Override
-			public TileSolarGeneratorAdvanced apply (World world, Integer meta) {
-				return new TileSolarGeneratorAdvanced();
-			}
-		}, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
-		solar_generator_advanced.setGUI(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		CTBlockRegistry.INSTANCE.register(new IConnectedTextureLogic() {
-			
-			@Override
-			public ResourceLocation getModelLocation () {
-				return solar_generator_advanced.getRegistryName();
-			}
-			
-			@Override
-			public List<ResourceLocation> getTextures () {
-				return Lists.newArrayList(new ResourceLocation(Storehouse.MOD_ID, "blocks/machine/generator/solar/advanced"));
-			}
-		});
-		solar_generator_ender = new StorehouseBaseMachine<TileSolarGeneratorEnder>("solar_generator_ender", new BiFunction<World, Integer, TileSolarGeneratorEnder>() {
-			
-			@Override
-			public TileSolarGeneratorEnder apply (World world, Integer meta) {
-				return new TileSolarGeneratorEnder();
-			}
-		}, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
-		solar_generator_ender.setGUI(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		combustion_generator_basic = new StorehouseBaseFacingMachine<TileCombustionGeneratorBasic>("combustion_generator_basic", new BiFunction<World, Integer, TileCombustionGeneratorBasic>() {
-			
-			@Override
-			public TileCombustionGeneratorBasic apply (World world, Integer meta) {
-				return new TileCombustionGeneratorBasic();
-			}
-		});
-		combustion_generator_basic.setGUI(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
-		combustion_generator_advanced = new StorehouseBaseFacingMachine<TileCombustionGeneratorAdvanced>("combustion_generator_advanced", new BiFunction<World, Integer, TileCombustionGeneratorAdvanced>() {
-			
-			@Override
-			public TileCombustionGeneratorAdvanced apply (World world, Integer meta) {
-				return new TileCombustionGeneratorAdvanced();
-			}
-		});
-		combustion_generator_advanced.setGUI(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
-		combustion_generator_ender = new StorehouseBaseFacingMachine<TileCombustionGeneratorEnder>("combustion_generator_ender", new BiFunction<World, Integer, TileCombustionGeneratorEnder>() {
-			
-			@Override
-			public TileCombustionGeneratorEnder apply (World world, Integer meta) {
-				return new TileCombustionGeneratorEnder();
-			}
-		});
-		combustion_generator_ender.setGUI(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
-		liquid_generator_basic = new StorehouseBaseFacingMachine<TileLiquidGeneratorBasic>("liquid_generator_basic", new BiFunction<World, Integer, TileLiquidGeneratorBasic>() {
-			
-			@Override
-			public TileLiquidGeneratorBasic apply (World world, Integer meta) {
-				return new TileLiquidGeneratorBasic();
-			}
-		});
-		liquid_generator_basic.setGUI(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
-		liquid_generator_advanced = new StorehouseBaseFacingMachine<TileLiquidGeneratorAdvanced>("liquid_generator_advanced", new BiFunction<World, Integer, TileLiquidGeneratorAdvanced>() {
-			
-			@Override
-			public TileLiquidGeneratorAdvanced apply (World world, Integer meta) {
-				return new TileLiquidGeneratorAdvanced();
-			}
-		});
-		liquid_generator_advanced.setGUI(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
-		liquid_generator_ender = new StorehouseBaseFacingMachine<TileLiquidGeneratorEnder>("liquid_generator_ender", new BiFunction<World, Integer, TileLiquidGeneratorEnder>() {
-			
-			@Override
-			public TileLiquidGeneratorEnder apply (World world, Integer meta) {
-				return new TileLiquidGeneratorEnder();
-			}
-		});
-		liquid_generator_ender.setGUI(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
-		thermal_press = new StorehouseBaseFacingMachine<TileThermalPress>("thermal_press", new BiFunction<World, Integer, TileThermalPress>() {
-			
-			@Override
-			public TileThermalPress apply (World world, Integer meta) {
-				return new TileThermalPress();
-			}
-		});
+		solar_generator_basic = new StorehouseBaseMachine<TileSolarGeneratorBasic>("solar_generator_basic", (world,
+				meta) -> new TileSolarGeneratorBasic(), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
+		solar_generator_basic.setGUICheckTile(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
+		solar_generator_advanced = new StorehouseBaseMachine.CT<TileSolarGeneratorAdvanced>("solar_generator_advanced", (world,
+				meta) -> new TileSolarGeneratorAdvanced(), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
+		solar_generator_advanced.setGUICheckTile(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
+		ctRegistry.registerS(solar_generator_advanced, "blocks/machine/generator/solar/advanced");
+		solar_generator_ender = new StorehouseBaseMachine<TileSolarGeneratorEnder>("solar_generator_ender", (world,
+				meta) -> new TileSolarGeneratorEnder(), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
+		solar_generator_ender.setGUICheckTile(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
+		combustion_generator_basic = new StorehouseBaseFacingMachine<TileCombustionGeneratorBasic>("combustion_generator_basic", (world,
+				meta) -> new TileCombustionGeneratorBasic());
+		combustion_generator_basic.setGUICheckTile(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
+		combustion_generator_advanced = new StorehouseBaseFacingMachine<TileCombustionGeneratorAdvanced>("combustion_generator_advanced", (world,
+				meta) -> new TileCombustionGeneratorAdvanced());
+		combustion_generator_advanced.setGUICheckTile(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
+		combustion_generator_ender = new StorehouseBaseFacingMachine<TileCombustionGeneratorEnder>("combustion_generator_ender", (world,
+				meta) -> new TileCombustionGeneratorEnder());
+		combustion_generator_ender.setGUICheckTile(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
+		liquid_generator_basic = new StorehouseBaseFacingMachine<TileLiquidGeneratorBasic>("liquid_generator_basic", (world,
+				meta) -> new TileLiquidGeneratorBasic());
+		liquid_generator_basic.setGUICheckTile(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
+		liquid_generator_advanced = new StorehouseBaseFacingMachine<TileLiquidGeneratorAdvanced>("liquid_generator_advanced", (world,
+				meta) -> new TileLiquidGeneratorAdvanced());
+		liquid_generator_advanced.setGUICheckTile(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
+		liquid_generator_ender = new StorehouseBaseFacingMachine<TileLiquidGeneratorEnder>("liquid_generator_ender", (world,
+				meta) -> new TileLiquidGeneratorEnder());
+		liquid_generator_ender.setGUICheckTile(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
+		thermal_press = new StorehouseBaseFacingMachine<TileThermalPress>("thermal_press", (world, meta) -> new TileThermalPress());
 		thermal_press.setGUI(GuiHandler.THERMALPRESS);
-		crystaliser = new StorehouseBaseFacingMachine<TileCrystaliser>("crystaliser", new BiFunction<World, Integer, TileCrystaliser>() {
-			
-			@Override
-			public TileCrystaliser apply (World world, Integer meta) {
-				return new TileCrystaliser();
-			}
-		});
+		crystaliser = new StorehouseBaseFacingMachine<TileCrystaliser>("crystaliser", (world, meta) -> new TileCrystaliser());
 		crystaliser.setGUI(GuiHandler.CRYSTALISER).setIsFluidHandler();
-		forge = new StorehouseBaseFacingMachine<TileForge>("forge", new BiFunction<World, Integer, TileForge>() {
-			
-			@Override
-			public TileForge apply (World world, Integer meta) {
-				return new TileForge();
-			}
-		}, new AxisAlignedBB(0.21875D, 0.0D, 0.21875D, 0.78125D, 0.5875D, 0.78125D));
+		forge = new StorehouseBaseFacingMachine<TileForge>("forge", (world,
+				meta) -> new TileForge(), new AxisAlignedBB(0.21875D, 0.0D, 0.21875D, 0.78125D, 0.5875D, 0.78125D));
 		forge.setNotifyTileActivation();
-		alloy_furnace = new StorehouseBaseFacingMachine<TileAlloyFurnace>("alloy_furnace", new BiFunction<World, Integer, TileAlloyFurnace>() {
-			
-			@Override
-			public TileAlloyFurnace apply (World world, Integer meta) {
-				return new TileAlloyFurnace();
-			}
-		});
+		alloy_furnace = new StorehouseBaseFacingMachine<TileAlloyFurnace>("alloy_furnace", (world, meta) -> new TileAlloyFurnace());
 		alloy_furnace.setGUI(GuiHandler.ALLOYFURNACE);
-		burner = new StorehouseBaseFacingMachine<TileBurner>("burner", new BiFunction<World, Integer, TileBurner>() {
-			
-			@Override
-			public TileBurner apply (World world, Integer meta) {
-				return new TileBurner();
-			}
-		});
-		burner.setGUI(GuiHandler.BURNER).setNotifyTileActivation();
-		carbonCompressor = new StorehouseBaseFacingMachine<TileCarbonCompressor>("carbon_compressor", new BiFunction<World, Integer, TileCarbonCompressor>() {
-			
-			@Override
-			public TileCarbonCompressor apply (World world, Integer meta) {
-				return new TileCarbonCompressor();
-			}
-		});
-		carbonCompressor.setGUI(GuiHandler.CARBONCOMPRESSOR).setNotifyTileActivation();
+		burner = new StorehouseBaseFacingMachine<TileBurner>("burner", (world, meta) -> new TileBurner());
+		burner.setGUICheckTile(GuiHandler.BURNER).setNotifyTileActivation();
+		carbonCompressor = new StorehouseBaseFacingMachine<TileCarbonCompressor>("carbon_compressor", (world, meta) -> new TileCarbonCompressor());
+		carbonCompressor.setGUICheckTile(GuiHandler.CARBONCOMPRESSOR).setNotifyTileActivation();
+		potion_brewer = new StorehouseBaseFacingMachine<TilePotionBrewer>("potion_brewer", (world, meta) -> new TilePotionBrewer());
+		potion_brewer.setGUI(GuiHandler.POTION_BREWER);
+		potion_injector = new StorehouseBaseFacingMachine<TilePotionInjector>("potion_injector", (world, meta) -> new TilePotionInjector());
+		potion_injector.setGUI(GuiHandler.POTION_INJECTOR);
 		blocklist.add(solar_generator_basic);
 		blocklist.add(solar_generator_advanced);
 		blocklist.add(solar_generator_ender);
@@ -227,6 +135,8 @@ public class ModBlocks {
 		blocklist.add(alloy_furnace);
 		blocklist.add(burner);
 		blocklist.add(carbonCompressor);
+		blocklist.add(potion_brewer);
+		blocklist.add(potion_injector);
 	}
 	
 	public static void Init () {
@@ -273,29 +183,32 @@ public class ModBlocks {
 	public static StorehouseBaseFacingMachine<TileForge> forge;
 	public static StorehouseBaseFacingMachine<TileAlloyFurnace> alloy_furnace;
 	public static StorehouseBaseFacingMachine<TileBurner> burner;
-	public static StorehouseBaseFacingMachine<TileCarbonCompressor> carbonCompressor;/*
-																						 * public static BlockPainter painter; public static BlockBioMachine bio_machine; public static BlockPotionBrewer potion_brewer; public static BlockPotionInjector potion_injector; public static
-																						 * BlockCraftingController crafting_controller;
-																						 * public static BlockCraftingCable crafting_cable; public static BlockShelfStocker shelf_stocker; public static BlockStockController stock_controller; public static BlockStockRequester stock_requester; public
-																						 * static
-																						 * BlockStockTransfer
-																						 * stock_transfer; public static BlockPlayerStocker player_stocker; public static BlockPlayerUnstocker player_unstocker; public static BlockPlayerRemoteFeeder player_remote_feeder; public static
-																						 * BlockPlayerHealthRegenerator
-																						 * player_health_regenerator; public static BlockAirConUnit air_con_unit; public static BlockFan fan; public static BlockInterDimensionalProvider inter_dimensional_provider; public static
-																						 * BlockWirelessRedstoneManager
-																						 * wireless_redstone_manager; public static BlockWirelessTransmitter wireless_transmitter; public static BlockWirelessReciever wireless_reciever; public static BlockBlackHoleStabiliser black_hole_stabiliser;
-																						 * public
-																						 * static
-																						 * BlockSingularityCore singularity_core; public static BlockBlackHoleEnergyGatherer black_hole_energy_gatherer; public static BlockBlackHoleEnergyTap black_hole_energy_tap; public static
-																						 * BlockBlackHoleContainmentFieldGenerator
-																						 * black_hole_containment_field_generator; public static BlockBlackHoleContainmentController black_hole_containment_controller; public static BlockBlackHoleMatterExtractor black_hole_matter_extractor; public
-																						 * static
-																						 * BlockBlackHoleMatterShaper black_hole_matter_shaper; public static BlockBlackHoleMatterConverter black_hole_matter_converter; public static BlockBlackHoleEnergyCannon black_hole_energy_cannon; public static
-																						 * BlockDragonAttractor
-																						 * dragon_attractor; public static BlockDragonContainmentField dragon_containment_field; public static BlockDragonGrinder dragon_grinder; public static BlockEnderVacuum ender_vacuum; public static
-																						 * BlockResourceConstructor
-																						 * resource_constructor; public static BlockForceField force_field; public static BlockPlacer block_placer; public static BlockWoodStorehouse wood_storehouse; public static BlockStoneStorehouse stone_storehouse;
-																						 * public static
-																						 * BlockIronStorehouse iron_storhouse; public static BlockSteelStorehouse steel_storehouse; public static BlockTitaniumStorehouse titanium_storehouse;
-																						 */
+	public static StorehouseBaseFacingMachine<TileCarbonCompressor> carbonCompressor;
+	public static StorehouseBaseFacingMachine<TilePotionBrewer> potion_brewer;
+	public static StorehouseBaseFacingMachine<TilePotionInjector> potion_injector;
+	/*
+	 * public static BlockPainter painter; public static BlockBioMachine bio_machine; public static BlockPotionBrewer potion_brewer; public static BlockPotionInjector potion_injector; public static
+	 * BlockCraftingController crafting_controller;
+	 * public static BlockCraftingCable crafting_cable; public static BlockShelfStocker shelf_stocker; public static BlockStockController stock_controller; public static BlockStockRequester stock_requester; public
+	 * static
+	 * BlockStockTransfer
+	 * stock_transfer; public static BlockPlayerStocker player_stocker; public static BlockPlayerUnstocker player_unstocker; public static BlockPlayerRemoteFeeder player_remote_feeder; public static
+	 * BlockPlayerHealthRegenerator
+	 * player_health_regenerator; public static BlockAirConUnit air_con_unit; public static BlockFan fan; public static BlockInterDimensionalProvider inter_dimensional_provider; public static
+	 * BlockWirelessRedstoneManager
+	 * wireless_redstone_manager; public static BlockWirelessTransmitter wireless_transmitter; public static BlockWirelessReciever wireless_reciever; public static BlockBlackHoleStabiliser black_hole_stabiliser;
+	 * public
+	 * static
+	 * BlockSingularityCore singularity_core; public static BlockBlackHoleEnergyGatherer black_hole_energy_gatherer; public static BlockBlackHoleEnergyTap black_hole_energy_tap; public static
+	 * BlockBlackHoleContainmentFieldGenerator
+	 * black_hole_containment_field_generator; public static BlockBlackHoleContainmentController black_hole_containment_controller; public static BlockBlackHoleMatterExtractor black_hole_matter_extractor; public
+	 * static
+	 * BlockBlackHoleMatterShaper black_hole_matter_shaper; public static BlockBlackHoleMatterConverter black_hole_matter_converter; public static BlockBlackHoleEnergyCannon black_hole_energy_cannon; public static
+	 * BlockDragonAttractor
+	 * dragon_attractor; public static BlockDragonContainmentField dragon_containment_field; public static BlockDragonGrinder dragon_grinder; public static BlockEnderVacuum ender_vacuum; public static
+	 * BlockResourceConstructor
+	 * resource_constructor; public static BlockForceField force_field; public static BlockPlacer block_placer; public static BlockWoodStorehouse wood_storehouse; public static BlockStoneStorehouse stone_storehouse;
+	 * public static
+	 * BlockIronStorehouse iron_storhouse; public static BlockSteelStorehouse steel_storehouse; public static BlockTitaniumStorehouse titanium_storehouse;
+	 */
 }

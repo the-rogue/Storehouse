@@ -12,14 +12,18 @@ package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.container.SlotItemHandlerFix;
+import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.container.InventorySlot;
+import therogue.storehouse.inventory.IInventoryItemHandler;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileCarbonCompressor;
 
 public class ContainerCarbonCompressor extends ContainerBase {
 	
 	public ContainerCarbonCompressor (IInventory playerInv, TileCarbonCompressor teInv) {
 		super(playerInv, teInv);
-		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 120, 37));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 60, 37));
+		IInventoryItemHandler inventory = teInv.getCapability(GuiItemCapability.CAP, null, ModuleContext.GUI);
+		this.addTESlot(new InventorySlot(inventory, 0, 120, 37));
+		this.addTESlot(new InventorySlot(inventory, 1, 60, 37));
 	}
 }

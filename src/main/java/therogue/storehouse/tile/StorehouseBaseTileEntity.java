@@ -10,8 +10,14 @@
 
 package therogue.storehouse.tile;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -22,11 +28,14 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.network.GuiUpdateTEPacket;
+import therogue.storehouse.network.CGuiUpdateTEPacket;
+import therogue.storehouse.network.SGuiUpdateTEPacket;
 
 public abstract class StorehouseBaseTileEntity extends TileEntity implements IWorldNameable {
 	
+	protected List<ITileModule> modules = new ArrayList<>();
 	private String customName;
 	protected IStorehouseBaseBlock block;
 	
@@ -67,18 +76,66 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 	}
 	
 	// -------------------------Standard TE methods-----------------------------------
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+			float hitY, float hitZ) {
 		return false;
+	}
+	
+	public boolean canOpenGui (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+			float hitY, float hitZ) {
+		return true;
+	}
+	
+	/**
+	 * Called when this is first added to the world (by {@link World#addTileEntity(TileEntity)}).
+	 * Override instead of adding {@code if (firstTick)} stuff in update.
+	 */
+	@Override
+	public void onLoad () {
+		super.onLoad();
+		this.modules = ImmutableList.copyOf(modules);
+		modules.forEach(module -> module.setTileData(this, modules.indexOf(module)));
 	}
 	
 	public void breakBlock (World worldIn, BlockPos pos, IBlockState state) {
 	}
 	
-	public GuiUpdateTEPacket getGUIPacket () {
-		return new GuiUpdateTEPacket(this.getPos(), new NBTTagCompound());
+	public CGuiUpdateTEPacket getCGUIPacket () {
+		CGuiUpdateTEPacket packet = new CGuiUpdateTEPacket(this.getPos(), new NBTTagCompound());
+		modules.forEach(module -> module.writeModuleToNBT(packet.getNbt()));
+		return packet;
 	}
 	
-	public void processGUIPacket (GuiUpdateTEPacket packet) {
+	public void processCGUIPacket (CGuiUpdateTEPacket packet) {
+		modules.forEach(module -> module.readModuleFromNBT(packet.getNbt()));
+	}
+	
+	public void processSGUIPacket (SGuiUpdateTEPacket message, EntityPlayerMP from) {
+		modules.get(message.getItem()).readModuleFromNBT(message.getNbt());
+	}
+	
+	public void notifyChange (Capability<?> changedCapability) {
+		if (world.isRemote) return;
+		modules.forEach(module -> module.onOtherChange(changedCapability));
+	}
+	
+	@Override
+	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+		for (ITileModule module : modules)
+			if (module.hasCapability(capability, facing)) return true;
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Deprecated // Use Context Sensitive version below
+	@Override
+	public final <T> T getCapability (Capability<T> capability, EnumFacing facing) {
+		return this.getCapability(capability, facing, ModuleContext.SIDE);
+	}
+	
+	public <T> T getCapability (Capability<T> capability, EnumFacing facing, ModuleContext context) {
+		for (ITileModule module : modules)
+			if (module.hasCapability(capability, facing)) return module.getCapability(capability, facing, context);
+		return super.getCapability(capability, facing);
 	}
 	
 	@Override
@@ -88,6 +145,7 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 		{
 			nbt.setString("CustomName", this.getName());
 		}
+		modules.forEach(module -> module.writeModuleToNBT(nbt));
 		return nbt;
 	}
 	
@@ -98,5 +156,6 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 		{
 			this.setCustomName(nbt.getString("CustomName"));
 		}
+		modules.forEach(module -> module.readModuleFromNBT(nbt));
 	}
 }

@@ -10,6 +10,9 @@
 
 package therogue.storehouse.crafting.wrapper;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+
 public interface IRecipeComponent {
 	
 	public static final IRecipeComponent NOTHING = new Nothing();
@@ -60,5 +63,15 @@ public interface IRecipeComponent {
 		public IRecipeWrapper getResidue () {
 			return IRecipeWrapper.NOTHING;
 		}
+	}
+	
+	public static interface IItemComponent extends IRecipeComponent {
+		
+		public ItemStack getInput ();
+	}
+	
+	public static interface IFluidComponent extends IRecipeComponent {
+		
+		public FluidStack getComponent ();
 	}
 }

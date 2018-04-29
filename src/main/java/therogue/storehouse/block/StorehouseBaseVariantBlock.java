@@ -19,8 +19,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import therogue.storehouse.client.connectedtextures.ConnectionState;
+import therogue.storehouse.client.connectedtextures.ConnectionState.RenderProperty;
 import therogue.storehouse.item.StorehouseBaseVariantItemBlock;
 
 public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
@@ -142,6 +148,26 @@ public class StorehouseBaseVariantBlock extends StorehouseBaseBlock {
 			this.stack = stack;
 			this.min_quantity = min_quantity;
 			this.max_quantity = max_quantity;
+		}
+	}
+	
+	public static class VBCT extends StorehouseBaseVariantBlock {
+		
+		public VBCT (String name) {
+			super(name);
+		}
+		
+		@Override
+		public ExtendedBlockState createBlockState () {
+			return new ExtendedBlockState(this, new IProperty[] { META }, new IUnlistedProperty[] { ConnectionState.RenderProperty.INSTANCE });
+		}
+		
+		/**
+		 * Can return IExtendedBlockState
+		 */
+		@Override
+		public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
+			return ((IExtendedBlockState) state).withProperty(RenderProperty.INSTANCE, new ConnectionState(world, pos));
 		}
 	}
 }

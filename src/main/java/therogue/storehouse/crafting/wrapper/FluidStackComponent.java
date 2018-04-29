@@ -12,9 +12,10 @@ package therogue.storehouse.crafting.wrapper;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import therogue.storehouse.util.FluidUtils;
+import therogue.storehouse.crafting.wrapper.IRecipeComponent.IFluidComponent;
+import therogue.storehouse.fluid.FluidUtils;
 
-public class FluidStackComponent implements IRecipeComponent {
+public class FluidStackComponent implements IFluidComponent {
 	
 	private FluidStack stack;
 	
@@ -42,7 +43,8 @@ public class FluidStackComponent implements IRecipeComponent {
 	@Override
 	public boolean matches (IRecipeWrapper component) {
 		if (!(component instanceof FluidStackWrapper)) return false;
-		return FluidUtils.areStacksMergable(stack, ((FluidStackWrapper) component).getStack()) && this.stack.amount <= ((FluidStackWrapper) component).getStack().amount;
+		return FluidUtils.areStacksMergable(stack, ((FluidStackWrapper) component).getStack())
+				&& this.stack.amount <= ((FluidStackWrapper) component).getStack().amount;
 	}
 	
 	@Override

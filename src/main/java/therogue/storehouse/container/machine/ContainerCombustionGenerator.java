@@ -12,7 +12,10 @@ package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.container.SlotItemHandlerFix;
+import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.container.InventorySlot;
+import therogue.storehouse.inventory.IInventoryItemHandler;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileCombustionGenerator;
 
 public class ContainerCombustionGenerator extends ContainerBase {
@@ -24,9 +27,10 @@ public class ContainerCombustionGenerator extends ContainerBase {
 	 */
 	public ContainerCombustionGenerator (IInventory playerInv, TileCombustionGenerator teInv) {
 		super(playerInv, teInv);
+		IInventoryItemHandler inventory = teInv.getCapability(GuiItemCapability.CAP, null, ModuleContext.GUI);
 		// Add Solar Generator's Inventory Slot IDs 36,37
-		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 30, 17));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 66, 17));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 2, 48, 53));
+		this.addTESlot(new InventorySlot(inventory, 0, 30, 17));
+		this.addTESlot(new InventorySlot(inventory, 1, 66, 17));
+		this.addTESlot(new InventorySlot(inventory, 2, 48, 53));
 	}
 }

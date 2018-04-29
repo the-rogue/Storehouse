@@ -10,13 +10,14 @@
 
 package therogue.storehouse.inventory;
 
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+
 public interface IGuiSupplier {
 	
-	public int getField (int id);
+	public boolean hasCapability (Capability<?> capability, EnumFacing facing);
 	
-	public void setField (int id, int value);
-	
-	public int getFieldCount ();
+	public <T> T getCapability (Capability<T> capability, EnumFacing facing);
 	
 	public String getGuiName ();
 }

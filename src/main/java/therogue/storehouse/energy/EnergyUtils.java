@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandler;
 
 public class EnergyUtils {
 	
@@ -36,16 +37,17 @@ public class EnergyUtils {
 		return received;
 	}
 	
-	public static int sendItemEnergy (ItemStack energyItem, int maxRFToGive) {
-		if (energyItem == null || energyItem.isEmpty() || maxRFToGive <= 0) return 0;
-		if (energyItem.hasCapability(CapabilityEnergy.ENERGY, null) && energyItem.getCapability(CapabilityEnergy.ENERGY, null).canReceive())
+	public static void sendItemEnergy (IEnergyStorage energyStorage, IItemHandler inventory, int slot, int maxRFToGive) {
+		maxRFToGive = energyStorage.extractEnergy(maxRFToGive, true);
+		ItemStack energyItem = inventory.extractItem(slot, -1, false);
+		if (energyItem.isEmpty()) return;
+		if (maxRFToGive > 0 && energyItem.hasCapability(CapabilityEnergy.ENERGY, null)
+				&& energyItem.getCapability(CapabilityEnergy.ENERGY, null).canReceive())
 		{
-			return energyItem.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(maxRFToGive, false);
+			int sentRF = energyItem.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(maxRFToGive, false);
+			energyStorage.extractEnergy(sentRF, false);
 		}
-		else
-		{
-			return 0;
-		}
+		inventory.insertItem(slot, energyItem, false);
 	}
 	
 	public static boolean isItemFull (ItemStack energyItem) {

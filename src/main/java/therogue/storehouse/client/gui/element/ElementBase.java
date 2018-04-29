@@ -11,16 +11,13 @@
 package therogue.storehouse.client.gui.element;
 
 import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.inventory.IGuiSupplier;
 
 public abstract class ElementBase {
 	
 	public final GuiBase gui;
-	public final IGuiSupplier stateChanger;
 	
 	public ElementBase (GuiBase gui) {
 		this.gui = gui;
-		this.stateChanger = gui.tile;
 	}
 	
 	public boolean isVisible () {

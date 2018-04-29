@@ -23,8 +23,8 @@ public class FluidTankInventory implements IRecipeInventory {
 	}
 	
 	@Override
-	public IRecipeWrapper getComponent (int slot) {
-		if (slot == 0) return new FluidStackWrapper(compose.getFluid());
+	public IRecipeWrapper getComponent (int slot, boolean simulate) {
+		if (slot == 0) return new FluidStackWrapper(compose.drain(compose.getFluidAmount(), simulate));
 		return IRecipeWrapper.NOTHING;
 	}
 	

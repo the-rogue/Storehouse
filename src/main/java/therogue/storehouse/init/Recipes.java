@@ -4,7 +4,6 @@ package therogue.storehouse.init;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineRecipe;
 import therogue.storehouse.crafting.RecipeHelper;
 import therogue.storehouse.crafting.wrapper.ItemStackComponent;
@@ -13,6 +12,9 @@ import therogue.storehouse.init.grouped.Materials;
 import therogue.storehouse.init.grouped.Ores;
 import therogue.storehouse.init.grouped.Resources;
 import therogue.storehouse.tile.machine.TileCarbonCompressor;
+import therogue.storehouse.tile.machine.TileCombustionGenerator;
+import therogue.storehouse.tile.machine.TileLiquidGenerator;
+import therogue.storehouse.tile.machine.TilePotionBrewer;
 
 public class Recipes {
 	
@@ -36,7 +38,10 @@ public class Recipes {
 		RecipeHelper.registerThermalPressStampRecipe(160, Materials.TIN_PLATE.createStack(), new ItemStackComponent(Resources.TIN_INGOT.createStack()), new ItemStackRemainComponent(Materials.PLATE_TOOL.createStack()));
 		RecipeHelper.registerThermalPressStampRecipe(160, Materials.STEEL_PLATE.createStack(), new ItemStackComponent(Resources.STEEL_INGOT.createStack()), new ItemStackRemainComponent(Materials.PLATE_TOOL.createStack()));
 		InitBurner();
-		MachineCraftingHandler.register(TileCarbonCompressor.class, new MachineRecipe(1, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(Materials.CARBON.createStack(16))));
+		MachineRecipe.create(TileCarbonCompressor.class, 1, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(Materials.CARBON.createStack(16)));
+		TileCombustionGenerator.CombustionRecipe.registerRecipes();
+		TileLiquidGenerator.LiquidRecipe.registerRecipes();
+		TilePotionBrewer.PotionRecipe.registerRecipes();
 	}
 	
 	private static void InitBurner () {

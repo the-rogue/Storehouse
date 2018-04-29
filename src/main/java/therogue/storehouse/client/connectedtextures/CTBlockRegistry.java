@@ -2,12 +2,17 @@
 package therogue.storehouse.client.connectedtextures;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.connectedtextures.ConnectionState.ConnectedTexturePair;
 import therogue.storehouse.util.LOG;
 
@@ -16,6 +21,22 @@ public enum CTBlockRegistry {
 	
 	private final Map<ResourceLocation, IConnectedTextureLogic> modellocations = new HashMap<ResourceLocation, IConnectedTextureLogic>();
 	private final Map<ResourceLocation, IConnectedTextureLogic> textureLocations = new HashMap<ResourceLocation, IConnectedTextureLogic>();
+	
+	public void registerS (Block block, String... locations) {
+		register(block, Storehouse.MOD_ID, locations);
+	}
+	
+	public void register (Block block, String domain, String... locations) {
+		register(new DefaultLogic(block, domain, locations));
+	}
+	
+	public void register (Block block, ResourceLocation... locations) {
+		register(new DefaultLogic(block, locations));
+	}
+	
+	public void register (Block block, List<ResourceLocation> locations) {
+		register(new DefaultLogic(block, locations));
+	}
 	
 	public void register (IConnectedTextureLogic theBlock) {
 		modellocations.put(theBlock.getModelLocation(), theBlock);
@@ -69,6 +90,35 @@ public enum CTBlockRegistry {
 		
 		public NoConnectedTextureRegistration (String texture) {
 			super(texture);
+		}
+	}
+	
+	public static class DefaultLogic implements IConnectedTextureLogic {
+		
+		private final ResourceLocation blockModelLocation;
+		private final List<ResourceLocation> textureLocations;
+		
+		public DefaultLogic (Block block, String domain, String... locations) {
+			this(block, Lists.newArrayList(locations).stream().map(s -> new ResourceLocation(domain, s)).collect(Collectors.toList()));
+		}
+		
+		public DefaultLogic (Block block, ResourceLocation... locations) {
+			this(block, Lists.newArrayList(locations));
+		}
+		
+		public DefaultLogic (Block block, List<ResourceLocation> locations) {
+			blockModelLocation = block.getRegistryName();
+			textureLocations = locations;
+		}
+		
+		@Override
+		public ResourceLocation getModelLocation () {
+			return blockModelLocation;
+		}
+		
+		@Override
+		public List<ResourceLocation> getTextures () {
+			return textureLocations;// "blocks/machine/generator/solar/advanced"
 		}
 	}
 }

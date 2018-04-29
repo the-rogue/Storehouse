@@ -52,38 +52,38 @@ public class RecipeHelper {
 	
 	// ----------------Storehouse Recipes----------------------
 	public static void registerCrystaliserRecipe (int timetaken, ItemStack output, ItemStack input) {
-		MachineCraftingHandler.register(TileCrystaliser.class, new MachineRecipe(timetaken, new ItemStackComponent(output), new ItemStackComponent(input), new FluidStackComponent(FluidRegistry.WATER)));
+		MachineRecipe.create(TileCrystaliser.class, timetaken, new ItemStackComponent(output), new ItemStackComponent(input), new FluidStackComponent(FluidRegistry.WATER));
 	}
 	
 	public static void registerAlloyFurnaceRecipe (int timetaken, ItemStack output, ItemStack... inputs) {
-		MachineCraftingHandler.register(TileAlloyFurnace.class, new MachineRecipe(timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs)));
+		MachineRecipe.create(TileAlloyFurnace.class, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs));
 	}
 	
 	public static void registerForgeRecipe (ItemStack output, ItemStack input) {
-		MachineCraftingHandler.register(TileForge.class, new MachineRecipe(0, new ItemStackComponent(output), new ItemStackComponent(input)));
+		MachineRecipe.create(TileForge.class, 0, new ItemStackComponent(output), new ItemStackComponent(input));
 	}
 	
 	public static void registerThermalPressStampRecipe (int timetaken, ItemStack output, ItemStack... inputs) {
-		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.STAMP.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs)));
+		MachineRecipe.create(TileThermalPress.class, TileThermalPress.Mode.STAMP.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs));
 	}
 	
 	public static void registerThermalPressStampRecipe (int timetaken, ItemStack output, ItemStackComponent... inputs) {
-		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.STAMP.modeTest, timetaken, new ItemStackComponent(output), inputs));
+		MachineRecipe.create(TileThermalPress.class, TileThermalPress.Mode.STAMP.modeTest, timetaken, new ItemStackComponent(output), inputs);
 	}
 	
 	public static void registerThermalPressPressRecipe (int timetaken, ItemStack output, ItemStack... inputs) {
-		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.PRESS.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs)));
+		MachineRecipe.create(TileThermalPress.class, TileThermalPress.Mode.PRESS.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs));
 	}
 	
 	public static void registerThermalPressJoinRecipe (int timetaken, ItemStack output, ItemStack... inputs) {
-		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.JOIN.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs)));
+		MachineRecipe.create(TileThermalPress.class, TileThermalPress.Mode.JOIN.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs));
 	}
 	
 	public static void registerThermalPressHighPressureRecipe (int timetaken, ItemStack output, ItemStack... inputs) {
-		MachineCraftingHandler.register(TileThermalPress.class, new MachineRecipe(TileThermalPress.Mode.HIGH_PRESSURE.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs)));
+		MachineRecipe.create(TileThermalPress.class, TileThermalPress.Mode.HIGH_PRESSURE.modeTest, timetaken, new ItemStackComponent(output), ItemStackComponent.convert(inputs));
 	}
 	
 	public static void registerBurnerRecipe (int timetaken, ItemStack output, String oreName, int amount) {
-		MachineCraftingHandler.register(TileBurner.class, new MachineRecipe(timetaken, new ItemStackComponent(output), new ItemOreNameComponent(oreName, amount)));
+		MachineRecipe.create(TileBurner.class, timetaken, new ItemStackComponent(output), new ItemOreNameComponent(oreName, amount));
 	}
 }

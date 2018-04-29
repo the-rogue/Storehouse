@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.energy.EnergyUtils;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModMultiBlocks;
 import therogue.storehouse.inventory.InventoryManager;
@@ -24,38 +23,32 @@ import therogue.storehouse.tile.TileBaseGenerator;
 
 public class TileSolarGenerator extends TileBaseGenerator {
 	
-	public static final int[] RFPerTick = { 5, 40, 1200 };
+	public static final int[] RFPerTicks = { 5, 40, 1200 };
+	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.solar_generator_basic, ModBlocks.solar_generator_advanced, ModBlocks.solar_generator_ender };
 	
 	public TileSolarGenerator (MachineTier tier) {
-		super(BLOCKS[tier.ordinal()], tier, RFPerTick[tier.ordinal()]);
-		inventory = new InventoryManager(this, 2, new Integer[] { 0 }, new Integer[] { 1 }) {
+		super(BLOCKS[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
+		this.setInventory(new InventoryManager(this, 2, new Integer[] { 0 }, new Integer[] { 1 }) {
 			
 			@Override
 			public boolean isItemValidForSlotChecks (int index, ItemStack stack) {
 				if ((index == 0 || index == 1) && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return true;
 				return false;
 			}
-		};
+		});
+		FIELDDATA.addField( () -> BlockUtils.canBlockSeeSky(this.pos, this.world)
+				&& (this.world.getWorldInfo().getWorldTime() % 24000) < 12000 ? 1 : 0);// Is Running?
 	}
 	
-	// -------------------------Customisable Generator Methods-------------------------------------------
+	// -------------------------ITickable-----------------------------------------------------------------
 	@Override
-	public boolean isRunning () {
-		return BlockUtils.canBlockSeeSky(this.pos, this.world) && (this.world.getWorldInfo().getWorldTime() % 24000) < 12000;
-	}
-	
-	@Override
-	protected void tick () {
-		this.sendEnergyToItems(0);
-		if (EnergyUtils.isItemFull(inventory.getStackInSlot(0)))
+	public void update () {
+		if (BlockUtils.canBlockSeeSky(this.pos, this.world) && (this.world.getWorldInfo().getWorldTime() % 24000) < 12000)
 		{
-			inventory.pushItems(0, 1);
+			energyStorage.modifyEnergyStored(super.RFPerTick);
 		}
-	}
-	
-	@Override
-	protected void doRunTick () {
+		super.update();
 	}
 	
 	// ----------------------IMultiBlockController-----------------------------------------------------------------

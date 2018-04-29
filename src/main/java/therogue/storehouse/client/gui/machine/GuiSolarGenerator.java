@@ -10,6 +10,8 @@
 
 package therogue.storehouse.client.gui.machine;
 
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.TierIcons;
 import therogue.storehouse.client.gui.element.ElementActiveIcon;
@@ -17,16 +19,20 @@ import therogue.storehouse.client.gui.element.ElementEnergyBar;
 import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.tile.IDataHandler;
+import therogue.storehouse.tile.ModuleContext;
+import therogue.storehouse.tile.TileData.CapabilityDataHandler;
 import therogue.storehouse.tile.machine.TileSolarGenerator;
-import therogue.storehouse.util.GeneralUtils;
 
 public class GuiSolarGenerator extends GuiBase {
 	
 	public GuiSolarGenerator (ContainerBase inventory, TileSolarGenerator linked) {
-		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory, linked);
-		elements.add(new ElementActiveIcon(this, 90, 23, TierIcons.SolarGenOn.getLocation(linked.getField(1)), 4));
-		elements.add(new ProgressHandler(this, 5, 6, new ElementVerticalProgressBar(33, 35, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
-		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
+		super(linked.tier.guiLocation, inventory, linked);
+		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
+		IDataHandler data = linked.getCapability(CapabilityDataHandler.DATAHANDLER, null, ModuleContext.GUI);
+		int tier = data.getField(0);
+		elements.add(new ElementActiveIcon(this, 90, 23, TierIcons.SolarGenOn.getLocation(tier), () -> data.getField(3)));
+		elements.add(new ProgressHandler(this, () -> data.getField(1), () -> data.getField(2), new ElementVerticalProgressBar(33, 35, TierIcons.EnergyIndicator.getLocation(tier))));
+		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(tier))));
 	}
 }

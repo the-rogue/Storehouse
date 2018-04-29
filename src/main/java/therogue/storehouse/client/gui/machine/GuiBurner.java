@@ -10,6 +10,8 @@
 
 package therogue.storehouse.client.gui.machine;
 
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
 import therogue.storehouse.client.gui.Icons;
@@ -19,14 +21,19 @@ import therogue.storehouse.client.gui.element.IProgressBar;
 import therogue.storehouse.client.gui.element.JoinProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.crafting.MachineCraftingHandler.CapabilityCrafter;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileBurner;
 
 public class GuiBurner extends GuiBase {
 	
 	public GuiBurner (ContainerBase inventory, TileBurner linked) {
 		super(NORMAL_TEXTURE, inventory, linked);
-		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
-		elements.add(new ProgressHandler(this, 4, 5, createProgressBar()));
+		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
+		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ProgressHandler(this, () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), createProgressBar()));
 	}
 	
 	private static IProgressBar createProgressBar () {

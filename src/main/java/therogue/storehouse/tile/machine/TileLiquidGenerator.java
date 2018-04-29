@@ -10,32 +10,44 @@
 
 package therogue.storehouse.tile.machine;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.energy.EnergyUtils;
+import therogue.storehouse.crafting.ICrafter;
+import therogue.storehouse.crafting.IMachineRecipe;
+import therogue.storehouse.crafting.MachineCraftingHandler;
+import therogue.storehouse.crafting.inventory.EnergyInventory;
+import therogue.storehouse.crafting.inventory.FluidTankInventory;
+import therogue.storehouse.crafting.inventory.IRecipeInventory;
+import therogue.storehouse.crafting.wrapper.FluidStackWrapper;
+import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
+import therogue.storehouse.energy.TileEnergyStorage;
+import therogue.storehouse.fluid.TileFluidTank;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure;
-import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.TileBaseGenerator;
+import therogue.storehouse.util.GeneralUtils;
 import therogue.storehouse.util.ItemStackUtils;
 
-public class TileLiquidGenerator extends TileBaseGenerator {
+public class TileLiquidGenerator extends TileBaseGenerator implements ICrafter {
 	
-	public static final int[] RFPerTick = { 20, 160, 4800 };
+	public static final int[] RFPerTicks = { 20, 160, 4800 };
+	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.liquid_generator_basic, ModBlocks.liquid_generator_advanced, ModBlocks.liquid_generator_ender };
-	private int generatorburntime = 0;
-	private int maxruntime = 0;
-	protected FluidTank tank = new FluidTank(10000) {
+	protected final MachineCraftingHandler<TileLiquidGenerator>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileLiquidGenerator.class).newCrafter(this);
+	protected TileFluidTank tank = new TileFluidTank(10000) {
 		
 		@Override
 		public boolean canFillFluidType (FluidStack fluid) {
@@ -45,8 +57,10 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 	};
 	
 	public TileLiquidGenerator (MachineTier tier) {
-		super(BLOCKS[tier.ordinal()], tier, RFPerTick[tier.ordinal()]);
-		inventory = new InventoryManager(this, 4, new Integer[] { 0, 2 }, new Integer[] { 1, 3 }) {
+		super(BLOCKS[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
+		modules.add(theCrafter);
+		modules.add(tank);
+		this.setInventory(new InventoryManager(this, 4, new Integer[] { 0, 2 }, new Integer[] { 1, 3 }) {
 			
 			@Override
 			public boolean isItemValidForSlotChecks (int index, ItemStack stack) {
@@ -54,119 +68,52 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 				if ((index == 2 || index == 3) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) return true;
 				return false;
 			}
-		};
+		});
 		tank.setTileEntity(this);
 		tank.setCanDrain(false);
 	}
 	
 	// -------------------------Customisable Generator Methods-------------------------------------------
 	@Override
-	public boolean isRunning () {
-		return generatorburntime > 0;
+	public Set<Integer> getOrderMattersSlots () {
+		return Sets.newHashSet();
 	}
 	
 	@Override
-	protected void doRunTick () {
-		--generatorburntime;
+	public IRecipeInventory getCraftingInventory () {
+		return new FluidTankInventory(tank);
 	}
 	
 	@Override
-	protected void tick () {
-		this.sendEnergyToItems(0);
-		if (EnergyUtils.isItemFull(inventory.getStackInSlot(0)))
+	public IRecipeInventory getOutputInventory () {
+		return new EnergyInventory(energyStorage);
+	}
+	
+	@Override
+	public void update () {
+		super.update();
+		if (GeneralUtils.isServerSide(world))
 		{
-			inventory.pushItems(0, 1);
-		}
-		if (!inventory.getStackInSlot(2).isEmpty())
-		{
-			ItemStack tankItem = inventory.getStackInSlot(2);
-			ItemStack outputSlot = inventory.getStackInSlot(3);
-			ItemStack result = FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, false).result;
-			if (ItemStackUtils.areStacksMergableWithLimit(inventory.getSlotLimit(3), result, outputSlot))
+			IItemHandler internalView = this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL);
+			if (!internalView.getStackInSlot(2).isEmpty())
 			{
-				inventory.setStackInSlot(2, ItemStack.EMPTY);
-				inventory.setStackInSlot(3, ItemStackUtils.mergeStacks(inventory.getSlotLimit(3), true, outputSlot, FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, true).result));
-			}
-		}
-		if (!isRunning())
-		{
-			FluidStack burnable = tank.getFluid();
-			if (burnable != null && burnable.amount >= 100)
-			{
-				int burntime = (int) Math.ceil((burnable.getFluid().getTemperature(new FluidStack(burnable.getFluid(), 100, burnable.tag)) * RFPerTick[1] * (this.tier.ordinal() == 0 ? 1 : 2 * this.tier.ordinal())) / super.RFPerTick);
-				if (burntime * super.RFPerTick <= energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored())
+				ItemStack tankItem = internalView.extractItem(2, -1, true);
+				ItemStack outputSlot = internalView.getStackInSlot(3);
+				ItemStack result = FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity() - tank.getFluidAmount(), null, false).result;
+				if (ItemStackUtils.areStacksMergableWithLimit(internalView.getSlotLimit(3), result, outputSlot))
 				{
-					generatorburntime += burntime;
-					maxruntime = burntime;
-					tank.drainInternal(100, true);
-					this.markDirty();
+					internalView.extractItem(2, -1, false);
+					internalView.insertItem(3, ItemStackUtils.mergeStacks(internalView.getSlotLimit(3), true, internalView.extractItem(3, -1, false), FluidUtil.tryEmptyContainer(tankItem, tank, tank.getCapacity()
+							- tank.getFluidAmount(), null, true).result), false);
 				}
 			}
 		}
-		if (generatorburntime == 0)
-		{
-			maxruntime = 0;
-		}
-	}
-	
-	@Override
-	public int runtimeLeft () {
-		return generatorburntime;
-	}
-	
-	@Override
-	public int maxruntime () {
-		return maxruntime;
 	}
 	
 	// ----------------------IMultiBlockController-----------------------------------------------------------------
 	@Override
 	public MultiBlockStructure getStructure () {
 		return null;
-	}
-	// -------------------------Standard TE methods-----------------------------------
-	
-	@Override
-	public GuiUpdateTEPacket getGUIPacket () {
-		GuiUpdateTEPacket packet = super.getGUIPacket();
-		packet.getNbt().setInteger("BurnTime", generatorburntime);
-		packet.getNbt().setInteger("MaxRuntime", maxruntime);
-		tank.writeToNBT(packet.getNbt());
-		return packet;
-	}
-	
-	@Override
-	public void processGUIPacket (GuiUpdateTEPacket packet) {
-		super.processGUIPacket(packet);
-		generatorburntime = packet.getNbt().getInteger("BurnTime");
-		maxruntime = packet.getNbt().getInteger("MaxRuntime");
-		tank.readFromNBT(packet.getNbt());
-	}
-	
-	@Override
-	public NBTTagCompound writeToNBT (NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		tank.writeToNBT(nbt);
-		return nbt;
-	}
-	
-	@Override
-	public void readFromNBT (NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		tank.readFromNBT(nbt);
-	}
-	
-	@Override
-	public boolean hasAdditionalCapability (Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return true;
-		return super.hasCapability(capability, facing);
-	}
-	
-	@SuppressWarnings ("unchecked")
-	@Override
-	public <T> T getAdditionalCapability (Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return (T) tank;
-		return super.getCapability(capability, facing);
 	}
 	
 	// ------------------------PlaceHolder Classes------------------------------------------------------------------
@@ -188,6 +135,51 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 		
 		public TileLiquidGeneratorEnder () {
 			super(MachineTier.ender);
+		}
+	}
+	
+	public static enum LiquidRecipe implements IMachineRecipe<TileLiquidGenerator> {
+		INSTANCE;
+		
+		public static void registerRecipes () {
+			MachineCraftingHandler.register(TileLiquidGenerator.class, INSTANCE);
+		}
+		
+		@Override
+		public int timeTaken (TileLiquidGenerator machine) {
+			return machine.tank.getFluid().getFluid().getTemperature(machine.tank.getFluid().copy()) / machine.timeModifier;
+		}
+		
+		@Override
+		public boolean itemValidForRecipe (TileLiquidGenerator tile, int index, IRecipeWrapper stack) {
+			if (stack instanceof FluidStackWrapper)
+			{
+				FluidStack fluidStack = ((FluidStackWrapper) stack).getStack();
+				if (fluidStack.getFluid().getTemperature(fluidStack) >= 600) return true;
+			}
+			return false;
+		}
+		
+		@Override
+		public boolean matches (TileLiquidGenerator machine) {
+			FluidStack fluidStack = machine.tank.getFluid();
+			if (fluidStack.getFluid().getTemperature(fluidStack) >= 600 && fluidStack.amount > 100) return true;
+			return false;
+		}
+		
+		@Override
+		public Result begin (TileLiquidGenerator machine) {
+			if (!matches(machine)) return Result.RESET;
+			machine.tank.drainInternal(-100, true);
+			return Result.CONTINUE;
+		}
+		
+		@Override
+		public Result doTick (TileLiquidGenerator machine) {
+			TileEnergyStorage energy = machine.energyStorage;
+			if (energy.getEnergyStored() > machine.getOutputInventory().getComponentSlotLimit(0) + machine.RFPerTick) return Result.PAUSE;
+			energy.modifyEnergyStored(machine.RFPerTick);
+			return Result.CONTINUE;
 		}
 	}
 }

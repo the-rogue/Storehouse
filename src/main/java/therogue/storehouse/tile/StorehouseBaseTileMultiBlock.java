@@ -15,6 +15,7 @@ import java.util.Map;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +32,8 @@ import therogue.storehouse.multiblock.tile.IMultiBlockController;
 import therogue.storehouse.multiblock.tile.InWorldUtils;
 import therogue.storehouse.multiblock.tile.InWorldUtils.MultiBlockFormationResult;
 import therogue.storehouse.multiblock.tile.WorldStates;
+import therogue.storehouse.network.CGuiUpdateTEPacket;
+import therogue.storehouse.network.StorehousePacketHandler;
 
 public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine implements IMultiBlockController {
 	
@@ -49,7 +52,8 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	 * Forms the Multiblock
 	 */
 	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+			float hitY, float hitZ) {
 		if (activationLock) return false;
 		if (super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ)) return true;
 		if (!world.isRemote && !isFormed)
@@ -61,8 +65,9 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 				components = result.components;
 				multiblockCapabilites = InWorldUtils.getWorldMultiblockCapabilities(components);
 				player.sendStatusMessage(new TextComponentTranslation("chatmessage.storehouse:multiblock_formed"), false);
+				StorehousePacketHandler.INSTANCE.sendTo(getCGUIPacket(), (EntityPlayerMP) player);
 			}
-			return isFormed;
+			return true;
 		}
 		if (!pos.equals(this.pos))
 		{
@@ -88,8 +93,24 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 			isFormed = false;
 			components = null;
 			multiblockCapabilites = null;
+			StorehousePacketHandler.INSTANCE.sendToAll(getCGUIPacket());
 		}
 		super.breakBlock(worldIn, at, state);
+	}
+	
+	/**
+	 * Called when this is first added to the world (by {@link World#addTileEntity(TileEntity)}).
+	 * Override instead of adding {@code if (firstTick)} stuff in update.
+	 */
+	@Override
+	public void onLoad () {
+		super.onLoad();
+		if (!world.isRemote) StorehousePacketHandler.INSTANCE.sendToAll(getCGUIPacket());
+	}
+	
+	public boolean canOpenGui (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+			float hitY, float hitZ) {
+		return isFormed;
 	}
 	
 	/**
@@ -104,7 +125,7 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	 * Internal method for IMultiBlockController
 	 */
 	@Override
-	public TileEntity getTile () {
+	public StorehouseBaseTileEntity getTile () {
 		return this;
 	}
 	
@@ -130,43 +151,46 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 		if (isFormed) components = WorldStates.readFromNBT((NBTTagList) nbt.getTag("PositionStateChangers"));
 	}
 	
+	public CGuiUpdateTEPacket getCGUIPacket () {
+		CGuiUpdateTEPacket packet = super.getCGUIPacket();
+		packet.getNbt().setBoolean("formed", isFormed);
+		return packet;
+	}
+	
+	public void processCGUIPacket (CGuiUpdateTEPacket packet) {
+		super.processCGUIPacket(packet);
+		isFormed = packet.getNbt().getBoolean("formed");
+	}
+	
 	@Override
 	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-		if (isFormed) return hasCapability(this.pos, capability, facing);
-		return false;
-	}
-	
-	public boolean hasAdditionalCapability (Capability<?> capability, EnumFacing facing) {
-		return false;
+		return hasCapability(this.pos, capability, facing, ModuleContext.SIDE);
 	}
 	
 	@Override
-	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
-		if (isFormed) return getCapability(this.pos, capability, facing);
-		return null;
-	}
-	
-	public <T> T getAdditionalCapability (Capability<T> capability, EnumFacing facing) {
-		return null;
+	public <T> T getCapability (Capability<T> capability, EnumFacing facing, ModuleContext context) {
+		return getCapability(this.pos, capability, facing, context);
 	}
 	
 	@Override
-	public boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing, ModuleContext context) {
 		if (!isFormed) return false;
+		if (context != ModuleContext.SIDE && context != ModuleContext.OTHER) return super.hasCapability(capability, facing);
 		if (multiblockCapabilites == null)
 		{
 			multiblockCapabilites = InWorldUtils.getWorldMultiblockCapabilities(components);
 		}
-		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).containsKey(capability)) return super.hasCapability(capability, facing) || hasAdditionalCapability(capability, facing);
+		if (multiblockCapabilites.containsKey(pos) && multiblockCapabilites.get(pos).containsKey(capability))
+			return super.hasCapability(capability, facing);
 		return false;
 	}
 	
 	@Override
-	public <T> T getCapability (BlockPos pos, Capability<T> capability, EnumFacing facing) {
-		if (!hasCapability(pos, capability, facing)) return null;
+	public <T> T getCapability (BlockPos pos, Capability<T> capability, EnumFacing facing, ModuleContext context) {
+		if (!hasCapability(pos, capability, facing, context)) return null;
+		if (context != ModuleContext.SIDE && context != ModuleContext.OTHER) return super.getCapability(capability, facing, context);
 		@SuppressWarnings ("unchecked")
 		ICapabilityWrapper<T> wrapper = (ICapabilityWrapper<T>) multiblockCapabilites.get(pos).get(capability);
-		T other = getAdditionalCapability(capability, facing);
-		return wrapper.getWrappedCapability(other != null ? other : super.getCapability(capability, facing));
+		return wrapper.getWrappedCapability(super.getCapability(capability, facing, context));
 	}
 }

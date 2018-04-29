@@ -10,6 +10,8 @@
 
 package therogue.storehouse.client.gui.machine;
 
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.TierIcons;
@@ -18,17 +20,26 @@ import therogue.storehouse.client.gui.element.ElementFluidTank;
 import therogue.storehouse.client.gui.element.ElementVerticalProgressBar;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.crafting.MachineCraftingHandler.CapabilityCrafter;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
+import therogue.storehouse.tile.IDataHandler;
 import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.tile.ModuleContext;
+import therogue.storehouse.tile.TileData.CapabilityDataHandler;
 import therogue.storehouse.tile.machine.TileLiquidGenerator;
 import therogue.storehouse.util.GeneralUtils;
 
 public class GuiLiquidGenerator extends GuiBase {
 	
 	public GuiLiquidGenerator (ContainerBase inventory, TileLiquidGenerator linked) {
-		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getField(1)).guiLocation, inventory, linked);
-		elements.add(new ProgressHandler(this, 7, 8, new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(linked.getField(1)))));
-		elements.add(new ProgressHandler(this, 5, 6, new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(linked.getField(1)))));
-		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(linked.getField(1)))));
-		elements.add(new ElementFluidTank(this, TierIcons.FluidTank.getLocation(linked.getField(1)), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
+		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getCapability(CapabilityDataHandler.DATAHANDLER, null, ModuleContext.GUI).getField(0)).guiLocation, inventory, linked);
+		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
+		IDataHandler data = linked.getCapability(CapabilityDataHandler.DATAHANDLER, null, ModuleContext.GUI);
+		int tier = data.getField(0);
+		elements.add(new ProgressHandler(this, () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(tier))));
+		elements.add(new ProgressHandler(this, () -> data.getField(1), () -> data.getField(2), new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(tier))));
+		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(tier))));
+		elements.add(new ElementFluidTank(this, TierIcons.FluidTank.getLocation(tier), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null, ModuleContext.GUI)));
 	}
 }

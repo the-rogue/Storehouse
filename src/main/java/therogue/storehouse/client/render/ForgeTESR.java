@@ -17,13 +17,15 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileForge;
 
 public class ForgeTESR extends TileEntitySpecialRenderer<TileForge> {
 	
 	public void renderTileEntityAt (TileForge te, double x, double y, double z, float partialTicks, int destroyStage) {
-		IItemHandler inventory = te.getInventory();
+		IItemHandler inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.GUI);
 		if (inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty()) return;
 		RenderItem renderitem = Minecraft.getMinecraft().getRenderItem();
 		GlStateManager.pushMatrix();
@@ -32,8 +34,8 @@ public class ForgeTESR extends TileEntitySpecialRenderer<TileForge> {
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.scale(0.25, 0.25, 0.25);
 		RenderHelper.enableStandardItemLighting();
-		ItemStack getstack = inventory.getStackInSlot(0).copy();
-		if (getstack.isEmpty()) getstack = inventory.getStackInSlot(1).copy();
+		ItemStack getstack = inventory.getStackInSlot(0);
+		if (getstack.isEmpty()) getstack = inventory.getStackInSlot(1);
 		if (!getstack.isEmpty())
 		{
 			renderitem.renderItem(getstack, ItemCameraTransforms.TransformType.FIXED);

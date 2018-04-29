@@ -11,124 +11,36 @@
 package therogue.storehouse.tile;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.energy.EnergyStorageAdv;
+import therogue.storehouse.energy.TileEnergyStorage;
 import therogue.storehouse.inventory.IGuiSupplier;
-import therogue.storehouse.inventory.IInventoryCapability;
 import therogue.storehouse.inventory.InventoryManager;
-import therogue.storehouse.network.GuiUpdateTEPacket;
 
-public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements IInventoryCapability, IGuiSupplier {
+public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements IGuiSupplier {
 	
 	protected InventoryManager inventory;
-	protected EnergyStorageAdv energyStorage = new EnergyStorageAdv(8000, 100, 0);
+	protected TileEnergyStorage energyStorage = new TileEnergyStorage(8000, 100, 0);
 	
 	public StorehouseBaseMachine (IStorehouseBaseBlock block) {
 		super(block);
+		modules.add(energyStorage);
 	}
 	
 	// -------------------------Inventory Methods-----------------------------------
-	@Override
-	public IItemHandlerModifiable getInventory () {
-		if (inventory == null) { throw new NullPointerException("inventory is null for machine: " + getName()); }
-		return inventory;
+	protected void setInventory (InventoryManager inventory) {
+		this.inventory = inventory;
+		modules.add(inventory);
 	}
 	
-	@Override
-	public void onInventoryChange () {
-		this.markDirty();
+	protected void setEnergyStorage (TileEnergyStorage energy) {
+		this.modules.remove(energyStorage);
+		this.energyStorage = energy;
+		this.modules.add(energyStorage);
 	}
 	
 	// -------------------------Container/Gui Methods-----------------------------------
-	/**
-	 * Fields Used: #1 - Machine Tier #2 - Energy Stored #3 - Max Energy Storage available
-	 */
-	@Override
-	public int getField (int id) {
-		switch (id)
-		{
-			case 2:
-				return energyStorage.getEnergyStored();
-			case 3:
-				return energyStorage.getMaxEnergyStored();
-			default:
-				return 0;
-		}
-	}
-	
-	@Override
-	public void setField (int id, int value) {
-		switch (id)
-		{
-		}
-	}
-	
-	@Override
-	public int getFieldCount () {
-		return 3;
-	}
-	
 	@Override
 	public String getGuiName () {
 		return block.getUnlocalizedName(ItemStack.EMPTY) + ".name";
-	}
-	
-	@Override
-	public IItemHandler getContainerCapability () {
-		if (inventory == null) { throw new NullPointerException("inventory is null for machine: " + getName()); }
-		return inventory.containerCapability;
-	}
-	
-	// -------------------------Standard TE methods-----------------------------------
-	@Override
-	public GuiUpdateTEPacket getGUIPacket () {
-		GuiUpdateTEPacket packet = super.getGUIPacket();
-		inventory.writeToNBT(packet.getNbt());
-		packet.getNbt().setInteger("EnergyStored", energyStorage.getEnergyStored());
-		return packet;
-	}
-	
-	@Override
-	public void processGUIPacket (GuiUpdateTEPacket packet) {
-		super.processGUIPacket(packet);
-		inventory.readFromNBT(packet.getNbt());
-		energyStorage.setEnergyStored(packet.getNbt().getInteger("EnergyStored"));
-	}
-	
-	@Override
-	public NBTTagCompound writeToNBT (NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		energyStorage.writeToNBT(nbt);
-		inventory.writeToNBT(nbt);
-		return nbt;
-	}
-	
-	@Override
-	public void readFromNBT (NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		energyStorage.readFromNBT(nbt);
-		inventory.readFromNBT(nbt);
-	}
-	
-	@Override
-	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
-		if (capability == CapabilityEnergy.ENERGY) return true;
-		return super.hasCapability(capability, facing);
-	}
-	
-	@SuppressWarnings ("unchecked")
-	@Override
-	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) inventory;
-		if (capability == CapabilityEnergy.ENERGY) return (T) energyStorage;
-		return super.getCapability(capability, facing);
 	}
 }

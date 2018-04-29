@@ -14,7 +14,7 @@ import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 
 public interface IRecipeInventory {
 	
-	public IRecipeWrapper getComponent (int slot);
+	public IRecipeWrapper getComponent (int slot, boolean simulate);
 	
 	public void insertComponent (int slot, IRecipeWrapper component);
 	

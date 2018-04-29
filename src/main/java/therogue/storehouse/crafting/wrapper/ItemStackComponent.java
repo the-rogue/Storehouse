@@ -20,9 +20,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
+import therogue.storehouse.crafting.wrapper.IRecipeComponent.IItemComponent;
 import therogue.storehouse.util.ItemStackUtils;
 
-public class ItemStackComponent implements IRecipeComponent {
+public class ItemStackComponent implements IItemComponent {
 	
 	public static final ItemStackComponent EMPTY = new ItemStackComponent(ItemStack.EMPTY, false, false);
 	protected ItemStack input;
@@ -74,7 +75,9 @@ public class ItemStackComponent implements IRecipeComponent {
 		if (comparison.isUnUsed() || !(comparison instanceof ItemStackWrapper)) return false;
 		for (ItemStack test : getOreDictEntries(input, useOreDict))
 		{
-			if (ItemStackUtils.areStacksEqual(test, ((ItemStackWrapper) comparison).getStack(), useMeta) && ((ItemStackWrapper) comparison).getStack().getCount() >= test.getCount()) return true;
+			if (ItemStackUtils.areStacksEqual(test, ((ItemStackWrapper) comparison).getStack(), useMeta)
+					&& ((ItemStackWrapper) comparison).getStack().getCount() >= test.getCount())
+				return true;
 		}
 		return false;
 	}
@@ -99,6 +102,7 @@ public class ItemStackComponent implements IRecipeComponent {
 		return oreEntries.get(entry);
 	}
 	
+	@Override
 	public ItemStack getInput () {
 		return input.copy();
 	}

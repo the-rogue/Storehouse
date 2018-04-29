@@ -10,6 +10,8 @@
 
 package therogue.storehouse.client.gui.element;
 
+import java.util.function.Supplier;
+
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.util.LOG;
 
@@ -17,14 +19,14 @@ public class ElementMode extends ElementBase {
 	
 	private final ElementBase[] elements;
 	private ElementBase current;
-	public final int modeField;
+	public final Supplier<Integer> modeSupplier;
 	private long lastCheckTime;
 	
-	public ElementMode (GuiBase gui, int modeField, ElementBase... elements) {
+	public ElementMode (GuiBase gui, Supplier<Integer> modeSupplier, ElementBase... elements) {
 		super(gui);
 		this.elements = elements;
 		this.current = elements[0];
-		this.modeField = modeField;
+		this.modeSupplier = modeSupplier;
 	}
 	
 	public boolean isVisible () {
@@ -68,11 +70,13 @@ public class ElementMode extends ElementBase {
 		lastCheckTime = System.currentTimeMillis();
 		try
 		{
-			current = elements[stateChanger.getField(modeField)];
+			current = elements[modeSupplier.get()];
 		}
 		catch (Exception e)
 		{
-			LOG.warn("ElementMode failed with Mode Field: " + modeField + ", Tile Entity: " + stateChanger + ", Exception Message: " + e.getMessage());
+			LOG.warn("ElementMode failed with Mode: " + modeSupplier.get()
+					+ ", Exception Message: "
+					+ e.getMessage());
 		}
 	}
 }

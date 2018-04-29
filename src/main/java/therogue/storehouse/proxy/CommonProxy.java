@@ -18,11 +18,14 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.config.ConfigHandler;
 import therogue.storehouse.container.GuiHandler;
+import therogue.storehouse.crafting.MachineCraftingHandler.CapabilityCrafter;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.init.ModMultiBlocks;
 import therogue.storehouse.init.ModTileEntities;
 import therogue.storehouse.init.Recipes;
+import therogue.storehouse.tile.ClientButton.CapabilityButton;
+import therogue.storehouse.tile.TileData.CapabilityDataHandler;
 import therogue.storehouse.util.LOG;
 import therogue.storehouse.world.StorehouseWorldGen;
 
@@ -35,6 +38,9 @@ public abstract class CommonProxy implements IProxy {
 	public void preInit (FMLPreInitializationEvent event) {
 		LOG.debug("Common Proxy Started PreInitialisation");
 		MinecraftForge.EVENT_BUS.register(EventHandlerCommon.INSTANCE);
+		CapabilityButton.register();
+		CapabilityDataHandler.register();
+		CapabilityCrafter.register();
 		ModItems.preInit();
 		ModBlocks.preInit();
 		ModTileEntities.preInit();

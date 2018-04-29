@@ -77,12 +77,16 @@ public class GuiHelper {
 	 * @param useLeftSide whether or not to draw on the left side of the point, and use xLeft - note that if both useLeftSide and useRightSide are false then both will be treated as true
 	 * @param useRightSide whether or not to draw on the right side of the point, and use xRight - note that if both useLeftSide and useRightSide are false then both will be treated as true
 	 */
-	public static void drawHoveringText (FontRenderer font, List<String> textLines, int xRight, int xLeft, int y, int screenWidth, int screenHeight, int maxTextWidth, int screenAdjusterLeft, int screenAdjusterTop, boolean useLeftSide, boolean useRightSide) {
+	public static void drawHoveringText (FontRenderer font, List<String> textLines, int xRight, int xLeft, int y, int screenWidth, int screenHeight,
+			int maxTextWidth, int screenAdjusterLeft, int screenAdjusterTop, boolean useLeftSide, boolean useRightSide) {
 		textLines = GeneralUtils.copyList(textLines);
 		xRight += screenAdjusterLeft;
 		xLeft += screenAdjusterLeft;
 		y += screenAdjusterTop;
-		if (textLines.isEmpty() || xLeft < 24 && !useRightSide || screenWidth - xRight < 24 && !useLeftSide || xLeft < 24 && screenWidth - xRight < 24) return;
+		if (textLines.isEmpty() || xLeft < 24 && !useRightSide
+				|| screenWidth - xRight < 24 && !useLeftSide
+				|| xLeft < 24 && screenWidth - xRight < 24)
+			return;
 		GlStateManager.disableRescaleNormal();
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableLighting();
@@ -237,7 +241,8 @@ public class GuiHelper {
 	 * @param startBorderColor - the border colour for the top of the box
 	 * @param endBorderColor - the border colour for the bottom of the box
 	 */
-	public static void drawRoundedBorderedBox (int x, int y, int z, int width, int height, int startBackgroundColor, int endBackgroundColor, int startBorderColor, int endBorderColor) {
+	public static void drawRoundedBorderedBox (int x, int y, int z, int width, int height, int startBackgroundColor, int endBackgroundColor,
+			int startBorderColor, int endBorderColor) {
 		GuiUtils.drawGradientRect(z, x - 3, y - 4, x + width + 3, y - 3, startBackgroundColor, endBackgroundColor);
 		GuiUtils.drawGradientRect(z, x - 3, y + height + 3, x + width + 3, y + height + 4, endBackgroundColor, endBackgroundColor);
 		GuiUtils.drawGradientRect(z, x - 3, y - 3, x + width + 3, y + height + 3, startBackgroundColor, endBackgroundColor);
@@ -251,6 +256,7 @@ public class GuiHelper {
 	
 	public static class XYCoords {
 		
+		public static final XYCoords OFF_SCREEN = new XYCoords(Integer.MIN_VALUE, Integer.MIN_VALUE);
 		public final int x;
 		public final int y;
 		
@@ -309,7 +315,8 @@ public class GuiHelper {
 	
 	public static void bindTexture (ElementBase element, TextureAtlasSprite texture) {
 		ResourceLocation location = new ResourceLocation(texture.getIconName());
-		element.gui.mc.getTextureManager().bindTexture(new ResourceLocation(location.getResourceDomain(), "textures/" + location.getResourcePath() + ".png"));
+		element.gui.mc.getTextureManager().bindTexture(new ResourceLocation(location.getResourceDomain(), "textures/" + location.getResourcePath()
+				+ ".png"));
 	}
 	
 	public static @Nonnull TextureAtlasSprite getMissingSprite () {
@@ -344,7 +351,8 @@ public class GuiHelper {
 				BufferBuilder vb = tessellator.getBuffer();
 				vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				vb.pos(drawX, drawY + drawHeight, 0.0D).tex(minU, minV + (maxV - minV) * drawHeight / 16.0F).endVertex();
-				vb.pos(drawX + drawWidth, drawY + drawHeight, 0.0D).tex(minU + (maxU - minU) * drawWidth / 16.0F, minV + (maxV - minV) * drawHeight / 16.0F).endVertex();
+				vb.pos(drawX + drawWidth, drawY + drawHeight, 0.0D).tex(minU + (maxU - minU) * drawWidth / 16.0F, minV
+						+ (maxV - minV) * drawHeight / 16.0F).endVertex();
 				vb.pos(drawX + drawWidth, drawY, 0.0D).tex(minU + (maxU - minU) * drawWidth / 16.0F, minV).endVertex();
 				vb.pos(drawX, drawY, 0.0D).tex(minU, minV).endVertex();
 				tessellator.draw();

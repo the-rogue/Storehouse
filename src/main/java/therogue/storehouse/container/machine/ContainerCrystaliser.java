@@ -11,9 +11,13 @@
 package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.container.SlotItemHandlerFix;
+import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.container.InventorySlot;
+import therogue.storehouse.inventory.IInventoryItemHandler;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 
 public class ContainerCrystaliser extends ContainerBase {
@@ -22,11 +26,12 @@ public class ContainerCrystaliser extends ContainerBase {
 	
 	public ContainerCrystaliser (IInventory playerInv, TileCrystaliser teInv) {
 		super(playerInv, teInv);
-		this.tileCrystaliser = teInv.getContainerCapability();
-		this.addTESlot(new SlotItemHandlerFix(teInv, 2, 141, 17));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 3, 141, 53));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 65, 37));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 65, 37));
+		this.tileCrystaliser = teInv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.GUI);
+		IInventoryItemHandler inventory = teInv.getCapability(GuiItemCapability.CAP, null, ModuleContext.GUI);
+		this.addTESlot(new InventorySlot(inventory, 2, 141, 17));
+		this.addTESlot(new InventorySlot(inventory, 3, 141, 53));
+		this.addTESlot(new InventorySlot(inventory, 0, 65, 37));
+		this.addTESlot(new InventorySlot(inventory, 1, 65, 37));
 		tileEntitySlots.get(3).slotNumber = tileEntitySlots.get(2).slotNumber;
 		update();
 	}

@@ -15,15 +15,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class ItemWrapper implements ICapabilityWrapper<IItemHandler> {
+public class ItemCapabilityWrapper implements ICapabilityWrapper<IItemHandler> {
 	
-	public static final ItemWrapper INSERT = new ItemWrapper(true, false);
-	public static final ItemWrapper EXTRACT = new ItemWrapper(false, true);
-	public static final ItemWrapper BOTH = new ItemWrapper(true, true);
+	public static final ItemCapabilityWrapper INSERT = new ItemCapabilityWrapper(true, false);
+	public static final ItemCapabilityWrapper EXTRACT = new ItemCapabilityWrapper(false, true);
+	public static final ItemCapabilityWrapper BOTH = new ItemCapabilityWrapper(true, true);
 	public final boolean canInsert;
 	public final boolean canExtract;
 	
-	public ItemWrapper (boolean canInsert, boolean canExtract) {
+	public ItemCapabilityWrapper (boolean canInsert, boolean canExtract) {
 		this.canInsert = canInsert;
 		this.canExtract = canExtract;
 	}

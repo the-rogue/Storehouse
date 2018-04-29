@@ -11,6 +11,7 @@
 package therogue.storehouse.client.gui.element;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
@@ -21,23 +22,23 @@ public class ElementButton extends ElementBase {
 	public final String commonToolTip;
 	public final IconDefinition[] innerIcons;
 	public final String[] toolTips;
-	public final int modeField;
-	public final int numModes;
+	public final Supplier<Integer> modeSupplier;
+	public final Runnable onPress;
 	private boolean pressed = false;
 	
-	public ElementButton (GuiBase gui, IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, int modeField, int numModes) {
+	public ElementButton (GuiBase gui, IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, Supplier<Integer> modeSupplier, Runnable onPress) {
 		super(gui);
 		this.mainIcon = mainIcon;
 		this.commonToolTip = commonToolTip;
 		this.innerIcons = innerIcons;
 		this.toolTips = toolTips;
-		this.modeField = modeField;
-		this.numModes = numModes;
+		this.modeSupplier = modeSupplier;
+		this.onPress = onPress;
 	}
 	
 	@Override
 	public void drawElement (int mouseX, int mouseY) {
-		int currentMode = stateChanger.getField(modeField);
+		int currentMode = modeSupplier.get();
 		if (!pressed)
 		{
 			GuiHelper.bindTexture(this, mainIcon.icon);
@@ -58,19 +59,11 @@ public class ElementButton extends ElementBase {
 	
 	@Override
 	public void onClick (int mouseX, int mouseY, int mouseButton) {
-		int currentMode = stateChanger.getField(modeField);
 		if (this.pressed) return;
 		if (gui.isPointInGuiRegion(mainIcon.x, mainIcon.y, mainIcon.width, mainIcon.height, mouseX, mouseY))
 		{
 			this.pressed = true;
-			if (currentMode >= numModes - 1)
-			{
-				stateChanger.setField(modeField, 0);
-			}
-			else
-			{
-				stateChanger.setField(modeField, currentMode + 1);
-			}
+			this.onPress.run();
 		}
 	}
 	
@@ -83,10 +76,11 @@ public class ElementButton extends ElementBase {
 	public void drawTopLayer (int mouseX, int mouseY) {
 		if (gui.isPointInGuiRegion(mainIcon.x, mainIcon.y, mainIcon.width, mainIcon.height, mouseX, mouseY))
 		{
-			int currentMode = stateChanger.getField(modeField);
+			int currentMode = modeSupplier.get();
 			if (currentMode < toolTips.length && toolTips[currentMode] != null && !toolTips[currentMode].isEmpty())
 			{
-				GuiHelper.drawHoveringText(gui.getFontRenderer(), Arrays.asList(new String[] { commonToolTip, toolTips[currentMode] }), mainIcon.x + mainIcon.width, 0, mainIcon.y + mainIcon.height, gui.width, gui.height, -1, gui.getGuiLeft(), gui.getGuiTop(), false, true);
+				GuiHelper.drawHoveringText(gui.getFontRenderer(), Arrays.asList(new String[] { commonToolTip, toolTips[currentMode] }), mainIcon.x
+						+ mainIcon.width, 0, mainIcon.y + mainIcon.height, gui.width, gui.height, -1, gui.getGuiLeft(), gui.getGuiTop(), false, true);
 			}
 		}
 	}

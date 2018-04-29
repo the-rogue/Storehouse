@@ -13,6 +13,8 @@ package therogue.storehouse.client.gui.machine;
 import java.awt.Color;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -24,22 +26,28 @@ import therogue.storehouse.client.gui.element.ElementFadingProgressBar;
 import therogue.storehouse.client.gui.element.ElementFluidTank;
 import therogue.storehouse.client.gui.element.ProgressHandler;
 import therogue.storehouse.container.ContainerBase;
+import therogue.storehouse.crafting.MachineCraftingHandler.CapabilityCrafter;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 
 public class GuiCrystaliser extends GuiBase {
 	
 	public GuiCrystaliser (ContainerBase inventory, TileCrystaliser linked) {
 		super(NORMAL_TEXTURE, inventory, linked);
-		elements.add(new ProgressHandler(this, 2, 3, new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
-		elements.add(new ElementFluidTank(this, Icons.FluidTank.getLocation(), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
-		elements.add(new ProgressHandler(this, 4, 5, new ElementFadingProgressBar(46, 18, 54, 54, new Color(15, 26, 95)) {
+		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
+		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ElementFluidTank(this, Icons.FluidTank.getLocation(), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null, ModuleContext.GUI)));
+		elements.add(new ProgressHandler(this, () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), new ElementFadingProgressBar(46, 18, 54, 54, new Color(15, 26, 95)) {
 			
 			@Override
 			public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
 				super.drawBottomLayer(gui, mouseX, mouseY, progress);
 				if (progress != 0.0F)
 				{
-					GlStateManager.color((FluidRegistry.WATER.getColor() >> 16 & 255) / 255, (FluidRegistry.WATER.getColor() >> 8 & 255) / 255, (FluidRegistry.WATER.getColor() & 255) / 255);
+					GlStateManager.color((FluidRegistry.WATER.getColor() >> 16 & 255) / 255, (FluidRegistry.WATER.getColor() >> 8 & 255)
+							/ 255, (FluidRegistry.WATER.getColor() & 255) / 255);
 					GuiHelper.drawFluid(new FluidStack(FluidRegistry.WATER, 1000), x, y, width, height);
 					GlStateManager.color(becomeColour.getRed() / 255.0F, becomeColour.getGreen() / 255.0F, becomeColour.getBlue() / 255.0F, progress);
 					GuiHelper.drawFluid(new FluidStack(FluidRegistry.WATER, 1000), x, y, width, height);

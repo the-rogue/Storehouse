@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import therogue.storehouse.tile.ModuleContext;
 
 public class BasicMultiBlockTile extends TileEntity implements IMultiBlockTile {
 	
@@ -51,12 +52,12 @@ public class BasicMultiBlockTile extends TileEntity implements IMultiBlockTile {
 	
 	@Override
 	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-		return getController().hasCapability(this.pos, capability, facing);
+		return getController().hasCapability(this.pos, capability, facing, ModuleContext.SIDE);
 	}
 	
 	@Override
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
-		return getController().getCapability(this.pos, capability, facing);
+		return getController().getCapability(this.pos, capability, facing, ModuleContext.SIDE);
 	}
 	
 	public class NoControllerException extends RuntimeException {

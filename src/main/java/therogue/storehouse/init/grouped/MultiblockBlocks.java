@@ -11,22 +11,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseCapabilityVariantBlock;
-import therogue.storehouse.capabilitywrapper.EnergyWrapper;
-import therogue.storehouse.capabilitywrapper.FluidWrapper;
+import therogue.storehouse.capabilitywrapper.EnergyCapabilityWrapper;
+import therogue.storehouse.capabilitywrapper.FluidCapabilityWrapper;
 import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
-import therogue.storehouse.capabilitywrapper.ItemWrapper;
+import therogue.storehouse.capabilitywrapper.ItemCapabilityWrapper;
 
 public enum MultiblockBlocks {
-	EJECTOR (ItemWrapper.EXTRACT),
-	CHUTE (ItemWrapper.INSERT),
-	ITEM_IO (ItemWrapper.BOTH),
-	TAP (FluidWrapper.DRAIN),
-	TANK (FluidWrapper.FILL),
-	FLUID_IO (FluidWrapper.BOTH),
-	ENERGY_TAP (EnergyWrapper.EXTRACT),
-	ENERGY_CONNECTOR (EnergyWrapper.RECIEVE),
-	ADVANCED_TAP (ItemWrapper.BOTH, FluidWrapper.BOTH, EnergyWrapper.EXTRACT),
-	ADVANCED_CONNECTOR (ItemWrapper.BOTH, FluidWrapper.BOTH, EnergyWrapper.RECIEVE);
+	EJECTOR (ItemCapabilityWrapper.EXTRACT),
+	CHUTE (ItemCapabilityWrapper.INSERT),
+	ITEM_IO (ItemCapabilityWrapper.BOTH),
+	TAP (FluidCapabilityWrapper.DRAIN),
+	TANK (FluidCapabilityWrapper.FILL),
+	FLUID_IO (FluidCapabilityWrapper.BOTH),
+	ENERGY_TAP (EnergyCapabilityWrapper.EXTRACT),
+	ENERGY_CONNECTOR (EnergyCapabilityWrapper.RECIEVE),
+	ADVANCED_TAP (ItemCapabilityWrapper.BOTH, FluidCapabilityWrapper.BOTH, EnergyCapabilityWrapper.EXTRACT),
+	ADVANCED_CONNECTOR (ItemCapabilityWrapper.BOTH, FluidCapabilityWrapper.BOTH, EnergyCapabilityWrapper.RECIEVE);
 	
 	public static StorehouseBaseCapabilityVariantBlock crafting_block;
 	public Map<Capability<?>, ICapabilityWrapper<?>> capabilities = new HashMap<Capability<?>, ICapabilityWrapper<?>>();

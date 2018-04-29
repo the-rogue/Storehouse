@@ -187,8 +187,8 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 		{
 			try
 			{
-				IMultiBlockController controller = ((IMultiBlockTile) te).getController();
-				return controller.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+				BlockPos controllerPos = ((IMultiBlockTile) te).getController().getPosition();
+				return world.getBlockState(controllerPos).getBlock().onBlockActivated(world, controllerPos, state, player, hand, side, hitX, hitY, hitZ);
 			}
 			catch (NoControllerException e)
 			{

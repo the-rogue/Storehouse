@@ -22,7 +22,10 @@ public interface ICrafter {
 	
 	public IRecipeInventory getOutputInventory ();
 	
-	public boolean isRunning ();
+	public default boolean isRunning () {
+		return true;
+	}
 	
-	public void doRunTick ();
+	public default void doRunTick () {
+	}
 }

@@ -11,39 +11,43 @@
 package therogue.storehouse.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import therogue.storehouse.tile.StorehouseBaseTileEntity;
+import therogue.storehouse.tile.StorehouseBaseMachine;
 import therogue.storehouse.util.LOG;
 
-public class GuiUpdateTEPacket implements IMessage {
+public class SGuiUpdateTEPacket implements IMessage {
 	
+	private byte item;
 	private BlockPos pos;
 	private NBTTagCompound nbt;
 	
-	public GuiUpdateTEPacket () {
+	public SGuiUpdateTEPacket () {
 	}
 	
-	public GuiUpdateTEPacket (BlockPos pos, NBTTagCompound nbt) {
+	public SGuiUpdateTEPacket (int item, BlockPos pos, NBTTagCompound nbt) {
+		this.item = (byte) item;
 		this.pos = pos;
 		this.nbt = nbt;
 	}
 	
 	@Override
 	public void fromBytes (ByteBuf buf) {
+		this.item = buf.readByte();
 		this.pos = BlockPos.fromLong(buf.readLong());
 		this.nbt = NetworkUtils.readNBTTagCompound(buf);
 	}
 	
 	@Override
 	public void toBytes (ByteBuf buf) {
+		buf.writeByte(item);
 		buf.writeLong(pos.toLong());
 		NetworkUtils.writeNBTTagCompoundToBuffer(buf, nbt);
 	}
@@ -56,24 +60,29 @@ public class GuiUpdateTEPacket implements IMessage {
 		return nbt;
 	}
 	
-	public static class GuiUpdateTEPacketHandler implements IMessageHandler<GuiUpdateTEPacket, IMessage> {
+	public int getItem () {
+		return item;
+	}
+	
+	public static class GuiClientUpdatePacketHandler implements IMessageHandler<SGuiUpdateTEPacket, IMessage> {
 		
 		@Override
-		public IMessage onMessage (GuiUpdateTEPacket message, MessageContext ctx) {
-			if (ctx.netHandler instanceof INetHandlerPlayClient)
+		public IMessage onMessage (SGuiUpdateTEPacket message, MessageContext ctx) {
+			if (ctx.netHandler instanceof INetHandlerPlayServer)
 			{
-				Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+				EntityPlayerMP fromPlayer = ctx.getServerHandler().playerEntity;
+				fromPlayer.getServerWorld().addScheduledTask(new Runnable() {
 					
 					@Override
 					public void run () {
-						WorldClient world = Minecraft.getMinecraft().world;
+						WorldServer world = fromPlayer.getServerWorld();
 						if (world.isBlockLoaded(message.getPos()))
 						{
 							TileEntity te = world.getTileEntity(message.getPos());
-							if (te != null && te instanceof StorehouseBaseTileEntity)
+							if (te != null && te instanceof StorehouseBaseMachine)
 							{
-								StorehouseBaseTileEntity stoTE = (StorehouseBaseTileEntity) te;
-								stoTE.processGUIPacket(message);
+								StorehouseBaseMachine stoTE = (StorehouseBaseMachine) te;
+								stoTE.processSGUIPacket(message, fromPlayer);
 							}
 							else
 							{

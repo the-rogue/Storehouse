@@ -11,7 +11,8 @@
 package therogue.storehouse.crafting.wrapper;
 
 import net.minecraftforge.fluids.FluidStack;
-import therogue.storehouse.util.FluidUtils;
+import therogue.storehouse.crafting.wrapper.IRecipeComponent.IFluidComponent;
+import therogue.storehouse.fluid.FluidUtils;
 
 public class FluidStackWrapper implements IRecipeWrapper {
 	
@@ -32,12 +33,12 @@ public class FluidStackWrapper implements IRecipeWrapper {
 	
 	@Override
 	public boolean mergable (IRecipeWrapper component, int limit) {
-		if (!(component instanceof ItemStackWrapper)) return false;
+		if (!(component instanceof FluidStackWrapper)) return false;
 		return FluidUtils.areStacksMergableWithLimit(limit, stack, ((FluidStackWrapper) component).getStack());
 	}
 	
 	@Override
-	public IRecipeWrapper merge (IRecipeWrapper component, int limit) {
+	public FluidStackWrapper merge (IRecipeWrapper component, int limit) {
 		if (!mergable(component, limit)) return this;
 		stack = FluidUtils.mergeStacks(limit, true, stack, ((FluidStackWrapper) component).getStack());
 		return this;
@@ -45,14 +46,14 @@ public class FluidStackWrapper implements IRecipeWrapper {
 	
 	@Override
 	public boolean canAddComponent (IRecipeComponent component, int limit) {
-		if (!(component instanceof FluidStackComponent)) return false;
-		return FluidUtils.areStacksMergableWithLimit(limit, stack, ((FluidStackComponent) component).getComponent());
+		if (!(component instanceof IFluidComponent)) return false;
+		return FluidUtils.areStacksMergableWithLimit(limit, stack, ((IFluidComponent) component).getComponent());
 	}
 	
 	@Override
-	public IRecipeWrapper addComponent (IRecipeComponent component, int limit) {
+	public FluidStackWrapper addComponent (IRecipeComponent component, int limit) {
 		if (!canAddComponent(component, limit)) return this;
-		FluidUtils.mergeStacks(limit, true, stack, ((FluidStackComponent) component).getComponent());
+		FluidUtils.mergeStacks(limit, true, stack, ((IFluidComponent) component).getComponent());
 		return this;
 	}
 	
@@ -73,7 +74,7 @@ public class FluidStackWrapper implements IRecipeWrapper {
 	}
 	
 	@Override
-	public IRecipeWrapper copy () {
-		return new FluidStackWrapper(getStack());
+	public FluidStackWrapper copy () {
+		return new FluidStackWrapper(getStack().copy());
 	}
 }

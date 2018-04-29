@@ -12,18 +12,22 @@ package therogue.storehouse.container.machine;
 
 import net.minecraft.inventory.IInventory;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.container.SlotItemHandlerFix;
+import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.container.InventorySlot;
+import therogue.storehouse.inventory.IInventoryItemHandler;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileBurner;
 
 public class ContainerBurner extends ContainerBase {
 	
 	public ContainerBurner (IInventory playerInv, TileBurner teInv) {
 		super(playerInv, teInv);
-		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 120, 37));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 50, 17));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 2, 50, 37));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 3, 50, 57));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 4, 70, 27));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 5, 70, 47));
+		IInventoryItemHandler inventory = teInv.getCapability(GuiItemCapability.CAP, null, ModuleContext.GUI);
+		this.addTESlot(new InventorySlot(inventory, 0, 120, 37));
+		this.addTESlot(new InventorySlot(inventory, 1, 50, 17));
+		this.addTESlot(new InventorySlot(inventory, 2, 50, 37));
+		this.addTESlot(new InventorySlot(inventory, 3, 50, 57));
+		this.addTESlot(new InventorySlot(inventory, 4, 70, 27));
+		this.addTESlot(new InventorySlot(inventory, 5, 70, 47));
 	}
 }

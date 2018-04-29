@@ -14,7 +14,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import therogue.storehouse.client.gui.GuiHelper.XYCoords;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.container.SlotItemHandlerFix;
+import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.container.InventorySlot;
+import therogue.storehouse.inventory.IInventoryItemHandler;
+import therogue.storehouse.tile.ClientButton.CapabilityButton;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.machine.TileThermalPress;
 import therogue.storehouse.tile.machine.TileThermalPress.Mode;
 
@@ -25,14 +29,15 @@ public class ContainerThermalPress extends ContainerBase {
 	
 	public ContainerThermalPress (IInventory playerInv, TileThermalPress teInv) {
 		super(playerInv, teInv);
+		IInventoryItemHandler inventory = teInv.getCapability(GuiItemCapability.CAP, null, ModuleContext.GUI);
 		this.teInv = teInv;
 		// Add Thermal Press's Inventory Slot IDs 36-41
-		this.addTESlot(new SlotItemHandlerFix(teInv, 0, 120, 37));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 1, 65, 37));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 2, 65, 10));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 3, 65, 64));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 4, Integer.MIN_VALUE, Integer.MIN_VALUE));
-		this.addTESlot(new SlotItemHandlerFix(teInv, 5, Integer.MIN_VALUE, Integer.MIN_VALUE));
+		this.addTESlot(new InventorySlot(inventory, 0, 120, 37));
+		this.addTESlot(new InventorySlot(inventory, 1, 65, 37));
+		this.addTESlot(new InventorySlot(inventory, 2, 65, 10));
+		this.addTESlot(new InventorySlot(inventory, 3, 65, 64));
+		this.addTESlot(new InventorySlot(inventory, 4, Integer.MIN_VALUE, Integer.MIN_VALUE));
+		this.addTESlot(new InventorySlot(inventory, 5, Integer.MIN_VALUE, Integer.MIN_VALUE));
 		this.detectAndSendChanges();
 		update();
 	}
@@ -44,7 +49,7 @@ public class ContainerThermalPress extends ContainerBase {
 	
 	@Override
 	public void update () {
-		XYCoords[] positions = slotPositions[teInv.getField(4)];
+		XYCoords[] positions = slotPositions[teInv.getCapability(CapabilityButton.BUTTON, null, ModuleContext.GUI).getMode().ordinal()];
 		for (int i = 0; i < tileEntitySlots.size() - 2; i++)
 		{
 			Slot s = tileEntitySlots.get(i + 2);

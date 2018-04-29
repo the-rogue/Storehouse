@@ -13,93 +13,92 @@ package therogue.storehouse.energy;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.EnergyStorage;
 
-public class EnergyStorageAdv extends EnergyStorage
-{
-
-	public EnergyStorageAdv(int capacity) { super(capacity); }
-
-	public EnergyStorageAdv(int capacity, int maxTransfer) { super(capacity, maxTransfer); }
-
-	public EnergyStorageAdv(int capacity, int maxReceive, int maxExtract) { super(capacity, maxReceive, maxExtract); }
+public class EnergyStorageAdv extends EnergyStorage {
 	
-	public void setEnergyStored(int energy) {
-
+	public EnergyStorageAdv (int capacity) {
+		super(capacity);
+	}
+	
+	public EnergyStorageAdv (int capacity, int maxTransfer) {
+		super(capacity, maxTransfer);
+	}
+	
+	public EnergyStorageAdv (int capacity, int maxReceive, int maxExtract) {
+		super(capacity, maxReceive, maxExtract);
+	}
+	
+	public void setEnergyStored (int energy) {
 		this.energy = energy;
-
-		if (this.energy > capacity) {
+		if (this.energy > capacity)
+		{
 			this.energy = capacity;
-		} else if (this.energy < 0) {
+		}
+		else if (this.energy < 0)
+		{
 			this.energy = 0;
 		}
 	}
 	
-	public EnergyStorage readFromNBT(NBTTagCompound nbt) {
-
+	public NBTTagCompound readModuleFromNBT (NBTTagCompound nbt) {
 		this.energy = nbt.getInteger("Energy");
-
-		if (energy > capacity) {
+		if (energy > capacity)
+		{
 			energy = capacity;
 		}
-		return this;
+		return nbt;
 	}
-
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-
-		if (energy < 0) {
+	
+	public NBTTagCompound writeModuleToNBT (NBTTagCompound nbt) {
+		if (energy < 0)
+		{
 			energy = 0;
 		}
 		nbt.setInteger("Energy", energy);
 		return nbt;
 	}
 	
-	public void modifyEnergyStored(int energy) {
-
+	public void modifyEnergyStored (int energy) {
 		this.energy += energy;
-
-		if (this.energy > capacity) {
+		if (this.energy > capacity)
+		{
 			this.energy = capacity;
-		} else if (this.energy < 0) {
+		}
+		else if (this.energy < 0)
+		{
 			this.energy = 0;
 		}
 	}
 	
-	public EnergyStorage setCapacity(int capacity) {
-
+	public EnergyStorage setCapacity (int capacity) {
 		this.capacity = capacity;
-
-		if (energy > capacity) {
+		if (energy > capacity)
+		{
 			energy = capacity;
 		}
 		return this;
 	}
-
-	public EnergyStorage setMaxTransfer(int maxTransfer) {
-
+	
+	public EnergyStorage setMaxTransfer (int maxTransfer) {
 		setMaxReceive(maxTransfer);
 		setMaxExtract(maxTransfer);
 		return this;
 	}
-
-	public EnergyStorage setMaxReceive(int maxReceive) {
-
+	
+	public EnergyStorage setMaxReceive (int maxReceive) {
 		this.maxReceive = maxReceive;
 		return this;
 	}
-
-	public EnergyStorage setMaxExtract(int maxExtract) {
-
+	
+	public EnergyStorage setMaxExtract (int maxExtract) {
 		this.maxExtract = maxExtract;
 		return this;
 	}
-
-	public int getMaxReceive() {
-
+	
+	public int getMaxReceive () {
 		return maxReceive;
 	}
-
-	public int getMaxExtract() {
-
+	
+	public int getMaxExtract () {
 		return maxExtract;
 	}
-
 }

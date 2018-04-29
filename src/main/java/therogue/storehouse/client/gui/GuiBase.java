@@ -12,9 +12,8 @@ package therogue.storehouse.client.gui;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -34,10 +33,13 @@ public class GuiBase extends GuiContainer {
 	
 	public static final ResourceLocation NORMAL_TEXTURE = new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/normal.png");
 	protected ResourceLocation texture;
-	protected List<ElementBase> elements = Lists.<ElementBase> newArrayList();
+	protected List<ElementBase> elements = new ArrayList<>();
+	protected List<Runnable> drawingInstructions = new ArrayList<>();
 	public final ContainerBase inventory;
 	public final String name;
 	public final IGuiSupplier tile;
+	protected int texWidth = 176;
+	protected int texHeight = 166;
 	
 	public GuiBase (ResourceLocation texture, ContainerBase inventory, IGuiSupplier tile) {
 		super(inventory);
@@ -56,19 +58,28 @@ public class GuiBase extends GuiContainer {
 		return texture;
 	}
 	
+	/**
+	 * Draws the screen and all the components in it.
+	 */
+	public void drawScreen (int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.func_191948_b(mouseX, mouseY);
+	}
+	
 	@Override
 	protected void drawGuiContainerBackgroundLayer (float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		GuiHelper.bindTexture(this, texture);
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+		this.drawTextureBackgroundRect(i, j, this.xSize, this.ySize, this.texWidth, this.texHeight);
 		inventory.update();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) this.guiLeft, (float) this.guiTop, 0.0F);
 		for (Slot s : this.inventorySlots.inventorySlots)
 		{
-			this.drawTexturedModalRect(s.xPos - 1, s.yPos - 1, this.xSize, 0, 18, 18);
+			this.drawTexturedModalRect(s.xPos - 1, s.yPos - 1, this.texWidth, 0, 18, 18);
 		}
 		GlStateManager.enableAlpha();
 		for (ElementBase e : elements)
@@ -81,13 +92,19 @@ public class GuiBase extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY) {
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		int nameWidth = fontRendererObj.getStringWidth(new TextComponentTranslation(name).getUnformattedComponentText());
-		fontRendererObj.drawString(new TextComponentTranslation(name).getFormattedText(), this.xSize / 2 - nameWidth / 2, 4, GuiHelper.GUI_TEXT_COLOUR);
+		fontRendererObj.drawString(new TextComponentTranslation(name).getFormattedText(), this.xSize / 2
+				- nameWidth / 2, 4, GuiHelper.GUI_TEXT_COLOUR);
 		GlStateManager.enableAlpha();
 		int x = mouseX - this.guiLeft, y = mouseY - this.guiTop;
 		for (ElementBase e : elements)
 		{
 			e.drawElement(x, y);
+		}
+		for (Runnable r : drawingInstructions)
+		{
+			r.run();
 		}
 		for (ElementBase e : elements)
 		{
@@ -119,6 +136,29 @@ public class GuiBase extends GuiContainer {
 		}
 	}
 	
+    /**
+     * Draws a textured rectangle at the current z-value, with default background texture values.
+     */
+    public void drawTextureBackgroundRect(int x, int y, int width, int height, int texWidth, int texHeight) {
+    	drawTextureBackgroundRect(x,y, width, height, 0, 0, texWidth, texHeight, 256, 256);
+    }
+	
+    /**
+     * Draws a textured rectangle at the current z-value.
+     */
+    public void drawTextureBackgroundRect(int x, int y, int width, int height, int textureX, int textureY, int texWidth, int texHeight, int totalWidth, int totalHeight)
+    {
+        float f = 1.0f / totalWidth;
+        float f1 = 1.0f / totalHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos((double)(x + 0), (double)(y + height), (double)this.zLevel).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + texHeight) * f1)).endVertex();
+        bufferbuilder.pos((double)(x + width), (double)(y + height), (double)this.zLevel).tex((double)((float)(textureX + texWidth) * f), (double)((float)(textureY + texHeight) * f1)).endVertex();
+        bufferbuilder.pos((double)(x + width), (double)(y + 0), (double)this.zLevel).tex((double)((float)(textureX + texWidth) * f), (double)((float)(textureY + 0) * f1)).endVertex();
+        bufferbuilder.pos((double)(x + 0), (double)(y + 0), (double)this.zLevel).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + 0) * f1)).endVertex();
+        tessellator.draw();
+    }
 	/**
 	 * Draws a texture rectangle using the texture currently bound to the TextureManager
 	 */
@@ -138,10 +178,14 @@ public class GuiBase extends GuiContainer {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) this.zLevel).tex((double) minU, (double) maxV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) this.zLevel).tex((double) maxU, (double) maxV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-		vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) this.zLevel).tex((double) maxU, (double) minV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) this.zLevel).tex((double) minU, (double) minV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y
+				+ height), (double) this.zLevel).tex((double) minU, (double) maxV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y
+				+ height), (double) this.zLevel).tex((double) maxU, (double) maxV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y
+				+ 0), (double) this.zLevel).tex((double) maxU, (double) minV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y
+				+ 0), (double) this.zLevel).tex((double) minU, (double) minV).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
 		tessellator.draw();
 		GlStateManager.disableBlend();
 	}

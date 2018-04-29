@@ -16,15 +16,15 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidWrapper implements ICapabilityWrapper<IFluidHandler> {
+public class FluidCapabilityWrapper implements ICapabilityWrapper<IFluidHandler> {
 	
-	public static final FluidWrapper FILL = new FluidWrapper(true, false);
-	public static final FluidWrapper DRAIN = new FluidWrapper(false, true);
-	public static final FluidWrapper BOTH = new FluidWrapper(true, true);
+	public static final FluidCapabilityWrapper FILL = new FluidCapabilityWrapper(true, false);
+	public static final FluidCapabilityWrapper DRAIN = new FluidCapabilityWrapper(false, true);
+	public static final FluidCapabilityWrapper BOTH = new FluidCapabilityWrapper(true, true);
 	public final boolean canFill;
 	public final boolean canDrain;
 	
-	public FluidWrapper (boolean canFill, boolean canDrain) {
+	public FluidCapabilityWrapper (boolean canFill, boolean canDrain) {
 		this.canFill = canFill;
 		this.canDrain = canDrain;
 	}

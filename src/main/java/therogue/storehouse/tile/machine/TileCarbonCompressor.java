@@ -12,42 +12,44 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.MachineCraftingHandler;
-import therogue.storehouse.crafting.MachineCraftingHandler.CraftingManager;
 import therogue.storehouse.crafting.inventory.IRecipeInventory;
 import therogue.storehouse.crafting.inventory.RangedItemInventory;
-import therogue.storehouse.energy.EnergyStorageAdv;
+import therogue.storehouse.energy.TileEnergyStorage;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModMultiBlocks;
 import therogue.storehouse.init.grouped.Materials;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.multiblock.tile.IMultiBlockController;
-import therogue.storehouse.network.GuiUpdateTEPacket;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.StorehouseBaseTileMultiBlock;
 import therogue.storehouse.util.ItemStackUtils;
 
 public class TileCarbonCompressor extends StorehouseBaseTileMultiBlock implements IMultiBlockController, ICrafter {
 	
-	private CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileCarbonCompressor.class).newCrafter(this);
+	private MachineCraftingHandler<TileCarbonCompressor>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileCarbonCompressor.class).newCrafter(this);
 	public static final int RFPerTick = 640;
 	
 	public TileCarbonCompressor () {
 		super(ModBlocks.carbonCompressor);
-		energyStorage = new EnergyStorageAdv(1200000, 640, 0);
-		inventory = new InventoryManager(this, 2, new Integer[] { 1 }, new Integer[] { 0 }) {
+		modules.add(theCrafter);
+		this.setEnergyStorage(new TileEnergyStorage(1200000, 640, 0));
+		this.setInventory(new InventoryManager(this, 2, new Integer[] { 1 }, new Integer[] { 0 }) {
 			
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
 				if (ItemStackUtils.areStacksMergable(stack, Materials.CARBON.createStack())) return true;
 				return false;
 			}
-		};
+		});
 	}
 	
 	// -----------------------IMultiBlockController Methods-----------------------------------
 	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+			float hitY, float hitZ) {
 		return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
 	}
 	
@@ -64,75 +66,21 @@ public class TileCarbonCompressor extends StorehouseBaseTileMultiBlock implement
 	
 	@Override
 	public IRecipeInventory getCraftingInventory () {
-		return new RangedItemInventory(getInventory(), 1, 2);
+		return new RangedItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 1, 2);
 	}
 	
 	@Override
 	public IRecipeInventory getOutputInventory () {
-		return new RangedItemInventory(getInventory(), 0, 1);
+		return new RangedItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 0, 1);
 	}
 	
 	@Override
 	public boolean isRunning () {
-		return energyStorage.getEnergyStored() >= RFPerTick;
+		return energyStorage.hasSufficientRF();
 	}
 	
 	@Override
 	public void doRunTick () {
-		if (isRunning())
-		{
-			energyStorage.modifyEnergyStored(-RFPerTick);
-		}
-	}
-	
-	// -------------------------Inventory Methods-----------------------------------
-	@Override
-	public void onInventoryChange () {
-		super.onInventoryChange();
-		theCrafter.checkRecipes();
-	}
-	
-	// -------------------------Gui Methods----------------------------------------------------
-	@Override
-	public int getField (int id) {
-		switch (id)
-		{
-			case 4:
-				return theCrafter.totalCraftingTime - theCrafter.craftingTime;
-			case 5:
-				return theCrafter.totalCraftingTime;
-			default:
-				return super.getField(id);
-		}
-	}
-	
-	@Override
-	public void setField (int id, int value) {
-		switch (id)
-		{
-			default:
-				super.setField(id, value);
-		}
-	}
-	
-	@Override
-	public int getFieldCount () {
-		return super.getFieldCount() + 2;
-	}
-	
-	// -------------------------Standard TE methods-----------------------------------
-	@Override
-	public GuiUpdateTEPacket getGUIPacket () {
-		GuiUpdateTEPacket packet = super.getGUIPacket();
-		packet.getNbt().setInteger("maxCraftingTime", theCrafter.totalCraftingTime);
-		packet.getNbt().setInteger("craftingTime", theCrafter.craftingTime);
-		return packet;
-	}
-	
-	@Override
-	public void processGUIPacket (GuiUpdateTEPacket packet) {
-		super.processGUIPacket(packet);
-		theCrafter.totalCraftingTime = packet.getNbt().getInteger("maxCraftingTime");
-		theCrafter.craftingTime = packet.getNbt().getInteger("craftingTime");
+		energyStorage.runTick();
 	}
 }

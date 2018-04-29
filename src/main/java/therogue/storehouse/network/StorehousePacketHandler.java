@@ -28,7 +28,7 @@ public class StorehousePacketHandler {
 	
 	static
 	{
-		StorehousePacketHandler.registerPacket(GuiUpdateTEPacket.GuiUpdateTEPacketHandler.class, GuiUpdateTEPacket.class, Side.CLIENT);
-		StorehousePacketHandler.registerPacket(GuiClientUpdatePacket.GuiClientUpdatePacketHandler.class, GuiClientUpdatePacket.class, Side.SERVER);
+		StorehousePacketHandler.registerPacket(CGuiUpdateTEPacket.GuiUpdateTEPacketHandler.class, CGuiUpdateTEPacket.class, Side.CLIENT);
+		StorehousePacketHandler.registerPacket(SGuiUpdateTEPacket.GuiClientUpdatePacketHandler.class, SGuiUpdateTEPacket.class, Side.SERVER);
 	}
 }

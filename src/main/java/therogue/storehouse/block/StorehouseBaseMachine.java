@@ -24,6 +24,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -43,7 +44,8 @@ import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.connectedtextures.ConnectionState;
 import therogue.storehouse.client.connectedtextures.ConnectionState.RenderProperty;
-import therogue.storehouse.inventory.IInventoryCapability;
+import therogue.storehouse.network.StorehousePacketHandler;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
 import therogue.storehouse.tile.TileUtils;
 
@@ -54,6 +56,7 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 	protected BiFunction<World, Integer, T> createTile;
 	protected int guiID = -1;
 	protected Object mod = Storehouse.instance;
+	protected boolean checkTile = false;
 	protected boolean notifyTile = false;
 	protected boolean fluidHandler = false;
 	
@@ -89,6 +92,19 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 		return this;
 	}
 	
+	public StorehouseBaseMachine<T> setGUICheckTile (int guiID) {
+		this.guiID = guiID;
+		this.checkTile = true;
+		return this;
+	}
+	
+	public StorehouseBaseMachine<T> setGUICheckTile (Object mod, int guiID) {
+		this.guiID = guiID;
+		this.mod = mod;
+		this.checkTile = true;
+		return this;
+	}
+	
 	@Override
 	public boolean onBlockActivated (
 			World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -105,11 +121,24 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 		}
 		if (guiID != -1 && mod != null)
 		{
-			if (!world.isRemote)
+			if (checkTile)
 			{
-				player.openGui(mod, guiID, world, pos.getX(), pos.getY(), pos.getZ());
+				TileEntity te = world.getTileEntity(pos);
+				if (te instanceof StorehouseBaseTileEntity
+						&& ((StorehouseBaseTileEntity) te).canOpenGui(world, pos, state, player, hand, side, hitX, hitY, hitZ))
+				{
+					if (world.isRemote) return true;
+					StorehousePacketHandler.INSTANCE.sendTo(((StorehouseBaseTileEntity) te).getCGUIPacket(), (EntityPlayerMP) player);
+					player.openGui(mod, guiID, world, pos.getX(), pos.getY(), pos.getZ());
+					return true;
+				}
 			}
-			return true;
+			else
+			{
+				if (world.isRemote) return true;
+				player.openGui(mod, guiID, world, pos.getX(), pos.getY(), pos.getZ());
+				return true;
+			}
 		}
 		return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
 	}
@@ -122,9 +151,9 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 		{
 			inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		}
-		else if (te instanceof IInventoryCapability)
+		else if (te instanceof StorehouseBaseTileEntity)
 		{
-			inventory = ((IInventoryCapability) te).getInventory();
+			inventory = ((StorehouseBaseTileEntity) te).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL);
 		}
 		if (inventory != null)
 		{

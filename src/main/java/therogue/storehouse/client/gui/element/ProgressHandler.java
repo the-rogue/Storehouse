@@ -10,37 +10,39 @@
 
 package therogue.storehouse.client.gui.element;
 
+import java.util.function.Supplier;
+
 import therogue.storehouse.client.gui.GuiBase;
 
 public class ProgressHandler extends ElementBase {
 	
-	public final int progressField;
-	public final int maxProgressField;
+	public final Supplier<Integer> progressSupplier;
+	public final Supplier<Integer> maxProgressSupplier;
 	public final IProgressBar drawThing;
 	
-	public ProgressHandler (GuiBase gui, int progressField, int maxProgressField, IProgressBar drawThing) {
+	public ProgressHandler (GuiBase gui, Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier, IProgressBar drawThing) {
 		super(gui);
-		this.progressField = progressField;
-		this.maxProgressField = maxProgressField;
+		this.progressSupplier = progressSupplier;
+		this.maxProgressSupplier = maxProgressSupplier;
 		this.drawThing = drawThing;
 	}
 	
 	@Override
 	public void drawBottomLayer (int mouseX, int mouseY) {
-		float progress = (float) stateChanger.getField(progressField) / (stateChanger.getField(maxProgressField) != 0 ? (float) stateChanger.getField(maxProgressField) : 1.0F);
+		float progress = (float) progressSupplier.get() / (maxProgressSupplier.get() != 0 ? (float) maxProgressSupplier.get() : 1.0F);
 		drawThing.drawBottomLayer(gui, mouseX, mouseY, progress);
 	}
 	
 	@Override
 	public void drawElement (int mouseX, int mouseY) {
-		float progress = (float) stateChanger.getField(progressField) / (stateChanger.getField(maxProgressField) != 0 ? (float) stateChanger.getField(maxProgressField) : 1.0F);
+		float progress = (float) progressSupplier.get() / (maxProgressSupplier.get() != 0 ? (float) maxProgressSupplier.get() : 1.0F);
 		// LOG.info(progress);
 		drawThing.drawBar(this.gui, mouseX, mouseY, progress);
 	}
 	
 	@Override
 	public void drawTopLayer (int mouseX, int mouseY) {
-		drawThing.drawTopLayer(gui, mouseX, mouseY, stateChanger.getField(progressField), stateChanger.getField(maxProgressField));
+		drawThing.drawTopLayer(gui, mouseX, mouseY, progressSupplier.get(), maxProgressSupplier.get());
 	}
 	
 	public boolean isVisible () {

@@ -25,9 +25,9 @@ public class DoubleInventory implements IRecipeInventory {
 	}
 	
 	@Override
-	public IRecipeWrapper getComponent (int slot) {
-		if (slot < inventory2Slot1) return inventory1.getComponent(slot);
-		else return inventory2.getComponent(slot - inventory2Slot1);
+	public IRecipeWrapper getComponent (int slot, boolean simulate) {
+		if (slot < inventory2Slot1) return inventory1.getComponent(slot, simulate);
+		else return inventory2.getComponent(slot - inventory2Slot1, simulate);
 	}
 	
 	@Override

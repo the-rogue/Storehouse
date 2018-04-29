@@ -20,6 +20,8 @@ import therogue.storehouse.client.gui.machine.GuiCarbonCompressor;
 import therogue.storehouse.client.gui.machine.GuiCombustionGenerator;
 import therogue.storehouse.client.gui.machine.GuiCrystaliser;
 import therogue.storehouse.client.gui.machine.GuiLiquidGenerator;
+import therogue.storehouse.client.gui.machine.GuiPotionBrewer;
+import therogue.storehouse.client.gui.machine.GuiPotionInjector;
 import therogue.storehouse.client.gui.machine.GuiSolarGenerator;
 import therogue.storehouse.client.gui.machine.GuiThermalPress;
 import therogue.storehouse.container.machine.ContainerAlloyFurnace;
@@ -28,6 +30,8 @@ import therogue.storehouse.container.machine.ContainerCarbonCompressor;
 import therogue.storehouse.container.machine.ContainerCombustionGenerator;
 import therogue.storehouse.container.machine.ContainerCrystaliser;
 import therogue.storehouse.container.machine.ContainerLiquidGenerator;
+import therogue.storehouse.container.machine.ContainerPotionBrewer;
+import therogue.storehouse.container.machine.ContainerPotionInjector;
 import therogue.storehouse.container.machine.ContainerSolarGenerator;
 import therogue.storehouse.container.machine.ContainerThermalPress;
 import therogue.storehouse.tile.machine.TileAlloyFurnace;
@@ -36,6 +40,8 @@ import therogue.storehouse.tile.machine.TileCarbonCompressor;
 import therogue.storehouse.tile.machine.TileCombustionGenerator;
 import therogue.storehouse.tile.machine.TileCrystaliser;
 import therogue.storehouse.tile.machine.TileLiquidGenerator;
+import therogue.storehouse.tile.machine.TilePotionBrewer;
+import therogue.storehouse.tile.machine.TilePotionInjector;
 import therogue.storehouse.tile.machine.TileSolarGenerator;
 import therogue.storehouse.tile.machine.TileThermalPress;
 
@@ -51,10 +57,13 @@ public class GuiHandler implements IGuiHandler {
 	public static final int ALLOYFURNACE = 5;
 	public static final int BURNER = 6;
 	public static final int CARBONCOMPRESSOR = 7;
+	public static final int POTION_BREWER = 8;
+	public static final int POTION_INJECTOR = 9;
 	
 	@Override
 	public Object getServerGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z) {
-		switch (ID) {
+		switch (ID)
+		{
 			case SOLARGENERATOR:
 				return new ContainerSolarGenerator(player.inventory, (TileSolarGenerator) world.getTileEntity(new BlockPos(x, y, z)));
 			case COMBUSTIONGENERATOR:
@@ -71,6 +80,10 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerBurner(player.inventory, (TileBurner) world.getTileEntity(new BlockPos(x, y, z)));
 			case CARBONCOMPRESSOR:
 				return new ContainerCarbonCompressor(player.inventory, (TileCarbonCompressor) world.getTileEntity(new BlockPos(x, y, z)));
+			case POTION_BREWER:
+				return new ContainerPotionBrewer(player.inventory, (TilePotionBrewer) world.getTileEntity(new BlockPos(x, y, z)));
+			case POTION_INJECTOR:
+				return new ContainerPotionInjector(player.inventory, (TilePotionInjector) world.getTileEntity(new BlockPos(x, y, z)));
 			default:
 				return null;
 		}
@@ -78,7 +91,8 @@ public class GuiHandler implements IGuiHandler {
 	
 	@Override
 	public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z) {
-		switch (ID) {
+		switch (ID)
+		{
 			case SOLARGENERATOR:
 				TileSolarGenerator gen = (TileSolarGenerator) world.getTileEntity(new BlockPos(x, y, z));
 				return new GuiSolarGenerator(new ContainerSolarGenerator(player.inventory, gen), gen);
@@ -103,6 +117,12 @@ public class GuiHandler implements IGuiHandler {
 			case CARBONCOMPRESSOR:
 				TileCarbonCompressor mach5 = (TileCarbonCompressor) world.getTileEntity(new BlockPos(x, y, z));
 				return new GuiCarbonCompressor(new ContainerCarbonCompressor(player.inventory, mach5), mach5);
+			case POTION_BREWER:
+				TilePotionBrewer mach6 = (TilePotionBrewer) world.getTileEntity(new BlockPos(x, y, z));
+				return new GuiPotionBrewer(new ContainerPotionBrewer(player.inventory, mach6), mach6);
+			case POTION_INJECTOR:
+				TilePotionInjector mach7 = (TilePotionInjector) world.getTileEntity(new BlockPos(x, y, z));
+				return new GuiPotionInjector(new ContainerPotionInjector(player.inventory, mach7), mach7);
 			default:
 				return null;
 		}

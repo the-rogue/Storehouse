@@ -10,29 +10,42 @@
 
 package therogue.storehouse.tile.machine;
 
-import net.minecraft.item.Item;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.energy.EnergyUtils;
+import therogue.storehouse.crafting.ICrafter;
+import therogue.storehouse.crafting.IMachineRecipe;
+import therogue.storehouse.crafting.MachineCraftingHandler;
+import therogue.storehouse.crafting.inventory.EnergyInventory;
+import therogue.storehouse.crafting.inventory.IRecipeInventory;
+import therogue.storehouse.crafting.inventory.RangedItemInventory;
+import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
+import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
+import therogue.storehouse.energy.TileEnergyStorage;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure;
-import therogue.storehouse.network.GuiUpdateTEPacket;
 import therogue.storehouse.tile.MachineTier;
+import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.TileBaseGenerator;
 
-public class TileCombustionGenerator extends TileBaseGenerator {
+public class TileCombustionGenerator extends TileBaseGenerator implements ICrafter {
 	
-	public static final int[] RFPerTick = { 20, 160, 4800 };
+	public static final int[] RFPerTicks = { 20, 160, 4800 };
+	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.combustion_generator_basic, ModBlocks.combustion_generator_advanced, ModBlocks.combustion_generator_ender };
-	private int generatorburntime = 0;
-	private int maxruntime = 0;
+	protected final MachineCraftingHandler<TileCombustionGenerator>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileCombustionGenerator.class).newCrafter(this);
 	
 	public TileCombustionGenerator (MachineTier tier) {
-		super(BLOCKS[tier.ordinal()], tier, RFPerTick[tier.ordinal()]);
-		inventory = new InventoryManager(this, 3, new Integer[] { 0, 2 }, new Integer[] { 1 }) {
+		super(BLOCKS[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
+		modules.add(theCrafter);
+		this.setInventory(new InventoryManager(this, 3, new Integer[] { 0, 2 }, new Integer[] { 1 }) {
 			
 			@Override
 			public boolean isItemValidForSlotChecks (int index, ItemStack stack) {
@@ -40,83 +53,29 @@ public class TileCombustionGenerator extends TileBaseGenerator {
 				if ((index == 0 || index == 1) && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return true;
 				return false;
 			}
-		};
+		});
 	}
 	
 	// -------------------------Customisable Generator Methods-------------------------------------------
 	@Override
-	public boolean isRunning () {
-		return generatorburntime > 0;
+	public Set<Integer> getOrderMattersSlots () {
+		return Sets.newHashSet();
 	}
 	
 	@Override
-	protected void doRunTick () {
-		--generatorburntime;
+	public IRecipeInventory getCraftingInventory () {
+		return new RangedItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 2, 3);
 	}
 	
 	@Override
-	protected void tick () {
-		this.sendEnergyToItems(0);
-		if (EnergyUtils.isItemFull(inventory.getStackInSlot(0)))
-		{
-			inventory.pushItems(0, 1);
-		}
-		if (!isRunning())
-		{
-			ItemStack burnable = inventory.getStackInSlot(2);
-			if (burnable != null && !burnable.isEmpty() && TileEntityFurnace.isItemFuel(burnable))
-			{
-				int burntime = (int) Math.ceil((TileEntityFurnace.getItemBurnTime(burnable) * RFPerTick[1] * (this.tier.ordinal() == 0 ? 1 : 2 * this.tier.ordinal())) / super.RFPerTick);
-				if (burntime * super.RFPerTick <= energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored())
-				{
-					generatorburntime += burntime;
-					maxruntime = burntime;
-					Item burnitem = burnable.getItem();
-					burnable.shrink(1);
-					if (burnable.isEmpty())
-					{
-						inventory.setStackInSlot(2, burnitem.getContainerItem(burnable));
-					}
-					this.markDirty();
-				}
-			}
-		}
-		if (generatorburntime == 0)
-		{
-			maxruntime = 0;
-		}
-	}
-	
-	@Override
-	public int runtimeLeft () {
-		return generatorburntime;
-	}
-	
-	@Override
-	public int maxruntime () {
-		return maxruntime;
+	public IRecipeInventory getOutputInventory () {
+		return new EnergyInventory(energyStorage);
 	}
 	
 	// ----------------------IMultiBlockController-----------------------------------------------------------------
 	@Override
 	public MultiBlockStructure getStructure () {
 		return null;
-	}
-	
-	// -------------------------Standard TE methods-----------------------------------
-	@Override
-	public GuiUpdateTEPacket getGUIPacket () {
-		GuiUpdateTEPacket packet = super.getGUIPacket();
-		packet.getNbt().setInteger("BurnTime", generatorburntime);
-		packet.getNbt().setInteger("MaxRuntime", maxruntime);
-		return packet;
-	}
-	
-	@Override
-	public void processGUIPacket (GuiUpdateTEPacket packet) {
-		super.processGUIPacket(packet);
-		generatorburntime = packet.getNbt().getInteger("BurnTime");
-		maxruntime = packet.getNbt().getInteger("MaxRuntime");
 	}
 	
 	// ------------------------PlaceHolder Classes------------------------------------------------------------------
@@ -138,6 +97,61 @@ public class TileCombustionGenerator extends TileBaseGenerator {
 		
 		public TileCombustionGeneratorEnder () {
 			super(MachineTier.ender);
+		}
+	}
+	
+	public static enum CombustionRecipe implements IMachineRecipe<TileCombustionGenerator> {
+		INSTANCE;
+		
+		public static void registerRecipes () {
+			MachineCraftingHandler.register(TileCombustionGenerator.class, INSTANCE);
+		}
+		
+		@Override
+		public int timeTaken (TileCombustionGenerator machine) {
+			return TileEntityFurnace.getItemBurnTime(machine.inventory.extractItem(2, -1, true, ModuleContext.INTERNAL)) / machine.timeModifier;
+		}
+		
+		@Override
+		public boolean itemValidForRecipe (TileCombustionGenerator tile, int index, IRecipeWrapper stack) {
+			if (stack instanceof ItemStackWrapper)
+			{
+				ItemStackWrapper itemStack = ((ItemStackWrapper) stack);
+				if (TileEntityFurnace.isItemFuel(itemStack.getStack())) return true;
+			}
+			return false;
+		}
+		
+		@Override
+		public boolean matches (TileCombustionGenerator machine) {
+			IRecipeWrapper wrapper = machine.getCraftingInventory().getComponent(0, true);
+			return itemValidForRecipe(machine, 0, wrapper);
+		}
+		
+		@Override
+		public Result begin (TileCombustionGenerator machine) {
+			if (!matches(machine)) return Result.RESET;
+			ItemStack itemStack = machine.inventory.extractItem(2, -1, true, ModuleContext.INTERNAL);
+			if (itemStack.getItem().getContainerItem(itemStack).isEmpty())
+			{
+				itemStack.grow(-1);
+				machine.inventory.insertItem(0, itemStack, false, ModuleContext.INTERNAL);
+				return Result.CONTINUE;
+			}
+			else if (itemStack.getCount() == 1)
+			{
+				machine.inventory.insertItem(0, new ItemStack(itemStack.getItem().getContainerItem()), false, ModuleContext.INTERNAL);
+				return Result.CONTINUE;
+			}
+			return Result.RESET;
+		}
+		
+		@Override
+		public Result doTick (TileCombustionGenerator machine) {
+			TileEnergyStorage energy = machine.energyStorage;
+			if (energy.getEnergyStored() > energy.getMaxEnergyStored() + machine.RFPerTick) return Result.PAUSE;
+			energy.modifyEnergyStored(machine.RFPerTick);
+			return Result.CONTINUE;
 		}
 	}
 }
