@@ -77,7 +77,7 @@ public class CGuiUpdateTEPacket implements IMessage {
 							}
 							else
 							{
-								LOG.log("error", String.format("Received invalid update packet for null tile entity at {} with data: {}", message.getPos(), message.getNbt()));
+								LOG.trace(String.format("CGuiUpdateTEPacket Received invalid update packet for invalid tile entity at %s with data: %s", message.getPos(), message.getNbt()));
 							}
 						}
 					}

@@ -86,7 +86,7 @@ public class SGuiUpdateTEPacket implements IMessage {
 							}
 							else
 							{
-								LOG.log("error", String.format("Received invalid update packet for null tile entity at {} with data: {}", message.getPos(), message.getNbt()));
+								LOG.log("error", String.format("SGuiUpdateTEPacket Received invalid update packet for null tile entity at %s with data: %s", message.getPos(), message.getNbt()));
 							}
 						}
 					}

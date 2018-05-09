@@ -7,22 +7,52 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
+import therogue.storehouse.tile.StorehouseBaseTileEntity;
 
 public class TileFluidTank extends FluidTank implements ITileModule {
 	
-	public TileFluidTank (int capacity) {
+	private StorehouseBaseTileEntity owner;
+	
+	public TileFluidTank (StorehouseBaseTileEntity owner, int capacity) {
 		super(capacity);
+		this.owner = owner;
 	}
 	
-	public TileFluidTank (FluidStack fluidStack, int capacity) {
+	public TileFluidTank (StorehouseBaseTileEntity owner, FluidStack fluidStack, int capacity) {
 		super(fluidStack, capacity);
+		this.owner = owner;
 	}
 	
-	public TileFluidTank (Fluid fluid, int amount, int capacity) {
+	public TileFluidTank (StorehouseBaseTileEntity owner, Fluid fluid, int amount, int capacity) {
 		super(fluid, amount, capacity);
+		this.owner = owner;
+	}
+	
+	@Override
+	public FluidStack drain (int maxDrain, boolean doDrain) {
+		FluidStack fluid = super.drain(maxDrain, doDrain);
+		if (fluid != null) owner.notifyChange(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		return fluid;
+	}
+	
+	public FluidStack drain (FluidStack resource, boolean doDrain) {
+		FluidStack fluid = super.drain(resource, doDrain);
+		if (fluid != null) owner.notifyChange(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		return fluid;
+	}
+	
+	@Override
+	public int fill (FluidStack resource, boolean doFill) {
+		int filled = super.fill(resource, doFill);
+		if (filled != 0) owner.notifyChange(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		return filled;
 	}
 	
 	/**
@@ -59,6 +89,83 @@ public class TileFluidTank extends FluidTank implements ITileModule {
 	@SuppressWarnings ("unchecked")
 	@Override
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing, ModuleContext capacity) {
-		return (T) this;
+		return (T) new FluidTankViewer(this, capacity);
+	}
+	
+	public IFluidTank getInternalTank () {
+		return new InternalTank(this);
+	}
+	
+	private static class InternalTank implements IFluidTank {
+		
+		private FluidTank delegate;
+		
+		public InternalTank (FluidTank delegate) {
+			this.delegate = delegate;
+		}
+		
+		@Override
+		public FluidStack getFluid () {
+			return delegate.getFluid().copy();
+		}
+		
+		@Override
+		public int getFluidAmount () {
+			return delegate.getFluidAmount();
+		}
+		
+		@Override
+		public int getCapacity () {
+			return delegate.getCapacity();
+		}
+		
+		@Override
+		public FluidTankInfo getInfo () {
+			return new FluidTankInfo(this);
+		}
+		
+		@Override
+		public int fill (FluidStack resource, boolean doFill) {
+			return delegate.fillInternal(resource, doFill);
+		}
+		
+		@Override
+		public FluidStack drain (int maxDrain, boolean doDrain) {
+			return delegate.drainInternal(maxDrain, doDrain);
+		}
+	}
+	
+	public static class FluidTankViewer implements IFluidHandler {
+		
+		private ModuleContext context;
+		private FluidTank delegate;
+		
+		public FluidTankViewer (FluidTank delegate, ModuleContext context) {
+			this.context = context;
+			this.delegate = delegate;
+		}
+		
+		@Override
+		public int fill (FluidStack resource, boolean doFill) {
+			if (context == ModuleContext.INTERNAL) return delegate.fillInternal(resource, doFill);
+			return delegate.fill(resource, doFill);
+		}
+		
+		@Override
+		public FluidStack drain (int maxDrain, boolean doDrain) {
+			if (context == ModuleContext.INTERNAL) return delegate.drainInternal(maxDrain, doDrain);
+			return delegate.drain(maxDrain, doDrain);
+		}
+		
+		@Override
+		public FluidStack drain (FluidStack resource, boolean doDrain) {
+			if (context == ModuleContext.INTERNAL) return delegate.drainInternal(resource, doDrain);
+			return delegate.drain(resource, doDrain);
+		}
+		
+		@Override
+		public IFluidTankProperties[] getTankProperties () {
+			return delegate.getTankProperties();
+		}
 	}
 }

@@ -35,7 +35,7 @@ public class TileBurner extends StorehouseBaseTileMultiBlock implements IMultiBl
 	public TileBurner () {
 		super(ModBlocks.burner);
 		modules.add(theCrafter);
-		this.setEnergyStorage(new TileEnergyStorage(1200000, 640, 0));
+		this.setEnergyStorage(new TileEnergyStorage(this, 1200000, 640, 0));
 		this.setInventory(new InventoryManager(this, 6, new Integer[] { 1, 2, 3, 4, 5 }, new Integer[] { 0 }) {
 			
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
@@ -52,6 +52,7 @@ public class TileBurner extends StorehouseBaseTileMultiBlock implements IMultiBl
 				return false;
 			}
 		});
+		energyStorage.setRFPerTick(40);
 	}
 	
 	// -----------------------IMultiBlockController Methods-----------------------------------

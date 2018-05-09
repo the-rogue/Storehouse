@@ -47,7 +47,7 @@ public class TileLiquidGenerator extends TileBaseGenerator implements ICrafter {
 	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.liquid_generator_basic, ModBlocks.liquid_generator_advanced, ModBlocks.liquid_generator_ender };
 	protected final MachineCraftingHandler<TileLiquidGenerator>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileLiquidGenerator.class).newCrafter(this);
-	protected TileFluidTank tank = new TileFluidTank(10000) {
+	protected TileFluidTank tank = new TileFluidTank(this, 10000) {
 		
 		@Override
 		public boolean canFillFluidType (FluidStack fluid) {

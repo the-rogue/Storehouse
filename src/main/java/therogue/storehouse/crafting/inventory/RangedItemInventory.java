@@ -12,6 +12,7 @@ package therogue.storehouse.crafting.inventory;
 
 import com.google.common.base.Preconditions;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
@@ -30,19 +31,25 @@ public class RangedItemInventory implements IRecipeInventory {
 	}
 	
 	@Override
-	public IRecipeWrapper getComponent (int slot, boolean simulate) {
-		if (checkSlot(slot)) return new ItemStackWrapper(compose.getStackInSlot(slot + minSlot));
+	public IRecipeWrapper getComponent (int slot) {
+		if (checkSlot(slot)) return new ItemStackWrapper(compose.getStackInSlot(slot + minSlot).copy());
 		return IRecipeWrapper.NOTHING;
 	}
 	
 	@Override
-	public void insertComponent (int slot, IRecipeWrapper component) {
+	public void insertComponent (int slot, IRecipeWrapper component, boolean simulate) {
 		if (checkSlot(slot))
 		{
-			ItemStackWrapper wrapper = new ItemStackWrapper(compose.extractItem(slot + minSlot, -1, false));
+			ItemStackWrapper wrapper = new ItemStackWrapper(ItemStack.EMPTY);
 			wrapper.merge(component, compose.getSlotLimit(slot));
 			compose.insertItem(slot + minSlot, wrapper.getStack(), false);
 		}
+	}
+	
+	@Override
+	public IRecipeWrapper extractComponent (int slot, int amount, boolean simulate) {
+		if (!checkSlot(slot)) return IRecipeWrapper.NOTHING;
+		return new ItemStackWrapper(compose.extractItem(slot + minSlot, amount, simulate));
 	}
 	
 	@Override

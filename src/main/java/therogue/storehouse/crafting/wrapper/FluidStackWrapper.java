@@ -18,6 +18,10 @@ public class FluidStackWrapper implements IRecipeWrapper {
 	
 	private FluidStack stack;
 	
+	public FluidStackWrapper () {
+		this.stack = null;
+	}
+	
 	public FluidStackWrapper (FluidStack stack) {
 		this.stack = stack;
 	}

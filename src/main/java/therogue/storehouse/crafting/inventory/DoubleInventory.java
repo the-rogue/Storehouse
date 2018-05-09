@@ -25,15 +25,21 @@ public class DoubleInventory implements IRecipeInventory {
 	}
 	
 	@Override
-	public IRecipeWrapper getComponent (int slot, boolean simulate) {
-		if (slot < inventory2Slot1) return inventory1.getComponent(slot, simulate);
-		else return inventory2.getComponent(slot - inventory2Slot1, simulate);
+	public IRecipeWrapper getComponent (int slot) {
+		if (slot < inventory2Slot1) return inventory1.getComponent(slot);
+		else return inventory2.getComponent(slot - inventory2Slot1);
 	}
 	
 	@Override
-	public void insertComponent (int slot, IRecipeWrapper component) {
-		if (slot < inventory2Slot1) inventory1.insertComponent(slot, component);
-		else inventory2.insertComponent(slot - inventory2Slot1, component);
+	public void insertComponent (int slot, IRecipeWrapper component, boolean simulate) {
+		if (slot < inventory2Slot1) inventory1.insertComponent(slot, component, simulate);
+		else inventory2.insertComponent(slot - inventory2Slot1, component, simulate);
+	}
+	
+	@Override
+	public IRecipeWrapper extractComponent (int slot, int amount, boolean simulate) {
+		if (slot < inventory2Slot1) return inventory1.extractComponent(slot, amount, simulate);
+		return inventory2.extractComponent(slot - inventory2Slot1, amount, simulate);
 	}
 	
 	@Override

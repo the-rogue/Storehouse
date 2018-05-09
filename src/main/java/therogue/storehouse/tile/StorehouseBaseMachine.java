@@ -19,7 +19,7 @@ import therogue.storehouse.inventory.InventoryManager;
 public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements IGuiSupplier {
 	
 	protected InventoryManager inventory;
-	protected TileEnergyStorage energyStorage = new TileEnergyStorage(8000, 100, 0);
+	protected TileEnergyStorage energyStorage = new TileEnergyStorage(this, 8000, 100, 0);
 	
 	public StorehouseBaseMachine (IStorehouseBaseBlock block) {
 		super(block);

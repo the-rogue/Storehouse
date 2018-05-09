@@ -232,26 +232,33 @@ public class ContainerBase extends Container {
 		if (slot == null || !slot.canTakeStack(player)) return ItemStack.EMPTY;
 		if (slot == null || slot.getStack().isEmpty()) return ItemStack.EMPTY;
 		ItemStack current = slot.extractItem(-1, true);
-		ItemStack previousExtractedStack = current.copy();
-		int startIndex = 0;
-		int endIndex = 36;
-		int i = endIndex - 1;
-		if (slotId < 36)
+		ItemStack oldpreviousExtractedStack = current.copy();
+		for (int j = 0; j < 2; j++)
 		{
-			startIndex = 36;
-			endIndex = this.smartInventorySlots.size();
-			i = startIndex;
+			ItemStack previousExtractedStack = current.copy();
+			int startIndex = 0;
+			int endIndex = 36;
+			int i = endIndex - 1;
+			if (slotId < 36)
+			{
+				startIndex = 36;
+				endIndex = this.smartInventorySlots.size();
+				i = startIndex;
+			}
+			while (current.getCount() > 0 && (slotId < 36 && i < endIndex || slotId >= 36 && i >= startIndex))
+			{
+				IInventorySlot checkSlot = this.smartInventorySlots.get(i);
+				if (!checkSlot.getStack().isEmpty() || j == 1)
+				{
+					current = checkSlot.insertItem(current, false);
+				}
+				if (slotId >= 36) --i;
+				else++i;
+			}
+			slot.extractItem(previousExtractedStack.getCount() - current.getCount(), false);
 		}
-		while (current.getCount() > 0 && (slotId < 36 && i < endIndex || slotId >= 36 && i >= startIndex))
-		{
-			IInventorySlot checkSlot = this.smartInventorySlots.get(i);
-			current = checkSlot.insertItem(current, false);
-			if (slotId >= 36) --i;
-			else++i;
-		}
-		slot.extractItem(previousExtractedStack.getCount() - current.getCount(), false);
-		if (current.getCount() == previousExtractedStack.getCount()) return ItemStack.EMPTY;
-		return previousExtractedStack.copy();
+		if (current.getCount() == oldpreviousExtractedStack.getCount()) return ItemStack.EMPTY;
+		return oldpreviousExtractedStack.copy();
 	}
 	
 	protected ItemStack clickStack (IInventorySlot slot, int dragType, EntityPlayer player) {

@@ -14,19 +14,25 @@ public class EnergyInventory implements IRecipeInventory {
 	}
 	
 	@Override
-	public IRecipeWrapper getComponent (int slot, boolean simulate) {
+	public IRecipeWrapper getComponent (int slot) {
 		if (slot == 0) return new EnergyWrapper(compose.getEnergyStored());
 		return IRecipeWrapper.NOTHING;
 	}
 	
 	@Override
-	public void insertComponent (int slot, IRecipeWrapper component) {
+	public void insertComponent (int slot, IRecipeWrapper component, boolean simulate) {
 		if (slot == 0)
 		{
-			EnergyWrapper wrapper = new EnergyWrapper(compose.getEnergyStored());
+			EnergyWrapper wrapper = new EnergyWrapper(0);
 			wrapper.merge(component, compose.getMaxEnergyStored());
-			compose.setEnergyStored(wrapper.getSize());
+			compose.receiveEnergy(wrapper.getSize(), simulate);
 		}
+	}
+	
+	@Override
+	public IRecipeWrapper extractComponent (int slot, int amount, boolean simulate) {
+		if (slot == 0) return new EnergyWrapper(compose.extractEnergy(amount, simulate));
+		return IRecipeWrapper.NOTHING;
 	}
 	
 	@Override

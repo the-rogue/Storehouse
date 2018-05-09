@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -75,7 +76,8 @@ public class InWorldUtils {
 		{
 			if (!blocktest.isValidBlock(world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))), false))
 			{
-				//LOG.info("MultiBlock Failed To Form at: " + "Pos: " + blocktest.getCurrentPosition() + " WorldPos: " + arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation)) + " State: " + world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))));
+				// LOG.info("MultiBlock Failed To Form at: " + "Pos: " + blocktest.getCurrentPosition() + " WorldPos: " + arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation)) + " State: " +
+				// world.getBlockState(arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation))));
 				return false;
 			}
 		}
@@ -144,12 +146,7 @@ public class InWorldUtils {
 	}
 	
 	private static List<BlockPos> getPositionsFromPSCList (List<WorldStates> positionStates) {
-		List<BlockPos> positions = new ArrayList<BlockPos>();
-		for (WorldStates psc : positionStates)
-		{
-			positions.add(psc.position);
-		}
-		return positions;
+		return positionStates.stream().map(s -> s.position).collect(Collectors.toList());
 	}
 	
 	private static class MultiBlockCheckResult {

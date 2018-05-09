@@ -124,7 +124,7 @@ public class TileCombustionGenerator extends TileBaseGenerator implements ICraft
 		
 		@Override
 		public boolean matches (TileCombustionGenerator machine) {
-			IRecipeWrapper wrapper = machine.getCraftingInventory().getComponent(0, true);
+			IRecipeWrapper wrapper = machine.getCraftingInventory().getComponent(0);
 			return itemValidForRecipe(machine, 0, wrapper);
 		}
 		

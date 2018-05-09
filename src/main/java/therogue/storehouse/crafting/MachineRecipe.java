@@ -119,12 +119,12 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 		int emptySlots = 0;
 		for (int i = 0; i < craftingInventory.getSize(); i++)
 		{
-			if (craftingInventory.getComponent(i, true).isUnUsed())
+			if (craftingInventory.getComponent(i).isUnUsed())
 			{
 				++emptySlots;
 				continue;
 			}
-			int ingredientIndex = matchesRecipeIngredient(tile, i, craftingInventory.getComponent(i, true), matchedIngredients);
+			int ingredientIndex = matchesRecipeIngredient(tile, i, craftingInventory.getComponent(i), matchedIngredients);
 			if (ingredientIndex != -1)
 			{
 				matchedIngredients.add(ingredientIndex);
@@ -161,7 +161,7 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 		NonNullList<IRecipeWrapper> availableIngredients = NonNullList.create();
 		for (int i = 0; i < inventory.getSize(); i++)
 		{
-			availableIngredients.add(inventory.getComponent(i, true));
+			availableIngredients.add(inventory.getComponent(i));
 		}
 		for (int i = 0; i < getAmountOfOutputs(); i++)
 		{
@@ -193,20 +193,20 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 		IRecipeInventory outputInventory = machine.getOutputInventory();
 		Map<Integer, Integer> ingredientSlots = new HashMap<Integer, Integer>();
 		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
-		if (getAmountOfOutputs() < outputInventory.getSize()) return false;
+		if (getAmountOfOutputs() > outputInventory.getSize()) return false;
 		Map<Integer, Integer> outputMap = getCorrespondingInventorySlots(outputInventory, getSlotLimitsList(outputInventory));
 		if (!checkMatchingSlots(outputMap)) return false;
 		for (Integer i : orderedSlots)
 		{
 			if (getInputComponent(i).isUnUsed()) continue;
-			if (!getInputComponent(i).matches(craftInventory.getComponent(i, true))) return false;
+			if (!getInputComponent(i).matches(craftInventory.getComponent(i))) return false;
 			ingredientSlots.put(i, i);
 		}
 		NonNullList<IRecipeWrapper> availableIngredients = NonNullList.create();
 		for (int i = 0; i < craftInventory.getSize(); i++)
 		{
 			if (orderedSlots.contains(i)) continue;
-			availableIngredients.add(craftInventory.getComponent(i, true));
+			availableIngredients.add(craftInventory.getComponent(i));
 		}
 		for (int i = 0; i < getAmountOfInputs(); i++)
 		{
@@ -226,7 +226,7 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 		for (Integer ingredient : ingredientSlots.keySet())
 		{
 			IRecipeComponent component = getInputComponent(ingredient);
-			IRecipeWrapper stack = craftInventory.getComponent(ingredientSlots.get(ingredient) + orderedSlots.size(), true);
+			IRecipeWrapper stack = craftInventory.getComponent(ingredientSlots.get(ingredient) + orderedSlots.size());
 			IRecipeWrapper testStack = stack.copy();
 			testStack.increaseSize(-component.getSize());
 			IRecipeWrapper container = component.getResidue();
@@ -269,7 +269,7 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 			}
 			else
 			{
-				availableIngredients.add(craftingInventory.getComponent(i, true));
+				availableIngredients.add(craftingInventory.getComponent(i));
 			}
 		}
 		// Map Unordered Slots to the machine slot with the ingredient
@@ -287,20 +287,18 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 		// Remove all the items that are used up in the process and deposit any left-overs
 		for (Integer ingredient : ingredientSlots.keySet())
 		{
-			IRecipeWrapper stack = craftingInventory.getComponent(ingredientSlots.get(ingredient), false);
-			stack.increaseSize(-getInputComponent(ingredient).getSize());
-			craftingInventory.insertComponent(ingredientSlots.get(ingredient), stack);
+			craftingInventory.extractComponent(ingredientSlots.get(ingredient), getInputComponent(ingredient).getSize(), false);
 			IRecipeWrapper container = getInputComponent(ingredient).getResidue();
 			if (!container.isUnUsed())
 			{
-				craftingInventory.insertComponent(ingredientSlots.get(ingredient), container);
+				craftingInventory.insertComponent(ingredientSlots.get(ingredient), container, false);
 			}
 		}
 		// Put all output items in the output slots
 		Map<Integer, Integer> outputMap = getCorrespondingInventorySlots(outputInventory, getSlotLimitsList(outputInventory));
 		for (int i = 0; i < getAmountOfOutputs(); i++)
 		{
-			outputInventory.insertComponent(outputMap.get(i), getOutputComponent(i).getWrapper());
+			outputInventory.insertComponent(outputMap.get(i), getOutputComponent(i).getWrapper(), false);
 		}
 		return Result.CONTINUE;
 	}

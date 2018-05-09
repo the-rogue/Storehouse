@@ -33,7 +33,7 @@ public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock imp
 		this.tier = tier;
 		this.RFPerTick = RFPerTick;
 		this.timeModifier = timeModifier;
-		this.setEnergyStorage(new TileEnergyStorage(RFPerTick * 3600, 0, RFPerTick * 9));
+		this.setEnergyStorage(new TileEnergyStorage(this, RFPerTick * 3600, 0, RFPerTick * 9));
 		FIELDDATA.addField( () -> tier.ordinal());
 		FIELDDATA.addField( () -> {// Current item energy level
 			ItemStack stack = inventory.extractItem(0, -1, true, ModuleContext.INTERNAL);

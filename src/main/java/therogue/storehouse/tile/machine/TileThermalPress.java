@@ -47,6 +47,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements ICrafter 
 				return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
 			}
 		});
+		energyStorage.setRFPerTick(40);
 	}
 	
 	// -------------------------ICrafter Methods-----------------------------------

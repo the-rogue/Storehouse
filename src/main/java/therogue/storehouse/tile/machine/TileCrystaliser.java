@@ -41,7 +41,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter, 
 	
 	public static final int RFPerTick = 10;
 	private MachineCraftingHandler<TileCrystaliser>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileCrystaliser.class).newCrafter(this);
-	protected TileFluidTank tank = new TileFluidTank(10000) {
+	protected TileFluidTank tank = new TileFluidTank(this, 10000) {
 		
 		@Override
 		public boolean canFillFluidType (FluidStack fluid) {
@@ -85,6 +85,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter, 
 		});
 		tank.setTileEntity(this);
 		tank.setCanDrain(false);
+		energyStorage.setRFPerTick(40);
 	}
 	
 	// -------------------------ITickable-----------------------------------------------------------------
@@ -116,7 +117,7 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ICrafter, 
 	
 	@Override
 	public IRecipeInventory getCraftingInventory () {
-		return new DoubleInventory(new RangedItemInventory(getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 1, 2), new FluidTankInventory(tank));
+		return new DoubleInventory(new RangedItemInventory(getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 1, 2), new FluidTankInventory(tank.getInternalTank()));
 	}
 	
 	@Override

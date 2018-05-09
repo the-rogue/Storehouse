@@ -26,7 +26,6 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.crafting.IMachineRecipe.Result;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.tile.ITileModule;
@@ -191,10 +190,7 @@ public class MachineCraftingHandler<T> {
 		// -----------------------------ITileModule------------------------
 		@Override
 		public void onOtherChange (Capability<?> changedCapability) {
-			if (changedCapability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || changedCapability == null)
-			{
-				this.checkRecipes();
-			}
+			this.checkRecipes();
 		}
 		
 		/**

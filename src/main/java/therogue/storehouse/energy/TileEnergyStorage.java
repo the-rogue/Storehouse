@@ -6,21 +6,26 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
+import therogue.storehouse.tile.StorehouseBaseTileEntity;
 
 public class TileEnergyStorage extends EnergyStorageAdv implements ITileModule {
 	
+	private StorehouseBaseTileEntity owner;
 	private int RFPerTick = 0;
 	
-	public TileEnergyStorage (int capacity) {
+	public TileEnergyStorage (StorehouseBaseTileEntity owner, int capacity) {
 		super(capacity);
+		this.owner = owner;
 	}
 	
-	public TileEnergyStorage (int capacity, int maxTransfer) {
+	public TileEnergyStorage (StorehouseBaseTileEntity owner, int capacity, int maxTransfer) {
 		super(capacity, maxTransfer);
+		this.owner = owner;
 	}
 	
-	public TileEnergyStorage (int capacity, int maxReceive, int maxExtract) {
+	public TileEnergyStorage (StorehouseBaseTileEntity owner, int capacity, int maxReceive, int maxExtract) {
 		super(capacity, maxReceive, maxExtract);
+		this.owner = owner;
 	}
 	
 	public void setRFPerTick (int RFPerTick) {
@@ -33,6 +38,20 @@ public class TileEnergyStorage extends EnergyStorageAdv implements ITileModule {
 	
 	public void runTick () {
 		if (hasSufficientRF()) this.modifyEnergyStored(-RFPerTick);
+	}
+	
+	@Override
+	public int receiveEnergy (int maxReceive, boolean simulate) {
+		int recieved = super.receiveEnergy(maxReceive, simulate);
+		if (recieved > 0) owner.notifyChange(CapabilityEnergy.ENERGY);
+		return recieved;
+	}
+	
+	@Override
+	public int extractEnergy (int maxExtract, boolean simulate) {
+		int extracted = super.extractEnergy(maxExtract, simulate);
+		if (extracted > 0) owner.notifyChange(CapabilityEnergy.ENERGY);
+		return extracted;
 	}
 	
 	/**

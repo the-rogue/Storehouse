@@ -36,7 +36,7 @@ public class TileCarbonCompressor extends StorehouseBaseTileMultiBlock implement
 	public TileCarbonCompressor () {
 		super(ModBlocks.carbonCompressor);
 		modules.add(theCrafter);
-		this.setEnergyStorage(new TileEnergyStorage(1200000, 640, 0));
+		this.setEnergyStorage(new TileEnergyStorage(this, 1200000, 640, 0));
 		this.setInventory(new InventoryManager(this, 2, new Integer[] { 1 }, new Integer[] { 0 }) {
 			
 			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
@@ -44,6 +44,7 @@ public class TileCarbonCompressor extends StorehouseBaseTileMultiBlock implement
 				return false;
 			}
 		});
+		energyStorage.setRFPerTick(40);
 	}
 	
 	// -----------------------IMultiBlockController Methods-----------------------------------
