@@ -37,9 +37,9 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import therogue.storehouse.GeneralUtils;
+import therogue.storehouse.LOG;
 import therogue.storehouse.client.gui.element.ElementBase;
-import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.LOG;
 
 public class GuiHelper {
 	

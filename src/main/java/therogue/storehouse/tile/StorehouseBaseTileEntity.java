@@ -33,7 +33,7 @@ import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.network.CGuiUpdateTEPacket;
 import therogue.storehouse.network.SGuiUpdateTEPacket;
 
-public abstract class StorehouseBaseTileEntity extends TileEntity implements IWorldNameable {
+public abstract class StorehouseBaseTileEntity extends TileEntity implements IWorldNameable, ITile {
 	
 	protected List<ITileModule> modules = new ArrayList<>();
 	private String customName;
@@ -114,6 +114,7 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 		modules.get(message.getItem()).readModuleFromNBT(message.getNbt());
 	}
 	
+	@Override
 	public void notifyChange (Capability<?> changedCapability) {
 		if (world.isRemote) return;
 		modules.forEach(module -> module.onOtherChange(changedCapability));
@@ -132,10 +133,15 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 		return this.getCapability(capability, facing, ModuleContext.SIDE);
 	}
 	
+	@Override
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing, ModuleContext context) {
 		for (ITileModule module : modules)
 			if (module.hasCapability(capability, facing)) return module.getCapability(capability, facing, context);
 		return super.getCapability(capability, facing);
+	}
+	
+	public BlockPos getTilePosition () {
+		return this.pos;
 	}
 	
 	@Override

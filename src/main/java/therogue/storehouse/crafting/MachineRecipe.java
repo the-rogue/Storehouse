@@ -24,32 +24,27 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 
 import net.minecraft.util.NonNullList;
-import therogue.storehouse.crafting.inventory.IRecipeInventory;
+import net.minecraftforge.energy.CapabilityEnergy;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
 import therogue.storehouse.crafting.wrapper.IRecipeComponent;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
+import therogue.storehouse.tile.ITile;
 
-public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
+public class MachineRecipe<T extends ITile> implements IMachineRecipe<T> {
 	
-	public static final Predicate<ICrafter> ALWAYSMODE = new Predicate<ICrafter>() {
-		
-		@Override
-		public boolean test (ICrafter crafter) {
-			return true;
-		}
-	};
-	public final Predicate<ICrafter> correctMode;
+	public final Predicate<ICraftingManager<T>> correctMode;
 	public final int timeTaken;
 	private final List<IRecipeComponent> craftingOutputs;
 	private final List<IRecipeComponent> craftingInputs;
 	
-	public static <T extends ICrafter> MachineRecipe<T> create (Class<T> crafterClass, int timeTaken, IRecipeComponent craftingOutputs,
+	public static <T extends ITile> MachineRecipe<T> create (Class<T> crafterClass, int timeTaken, IRecipeComponent craftingOutputs,
 			IRecipeComponent... craftingInputs) {
 		MachineRecipe<T> recipe = new MachineRecipe<T>(timeTaken, craftingOutputs, craftingInputs);
 		MachineCraftingHandler.register(crafterClass, recipe);
 		return recipe;
 	}
 	
-	public static <T extends ICrafter> MachineRecipe<T> create (Class<T> crafterClass, Predicate<ICrafter> correctMode, int timeTaken,
+	public static <T extends ITile> MachineRecipe<T> create (Class<T> crafterClass, Predicate<ICraftingManager<T>> correctMode, int timeTaken,
 			IRecipeComponent craftingOutputs,
 			IRecipeComponent... craftingInputs) {
 		MachineRecipe<T> recipe = new MachineRecipe<T>(correctMode, timeTaken, craftingOutputs, craftingInputs);
@@ -57,14 +52,14 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 		return recipe;
 	}
 	
-	public static <T extends ICrafter> MachineRecipe<T> create (Class<T> crafterClass, int timeTaken, List<IRecipeComponent> craftingOutputs,
+	public static <T extends ITile> MachineRecipe<T> create (Class<T> crafterClass, int timeTaken, List<IRecipeComponent> craftingOutputs,
 			IRecipeComponent... craftingInputs) {
 		MachineRecipe<T> recipe = new MachineRecipe<T>(timeTaken, craftingOutputs, craftingInputs);
 		MachineCraftingHandler.register(crafterClass, recipe);
 		return recipe;
 	}
 	
-	public static <T extends ICrafter> MachineRecipe<T> create (Class<T> crafterClass, Predicate<ICrafter> correctMode, int timeTaken,
+	public static <T extends ITile> MachineRecipe<T> create (Class<T> crafterClass, Predicate<ICraftingManager<T>> correctMode, int timeTaken,
 			List<IRecipeComponent> craftingOutputs, IRecipeComponent... craftingInputs) {
 		MachineRecipe<T> recipe = new MachineRecipe<T>(correctMode, timeTaken, craftingOutputs, craftingInputs);
 		MachineCraftingHandler.register(crafterClass, recipe);
@@ -72,19 +67,22 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 	}
 	
 	public MachineRecipe (int timeTaken, IRecipeComponent craftingOutputs, IRecipeComponent... craftingInputs) {
-		this(ALWAYSMODE, timeTaken, Lists.newArrayList(craftingOutputs), craftingInputs);
+		this(timeTaken, Lists.newArrayList(craftingOutputs), craftingInputs);
 	}
 	
-	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, IRecipeComponent craftingOutputs, IRecipeComponent... craftingInputs) {
+	public MachineRecipe (Predicate<ICraftingManager<T>> correctMode, int timeTaken, IRecipeComponent craftingOutputs, IRecipeComponent... craftingInputs) {
 		this(correctMode, timeTaken, Lists.newArrayList(craftingOutputs), craftingInputs);
 	}
 	
 	public MachineRecipe (int timeTaken, List<IRecipeComponent> craftingOutputs, IRecipeComponent... craftingInputs) {
-		this(ALWAYSMODE, timeTaken, Lists.newArrayList(craftingOutputs), craftingInputs);
+		this.correctMode = (ICraftingManager<T> manager) -> true;
+		this.timeTaken = timeTaken;
+		this.craftingOutputs = craftingOutputs;
+		this.craftingInputs = Arrays.asList(craftingInputs);
 	}
 	
 	// All ordered slots must have a placeholder of IRecipeComponent.Empty if they are unused
-	public MachineRecipe (Predicate<ICrafter> correctMode, int timeTaken, List<IRecipeComponent> craftingOutputs, IRecipeComponent... craftingInputs) {
+	public MachineRecipe (Predicate<ICraftingManager<T>> correctMode, int timeTaken, List<IRecipeComponent> craftingOutputs, IRecipeComponent... craftingInputs) {
 		this.correctMode = correctMode;
 		this.timeTaken = timeTaken;
 		this.craftingOutputs = craftingOutputs;
@@ -108,13 +106,14 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 	}
 	
 	@Override
-	public int timeTaken (T machine) {
+	public int timeTaken (ICraftingManager<T> machine) {
 		return timeTaken;
 	}
 	
 	@Override
-	public boolean itemValidForRecipe (T tile, int index, IRecipeWrapper stack) {
-		IRecipeInventory craftingInventory = tile.getCraftingInventory();
+	public boolean itemValidForRecipe (ICraftingManager<T> cm, int index, IRecipeWrapper stack) {
+		if (!correctMode.test(cm)) return false;
+		IRecipeInventory craftingInventory = cm.getCraftingInventory();
 		Set<Integer> matchedIngredients = new HashSet<Integer>();
 		int emptySlots = 0;
 		for (int i = 0; i < craftingInventory.getSize(); i++)
@@ -124,21 +123,20 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 				++emptySlots;
 				continue;
 			}
-			int ingredientIndex = matchesRecipeIngredient(tile, i, craftingInventory.getComponent(i), matchedIngredients);
+			int ingredientIndex = matchesRecipeIngredient(cm, i, craftingInventory.getComponent(i), matchedIngredients);
 			if (ingredientIndex != -1)
 			{
 				matchedIngredients.add(ingredientIndex);
 			}
 		}
 		if (matchedIngredients.size() + emptySlots > getAmountOfInputs()
-				&& matchesRecipeIngredient(tile, index, stack, null) != -1)
+				&& matchesRecipeIngredient(cm, index, stack, null) != -1)
 			return true;
-		if (matchesRecipeIngredient(tile, index, stack, matchedIngredients) != -1) return true;
+		if (matchesRecipeIngredient(cm, index, stack, matchedIngredients) != -1) return true;
 		return false;
 	}
 	
-	private int matchesRecipeIngredient (T machine, int index, IRecipeWrapper test, @Nullable Set<Integer> exclusions) {
-		if (!correctMode.test(machine)) return -1;
+	private int matchesRecipeIngredient (ICraftingManager<T> machine, int index, IRecipeWrapper test, @Nullable Set<Integer> exclusions) {
 		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
 		if (orderedSlots.contains(index))
 		{
@@ -187,12 +185,12 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 	
 	// TODO : Make sure this recognises that there may be multiple items in an ingredient stack
 	@Override
-	public boolean matches (T machine) {
-		if (!correctMode.test(machine)) return false;
-		IRecipeInventory craftInventory = machine.getCraftingInventory();
-		IRecipeInventory outputInventory = machine.getOutputInventory();
+	public boolean matches (ICraftingManager<T> cm) {
+		if (!correctMode.test(cm)) return false;
+		IRecipeInventory craftInventory = cm.getCraftingInventory();
+		IRecipeInventory outputInventory = cm.getOutputInventory();
 		Map<Integer, Integer> ingredientSlots = new HashMap<Integer, Integer>();
-		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
+		Set<Integer> orderedSlots = cm.getOrderMattersSlots();
 		if (getAmountOfOutputs() > outputInventory.getSize()) return false;
 		Map<Integer, Integer> outputMap = getCorrespondingInventorySlots(outputInventory, getSlotLimitsList(outputInventory));
 		if (!checkMatchingSlots(outputMap)) return false;
@@ -240,20 +238,22 @@ public class MachineRecipe<T extends ICrafter> implements IMachineRecipe<T> {
 	}
 	
 	@Override
-	public Result doTick (T machine) {
-		if (!matches(machine)) return Result.RESET;
-		if (!machine.isRunning()) return Result.PAUSE;
-		machine.doRunTick();
-		return Result.CONTINUE;
+	public Result doTick (ICraftingManager<T> cm) {
+		if (!matches(cm)) return Result.RESET;
+		T tile = cm.getAttachedTile();
+		if (!tile.hasCapability(CapabilityEnergy.ENERGY, null)) return Result.RESET;
+		Result res = cm.canRun();
+		if (res == Result.CONTINUE) cm.doSpecifiedRunTick();
+		return res;
 	}
 	
 	@Override
-	public Result end (T machine) {
-		if (!matches(machine)) return Result.RESET;
-		IRecipeInventory craftingInventory = machine.getCraftingInventory();
-		IRecipeInventory outputInventory = machine.getOutputInventory();
+	public Result end (ICraftingManager<T> cm) {
+		if (!matches(cm)) return Result.RESET;
+		IRecipeInventory craftingInventory = cm.getCraftingInventory();
+		IRecipeInventory outputInventory = cm.getOutputInventory();
 		Map<Integer, Integer> ingredientSlots = new HashMap<Integer, Integer>();
-		Set<Integer> orderedSlots = machine.getOrderMattersSlots();
+		Set<Integer> orderedSlots = cm.getOrderMattersSlots();
 		// Map Ordered slots to the machine slot
 		for (Integer i : orderedSlots)
 		{

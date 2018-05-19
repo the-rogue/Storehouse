@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
 
 public class ElementActiveIcon extends ElementBase {
@@ -26,8 +25,7 @@ public class ElementActiveIcon extends ElementBase {
 	public final int y;
 	public final Supplier<Integer> activeFieldGetter;
 	
-	public ElementActiveIcon (GuiBase gui, int x, int y, ResourceLocation iconLocation, Supplier<Integer> activeFieldGetter) {
-		super(gui);
+	public ElementActiveIcon (int x, int y, ResourceLocation iconLocation, Supplier<Integer> activeFieldGetter) {
 		this.iconLocation = iconLocation;
 		this.icon = GuiHelper.getImageAt(iconLocation);
 		this.x = x;

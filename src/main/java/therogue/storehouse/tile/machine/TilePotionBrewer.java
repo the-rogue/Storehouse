@@ -22,6 +22,7 @@ import net.minecraftforge.common.brewing.IBrewingRecipe;
 import therogue.storehouse.container.GuiItemCapability;
 import therogue.storehouse.crafting.IMachineRecipe;
 import therogue.storehouse.crafting.MachineCraftingHandler;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
@@ -32,34 +33,32 @@ import therogue.storehouse.tile.StorehouseBaseMachine;
 
 public class TilePotionBrewer extends StorehouseBaseMachine implements ITickable {
 	
-	public static final int RFPerTick = 80;
 	public static final int CRAFTING_TIME = 400;
 	public static final List<Integer> OUTPUT_SLOTS = Lists.newArrayList(0, 1, 2);
 	public static final List<Integer> BREWING_SLOTS = Lists.newArrayList(3, 4, 5);
 	public static final List<Integer> BOTTLE_SLOTS = Lists.newArrayList(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17);
-	protected final MachineCraftingHandler<TilePotionBrewer>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TilePotionBrewer.class).newCrafter(this);
+	protected final MachineCraftingHandler<TilePotionBrewer>.CraftingManager theCrafter;
 	private int injector = 0;
 	// TODO ability to change injectors/configure, multiple lists of injectors, switchable via redstone, buttons in UI, bigger UI
 	private final ArrayList<TilePotionInjector> injectors = new ArrayList<>();
 	
 	public TilePotionBrewer () {
 		super(ModBlocks.potion_brewer);
+		this.setInventory(new InventoryManager(this, 18, BOTTLE_SLOTS.toArray(new Integer[0]), new Integer[] { 0, 1, 2 }));
+		theCrafter = MachineCraftingHandler.getHandler(TilePotionBrewer.class).newCrafter(this, "", "", energyStorage);
 		modules.add(theCrafter);
-		this.setInventory(new InventoryManager(this, 18, BOTTLE_SLOTS.toArray(new Integer[0]), new Integer[] { 0, 1, 2 }) {
-			
-			@Override
-			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				if (BOTTLE_SLOTS.contains(index))
+		energyStorage.setRFPerTick(80);
+		inventory.setItemValidForSlotChecks( (index, stack) -> {
+			if (BOTTLE_SLOTS.contains(index))
+			{
+				for (IBrewingRecipe recipe : BrewingRecipeRegistry.getRecipes())
 				{
-					for (IBrewingRecipe recipe : BrewingRecipeRegistry.getRecipes())
-					{
-						if (recipe.isInput(stack)) return true;
-					}
-					return false;
+					if (recipe.isInput(stack)) return true;
 				}
-				if (BREWING_SLOTS.contains(index) || OUTPUT_SLOTS.contains(index)) return true;
 				return false;
 			}
+			if (BREWING_SLOTS.contains(index) || OUTPUT_SLOTS.contains(index)) return true;
+			return false;
 		});
 	}
 	
@@ -127,12 +126,12 @@ public class TilePotionBrewer extends StorehouseBaseMachine implements ITickable
 		}
 		
 		@Override
-		public int timeTaken (TilePotionBrewer machine) {
+		public int timeTaken (ICraftingManager<TilePotionBrewer> machine) {
 			return CRAFTING_TIME;
 		}
 		
 		@Override
-		public boolean itemValidForRecipe (TilePotionBrewer tile, int index, IRecipeWrapper stack) {
+		public boolean itemValidForRecipe (ICraftingManager<TilePotionBrewer> tile, int index, IRecipeWrapper stack) {
 			if (!(stack instanceof ItemStackWrapper)) return false;
 			for (IBrewingRecipe recipe : BrewingRecipeRegistry.getRecipes())
 			{
@@ -142,16 +141,17 @@ public class TilePotionBrewer extends StorehouseBaseMachine implements ITickable
 		}
 		
 		@Override
-		public boolean matches (TilePotionBrewer machine) {
-			return BrewingRecipeRegistry.canBrew(machine.inventory.getInventory(), machine.getNextIngredient(), BREWING_SLOTS.stream().mapToInt(i -> i).toArray());
+		public boolean matches (ICraftingManager<TilePotionBrewer> machine) {
+			return BrewingRecipeRegistry.canBrew(machine.getAttachedTile().inventory.getInventory(), machine.getAttachedTile().getNextIngredient(), BREWING_SLOTS.stream().mapToInt(i -> i).toArray());
 		}
 		
 		@Override
-		public Result end (TilePotionBrewer machine) {
-			ItemStack nextIngredient = machine.injectors.get(machine.injector).getNext();
-			BrewingRecipeRegistry.brewPotions(machine.inventory.getInventory(), nextIngredient, BREWING_SLOTS.stream().mapToInt(i -> i).toArray());
+		public Result end (ICraftingManager<TilePotionBrewer> machine) {
+			TilePotionBrewer brewer = machine.getAttachedTile();
+			ItemStack nextIngredient = brewer.injectors.get(brewer.injector).getNext();
+			BrewingRecipeRegistry.brewPotions(brewer.inventory.getInventory(), nextIngredient, BREWING_SLOTS.stream().mapToInt(i -> i).toArray());
 			nextIngredient.shrink(1);
-			++machine.injector;
+			++brewer.injector;
 			return Result.CONTINUE;
 		}
 	}

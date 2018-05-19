@@ -13,6 +13,7 @@ package therogue.storehouse.inventory;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,24 +26,31 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.tile.ITile;
 import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
-import therogue.storehouse.tile.StorehouseBaseTileEntity;
-import therogue.storehouse.util.ItemStackUtils;
 
-public abstract class InventoryManager implements ITileModule {
+public class InventoryManager implements ITileModule {
 	
-	private StorehouseBaseTileEntity owner;
+	private ITile owner;
 	private NonNullList<ItemStack> inventory;
 	private Set<Integer> extractable_slots;
 	private Set<Integer> insertable_slots;
 	private Set<Integer> insertable_gui_slots;
+	/**
+	 * Specify what items can go in which slots here for different inventories
+	 * 
+	 * @param slot The slot the stack would be inserted into
+	 * @param stack The stack that would be inserted
+	 * @return Whether or not this stack should be allowed to be placed into this inventory
+	 */
+	private BiPredicate<Integer, ItemStack> itemValidForSlotChecks = (slot, stack) -> true;
 	
-	public InventoryManager (StorehouseBaseTileEntity owner, int size, @Nullable Integer[] insertable_slots, @Nullable Integer[] extractable_slots) {
+	public InventoryManager (ITile owner, int size, @Nullable Integer[] insertable_slots, @Nullable Integer[] extractable_slots) {
 		this(owner, size, insertable_slots, null, extractable_slots);
 	}
 	
-	public InventoryManager (StorehouseBaseTileEntity owner, int size, @Nullable Integer[] insertable_slots, @Nullable Integer[] insertable_gui_slots, @Nullable Integer[] extractable_slots) {
+	public InventoryManager (ITile owner, int size, @Nullable Integer[] insertable_slots, @Nullable Integer[] insertable_gui_slots, @Nullable Integer[] extractable_slots) {
 		this.owner = owner;
 		inventory = NonNullList.<ItemStack> withSize(size, ItemStack.EMPTY);
 		this.extractable_slots = new HashSet<Integer>();
@@ -72,6 +80,17 @@ public abstract class InventoryManager implements ITileModule {
 		}
 		this.insertable_gui_slots.addAll(this.insertable_slots);
 		if (insertable_gui_slots != null) this.insertable_gui_slots.addAll(Arrays.asList(insertable_gui_slots));
+	}
+	
+	/**
+	 * Specify what items can go in which slots here for different inventories
+	 * 
+	 * @param slot The slot the stack would be inserted into
+	 * @param stack The stack that would be inserted
+	 * @return Whether or not this stack should be allowed to be placed into this inventory
+	 */
+	public void setItemValidForSlotChecks (BiPredicate<Integer, ItemStack> procedure) {
+		this.itemValidForSlotChecks = procedure;
 	}
 	
 	/**
@@ -125,7 +144,7 @@ public abstract class InventoryManager implements ITileModule {
 		if ((context == ModuleContext.SIDE || context == ModuleContext.OTHER) && !insertable_slots.contains(slot)) return stack;
 		if (context == ModuleContext.GUI && !insertable_gui_slots.contains(slot)) return stack;
 		ItemStack stackInSlot = inventory.get(slot);
-		if (context != ModuleContext.INTERNAL && !isItemValidForSlotChecks(slot, stack) && !stack.isItemEqual(stackInSlot)) return stack;
+		if (context != ModuleContext.INTERNAL && !itemValidForSlotChecks.test(slot, stack) && !stack.isItemEqual(stackInSlot)) return stack;
 		if (!ItemStackUtils.areStacksMergable(stack, stackInSlot)) return stack;
 		ItemStack returns = stack.copy();
 		ItemStack inSlot = ItemStackUtils.mergeStacks(Math.min(getSlotLimit(slot), stack.getMaxStackSize()), true, stackInSlot.copy(), returns);
@@ -201,15 +220,6 @@ public abstract class InventoryManager implements ITileModule {
 	
 	// ---------------------------------Inventory Specific Methods------------------------------------
 	/**
-	 * Specify what items can go in which slots here for different inventories
-	 * 
-	 * @param slot The slot the stack would be inserted into
-	 * @param stack The stack that would be inserted
-	 * @return Whether or not this stack should be allowed to be placed into this inventory
-	 */
-	protected abstract boolean isItemValidForSlotChecks (int slot, ItemStack stack);
-	
-	/**
 	 * Try to insert a stack at the same time as pulling one out,
 	 * provided to make sure stacks don't disappear when trying to insert one and extract another
 	 * 
@@ -221,7 +231,7 @@ public abstract class InventoryManager implements ITileModule {
 	public ItemStack swapStacks (int index, ItemStack toInsert, boolean simulate, ModuleContext context) {
 		if ((context == ModuleContext.SIDE || context == ModuleContext.OTHER) && !insertable_slots.contains(index)) return toInsert;
 		if (context == ModuleContext.GUI && !insertable_gui_slots.contains(index)) return toInsert;
-		if (context != ModuleContext.INTERNAL && !isItemValidForSlotChecks(index, toInsert)) return toInsert;
+		if (context != ModuleContext.INTERNAL && !itemValidForSlotChecks.test(index, toInsert)) return toInsert;
 		if (context != ModuleContext.INTERNAL && context != ModuleContext.GUI && !extractable_slots.contains(index)) return toInsert;
 		ItemStack stackInSlot = inventory.get(index);
 		if (!simulate)

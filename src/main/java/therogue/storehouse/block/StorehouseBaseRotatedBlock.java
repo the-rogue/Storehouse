@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.block.Decorative;
+package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRotatedPillar;
@@ -16,9 +16,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
+import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseRotatedBlock extends BlockRotatedPillar implements IStorehouseBaseBlock {
 	

@@ -18,9 +18,9 @@ import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
+import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.config.ConfigHandler;
-import therogue.storehouse.util.LOG;
 
 public class StorehouseConfigGui extends GuiConfig {
 	

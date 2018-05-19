@@ -8,50 +8,48 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.crafting.inventory;
+package therogue.storehouse.crafting;
 
-import net.minecraftforge.fluids.IFluidTank;
-import therogue.storehouse.crafting.wrapper.FluidStackWrapper;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 
-public class FluidTankInventory implements IRecipeInventory {
+public class DoubleInventory implements IRecipeInventory {
 	
-	private final IFluidTank compose;
+	private final IRecipeInventory inventory1;
+	private final IRecipeInventory inventory2;
+	private final int inventory2Slot1;
 	
-	public FluidTankInventory (IFluidTank compose) {
-		this.compose = compose;
+	public DoubleInventory (IRecipeInventory inventory1, IRecipeInventory inventory2) {
+		this.inventory1 = inventory1;
+		this.inventory2 = inventory2;
+		this.inventory2Slot1 = inventory1.getSize();
 	}
 	
 	@Override
 	public IRecipeWrapper getComponent (int slot) {
-		if (slot == 0) return new FluidStackWrapper(compose.drain(compose.getFluidAmount(), false));
-		return IRecipeWrapper.NOTHING;
+		if (slot < inventory2Slot1) return inventory1.getComponent(slot);
+		else return inventory2.getComponent(slot - inventory2Slot1);
 	}
 	
 	@Override
 	public void insertComponent (int slot, IRecipeWrapper component, boolean simulate) {
-		if (slot == 0)
-		{
-			FluidStackWrapper wrapper = new FluidStackWrapper();
-			wrapper.merge(component, compose.getCapacity());
-			compose.fill(wrapper.getStack(), !simulate);
-		}
+		if (slot < inventory2Slot1) inventory1.insertComponent(slot, component, simulate);
+		else inventory2.insertComponent(slot - inventory2Slot1, component, simulate);
 	}
 	
 	@Override
 	public IRecipeWrapper extractComponent (int slot, int amount, boolean simulate) {
-		if (slot == 0) return new FluidStackWrapper(compose.drain(amount, !simulate));
-		return IRecipeWrapper.NOTHING;
+		if (slot < inventory2Slot1) return inventory1.extractComponent(slot, amount, simulate);
+		return inventory2.extractComponent(slot - inventory2Slot1, amount, simulate);
 	}
 	
 	@Override
 	public int getComponentSlotLimit (int slot) {
-		if (slot == 0) return compose.getCapacity();
-		return 0;
+		if (slot < inventory2Slot1) return inventory1.getComponentSlotLimit(slot);
+		else return inventory2.getComponentSlotLimit(slot - inventory2Slot1);
 	}
 	
 	@Override
 	public int getSize () {
-		return 1;
+		return inventory1.getSize() + inventory2.getSize();
 	}
 }

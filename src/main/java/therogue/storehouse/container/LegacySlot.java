@@ -3,7 +3,7 @@ package therogue.storehouse.container;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import therogue.storehouse.util.ItemStackUtils;
+import therogue.storehouse.inventory.ItemStackUtils;
 
 public class LegacySlot implements IInventorySlot {
 	

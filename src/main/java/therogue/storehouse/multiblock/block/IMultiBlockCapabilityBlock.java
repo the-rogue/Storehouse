@@ -14,7 +14,6 @@ import java.util.Map;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
 
 public interface IMultiBlockCapabilityBlock {
 	

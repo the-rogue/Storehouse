@@ -12,6 +12,7 @@ package therogue.storehouse.client.gui.machine;
 
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.TierIcons;
 import therogue.storehouse.client.gui.element.ElementEnergyBar;
@@ -25,18 +26,18 @@ import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.TileData.CapabilityDataHandler;
 import therogue.storehouse.tile.machine.TileCombustionGenerator;
-import therogue.storehouse.util.GeneralUtils;
 
 public class GuiCombustionGenerator extends GuiBase {
 	
 	public GuiCombustionGenerator (ContainerBase inventory, TileCombustionGenerator linked) {
 		super(GeneralUtils.getEnumFromNumber(MachineTier.class, linked.getCapability(CapabilityDataHandler.DATAHANDLER, null, ModuleContext.GUI).getField(0)).guiLocation, inventory, linked);
-		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		ICraftingManager<?> crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
 		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
 		IDataHandler data = linked.getCapability(CapabilityDataHandler.DATAHANDLER, null, ModuleContext.GUI);
 		int tier = data.getField(0);
-		elements.add(new ProgressHandler(this, () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(tier))));
-		elements.add(new ProgressHandler(this, () -> data.getField(1), () -> data.getField(2), new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(tier))));
-		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(tier))));
+		elements.add(new ProgressHandler( () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), new ElementVerticalProgressBar(48, 35, TierIcons.CombustionIndicator.getLocation(tier))));
+		elements.add(new ProgressHandler( () -> data.getField(1), () -> data.getField(2), new ElementVerticalProgressBar(51, 17, TierIcons.EnergyIndicator.getLocation(tier))));
+		elements.add(new ProgressHandler( () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, TierIcons.EnergyBar.getLocation(tier))));
+		onConstructorFinishTEMP();
 	}
 }

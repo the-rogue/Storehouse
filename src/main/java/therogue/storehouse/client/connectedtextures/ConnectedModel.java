@@ -1,5 +1,5 @@
 
-package therogue.storehouse.client.model;
+package therogue.storehouse.client.connectedtextures;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,9 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
-import therogue.storehouse.client.connectedtextures.CTBlockRegistry;
 import therogue.storehouse.client.connectedtextures.ConnectionState.ConnectedTexturePair;
-import therogue.storehouse.client.connectedtextures.IConnectedTextureLogic;
 
 public class ConnectedModel implements IModel {
 	

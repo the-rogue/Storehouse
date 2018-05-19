@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 import therogue.storehouse.crafting.wrapper.IRecipeComponent.IItemComponent;
-import therogue.storehouse.util.ItemStackUtils;
+import therogue.storehouse.inventory.ItemStackUtils;
 
 public class ItemStackComponent implements IItemComponent {
 	

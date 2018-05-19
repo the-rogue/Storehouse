@@ -14,9 +14,12 @@ import therogue.storehouse.client.gui.GuiBase;
 
 public abstract class ElementBase {
 	
-	public final GuiBase gui;
+	public GuiBase gui;
 	
-	public ElementBase (GuiBase gui) {
+	public ElementBase () {
+	}
+	
+	public void setGUI (GuiBase gui) {
 		this.gui = gui;
 	}
 	

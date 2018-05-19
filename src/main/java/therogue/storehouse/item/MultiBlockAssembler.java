@@ -1,7 +1,5 @@
 
-package therogue.storehouse.item.tool;
-
-import therogue.storehouse.item.StorehouseBaseItem;
+package therogue.storehouse.item;
 
 public class MultiBlockAssembler extends StorehouseBaseItem {
 	

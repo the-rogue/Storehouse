@@ -13,7 +13,6 @@ package therogue.storehouse.client.gui.element;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
 
 public class ElementButton extends ElementBase {
@@ -26,8 +25,7 @@ public class ElementButton extends ElementBase {
 	public final Runnable onPress;
 	private boolean pressed = false;
 	
-	public ElementButton (GuiBase gui, IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, Supplier<Integer> modeSupplier, Runnable onPress) {
-		super(gui);
+	public ElementButton (IconDefinition mainIcon, String commonToolTip, IconDefinition[] innerIcons, String[] toolTips, Supplier<Integer> modeSupplier, Runnable onPress) {
 		this.mainIcon = mainIcon;
 		this.commonToolTip = commonToolTip;
 		this.innerIcons = innerIcons;

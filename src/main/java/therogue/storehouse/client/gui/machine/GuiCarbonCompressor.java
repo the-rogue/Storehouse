@@ -30,10 +30,11 @@ public class GuiCarbonCompressor extends GuiBase {
 	
 	public GuiCarbonCompressor (ContainerBase inventory, TileCarbonCompressor linked) {
 		super(NORMAL_TEXTURE, inventory, linked);
-		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		ICraftingManager<?> crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
 		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
-		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
-		elements.add(new ProgressHandler(this, () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), createProgressBar()));
+		elements.add(new ProgressHandler( () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ProgressHandler( () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), createProgressBar()));
+		onConstructorFinishTEMP();
 	}
 	
 	private static IProgressBar createProgressBar () {

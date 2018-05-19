@@ -12,8 +12,7 @@ package therogue.storehouse.client.gui.element;
 
 import java.util.function.Supplier;
 
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.util.LOG;
+import therogue.storehouse.LOG;
 
 public class ElementMode extends ElementBase {
 	
@@ -22,8 +21,7 @@ public class ElementMode extends ElementBase {
 	public final Supplier<Integer> modeSupplier;
 	private long lastCheckTime;
 	
-	public ElementMode (GuiBase gui, Supplier<Integer> modeSupplier, ElementBase... elements) {
-		super(gui);
+	public ElementMode (Supplier<Integer> modeSupplier, ElementBase... elements) {
 		this.elements = elements;
 		this.current = elements[0];
 		this.modeSupplier = modeSupplier;

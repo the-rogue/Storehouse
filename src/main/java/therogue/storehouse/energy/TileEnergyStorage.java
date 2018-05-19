@@ -4,26 +4,26 @@ package therogue.storehouse.energy;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import therogue.storehouse.tile.ITile;
 import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
-import therogue.storehouse.tile.StorehouseBaseTileEntity;
 
 public class TileEnergyStorage extends EnergyStorageAdv implements ITileModule {
 	
-	private StorehouseBaseTileEntity owner;
+	private ITile owner;
 	private int RFPerTick = 0;
 	
-	public TileEnergyStorage (StorehouseBaseTileEntity owner, int capacity) {
+	public TileEnergyStorage (ITile owner, int capacity) {
 		super(capacity);
 		this.owner = owner;
 	}
 	
-	public TileEnergyStorage (StorehouseBaseTileEntity owner, int capacity, int maxTransfer) {
+	public TileEnergyStorage (ITile owner, int capacity, int maxTransfer) {
 		super(capacity, maxTransfer);
 		this.owner = owner;
 	}
 	
-	public TileEnergyStorage (StorehouseBaseTileEntity owner, int capacity, int maxReceive, int maxExtract) {
+	public TileEnergyStorage (ITile owner, int capacity, int maxReceive, int maxExtract) {
 		super(capacity, maxReceive, maxExtract);
 		this.owner = owner;
 	}
@@ -32,12 +32,12 @@ public class TileEnergyStorage extends EnergyStorageAdv implements ITileModule {
 		this.RFPerTick = RFPerTick;
 	}
 	
-	public boolean hasSufficientRF () {
-		return energy >= this.RFPerTick;
+	public boolean canRun () {
+		return 0 <= energy - RFPerTick && energy - RFPerTick <= capacity;
 	}
 	
 	public void runTick () {
-		if (hasSufficientRF()) this.modifyEnergyStored(-RFPerTick);
+		if (canRun()) this.modifyEnergyStored(-RFPerTick);
 	}
 	
 	@Override

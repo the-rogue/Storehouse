@@ -35,11 +35,11 @@ public class GuiCrystaliser extends GuiBase {
 	
 	public GuiCrystaliser (ContainerBase inventory, TileCrystaliser linked) {
 		super(NORMAL_TEXTURE, inventory, linked);
-		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		ICraftingManager<?> crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
 		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
-		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
-		elements.add(new ElementFluidTank(this, Icons.FluidTank.getLocation(), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null, ModuleContext.GUI)));
-		elements.add(new ProgressHandler(this, () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), new ElementFadingProgressBar(46, 18, 54, 54, new Color(15, 26, 95)) {
+		elements.add(new ProgressHandler( () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ElementFluidTank(Icons.FluidTank.getLocation(), 105, 12, linked.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null, ModuleContext.GUI)));
+		elements.add(new ProgressHandler( () -> crafter.getTimeElapsed(), () -> crafter.getTotalCraftingTime(), new ElementFadingProgressBar(46, 18, 54, 54, new Color(15, 26, 95)) {
 			
 			@Override
 			public void drawBottomLayer (GuiBase gui, int mouseX, int mouseY, float progress) {
@@ -57,5 +57,6 @@ public class GuiCrystaliser extends GuiBase {
 				gui.drawTexturedModalRect(x, y, width, height);
 			}
 		}));
+		onConstructorFinishTEMP();
 	}
 }

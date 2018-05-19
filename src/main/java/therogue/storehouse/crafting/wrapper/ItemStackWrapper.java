@@ -12,7 +12,7 @@ package therogue.storehouse.crafting.wrapper;
 
 import net.minecraft.item.ItemStack;
 import therogue.storehouse.crafting.wrapper.IRecipeComponent.IItemComponent;
-import therogue.storehouse.util.ItemStackUtils;
+import therogue.storehouse.inventory.ItemStackUtils;
 
 public class ItemStackWrapper implements IRecipeWrapper {
 	

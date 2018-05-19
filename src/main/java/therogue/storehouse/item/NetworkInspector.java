@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.item.tool;
+package therogue.storehouse.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,7 +22,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.config.ConfigValues;
 import therogue.storehouse.energy.ItemEnergyCapabilityProvider;
-import therogue.storehouse.item.StorehouseBaseActiveItem;
 
 public class NetworkInspector extends StorehouseBaseActiveItem {
 	

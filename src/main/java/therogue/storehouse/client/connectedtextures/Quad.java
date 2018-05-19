@@ -1,5 +1,5 @@
 
-package therogue.storehouse.client.util;
+package therogue.storehouse.client.connectedtextures;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +30,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import therogue.storehouse.client.connectedtextures.ConnectedLogic;
 
 @ParametersAreNonnullByDefault
 public class Quad {

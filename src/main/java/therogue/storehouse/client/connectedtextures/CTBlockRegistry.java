@@ -12,9 +12,9 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.connectedtextures.ConnectionState.ConnectedTexturePair;
-import therogue.storehouse.util.LOG;
 
 public enum CTBlockRegistry {
 	INSTANCE;

@@ -1,15 +1,18 @@
 
-package therogue.storehouse.crafting.inventory;
+package therogue.storehouse.crafting;
 
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import therogue.storehouse.crafting.wrapper.EnergyWrapper;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
-import therogue.storehouse.energy.EnergyStorageAdv;
+import therogue.storehouse.tile.ITile;
+import therogue.storehouse.tile.ModuleContext;
 
 public class EnergyInventory implements IRecipeInventory {
 	
-	private final EnergyStorageAdv compose;
+	private final IEnergyStorage compose;
 	
-	public EnergyInventory (EnergyStorageAdv compose) {
+	public EnergyInventory (IEnergyStorage compose) {
 		this.compose = compose;
 	}
 	
@@ -44,5 +47,18 @@ public class EnergyInventory implements IRecipeInventory {
 	@Override
 	public int getSize () {
 		return 1;
+	}
+	
+	public static final EnergyInvConverter CONVERTER = new EnergyInvConverter();
+	
+	private static class EnergyInvConverter implements IRecipeInventoryConverter {
+		
+		public String getString () {
+			return "ENG";
+		}
+		
+		public IRecipeInventory getFromTile (ITile tile, int data[]) {
+			return new EnergyInventory(tile.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.INTERNAL));
+		}
 	}
 }

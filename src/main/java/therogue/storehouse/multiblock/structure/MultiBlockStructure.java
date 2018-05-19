@@ -12,7 +12,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
-import therogue.storehouse.util.LOG;
+import therogue.storehouse.LOG;
 
 public class MultiBlockStructure {
 	

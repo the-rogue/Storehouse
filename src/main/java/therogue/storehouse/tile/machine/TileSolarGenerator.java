@@ -10,7 +10,6 @@
 
 package therogue.storehouse.tile.machine;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.block.BlockUtils;
 import therogue.storehouse.block.IStorehouseBaseBlock;
@@ -26,17 +25,12 @@ public class TileSolarGenerator extends TileBaseGenerator {
 	public static final int[] RFPerTicks = { 5, 40, 1200 };
 	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.solar_generator_basic, ModBlocks.solar_generator_advanced, ModBlocks.solar_generator_ender };
+	private static final MultiBlockStructure[] STRUCTURES = { ModMultiBlocks.basicSolarGeneratorStructure, ModMultiBlocks.advancedSolarGeneratorStructure, ModMultiBlocks.enderSolarGeneratorStructure };
 	
 	public TileSolarGenerator (MachineTier tier) {
-		super(BLOCKS[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
-		this.setInventory(new InventoryManager(this, 2, new Integer[] { 0 }, new Integer[] { 1 }) {
-			
-			@Override
-			public boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				if ((index == 0 || index == 1) && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return true;
-				return false;
-			}
-		});
+		super(BLOCKS[tier.ordinal()], STRUCTURES[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
+		this.setInventory(new InventoryManager(this, 2, new Integer[] { 0 }, new Integer[] { 1 }));
+		inventory.setItemValidForSlotChecks( (index, stack) -> (index == 0 || index == 1) && stack.hasCapability(CapabilityEnergy.ENERGY, null) ? true : false);
 		FIELDDATA.addField( () -> BlockUtils.canBlockSeeSky(this.pos, this.world)
 				&& (this.world.getWorldInfo().getWorldTime() % 24000) < 12000 ? 1 : 0);// Is Running?
 	}

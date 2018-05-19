@@ -12,16 +12,13 @@ package therogue.storehouse.client.gui.element;
 
 import java.util.function.Supplier;
 
-import therogue.storehouse.client.gui.GuiBase;
-
 public class ProgressHandler extends ElementBase {
 	
 	public final Supplier<Integer> progressSupplier;
 	public final Supplier<Integer> maxProgressSupplier;
 	public final IProgressBar drawThing;
 	
-	public ProgressHandler (GuiBase gui, Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier, IProgressBar drawThing) {
-		super(gui);
+	public ProgressHandler (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier, IProgressBar drawThing) {
 		this.progressSupplier = progressSupplier;
 		this.maxProgressSupplier = maxProgressSupplier;
 		this.drawThing = drawThing;

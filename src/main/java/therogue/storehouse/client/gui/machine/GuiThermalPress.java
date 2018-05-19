@@ -42,19 +42,21 @@ public class GuiThermalPress extends GuiBase {
 	
 	public GuiThermalPress (ContainerBase inventory, TileThermalPress linked) {
 		super(NORMAL_TEXTURE, inventory, linked);
-		ICraftingManager crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
+		ICraftingManager<?> crafter = linked.getCapability(CapabilityCrafter.CraftingManager, null, ModuleContext.GUI);
 		Supplier<Integer> timeElapsed = () -> crafter.getTimeElapsed();
 		Supplier<Integer> totalTime = () -> crafter.getTotalCraftingTime();
 		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
-		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
+		elements.add(new ProgressHandler( () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 8, Icons.EnergyBar.getLocation())));
 		IButton<?> button = linked.getCapability(CapabilityButton.BUTTON, null, ModuleContext.GUI);
-		IconDefinition[] innerIcons = new IconDefinition[] { new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/press_mode.png"), this.xSize - 17, 7, 10, 10),
-				new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/join_mode.png"), this.xSize - 17, 7, 10, 10),
-				new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/stamp_mode.png"), this.xSize - 17, 7, 10, 10),
-				new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/high_pressure_mode.png"), this.xSize - 17, 7, 10, 10), };
-		elements.add(new ElementButton(this, new IconDefinition(Icons.Button.getLocation(), this.xSize - 20, 4, 16, 16), "Click to change the mode of the Thermal Press", innerIcons,
-				new String[] { "Current Setting: Press", "Current Setting: Join", "Current Setting: Stamp", "Current Setting: High Pressure" }, () -> button.getOrdinal(), () -> button.pressed()));
-		elements.add(new ElementMode(this,() -> button.getOrdinal(), createPressProgressBar(timeElapsed, totalTime), createJoinProgressBar(timeElapsed, totalTime), createStampProgressBar(timeElapsed, totalTime), createHighPressureProgressBar(timeElapsed, totalTime)));
+		IconDefinition[] innerIcons = new IconDefinition[] { new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/press_mode.png"), this.xSize
+				- 17, 7, 10, 10), new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/join_mode.png"), this.xSize
+						- 17, 7, 10, 10), new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/stamp_mode.png"), this.xSize
+								- 17, 7, 10, 10), new IconDefinition(new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/icons/thermalpress/high_pressure_mode.png"), this.xSize
+										- 17, 7, 10, 10), };
+		elements.add(new ElementButton(new IconDefinition(Icons.Button.getLocation(), this.xSize
+				- 20, 4, 16, 16), "Click to change the mode of the Thermal Press", innerIcons, new String[] { "Current Setting: Press", "Current Setting: Join", "Current Setting: Stamp", "Current Setting: High Pressure" }, () -> button.getOrdinal(), () -> button.pressed()));
+		elements.add(new ElementMode( () -> button.getOrdinal(), createPressProgressBar(timeElapsed, totalTime), createJoinProgressBar(timeElapsed, totalTime), createStampProgressBar(timeElapsed, totalTime), createHighPressureProgressBar(timeElapsed, totalTime)));
+		onConstructorFinishTEMP();
 	}
 	
 	private ElementBase createPressProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
@@ -62,19 +64,19 @@ public class GuiThermalPress extends GuiBase {
 		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
 		IProgressBar topbottom = new DoubleProgressBar(pointerbottom, pointertop);
 		IProgressBar bar = new JoinProgressBar(topbottom, createFinal());
-		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
+		return new ProgressHandler(progressSupplier, maxProgressSupplier, bar);
 	}
 	
 	private ElementBase createJoinProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
 		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
 		IProgressBar bar = new JoinProgressBar(pointertop, createFinal());
-		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
+		return new ProgressHandler(progressSupplier, maxProgressSupplier, bar);
 	}
 	
 	private ElementBase createStampProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
 		IProgressBar pointertop = new ElementVerticalProgressBar(67, 27, Icons.ProgressDown.getLocation(), false);
 		IProgressBar bar = new JoinProgressBar(pointertop, createFinal());
-		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
+		return new ProgressHandler(progressSupplier, maxProgressSupplier, bar);
 	}
 	
 	private ElementBase createHighPressureProgressBar (Supplier<Integer> progressSupplier, Supplier<Integer> maxProgressSupplier) {
@@ -94,7 +96,7 @@ public class GuiThermalPress extends GuiBase {
 		IProgressBar combo2top = new JoinProgressBar(combo1top, pointertop);
 		IProgressBar topbottom = new DoubleProgressBar(combo2top, combo2bottom);
 		IProgressBar bar = new JoinProgressBar(topbottom, createFinal());
-		return new ProgressHandler(this, progressSupplier, maxProgressSupplier, bar);
+		return new ProgressHandler(progressSupplier, maxProgressSupplier, bar);
 	}
 	
 	private IProgressBar createFinal () {

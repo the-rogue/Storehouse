@@ -1,5 +1,5 @@
 
-package therogue.storehouse.client.model;
+package therogue.storehouse.client.connectedtextures;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -64,11 +64,8 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IRegistryDelegate;
-import therogue.storehouse.client.connectedtextures.ConnectedLogic;
-import therogue.storehouse.client.connectedtextures.ConnectionState;
 import therogue.storehouse.client.connectedtextures.ConnectionState.ConnectedTexturePair;
 import therogue.storehouse.client.connectedtextures.ConnectionState.RenderProperty;
-import therogue.storehouse.client.util.Quad;
 
 public class ConnectedBakedModel implements IBakedModel {
 	

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.util;
+package therogue.storehouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,5 +43,23 @@ public class GeneralUtils {
 			toReturn.add(element);
 		}
 		return toReturn;
+	}
+	
+	public static boolean isInteger (String str) {
+		if (str == null) return false;
+		int length = str.length();
+		if (length == 0) return false;
+		int i = 0;
+		if (str.charAt(0) == '-')
+		{
+			if (length == 1) return false;
+			i = 1;
+		}
+		for (; i < length; i++)
+		{
+			char c = str.charAt(i);
+			if (c < '0' || c > '9') return false;
+		}
+		return true;
 	}
 }

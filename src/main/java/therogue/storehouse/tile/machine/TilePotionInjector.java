@@ -31,13 +31,7 @@ public class TilePotionInjector extends StorehouseBaseMachine {
 	
 	public TilePotionInjector () {
 		super(ModBlocks.potion_injector);
-		this.setInventory(new InventoryManager(this, 1, new Integer[] { 0 }, new Integer[] { 0 }) {
-			
-			@Override
-			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				return true;
-			}
-		});
+		this.setInventory(new InventoryManager(this, 1, new Integer[] { 0 }, new Integer[] { 0 }));
 	}
 	
 	@Override

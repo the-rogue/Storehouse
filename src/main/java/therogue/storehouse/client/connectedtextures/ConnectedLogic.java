@@ -9,7 +9,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import therogue.storehouse.client.connectedtextures.IConnectedTextureLogic.IConnectionTest;
-import therogue.storehouse.client.util.FlatFacing;
 
 /**
  * The CTM renderer will draw the block's FACE using by assembling 4 quadrants from the 5 available block

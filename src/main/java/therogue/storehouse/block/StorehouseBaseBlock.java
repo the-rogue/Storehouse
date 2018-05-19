@@ -12,8 +12,8 @@ package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.util.LOG;
 
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	

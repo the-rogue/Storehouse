@@ -1,9 +1,6 @@
 
 package therogue.storehouse.tile.machine;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,34 +12,25 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import therogue.storehouse.crafting.ICrafter;
+import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.crafting.MachineCraftingHandler;
-import therogue.storehouse.crafting.inventory.IRecipeInventory;
-import therogue.storehouse.crafting.inventory.RangedItemInventory;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
 import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.inventory.ItemStackUtils;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
-import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.ItemStackUtils;
 
-public class TileForge extends StorehouseBaseTileEntity implements ICrafter {
+public class TileForge extends StorehouseBaseTileEntity {
 	
 	protected InventoryManager inventory;
-	private MachineCraftingHandler<TileForge>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileForge.class).newNonTickingCrafter(this);
+	protected final MachineCraftingHandler<TileForge>.CraftingManager theCrafter;
 	
 	public TileForge () {
 		super(ModBlocks.forge);
 		inventory = new InventoryManager(this, 2, new Integer[0], new Integer[] { 1 }, new Integer[0]) {
-			
-			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				if (!this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL).getStackInSlot(0).isEmpty())
-					return false;
-				return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
-			}
 			
 			@Override
 			public int getSlotLimit (int slot) {
@@ -50,7 +38,13 @@ public class TileForge extends StorehouseBaseTileEntity implements ICrafter {
 			}
 		};
 		modules.add(inventory);
+		theCrafter = MachineCraftingHandler.getHandler(TileForge.class).newNonTickingCrafter(this, "ITM 1 2", "ITM 0 1");
 		modules.add(theCrafter);
+		inventory.setItemValidForSlotChecks( (index, stack) -> {
+			if (!this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL).getStackInSlot(0).isEmpty())
+				return false;
+			return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
+		});
 	}
 	
 	// -------------------------Tile Specific Utility Methods-------------------------------------------
@@ -86,22 +80,6 @@ public class TileForge extends StorehouseBaseTileEntity implements ICrafter {
 			}
 		}
 		return true;
-	}
-	
-	// -------------------------ICrafter Methods-----------------------------------
-	@Override
-	public Set<Integer> getOrderMattersSlots () {
-		return new HashSet<Integer>();
-	}
-	
-	@Override
-	public IRecipeInventory getCraftingInventory () {
-		return new RangedItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 1, 2);
-	}
-	
-	@Override
-	public IRecipeInventory getOutputInventory () {
-		return new RangedItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 0, 1);
 	}
 	
 	// -------------------------Inventory Methods-----------------------------------

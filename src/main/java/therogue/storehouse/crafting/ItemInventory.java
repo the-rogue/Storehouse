@@ -8,22 +8,25 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.crafting.inventory;
+package therogue.storehouse.crafting;
 
 import com.google.common.base.Preconditions;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
+import therogue.storehouse.tile.ITile;
+import therogue.storehouse.tile.ModuleContext;
 
-public class RangedItemInventory implements IRecipeInventory {
+public class ItemInventory implements IRecipeInventory {
 	
 	private final IItemHandler compose;
 	private final int minSlot;
 	private final int maxSlot;
 	
-	public RangedItemInventory (IItemHandler compose, int minSlot, int maxSlotExclusive) {
+	public ItemInventory (IItemHandler compose, int minSlot, int maxSlotExclusive) {
 		Preconditions.checkArgument(maxSlotExclusive > minSlot, "Max slot must be greater than min slot");
 		this.compose = compose;
 		this.minSlot = minSlot;
@@ -65,5 +68,23 @@ public class RangedItemInventory implements IRecipeInventory {
 	
 	private boolean checkSlot (int localSlot) {
 		return localSlot + minSlot < maxSlot;
+	}
+	
+	public static final ItemInvConverter CONVERTER = new ItemInvConverter();
+	
+	private static class ItemInvConverter implements IRecipeInventoryConverter {
+		
+		public String getString () {
+			return "ITM";
+		}
+		
+		public IRecipeInventory getFromTile (ITile tile, int data[]) {
+			return new ItemInventory(tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), data[0], data[1]);
+		}
+		
+		@Override
+		public int numOfDataItems () {
+			return 2;
+		}
 	}
 }

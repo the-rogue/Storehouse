@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.capabilitywrapper;
+package therogue.storehouse.multiblock.block;
 
 import net.minecraftforge.common.capabilities.Capability;
 

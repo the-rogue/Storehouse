@@ -28,10 +28,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.block.BlockUtils;
+import therogue.storehouse.inventory.IInventoryItemHandler;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
-import therogue.storehouse.util.GeneralUtils;
 
 public class ContainerBase extends Container {
 	
@@ -63,13 +64,21 @@ public class ContainerBase extends Container {
 		}
 	}
 	
-	protected IInventorySlot addSlot (IInventorySlot slot) {
+	public IInventorySlot addSlot (IInventorySlot slot) {
 		this.addSlotToContainer(new SlotAdapter(slot));
 		smartInventorySlots.add(slot);
 		return slot;
 	}
 	
-	protected IInventorySlot addTESlot (IInventorySlot slot) {
+	public void setTESlotList (IInventoryItemHandler inventory, int[] slotPositions) {
+		if (slotPositions.length % 3 != 0) throw new IllegalArgumentException("List of slot positions size is not a multiple of 3");
+		for (int i = 0; i < slotPositions.length / 3; i++)
+		{
+			this.addTESlot(new InventorySlot(inventory, slotPositions[i * 3], slotPositions[i * 3 + 1], slotPositions[i * 3 + 2]));
+		}
+	}
+	
+	public IInventorySlot addTESlot (IInventorySlot slot) {
 		Slot slotAdapter = new SlotAdapter(slot);
 		this.addSlotToContainer(slotAdapter);
 		tileEntitySlots.add(slotAdapter);

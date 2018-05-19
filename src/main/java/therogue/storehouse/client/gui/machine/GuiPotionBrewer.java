@@ -34,7 +34,7 @@ public class GuiPotionBrewer extends GuiBase {
 		this.xSize = 198;
 		this.ySize = 186;
 		IEnergyStorage energy = linked.getCapability(CapabilityEnergy.ENERGY, null, ModuleContext.GUI);
-		elements.add(new ProgressHandler(this, () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 18, Icons.EnergyBar.getLocation())));
+		elements.add(new ProgressHandler( () -> energy.getEnergyStored(), () -> energy.getMaxEnergyStored(), new ElementEnergyBar(8, 18, Icons.EnergyBar.getLocation())));
 		drawingInstructions.add( () -> {
 			Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(linked.getNextIngredient(), 100, 37);
 			BufferBuilder vertexBuffer = Tessellator.getInstance().getBuffer();
@@ -51,5 +51,6 @@ public class GuiPotionBrewer extends GuiBase {
 			GlStateManager.popAttrib();
 			GlStateManager.popMatrix();
 		});
+		onConstructorFinishTEMP();
 	}
 }

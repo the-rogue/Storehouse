@@ -27,7 +27,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
+import therogue.storehouse.multiblock.block.ICapabilityWrapper;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.multiblock.tile.IMultiBlockController;
 import therogue.storehouse.multiblock.tile.InWorldUtils;
 import therogue.storehouse.multiblock.tile.InWorldUtils.MultiBlockFormationResult;
@@ -42,9 +43,11 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	protected List<WorldStates> components = null;
 	protected Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> multiblockCapabilites;
 	protected boolean activationLock = false;
+	protected final MultiBlockStructure structure;
 	
-	public StorehouseBaseTileMultiBlock (IStorehouseBaseBlock block) {
+	public StorehouseBaseTileMultiBlock (IStorehouseBaseBlock block, MultiBlockStructure structure) {
 		super(block);
+		this.structure = structure;
 	}
 	
 	// -------------------------IMultiblockController methods-----------------------------------
@@ -127,6 +130,11 @@ public abstract class StorehouseBaseTileMultiBlock extends StorehouseBaseMachine
 	@Override
 	public StorehouseBaseTileEntity getTile () {
 		return this;
+	}
+	
+	@Override
+	public MultiBlockStructure getStructure () {
+		return structure;
 	}
 	
 	// --------------------------IGuiSupplier Methods-----------------------------------

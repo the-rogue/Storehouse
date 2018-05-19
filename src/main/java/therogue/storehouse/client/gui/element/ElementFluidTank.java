@@ -18,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import therogue.storehouse.client.gui.GuiBase;
 import therogue.storehouse.client.gui.GuiHelper;
 
 public class ElementFluidTank extends ElementBase {
@@ -29,8 +28,7 @@ public class ElementFluidTank extends ElementBase {
 	public final int y;
 	public final IFluidHandler tank;
 	
-	public ElementFluidTank (GuiBase gui, ResourceLocation location, int x, int y, IFluidHandler tank) {
-		super(gui);
+	public ElementFluidTank (ResourceLocation location, int x, int y, IFluidHandler tank) {
 		this.iconLocation = location;
 		this.icon = GuiHelper.getImageAt(iconLocation);
 		this.x = x;

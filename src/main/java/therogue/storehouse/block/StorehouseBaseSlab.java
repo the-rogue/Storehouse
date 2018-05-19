@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.block.Decorative;
+package therogue.storehouse.block;
 
 import java.util.Random;
 
@@ -30,9 +30,8 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.util.LOG;
 
 public abstract class StorehouseBaseSlab extends BlockSlab implements IStorehouseBaseBlock {
 	

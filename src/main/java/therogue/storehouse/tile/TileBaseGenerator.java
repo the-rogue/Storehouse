@@ -15,10 +15,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
+import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyUtils;
 import therogue.storehouse.energy.TileEnergyStorage;
-import therogue.storehouse.util.GeneralUtils;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 
 public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock implements ITickable {
 	
@@ -27,13 +28,14 @@ public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock imp
 	public final MachineTier tier;
 	protected final TileData FIELDDATA = new TileData();
 	
-	public TileBaseGenerator (IStorehouseBaseBlock block, MachineTier tier, int RFPerTick, int timeModifier) {
-		super(block);
+	public TileBaseGenerator (IStorehouseBaseBlock block, MultiBlockStructure structure, MachineTier tier, int RFPerTick, int timeModifier) {
+		super(block, structure);
 		modules.add(FIELDDATA);
 		this.tier = tier;
 		this.RFPerTick = RFPerTick;
 		this.timeModifier = timeModifier;
 		this.setEnergyStorage(new TileEnergyStorage(this, RFPerTick * 3600, 0, RFPerTick * 9));
+		energyStorage.setRFPerTick(-RFPerTick);
 		FIELDDATA.addField( () -> tier.ordinal());
 		FIELDDATA.addField( () -> {// Current item energy level
 			ItemStack stack = inventory.extractItem(0, -1, true, ModuleContext.INTERNAL);

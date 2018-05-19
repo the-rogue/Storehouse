@@ -20,8 +20,8 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import therogue.storehouse.LOG;
 import therogue.storehouse.init.grouped.Ores;
-import therogue.storehouse.util.LOG;
 
 public class StorehouseWorldGen implements IWorldGenerator {
 	

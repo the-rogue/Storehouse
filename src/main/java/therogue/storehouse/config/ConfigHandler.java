@@ -15,8 +15,8 @@ import java.io.File;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.util.LOG;
 
 public class ConfigHandler {
 	

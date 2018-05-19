@@ -80,6 +80,6 @@ public interface ITileModule {
 	public default void onOtherChange (Capability<?> changedCapability) {
 	}
 	
-	public default void setTileData (StorehouseBaseTileEntity owner, int moduleListPos) {
+	public default void setTileData (ITile owner, int moduleListPos) {
 	}
 }

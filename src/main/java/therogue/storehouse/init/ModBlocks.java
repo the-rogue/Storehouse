@@ -18,7 +18,7 @@ import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseFacingMachine;
 import therogue.storehouse.block.StorehouseBaseMachine;
-import therogue.storehouse.block.Decorative.StorehouseBaseRotatedBlock;
+import therogue.storehouse.block.StorehouseBaseRotatedBlock;
 import therogue.storehouse.client.connectedtextures.CTBlockRegistry;
 import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.init.grouped.CraftingBlocks;

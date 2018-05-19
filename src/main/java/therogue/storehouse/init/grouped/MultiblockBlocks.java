@@ -11,10 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseCapabilityVariantBlock;
-import therogue.storehouse.capabilitywrapper.EnergyCapabilityWrapper;
-import therogue.storehouse.capabilitywrapper.FluidCapabilityWrapper;
-import therogue.storehouse.capabilitywrapper.ICapabilityWrapper;
-import therogue.storehouse.capabilitywrapper.ItemCapabilityWrapper;
+import therogue.storehouse.multiblock.block.EnergyCapabilityWrapper;
+import therogue.storehouse.multiblock.block.FluidCapabilityWrapper;
+import therogue.storehouse.multiblock.block.ICapabilityWrapper;
+import therogue.storehouse.multiblock.block.ItemCapabilityWrapper;
 
 public enum MultiblockBlocks {
 	EJECTOR (ItemCapabilityWrapper.EXTRACT),

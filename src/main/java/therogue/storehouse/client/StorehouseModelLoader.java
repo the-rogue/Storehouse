@@ -1,5 +1,5 @@
 
-package therogue.storehouse.client.model;
+package therogue.storehouse.client;
 
 import java.io.IOException;
 import java.util.Map;
@@ -15,6 +15,8 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.connectedtextures.CTBlockRegistry;
+import therogue.storehouse.client.connectedtextures.ConnectedBakedModel;
+import therogue.storehouse.client.connectedtextures.ConnectedModel;
 
 public enum StorehouseModelLoader implements ICustomModelLoader {
 	INSTANCE;

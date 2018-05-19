@@ -15,14 +15,12 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import therogue.storehouse.client.gui.GuiHelper.XYCoords;
 import therogue.storehouse.container.machine.ContainerThermalPress;
-import therogue.storehouse.crafting.ICrafter;
+import therogue.storehouse.crafting.ItemInventory;
 import therogue.storehouse.crafting.MachineCraftingHandler;
-import therogue.storehouse.crafting.inventory.IRecipeInventory;
-import therogue.storehouse.crafting.inventory.RangedItemInventory;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
@@ -30,51 +28,23 @@ import therogue.storehouse.tile.ClientButton;
 import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 
-public class TileThermalPress extends StorehouseBaseMachine implements ICrafter {
+public class TileThermalPress extends StorehouseBaseMachine {
 	
 	public static final int RFPerTick = 40;
 	private ClientButton<Mode> mode = new ClientButton<Mode>("TPMode", Mode.class, Mode.PRESS);
-	private MachineCraftingHandler<TileThermalPress>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileThermalPress.class).newCrafter(this);
+	protected final MachineCraftingHandler<TileThermalPress>.CraftingManager theCrafter;
 	
 	public TileThermalPress () {
 		super(ModBlocks.thermal_press);
-		mode.setOnUpdate( () -> theCrafter.checkRecipes());
 		modules.add(mode);
+		this.setInventory(new InventoryManager(this, 6, new Integer[] { 1, 2, 3, 4, 5 }, new Integer[] { 0 }));
+		theCrafter = MachineCraftingHandler.getHandler(TileThermalPress.class).newCrafter(this, "", "ITM 0 1", energyStorage).setOrderMattersSlots( () -> mode.getMode().orderMattersSlots);
+		theCrafter.setDynamicCraftingInventory( () -> new ItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 1, mode.getMode().craftingSlots
+				+ 1));
 		modules.add(theCrafter);
-		this.setInventory(new InventoryManager(this, 6, new Integer[] { 1, 2, 3, 4, 5 }, new Integer[] { 0 }) {
-			
-			protected boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				return theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack));
-			}
-		});
+		mode.setOnUpdate( () -> theCrafter.checkRecipes());
 		energyStorage.setRFPerTick(40);
-	}
-	
-	// -------------------------ICrafter Methods-----------------------------------
-	@Override
-	public Set<Integer> getOrderMattersSlots () {
-		return mode.getMode().orderMattersSlots;
-	}
-	
-	@Override
-	public IRecipeInventory getCraftingInventory () {
-		return new RangedItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 1, mode.getMode().craftingSlots
-				+ 1);
-	}
-	
-	@Override
-	public IRecipeInventory getOutputInventory () {
-		return new RangedItemInventory(this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), 0, 1);
-	}
-	
-	@Override
-	public boolean isRunning () {
-		return energyStorage.hasSufficientRF();
-	}
-	
-	@Override
-	public void doRunTick () {
-		energyStorage.runTick();
+		inventory.setItemValidForSlotChecks( (index, stack) -> theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack)));
 	}
 	
 	// ------------------Thermal Press Mode Enum-------------------------------------------------------
@@ -86,7 +56,7 @@ public class TileThermalPress extends StorehouseBaseMachine implements ICrafter 
 		
 		public final int craftingSlots;
 		public final Set<Integer> orderMattersSlots = Sets.newHashSet(0);
-		public final Predicate<ICrafter> modeTest;
+		public final Predicate<ICraftingManager<TileThermalPress>> modeTest;
 		
 		private Mode (int craftingSlots, XYCoords... coords) {
 			this.craftingSlots = craftingSlots;

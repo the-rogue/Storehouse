@@ -10,10 +10,17 @@
 
 package therogue.storehouse.inventory;
 
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
 public interface IGuiSupplier {
+	
+	public GuiScreen getGUI (EntityPlayer player);
+	
+	public Container getContainer (EntityPlayer player);
 	
 	public boolean hasCapability (Capability<?> capability, EnumFacing facing);
 	

@@ -16,9 +16,9 @@ import therogue.storehouse.init.grouped.Materials;
 import therogue.storehouse.init.grouped.Resources;
 import therogue.storehouse.init.grouped.Upgrades;
 import therogue.storehouse.item.IStorehouseBaseItem;
+import therogue.storehouse.item.MultiBlockAssembler;
+import therogue.storehouse.item.NetworkInspector;
 import therogue.storehouse.item.StorehouseBaseItem;
-import therogue.storehouse.item.tool.MultiBlockAssembler;
-import therogue.storehouse.item.tool.NetworkInspector;
 
 public class ModItems {
 	

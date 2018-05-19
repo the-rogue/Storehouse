@@ -33,8 +33,8 @@ public class GuiBase extends GuiContainer {
 	
 	public static final ResourceLocation NORMAL_TEXTURE = new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + "textures/gui/normal.png");
 	protected ResourceLocation texture;
-	protected List<ElementBase> elements = new ArrayList<>();
-	protected List<Runnable> drawingInstructions = new ArrayList<>();
+	public List<ElementBase> elements = new ArrayList<>();
+	public List<Runnable> drawingInstructions = new ArrayList<>();
 	public final ContainerBase inventory;
 	public final String name;
 	public final IGuiSupplier tile;
@@ -49,6 +49,11 @@ public class GuiBase extends GuiContainer {
 		this.inventory = inventory;
 		this.tile = tile;
 		this.name = tile.getGuiName();
+	}
+	
+	public void onConstructorFinishTEMP () {
+		for (ElementBase element : elements)
+			element.setGUI(this);
 	}
 	
 	/**
@@ -136,29 +141,30 @@ public class GuiBase extends GuiContainer {
 		}
 	}
 	
-    /**
-     * Draws a textured rectangle at the current z-value, with default background texture values.
-     */
-    public void drawTextureBackgroundRect(int x, int y, int width, int height, int texWidth, int texHeight) {
-    	drawTextureBackgroundRect(x,y, width, height, 0, 0, texWidth, texHeight, 256, 256);
-    }
+	/**
+	 * Draws a textured rectangle at the current z-value, with default background texture values.
+	 */
+	public void drawTextureBackgroundRect (int x, int y, int width, int height, int texWidth, int texHeight) {
+		drawTextureBackgroundRect(x, y, width, height, 0, 0, texWidth, texHeight, 256, 256);
+	}
 	
-    /**
-     * Draws a textured rectangle at the current z-value.
-     */
-    public void drawTextureBackgroundRect(int x, int y, int width, int height, int textureX, int textureY, int texWidth, int texHeight, int totalWidth, int totalHeight)
-    {
-        float f = 1.0f / totalWidth;
-        float f1 = 1.0f / totalHeight;
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos((double)(x + 0), (double)(y + height), (double)this.zLevel).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + texHeight) * f1)).endVertex();
-        bufferbuilder.pos((double)(x + width), (double)(y + height), (double)this.zLevel).tex((double)((float)(textureX + texWidth) * f), (double)((float)(textureY + texHeight) * f1)).endVertex();
-        bufferbuilder.pos((double)(x + width), (double)(y + 0), (double)this.zLevel).tex((double)((float)(textureX + texWidth) * f), (double)((float)(textureY + 0) * f1)).endVertex();
-        bufferbuilder.pos((double)(x + 0), (double)(y + 0), (double)this.zLevel).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + 0) * f1)).endVertex();
-        tessellator.draw();
-    }
+	/**
+	 * Draws a textured rectangle at the current z-value.
+	 */
+	public void drawTextureBackgroundRect (int x, int y, int width, int height, int textureX, int textureY, int texWidth, int texHeight, int totalWidth, int totalHeight) {
+		float f = 1.0f / totalWidth;
+		float f1 = 1.0f / totalHeight;
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.pos((double) (x + 0), (double) (y + height), (double) this.zLevel).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + texHeight) * f1)).endVertex();
+		bufferbuilder.pos((double) (x + width), (double) (y + height), (double) this.zLevel).tex((double) ((float) (textureX + texWidth) * f), (double) ((float) (textureY + texHeight)
+				* f1)).endVertex();
+		bufferbuilder.pos((double) (x + width), (double) (y + 0), (double) this.zLevel).tex((double) ((float) (textureX + texWidth) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
+		bufferbuilder.pos((double) (x + 0), (double) (y + 0), (double) this.zLevel).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
+		tessellator.draw();
+	}
+	
 	/**
 	 * Draws a texture rectangle using the texture currently bound to the TextureManager
 	 */

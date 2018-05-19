@@ -10,10 +10,6 @@
 
 package therogue.storehouse.tile.machine;
 
-import java.util.Set;
-
-import com.google.common.collect.Sets;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,32 +17,29 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.crafting.ICrafter;
 import therogue.storehouse.crafting.IMachineRecipe;
 import therogue.storehouse.crafting.MachineCraftingHandler;
-import therogue.storehouse.crafting.inventory.EnergyInventory;
-import therogue.storehouse.crafting.inventory.FluidTankInventory;
-import therogue.storehouse.crafting.inventory.IRecipeInventory;
+import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
 import therogue.storehouse.crafting.wrapper.FluidStackWrapper;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
-import therogue.storehouse.energy.TileEnergyStorage;
 import therogue.storehouse.fluid.TileFluidTank;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
+import therogue.storehouse.inventory.ItemStackUtils;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.TileBaseGenerator;
-import therogue.storehouse.util.GeneralUtils;
-import therogue.storehouse.util.ItemStackUtils;
 
-public class TileLiquidGenerator extends TileBaseGenerator implements ICrafter {
+public class TileLiquidGenerator extends TileBaseGenerator {
 	
 	public static final int[] RFPerTicks = { 20, 160, 4800 };
 	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.liquid_generator_basic, ModBlocks.liquid_generator_advanced, ModBlocks.liquid_generator_ender };
-	protected final MachineCraftingHandler<TileLiquidGenerator>.CraftingManager theCrafter = MachineCraftingHandler.getHandler(TileLiquidGenerator.class).newCrafter(this);
+	private static final MultiBlockStructure[] STRUCTURES = { null, null, null };
+	protected final MachineCraftingHandler<TileLiquidGenerator>.CraftingManager theCrafter;
 	protected TileFluidTank tank = new TileFluidTank(this, 10000) {
 		
 		@Override
@@ -57,38 +50,21 @@ public class TileLiquidGenerator extends TileBaseGenerator implements ICrafter {
 	};
 	
 	public TileLiquidGenerator (MachineTier tier) {
-		super(BLOCKS[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
-		modules.add(theCrafter);
+		super(BLOCKS[tier.ordinal()], STRUCTURES[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
 		modules.add(tank);
-		this.setInventory(new InventoryManager(this, 4, new Integer[] { 0, 2 }, new Integer[] { 1, 3 }) {
-			
-			@Override
-			public boolean isItemValidForSlotChecks (int index, ItemStack stack) {
-				if ((index == 0 || index == 1) && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return true;
-				if ((index == 2 || index == 3) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) return true;
-				return false;
-			}
-		});
+		this.setInventory(new InventoryManager(this, 4, new Integer[] { 0, 2 }, new Integer[] { 1, 3 }));
+		theCrafter = MachineCraftingHandler.getHandler(TileLiquidGenerator.class).newCrafter(this, "FLD", "ENG", energyStorage);
+		modules.add(theCrafter);
 		tank.setTileEntity(this);
 		tank.setCanDrain(false);
+		inventory.setItemValidForSlotChecks( (index, stack) -> {
+			if ((index == 0 || index == 1) && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return true;
+			if ((index == 2 || index == 3) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) return true;
+			return false;
+		});
 	}
 	
 	// -------------------------Customisable Generator Methods-------------------------------------------
-	@Override
-	public Set<Integer> getOrderMattersSlots () {
-		return Sets.newHashSet();
-	}
-	
-	@Override
-	public IRecipeInventory getCraftingInventory () {
-		return new FluidTankInventory(tank);
-	}
-	
-	@Override
-	public IRecipeInventory getOutputInventory () {
-		return new EnergyInventory(energyStorage);
-	}
-	
 	@Override
 	public void update () {
 		super.update();
@@ -146,12 +122,12 @@ public class TileLiquidGenerator extends TileBaseGenerator implements ICrafter {
 		}
 		
 		@Override
-		public int timeTaken (TileLiquidGenerator machine) {
-			return machine.tank.getFluid().getFluid().getTemperature(machine.tank.getFluid().copy()) / machine.timeModifier;
+		public int timeTaken (ICraftingManager<TileLiquidGenerator> machine) {
+			return machine.getAttachedTile().tank.getFluid().getFluid().getTemperature(machine.getAttachedTile().tank.getFluid().copy()) / machine.getAttachedTile().timeModifier;
 		}
 		
 		@Override
-		public boolean itemValidForRecipe (TileLiquidGenerator tile, int index, IRecipeWrapper stack) {
+		public boolean itemValidForRecipe (ICraftingManager<TileLiquidGenerator> tile, int index, IRecipeWrapper stack) {
 			if (stack instanceof FluidStackWrapper)
 			{
 				FluidStack fluidStack = ((FluidStackWrapper) stack).getStack();
@@ -161,25 +137,24 @@ public class TileLiquidGenerator extends TileBaseGenerator implements ICrafter {
 		}
 		
 		@Override
-		public boolean matches (TileLiquidGenerator machine) {
-			FluidStack fluidStack = machine.tank.getFluid();
+		public boolean matches (ICraftingManager<TileLiquidGenerator> machine) {
+			FluidStack fluidStack = machine.getAttachedTile().tank.getFluid();
 			if (fluidStack.getFluid().getTemperature(fluidStack) >= 600 && fluidStack.amount > 100) return true;
 			return false;
 		}
 		
 		@Override
-		public Result begin (TileLiquidGenerator machine) {
+		public Result begin (ICraftingManager<TileLiquidGenerator> machine) {
 			if (!matches(machine)) return Result.RESET;
-			machine.tank.drainInternal(-100, true);
+			machine.getCraftingInventory().extractComponent(0, 100, false);
 			return Result.CONTINUE;
 		}
 		
 		@Override
-		public Result doTick (TileLiquidGenerator machine) {
-			TileEnergyStorage energy = machine.energyStorage;
-			if (energy.getEnergyStored() > machine.getOutputInventory().getComponentSlotLimit(0) + machine.RFPerTick) return Result.PAUSE;
-			energy.modifyEnergyStored(machine.RFPerTick);
-			return Result.CONTINUE;
+		public Result doTick (ICraftingManager<TileLiquidGenerator> machine) {
+			Result res = machine.canRun();
+			if (res == Result.CONTINUE) machine.doSpecifiedRunTick();
+			return res;
 		}
 	}
 }

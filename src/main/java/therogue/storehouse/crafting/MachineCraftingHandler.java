@@ -11,12 +11,21 @@
 package therogue.storehouse.crafting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,18 +35,34 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import therogue.storehouse.GeneralUtils;
+import therogue.storehouse.LOG;
 import therogue.storehouse.crafting.IMachineRecipe.Result;
+import therogue.storehouse.crafting.IRecipeInventory.IRecipeInventoryConverter;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
+import therogue.storehouse.energy.TileEnergyStorage;
+import therogue.storehouse.tile.ITile;
 import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
-import therogue.storehouse.util.LOG;
 
-public class MachineCraftingHandler<T> {
+public class MachineCraftingHandler<T extends ITile> {
 	
 	private static final Map<Class<?>, MachineCraftingHandler<?>> CRAFTING_HANDLERS = new HashMap<>();
+	private static final List<IRecipeInventoryConverter> CONVERTERS = new ArrayList<>();
+	
+	public static void registerInventoryConverter (IRecipeInventoryConverter converter) {
+		CONVERTERS.add(converter);
+	}
+	
+	static
+	{
+		CONVERTERS.add(ItemInventory.CONVERTER);
+		CONVERTERS.add(FluidTankInventory.CONVERTER);
+		CONVERTERS.add(EnergyInventory.CONVERTER);
+	}
 	
 	@SuppressWarnings ("unchecked")
-	public static <U> MachineCraftingHandler<U> getHandler (Class<U> crafterClass) {
+	public static <U extends ITile> MachineCraftingHandler<U> getHandler (Class<U> crafterClass) {
 		if (!CRAFTING_HANDLERS.containsKey(crafterClass))
 		{
 			CRAFTING_HANDLERS.put(crafterClass, new MachineCraftingHandler<U>());
@@ -45,7 +70,7 @@ public class MachineCraftingHandler<T> {
 		return (MachineCraftingHandler<U>) CRAFTING_HANDLERS.get(crafterClass);
 	}
 	
-	public static <T> void register (Class<T> crafterClass, IMachineRecipe<T> recipe) {
+	public static <T extends ITile> void register (Class<T> crafterClass, IMachineRecipe<T> recipe) {
 		getHandler(crafterClass).register(recipe);
 	}
 	
@@ -55,14 +80,26 @@ public class MachineCraftingHandler<T> {
 	private MachineCraftingHandler () {
 	}
 	
-	public CraftingManager newCrafter (T attachedTile) {
-		CraftingManager cm = new CraftingManager(attachedTile);
+	public CraftingManager newCrafter (T attachedTile, String inventoryString, String outputString) {
+		CraftingManager cm = new CraftingManager(attachedTile, inventoryString, outputString);
 		CRAFTERS.add(cm);
 		return cm;
 	}
 	
-	public CraftingManager newNonTickingCrafter (T attachedTile) {
-		CraftingManager cm = new CraftingManager(attachedTile);
+	public CraftingManager newCrafter (T attachedTile, String inventoryString, String outputString, TileEnergyStorage energy) {
+		CraftingManager cm = new CraftingManager(attachedTile, inventoryString, outputString, energy);
+		CRAFTERS.add(cm);
+		return cm;
+	}
+	
+	public CraftingManager newCrafter (T attachedTile, String inventoryString, String outputString, Supplier<Result> canRun, Runnable doRunTick) {
+		CraftingManager cm = new CraftingManager(attachedTile, inventoryString, outputString, canRun, doRunTick);
+		CRAFTERS.add(cm);
+		return cm;
+	}
+	
+	public CraftingManager newNonTickingCrafter (T attachedTile, String inventoryString, String outputString) {
+		CraftingManager cm = new CraftingManager(attachedTile, inventoryString, outputString);
 		return cm;
 	}
 	
@@ -88,9 +125,21 @@ public class MachineCraftingHandler<T> {
 		}
 	}
 	
-	public interface ICraftingManager {
+	public interface ICraftingManager<T> {
 		
 		public int getTimeElapsed ();
+		
+		public void doSpecifiedRunTick ();
+		
+		public Result canRun ();
+		
+		public T getAttachedTile ();
+		
+		public Set<Integer> getOrderMattersSlots ();
+		
+		public IRecipeInventory getCraftingInventory ();
+		
+		public IRecipeInventory getOutputInventory ();
 		
 		public int getTotalCraftingTime ();
 	}
@@ -98,8 +147,9 @@ public class MachineCraftingHandler<T> {
 	public static class CapabilityCrafter {
 		
 		@CapabilityInject (ICraftingManager.class)
-		public static Capability<ICraftingManager> CraftingManager = null;
+		public static Capability<ICraftingManager<?>> CraftingManager = null;
 		
+		@SuppressWarnings ("rawtypes")
 		public static void register () {
 			CapabilityManager.INSTANCE.register(ICraftingManager.class, new IStorage<ICraftingManager>() {
 				
@@ -111,20 +161,105 @@ public class MachineCraftingHandler<T> {
 				@Override
 				public void readNBT (Capability<ICraftingManager> capability, ICraftingManager instance, EnumFacing side, NBTBase nbt) {
 				}
-			}, () -> MachineCraftingHandler.getHandler(ICrafter.class).newNonTickingCrafter((ICrafter) null));
+			}, (Callable<ICraftingManager<?>>) () -> {
+				return MachineCraftingHandler.getHandler(ITile.class).newNonTickingCrafter(null, "", "");
+			});
 		}
 	}
 	
-	public class CraftingManager implements ICraftingManager, ITileModule {
+	private static IRecipeInventory createInv (ITile tile, String s) {
+		String original = s;
+		Queue<String> elements = new LinkedList<>();
+		while (true)
+		{
+			int pos = s.indexOf(" ");
+			if (pos != -1)
+			{
+				elements.add(s.substring(0, pos));
+				s = s.substring(pos + 1);
+			}
+			else
+			{
+				elements.add(s);
+				break;
+			}
+		}
+		Stack<IRecipeInventory> inventories = new Stack<>();
+		while (elements.size() > 0)
+		{
+			Optional<IRecipeInventoryConverter> convert = CONVERTERS.stream().filter(conv -> conv.getString().equals(elements.peek())).findFirst();
+			elements.poll();
+			if (convert.isPresent())
+			{
+				int datas = convert.get().numOfDataItems();
+				int[] data = new int[datas];
+				for (int i = 0; i < datas; i++)
+				{
+					if (!GeneralUtils.isInteger(elements.peek())) throw new IllegalArgumentException("Inventory String with the wrong number of data items: " + original);
+					data[i] = Integer.parseInt(elements.poll());
+				}
+				inventories.push(convert.get().getFromTile(tile, data));
+			}
+			// else throw new IllegalArgumentException("Inventory String with no converter match: " + original);
+		}
+		IRecipeInventory theInv = inventories.pop();
+		while (!inventories.isEmpty())
+		{
+			theInv = new DoubleInventory(inventories.pop(), theInv);
+		}
+		return theInv;
+	}
+	
+	public class CraftingManager implements ICraftingManager<T>, ITileModule {
 		
 		private final T attachedTile;
 		private IMachineRecipe<T> currentCrafting = null;
 		public int totalCraftingTime = 0;
 		public int craftingTime = 0;
 		private boolean craftingLock = false;
+		private Supplier<Set<Integer>> orderMattersSlots = () -> Sets.newHashSet();
+		private Supplier<IRecipeInventory> craftingInventory;
+		private Supplier<IRecipeInventory> outputInventory;
+		private final Supplier<Result> canRun;
+		private final Runnable doRunTick;
 		
-		private CraftingManager (T attachedTile) {
+		private CraftingManager (T attachedTile, String inventoryString, String outputString) {
+			this(attachedTile, inventoryString, outputString, () -> Result.CONTINUE, () -> {
+			});
+		}
+		
+		private CraftingManager (T attachedTile, String inventoryString, String outputString, TileEnergyStorage energy) {
+			this(attachedTile, inventoryString, outputString, () -> energy.canRun() ? Result.CONTINUE : Result.PAUSE, () -> energy.runTick());
+		}
+		
+		private CraftingManager (T attachedTile, String inventoryString, String outputString, Supplier<Result> canRun, Runnable doRunTick) {
 			this.attachedTile = attachedTile;
+			this.craftingInventory = () -> createInv(attachedTile, inventoryString);
+			this.outputInventory = () -> createInv(attachedTile, outputString);
+			this.canRun = canRun;
+			this.doRunTick = doRunTick;
+		}
+		
+		public CraftingManager addOrderMattersSlots (Integer... slots) {
+			Set<Integer> prevSlots = orderMattersSlots.get();
+			prevSlots.addAll(Arrays.asList(slots));
+			orderMattersSlots = () -> prevSlots;
+			return this;
+		}
+		
+		public CraftingManager setOrderMattersSlots (Supplier<Set<Integer>> slots) {
+			this.orderMattersSlots = slots;
+			return this;
+		}
+		
+		public CraftingManager setDynamicCraftingInventory (Supplier<IRecipeInventory> craftingInv) {
+			this.craftingInventory = craftingInv;
+			return this;
+		}
+		
+		public CraftingManager setDynamicOutputInventory (Supplier<IRecipeInventory> outputInv) {
+			this.outputInventory = outputInv;
+			return this;
 		}
 		
 		private void resetCraftingStatus () {
@@ -137,7 +272,7 @@ public class MachineCraftingHandler<T> {
 		public boolean checkItemValidForSlot (int index, IRecipeWrapper stack) {
 			for (IMachineRecipe<T> recipe : RECIPES)
 			{
-				if (recipe.itemValidForRecipe(attachedTile, index, stack)) return true;
+				if (recipe.itemValidForRecipe(this, index, stack)) return true;
 			}
 			return false;
 		}
@@ -147,12 +282,12 @@ public class MachineCraftingHandler<T> {
 			resetCraftingStatus();
 			for (IMachineRecipe<T> recipe : RECIPES)
 			{
-				if (recipe.matches(attachedTile))
+				if (recipe.matches(this))
 				{
 					currentCrafting = recipe;
-					totalCraftingTime = recipe.timeTaken(attachedTile);
-					craftingTime = recipe.timeTaken(attachedTile);
-					if (currentCrafting.begin(attachedTile) != Result.RESET)
+					totalCraftingTime = recipe.timeTaken(this);
+					craftingTime = recipe.timeTaken(this);
+					if (currentCrafting.begin(this) != Result.RESET)
 					{
 						break;
 					}
@@ -163,7 +298,7 @@ public class MachineCraftingHandler<T> {
 		private void updateCraftingStatus () {
 			if (currentCrafting != null)
 			{
-				Result res = currentCrafting.doTick(attachedTile);
+				Result res = currentCrafting.doTick(this);
 				if (res == Result.CONTINUE)
 				{
 					if (craftingTime <= 1) craft();
@@ -178,7 +313,7 @@ public class MachineCraftingHandler<T> {
 		
 		public boolean craft () {
 			craftingLock = true;
-			Result crafted = currentCrafting.end(attachedTile);
+			Result crafted = currentCrafting.end(this);
 			if (crafted != Result.PAUSE)
 			{
 				resetCraftingStatus();
@@ -209,6 +344,36 @@ public class MachineCraftingHandler<T> {
 		@Override
 		public int getTotalCraftingTime () {
 			return totalCraftingTime;// Total Time
+		}
+		
+		@Override
+		public Result canRun () {
+			return canRun.get();
+		}
+		
+		@Override
+		public void doSpecifiedRunTick () {
+			doRunTick.run();
+		}
+		
+		@Override
+		public Set<Integer> getOrderMattersSlots () {
+			return orderMattersSlots.get();
+		}
+		
+		@Override
+		public IRecipeInventory getCraftingInventory () {
+			return craftingInventory.get();
+		}
+		
+		@Override
+		public IRecipeInventory getOutputInventory () {
+			return outputInventory.get();
+		}
+		
+		@Override
+		public T getAttachedTile () {
+			return attachedTile;
 		}
 		
 		/**

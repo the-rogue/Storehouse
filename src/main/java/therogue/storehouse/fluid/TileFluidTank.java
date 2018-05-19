@@ -12,25 +12,25 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import therogue.storehouse.tile.ITile;
 import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
-import therogue.storehouse.tile.StorehouseBaseTileEntity;
 
 public class TileFluidTank extends FluidTank implements ITileModule {
 	
-	private StorehouseBaseTileEntity owner;
+	private ITile owner;
 	
-	public TileFluidTank (StorehouseBaseTileEntity owner, int capacity) {
+	public TileFluidTank (ITile owner, int capacity) {
 		super(capacity);
 		this.owner = owner;
 	}
 	
-	public TileFluidTank (StorehouseBaseTileEntity owner, FluidStack fluidStack, int capacity) {
+	public TileFluidTank (ITile owner, FluidStack fluidStack, int capacity) {
 		super(fluidStack, capacity);
 		this.owner = owner;
 	}
 	
-	public TileFluidTank (StorehouseBaseTileEntity owner, Fluid fluid, int amount, int capacity) {
+	public TileFluidTank (ITile owner, Fluid fluid, int amount, int capacity) {
 		super(fluid, amount, capacity);
 		this.owner = owner;
 	}

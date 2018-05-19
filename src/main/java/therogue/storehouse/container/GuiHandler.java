@@ -14,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import therogue.storehouse.client.gui.machine.GuiAlloyFurnace;
 import therogue.storehouse.client.gui.machine.GuiBurner;
 import therogue.storehouse.client.gui.machine.GuiCarbonCompressor;
 import therogue.storehouse.client.gui.machine.GuiCombustionGenerator;
@@ -24,7 +23,6 @@ import therogue.storehouse.client.gui.machine.GuiPotionBrewer;
 import therogue.storehouse.client.gui.machine.GuiPotionInjector;
 import therogue.storehouse.client.gui.machine.GuiSolarGenerator;
 import therogue.storehouse.client.gui.machine.GuiThermalPress;
-import therogue.storehouse.container.machine.ContainerAlloyFurnace;
 import therogue.storehouse.container.machine.ContainerBurner;
 import therogue.storehouse.container.machine.ContainerCarbonCompressor;
 import therogue.storehouse.container.machine.ContainerCombustionGenerator;
@@ -34,7 +32,7 @@ import therogue.storehouse.container.machine.ContainerPotionBrewer;
 import therogue.storehouse.container.machine.ContainerPotionInjector;
 import therogue.storehouse.container.machine.ContainerSolarGenerator;
 import therogue.storehouse.container.machine.ContainerThermalPress;
-import therogue.storehouse.tile.machine.TileAlloyFurnace;
+import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.tile.machine.TileBurner;
 import therogue.storehouse.tile.machine.TileCarbonCompressor;
 import therogue.storehouse.tile.machine.TileCombustionGenerator;
@@ -75,7 +73,7 @@ public class GuiHandler implements IGuiHandler {
 			case CRYSTALISER:
 				return new ContainerCrystaliser(player.inventory, (TileCrystaliser) world.getTileEntity(new BlockPos(x, y, z)));
 			case ALLOYFURNACE:
-				return new ContainerAlloyFurnace(player.inventory, (TileAlloyFurnace) world.getTileEntity(new BlockPos(x, y, z)));
+				return ((IGuiSupplier) world.getTileEntity(new BlockPos(x, y, z))).getContainer(player);
 			case BURNER:
 				return new ContainerBurner(player.inventory, (TileBurner) world.getTileEntity(new BlockPos(x, y, z)));
 			case CARBONCOMPRESSOR:
@@ -109,8 +107,7 @@ public class GuiHandler implements IGuiHandler {
 				TileCrystaliser mach2 = (TileCrystaliser) world.getTileEntity(new BlockPos(x, y, z));
 				return new GuiCrystaliser(new ContainerCrystaliser(player.inventory, mach2), mach2);
 			case ALLOYFURNACE:
-				TileAlloyFurnace mach3 = (TileAlloyFurnace) world.getTileEntity(new BlockPos(x, y, z));
-				return new GuiAlloyFurnace(new ContainerAlloyFurnace(player.inventory, mach3), mach3);
+				return ((IGuiSupplier) world.getTileEntity(new BlockPos(x, y, z))).getGUI(player);
 			case BURNER:
 				TileBurner mach4 = (TileBurner) world.getTileEntity(new BlockPos(x, y, z));
 				return new GuiBurner(new ContainerBurner(player.inventory, mach4), mach4);

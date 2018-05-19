@@ -8,9 +8,10 @@
  * You should have received a copy of the GNU General Public License along with Storehouse. If not, see <http://www.gnu.org/licenses/gpl>.
  */
 
-package therogue.storehouse.crafting.inventory;
+package therogue.storehouse.crafting;
 
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
+import therogue.storehouse.tile.ITile;
 
 public interface IRecipeInventory {
 	
@@ -23,4 +24,15 @@ public interface IRecipeInventory {
 	public int getComponentSlotLimit (int slot);
 	
 	public int getSize ();
+	
+	public interface IRecipeInventoryConverter {
+		
+		public String getString ();
+		
+		public IRecipeInventory getFromTile (ITile tile, int[] data);
+		
+		public default int numOfDataItems () {
+			return 0;
+		}
+	}
 }

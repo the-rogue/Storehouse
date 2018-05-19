@@ -6,8 +6,8 @@ import java.util.List;
 
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
-import therogue.storehouse.block.Decorative.StorehouseBaseSlab;
-import therogue.storehouse.block.Decorative.StorehouseBaseStair;
+import therogue.storehouse.block.StorehouseBaseSlab;
+import therogue.storehouse.block.StorehouseBaseStair;
 
 public class DecorativeBlockContainer {
 	

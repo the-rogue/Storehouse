@@ -11,13 +11,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.network.SGuiUpdateTEPacket;
 import therogue.storehouse.network.StorehousePacketHandler;
-import therogue.storehouse.util.GeneralUtils;
 
 public class ClientButton<T extends Enum<T>> implements IButton<T>, ITileModule {
 	
-	private StorehouseBaseTileEntity owner;
+	private ITile owner;
 	private int moduleListPos = -1;
 	public static final String NBT_KEY = "CBSetting";
 	public final String name;
@@ -38,7 +38,7 @@ public class ClientButton<T extends Enum<T>> implements IButton<T>, ITileModule 
 	}
 	
 	@Override
-	public void setTileData (StorehouseBaseTileEntity owner, int moduleListPos) {
+	public void setTileData (ITile owner, int moduleListPos) {
 		this.owner = owner;
 		this.moduleListPos = moduleListPos;
 	}
@@ -68,7 +68,7 @@ public class ClientButton<T extends Enum<T>> implements IButton<T>, ITileModule 
 			updateProcedures.forEach(r -> r.run());
 			if (owner != null) owner.notifyChange(CapabilityButton.BUTTON);
 			if (moduleListPos != -1)
-				StorehousePacketHandler.INSTANCE.sendToServer(new SGuiUpdateTEPacket(moduleListPos, owner.getPos(), writeModuleToNBT(new NBTTagCompound())));
+				StorehousePacketHandler.INSTANCE.sendToServer(new SGuiUpdateTEPacket(moduleListPos, owner.getTilePosition(), writeModuleToNBT(new NBTTagCompound())));
 		}
 	}
 	

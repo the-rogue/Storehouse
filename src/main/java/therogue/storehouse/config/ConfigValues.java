@@ -11,7 +11,7 @@
 package therogue.storehouse.config;
 
 import net.minecraftforge.common.config.Configuration;
-import therogue.storehouse.util.LOG;
+import therogue.storehouse.LOG;
 
 
 public class ConfigValues

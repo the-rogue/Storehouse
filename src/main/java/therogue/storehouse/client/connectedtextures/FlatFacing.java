@@ -1,5 +1,5 @@
 
-package therogue.storehouse.client.util;
+package therogue.storehouse.client.connectedtextures;
 
 import static net.minecraft.util.EnumFacing.DOWN;
 import static net.minecraft.util.EnumFacing.EAST;

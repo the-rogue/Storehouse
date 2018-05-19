@@ -27,12 +27,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import therogue.storehouse.LOG;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile.NoControllerException;
 import therogue.storehouse.multiblock.tile.IMultiBlockController;
 import therogue.storehouse.multiblock.tile.IMultiBlockTile;
-import therogue.storehouse.util.LOG;
 
 public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiBlockStateMapper, ITileEntityProvider {
 	

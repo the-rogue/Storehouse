@@ -10,8 +10,14 @@
 
 package therogue.storehouse.tile;
 
+import java.util.function.Function;
+
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.energy.TileEnergyStorage;
 import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.inventory.InventoryManager;
@@ -20,6 +26,8 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	
 	protected InventoryManager inventory;
 	protected TileEnergyStorage energyStorage = new TileEnergyStorage(this, 8000, 100, 0);
+	protected Function<EntityPlayer, GuiScreen> guiFactory;
+	protected Function<EntityPlayer, ContainerBase> containerFactory;
 	
 	public StorehouseBaseMachine (IStorehouseBaseBlock block) {
 		super(block);
@@ -42,5 +50,15 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	@Override
 	public String getGuiName () {
 		return block.getUnlocalizedName(ItemStack.EMPTY) + ".name";
+	}
+	
+	@Override
+	public GuiScreen getGUI (EntityPlayer player) {
+		return guiFactory.apply(player);
+	}
+	
+	@Override
+	public Container getContainer (EntityPlayer player) {
+		return containerFactory.apply(player);
 	}
 }
