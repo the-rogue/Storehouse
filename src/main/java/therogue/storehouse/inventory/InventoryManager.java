@@ -10,8 +10,10 @@
 
 package therogue.storehouse.inventory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
@@ -23,20 +25,25 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.tile.ITickableModule;
 import therogue.storehouse.tile.ITile;
-import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
 
-public class InventoryManager implements ITileModule {
+public class InventoryManager implements ITickableModule {
 	
+	public final IInventoryItemHandler guiAccess = new InventoryViewer(this, ModuleContext.GUI);
 	private ITile owner;
 	private NonNullList<ItemStack> inventory;
 	private Set<Integer> extractable_slots;
 	private Set<Integer> insertable_slots;
 	private Set<Integer> insertable_gui_slots;
+	public final List<BlockPos> sendItemsFrom = new ArrayList<>();
+	public int transferRate = 16;
+	private boolean shouldRemoveTicking = false;
+	private int tick;
 	/**
 	 * Specify what items can go in which slots here for different inventories
 	 * 
@@ -296,13 +303,34 @@ public class InventoryManager implements ITileModule {
 	
 	@Override
 	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == GuiItemCapability.CAP;
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
 	
 	@Override
 	@SuppressWarnings ("unchecked")
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing, ModuleContext capacity) {
 		return (T) new InventoryViewer(this, capacity);
+	}
+	
+	@Override
+	public void update () {
+		if (((tick == 9 ? tick = 0 : ++tick) % 10) == 0)
+			sendItemsFrom.forEach(pos -> ItemStackUtils.sendItemsToAllNeighbours(owner.getTileWorld(), pos, new InventoryViewer(this, ModuleContext.SIDE), transferRate));
+	}
+	
+	@Override
+	public boolean stillTicking () {
+		return sendItemsFrom.size() != 0;
+	}
+	
+	@Override
+	public void onRemove () {
+		shouldRemoveTicking = true;
+	}
+	
+	@Override
+	public boolean shouldRemove () {
+		return shouldRemoveTicking;
 	}
 	
 	protected class InventoryViewer implements IInventoryItemHandler {

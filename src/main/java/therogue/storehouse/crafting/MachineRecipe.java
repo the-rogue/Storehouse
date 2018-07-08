@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
 import therogue.storehouse.crafting.wrapper.IRecipeComponent;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
@@ -240,8 +239,8 @@ public class MachineRecipe<T extends ITile> implements IMachineRecipe<T> {
 	@Override
 	public Result doTick (ICraftingManager<T> cm) {
 		if (!matches(cm)) return Result.RESET;
-		T tile = cm.getAttachedTile();
-		if (!tile.hasCapability(CapabilityEnergy.ENERGY, null)) return Result.RESET;
+		// T tile = cm.getAttachedTile();
+		// if (!tile.hasCapability(CapabilityEnergy.ENERGY, null, ModuleContext.INTERNAL)) return Result.RESET;
 		Result res = cm.canRun();
 		if (res == Result.CONTINUE) cm.doSpecifiedRunTick();
 		return res;

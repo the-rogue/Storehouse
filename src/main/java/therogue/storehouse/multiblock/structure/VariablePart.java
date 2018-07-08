@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
+import therogue.storehouse.multiblock.block.ICapabilityWrapper;
 
 public class VariablePart implements IMultiBlockPart {
 	
@@ -92,6 +93,11 @@ public class VariablePart implements IMultiBlockPart {
 	@Override
 	public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z) {
 		return parts[partNo][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getMultiBlockState(originalState);
+	}
+	
+	@Override
+	public List<ICapabilityWrapper<?>> getCapbilities (IBlockState originalState, int partNo, int x, int y, int z) {
+		return parts[partNo][x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getCapabilities(originalState);
 	}
 	
 	@Override

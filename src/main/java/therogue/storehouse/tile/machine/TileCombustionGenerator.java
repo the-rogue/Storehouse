@@ -14,6 +14,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.energy.CapabilityEnergy;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.client.gui.ElementFactory;
+import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.TierIcons;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.crafting.IMachineRecipe;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
@@ -21,7 +25,6 @@ import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
-import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.TileBaseGenerator;
@@ -31,11 +34,10 @@ public class TileCombustionGenerator extends TileBaseGenerator {
 	public static final int[] RFPerTicks = { 20, 160, 4800 };
 	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.combustion_generator_basic, ModBlocks.combustion_generator_advanced, ModBlocks.combustion_generator_ender };
-	private static final MultiBlockStructure[] STRUCTURES = { null, null, null };
 	protected final MachineCraftingHandler<TileCombustionGenerator>.CraftingManager theCrafter;
 	
 	public TileCombustionGenerator (MachineTier tier) {
-		super(BLOCKS[tier.ordinal()], STRUCTURES[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
+		super(BLOCKS[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
 		this.setInventory(new InventoryManager(this, 3, new Integer[] { 0, 2 }, new Integer[] { 1 }));
 		theCrafter = MachineCraftingHandler.getHandler(TileCombustionGenerator.class).newCrafter(this, "ITM 2 3", "ENG", energyStorage);
 		modules.add(theCrafter);
@@ -44,12 +46,15 @@ public class TileCombustionGenerator extends TileBaseGenerator {
 			if ((index == 0 || index == 1) && stack.hasCapability(CapabilityEnergy.ENERGY, null)) return true;
 			return false;
 		});
-	}
-	
-	// ----------------------IMultiBlockController-----------------------------------------------------------------
-	@Override
-	public MultiBlockStructure getStructure () {
-		return null;
+		this.containerFactory = (player) -> new ContainerBase(player.inventory, this).setTESlotList(inventory.guiAccess, new int[] { 0, 30, 17, 1, 66, 17, 2, 48, 53 });
+		this.guiFactory = (player) -> {
+			GuiBase gui = new GuiBase(this.tier.guiLocation, containerFactory.apply(player), this);
+			String s = "ENERGYBAR 8 8 %s,  PROGRESS_BAR ITEM_CHARGE0 ITEM_MAXCHARGE0 RIGHT_PB 33 35 %s,  PROGRESS_BAR CRFT_TL CRFT_TT UP_PB 48 35 %s";
+			int iTier = tier.ordinal();
+			Object[] sP = new Object[] { TierIcons.EnergyBar.getLocation(iTier), TierIcons.EnergyIndicator.getLocation(iTier), TierIcons.CombustionIndicator.getLocation(iTier) };
+			ElementFactory.makeElements(gui, gui.elements, this, s, sP);
+			return gui;
+		};
 	}
 	
 	// ------------------------PlaceHolder Classes------------------------------------------------------------------

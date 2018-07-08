@@ -12,8 +12,11 @@ package therogue.storehouse.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import therogue.storehouse.LOG;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import therogue.storehouse.Storehouse;
+import therogue.storehouse.client.connectedtextures.CTBlockRegistry;
 
 public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	
@@ -52,7 +55,6 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	 */
 	public StorehouseBaseBlock (String name, Material material, float hardness, float resistance) {
 		super(material);
-		LOG.log("trace", "Creating new StorehouseBaseBlock: " + name);
 		this.setUnlocalizedName(name);
 		this.setRegistryName(Storehouse.MOD_ID, name);
 		this.setHardness(hardness);
@@ -110,5 +112,23 @@ public class StorehouseBaseBlock extends Block implements IStorehouseBaseBlock {
 	@Override
 	public Block getBlock () {
 		return this;
+	}
+	
+	public StorehouseBaseBlock hasConnectedTexture () {
+		CTBlockRegistry.INSTANCE.register(this);
+		return this;
+	}
+	
+	public StorehouseBaseBlock hasConnectedTextureGroup (String group) {
+		CTBlockRegistry.INSTANCE.registerGroup(group, this);
+		return this;
+	}
+	
+	/**
+	 * Can return IExtendedBlockState
+	 */
+	@Override
+	public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
+		return CTBlockRegistry.INSTANCE.extendedState(state, world, pos);
 	}
 }

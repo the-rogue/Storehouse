@@ -17,17 +17,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.client.gui.ElementFactory;
+import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.IGuiSupplier;
 import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.energy.TileEnergyStorage;
-import therogue.storehouse.inventory.IGuiSupplier;
 import therogue.storehouse.inventory.InventoryManager;
 
 public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity implements IGuiSupplier {
 	
 	protected InventoryManager inventory;
 	protected TileEnergyStorage energyStorage = new TileEnergyStorage(this, 8000, 100, 0);
-	protected Function<EntityPlayer, GuiScreen> guiFactory;
-	protected Function<EntityPlayer, ContainerBase> containerFactory;
+	protected Function<EntityPlayer, ContainerBase> containerFactory = (player) -> new ContainerBase(player.inventory, this);
+	protected Function<EntityPlayer, GuiScreen> guiFactory = (player) -> new GuiBase(GuiBase.NORMAL_TEXTURE, containerFactory.apply(player), this);
 	
 	public StorehouseBaseMachine (IStorehouseBaseBlock block) {
 		super(block);
@@ -50,6 +52,14 @@ public abstract class StorehouseBaseMachine extends StorehouseBaseTileEntity imp
 	@Override
 	public String getGuiName () {
 		return block.getUnlocalizedName(ItemStack.EMPTY) + ".name";
+	}
+	
+	protected void setElementString (String elements, Object... args) {
+		guiFactory = (player) -> {
+			GuiBase gui = new GuiBase(GuiBase.NORMAL_TEXTURE, containerFactory.apply(player), this);
+			ElementFactory.makeElements(gui, gui.elements, this, elements, args);
+			return gui;
+		};
 	}
 	
 	@Override

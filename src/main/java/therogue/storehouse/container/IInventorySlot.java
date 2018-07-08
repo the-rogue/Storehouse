@@ -1,9 +1,12 @@
 
 package therogue.storehouse.container;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 
 public interface IInventorySlot {
@@ -101,5 +104,8 @@ public interface IInventorySlot {
 	 */
 	default boolean canTakeStack (EntityPlayer playerIn) {
 		return true;
+	}
+	
+	default void detectAndSendChanges (List<IContainerListener> listeners) {
 	}
 }

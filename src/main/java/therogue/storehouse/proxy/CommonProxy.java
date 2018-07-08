@@ -18,12 +18,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.config.ConfigHandler;
-import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.CapabilityCrafter;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
-import therogue.storehouse.init.ModMultiBlocks;
-import therogue.storehouse.init.ModTileEntities;
 import therogue.storehouse.init.Recipes;
 import therogue.storehouse.tile.ClientButton.CapabilityButton;
 import therogue.storehouse.tile.TileData.CapabilityDataHandler;
@@ -43,8 +40,6 @@ public abstract class CommonProxy implements IProxy {
 		CapabilityCrafter.register();
 		ModItems.preInit();
 		ModBlocks.preInit();
-		ModTileEntities.preInit();
-		ModMultiBlocks.preInit();
 		ConfigHandler.preInit(event.getSuggestedConfigurationFile());
 		LOG.debug("Common Proxy Finished PreInitialisation");
 	}
@@ -57,10 +52,9 @@ public abstract class CommonProxy implements IProxy {
 		LOG.debug("Common Proxy Started Initialisation");
 		ModItems.Init();
 		ModBlocks.Init();
-		ModMultiBlocks.Init();
 		Recipes.Init();
 		StorehouseWorldGen.init();
-		NetworkRegistry.INSTANCE.registerGuiHandler(Storehouse.instance, GuiHandler.INSTANCE);
+		NetworkRegistry.INSTANCE.registerGuiHandler(Storehouse.instance, Storehouse.GUI_HANDLER);
 		LOG.debug("Common Proxy Finished Initialisation");
 	}
 	
@@ -72,7 +66,6 @@ public abstract class CommonProxy implements IProxy {
 		LOG.debug("Common Proxy Started PostInitialisation");
 		ModItems.postInit();
 		ModBlocks.postInit();
-		ModMultiBlocks.postInit();
 		LOG.debug("Common Proxy Finished PostInitialisation");
 	}
 }

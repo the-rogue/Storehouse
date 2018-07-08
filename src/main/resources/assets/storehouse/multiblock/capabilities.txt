@@ -1,0 +1,8 @@
+IO0 multiblock_blocks7 ENG-IN
+IO0 multiblock_blocks1 ITM-IN
+IO0 multiblock_blocks0 ITM-OUT
+IO0 multiblock_blocks2 ITM-BOTH
+IO0 multiblock_blocks9 ITM-BOTH ENG-IN FLD-BOTH
+SG0 solar_generator_basic ENG-OUT
+SG1 solar_generator_advanced ENG-OUT
+SG2 solar_generator_ender ENG-OUT

@@ -1,18 +1,10 @@
 
 package therogue.storehouse.multiblock.block;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,72 +14,49 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import therogue.storehouse.LOG;
+import therogue.storehouse.block.DelagateBlockStateContainer;
+import therogue.storehouse.block.IWrappedBlock;
 import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile;
 import therogue.storehouse.multiblock.tile.BasicMultiBlockTile.NoControllerException;
 import therogue.storehouse.multiblock.tile.IMultiBlockController;
 import therogue.storehouse.multiblock.tile.IMultiBlockTile;
 
-public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiBlockStateMapper, ITileEntityProvider {
+public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IBlockWrapper, ITileEntityProvider, IWrappedBlock {
 	
-	private final List<WrapperEntry> blocks = new ArrayList<WrapperEntry>();
-	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-	public static final StorehouseBaseBlock placeholder = new StorehouseBaseBlock("placeholder");
+	private final Block wrappedBlock;
 	
-	public BasicMultiBlockBlock (String name) {
+	public BasicMultiBlockBlock (String name, Block subBlock) {
 		super(name);
-		this.setDefaultState(this.getDefaultState().withProperty(META, 0));
+		this.wrappedBlock = subBlock;
+		this.blockState = new DelagateBlockStateContainer(this, wrappedBlock);
+		this.setDefaultState(this.blockState.getBaseState());
+		this.fullBlock = this.getDefaultState().isOpaqueCube();
+		this.lightOpacity = this.fullBlock ? 255 : 0;
 	}
 	
-	public BasicMultiBlockBlock (String name, Block... subStates) {
-		this(name);
-		addBlocks(subStates);
+	public BasicMultiBlockBlock (String name, IBlockState subBlockState) {
+		super(name);
+		this.wrappedBlock = subBlockState.getBlock();
 	}
 	
-	public BasicMultiBlockBlock addBlocks (Block... states) {
-		if (blocks.size() + states.length > 16)
-			throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: "
-					+ this.getUnlocalizedName());
-		for (Block subState : states)
-		{
-			if (subState == null) throw new IllegalArgumentException("Tried to register a null Block to a multiblockstate wrapper");
-			blocks.add(new WrapperEntry(subState.getDefaultState(), true));
-		}
-		return this;
-	}
-	
-	public BasicMultiBlockBlock addMatchStates (IBlockState... states) {
-		if (blocks.size() + states.length > 16)
-			throw new IllegalArgumentException("The number of subStates in a MultiBlock Vanilla Block Wrapper must be 16 or less for block: "
-					+ this.getUnlocalizedName());
-		for (IBlockState subState : states)
-		{
-			if (subState == null) throw new IllegalArgumentException("Tried to register a null IBlockState to a multiblockstate wrapper");
-			blocks.add(new WrapperEntry(subState, true));
-		}
-		return this;
-	}
-	
-	public IBlockState getSubBlockState (IBlockState thisState) {
-		return blocks.get(thisState.getValue(META)).state;
+	@Override
+	public IBlockState unwrap (IBlockState wrapped) {
+		return DelagateBlockStateContainer.convertFromProperties(wrappedBlock.getDefaultState(), wrapped.getProperties());
 	}
 	
 	@Override
 	public Item getItemDropped (IBlockState blockstate, Random random, int fortune) {
-		IBlockState subBlockState = getSubBlockState(blockstate);
-		return subBlockState.getBlock().getItemDropped(subBlockState, random, fortune);
+		return wrappedBlock.getItemDropped(blockstate, random, fortune);
 	}
 	
 	@Override
 	public int quantityDropped (IBlockState blockstate, int fortune, Random random) {
-		IBlockState subBlockState = getSubBlockState(blockstate);
-		return subBlockState.getBlock().quantityDropped(subBlockState, fortune, random);
+		return wrappedBlock.quantityDropped(blockstate, fortune, random);
 	}
 	
 	/**
@@ -95,23 +64,7 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	 */
 	@Override
 	public int damageDropped (IBlockState state) {
-		IBlockState subBlockState = getSubBlockState(state);
-		return subBlockState.getBlock().damageDropped(subBlockState);
-	}
-	
-	@Override
-	public BlockStateContainer createBlockState () {
-		return new BlockStateContainer(this, new IProperty[] { META });
-	}
-	
-	@Override
-	public int getMetaFromState (IBlockState state) {
-		return state.getValue(META);
-	}
-	
-	@Override
-	public IBlockState getStateFromMeta (int meta) {
-		return this.getDefaultState().withProperty(META, meta);
+		return wrappedBlock.damageDropped(state);
 	}
 	
 	@Override
@@ -120,8 +73,18 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	
 	@Override
 	public ItemStack getPickBlock (IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-		IBlockState subBlockState = getSubBlockState(state);
-		return subBlockState.getBlock().getPickBlock(subBlockState, target, world, pos, player);
+		return wrappedBlock.getPickBlock(state, target, world, pos, player);
+	}
+	
+	@Override
+	public int getMetaFromState (IBlockState state) {
+		return wrappedBlock.getMetaFromState(state);
+	}
+	
+	@SuppressWarnings ("deprecation")
+	@Override
+	public IBlockState getStateFromMeta (int meta) {
+		return DelagateBlockStateContainer.convertFromProperties(this.getDefaultState(), wrappedBlock.getStateFromMeta(meta).getProperties());
 	}
 	
 	/**
@@ -129,42 +92,7 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	 */
 	@Override
 	public String getUnlocalizedName (ItemStack stack) {
-		IBlockState subBlockState = getSubBlockState(getDefaultState().withProperty(META, stack.getMetadata()));
-		return subBlockState.getBlock().getUnlocalizedName();
-	}
-	
-	@Override
-	@Nullable
-	public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-		IBlockState subBlockState = getSubBlockState(blockState);
-		return subBlockState.getCollisionBoundingBox(worldIn, pos);
-	}
-	
-	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
-	 */
-	@Override
-	public boolean isOpaqueCube (IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess source, BlockPos pos) {
-		IBlockState subBlockState = getSubBlockState(state);
-		return subBlockState.getBoundingBox(source, pos);
-	}
-	
-	@Override
-	public boolean isFullCube (IBlockState state) {
-		IBlockState subBlockState = getSubBlockState(state);
-		return subBlockState.isFullCube();
-	}
-	
-	@Deprecated
-	@Override
-	public boolean isFullBlock (IBlockState state) {
-		IBlockState subBlockState = getSubBlockState(state);
-		return subBlockState.isFullBlock();
+		return wrappedBlock.getUnlocalizedName();
 	}
 	
 	@Override
@@ -217,12 +145,8 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	}
 	
 	@Override
-	public IBlockState getMultiBlockState (IBlockState state) {
-		for (WrapperEntry element : blocks)
-		{
-			if (element.matchState ? element.state == state : element.state.getBlock() == state.getBlock())
-				return this.getDefaultState().withProperty(META, blocks.indexOf(element));
-		}
+	public IBlockState getWrappedState (IBlockState state) {
+		if (state.getBlock() == wrappedBlock) return DelagateBlockStateContainer.convertFromProperties(this.getDefaultState(), state.getProperties());
 		LOG.debug("Failed to get a wrapped state for state: " + state.getBlock() + " BlockWrapper: " + this);
 		return state;
 	}
@@ -230,17 +154,5 @@ public class BasicMultiBlockBlock extends StorehouseBaseBlock implements IMultiB
 	@Override
 	public TileEntity createNewTileEntity (World world, int meta) {
 		return new BasicMultiBlockTile();
-	}
-	
-	public class WrapperEntry {
-		
-		@Nonnull
-		public final IBlockState state;
-		public final boolean matchState;
-		
-		public WrapperEntry (IBlockState state, boolean matchState) {
-			this.state = state;
-			this.matchState = matchState;
-		}
 	}
 }

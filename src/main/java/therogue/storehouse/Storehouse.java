@@ -11,8 +11,11 @@
 package therogue.storehouse;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -22,12 +25,22 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import therogue.storehouse.client.gui.IGuiSupplier;
 import therogue.storehouse.command.DebugResetLogger;
 import therogue.storehouse.config.ConfigHandler;
 import therogue.storehouse.init.grouped.Resources;
 import therogue.storehouse.proxy.IProxy;
 
-@Mod (modid = Storehouse.MOD_ID, name = Storehouse.MOD_NAME, version = Storehouse.VERSION, acceptedMinecraftVersions = Storehouse.MC_VERSIONS, useMetadata = true, guiFactory = Storehouse.GUI_FACTORY, updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json", dependencies = "before:guideapi")
+@Mod (
+		modid = Storehouse.MOD_ID,
+		name = Storehouse.MOD_NAME,
+		version = Storehouse.VERSION,
+		acceptedMinecraftVersions = Storehouse.MC_VERSIONS,
+		useMetadata = true,
+		guiFactory = Storehouse.GUI_FACTORY,
+		updateJSON = "https://raw.githubusercontent.com/the-rogue/Storehouse-Expansion/master/Misc_Files/update.json",
+		dependencies = "before:guideapi")
 public class Storehouse {
 	
 	/**
@@ -104,6 +117,18 @@ public class Storehouse {
 		@Override
 		public String getTranslatedTabLabel () {
 			return MOD_NAME;
+		}
+	};
+	public static final IGuiHandler GUI_HANDLER = new IGuiHandler() {
+		
+		@Override
+		public Object getServerGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z) {
+			return ((IGuiSupplier) world.getTileEntity(new BlockPos(x, y, z))).getContainer(player);
+		}
+		
+		@Override
+		public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z) {
+			return ((IGuiSupplier) world.getTileEntity(new BlockPos(x, y, z))).getGUI(player);
 		}
 	};
 }

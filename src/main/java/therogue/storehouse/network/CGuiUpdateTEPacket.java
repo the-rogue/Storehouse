@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import therogue.storehouse.LOG;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
 
 public class CGuiUpdateTEPacket implements IMessage {
@@ -77,7 +76,7 @@ public class CGuiUpdateTEPacket implements IMessage {
 							}
 							else
 							{
-								LOG.trace(String.format("CGuiUpdateTEPacket Received invalid update packet for invalid tile entity at %s with data: %s", message.getPos(), message.getNbt()));
+								// LOG.trace(String.format("CGuiUpdateTEPacket Received invalid update packet for invalid tile entity at %s with data: %s", message.getPos(), message.getNbt()));
 							}
 						}
 					}

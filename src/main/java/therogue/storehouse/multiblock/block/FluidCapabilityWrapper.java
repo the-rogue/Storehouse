@@ -24,7 +24,7 @@ public class FluidCapabilityWrapper implements ICapabilityWrapper<IFluidHandler>
 	public final boolean canFill;
 	public final boolean canDrain;
 	
-	public FluidCapabilityWrapper (boolean canFill, boolean canDrain) {
+	private FluidCapabilityWrapper (boolean canFill, boolean canDrain) {
 		this.canFill = canFill;
 		this.canDrain = canDrain;
 	}

@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.tile.ModuleContext;
@@ -32,6 +33,7 @@ public class TilePotionInjector extends StorehouseBaseMachine {
 	public TilePotionInjector () {
 		super(ModBlocks.potion_injector);
 		this.setInventory(new InventoryManager(this, 1, new Integer[] { 0 }, new Integer[] { 0 }));
+		containerFactory = (player) -> new ContainerBase(player.inventory, this).setTESlotList(inventory.guiAccess, new int[] { 0, 80, 37 });
 	}
 	
 	@Override

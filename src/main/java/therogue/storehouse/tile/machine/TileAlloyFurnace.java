@@ -10,22 +10,19 @@
 
 package therogue.storehouse.tile.machine;
 
-import therogue.storehouse.client.gui.ElementFactory;
-import therogue.storehouse.client.gui.GuiBase;
-import therogue.storehouse.client.gui.Icons;
+import net.minecraft.util.ResourceLocation;
+import therogue.storehouse.client.gui.GuiHelper;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.container.GuiItemCapability;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
-import therogue.storehouse.inventory.IInventoryItemHandler;
 import therogue.storehouse.inventory.InventoryManager;
-import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 
 public class TileAlloyFurnace extends StorehouseBaseMachine {
 	
 	protected final MachineCraftingHandler<TileAlloyFurnace>.CraftingManager theCrafter;
+	public static final ResourceLocation COMBUSTION_INDICATOR_LOCATION = GuiHelper.makeStorehouseLocation("textures/gui/icons/combustionindicator.png");
 	
 	public TileAlloyFurnace () {
 		super(ModBlocks.alloy_furnace);
@@ -34,17 +31,7 @@ public class TileAlloyFurnace extends StorehouseBaseMachine {
 		modules.add(theCrafter);
 		energyStorage.setRFPerTick(80);
 		inventory.setItemValidForSlotChecks( (index, stack) -> theCrafter.checkItemValidForSlot(index - 1, new ItemStackWrapper(stack)));
-		containerFactory = (player) -> {
-			ContainerBase container = new ContainerBase(player.inventory, this);
-			IInventoryItemHandler inventory = this.getCapability(GuiItemCapability.CAP, null, ModuleContext.GUI);
-			container.setTESlotList(inventory, new int[] { 2, 60, 37, 3, 60, 57, 0, 120, 37, 1, 60, 17 });
-			return container;
-		};
-		guiFactory = (player) -> {
-			GuiBase gui = new GuiBase(GuiBase.NORMAL_TEXTURE, containerFactory.apply(player), this);
-			String s = "ENERGYBAR 8 8,  PROGRESS_BAR CRFT_TL CRFT_TT D( UP_PB 90 58 %s )D( J( RBAR 88 44 12 2 )J( RARROW 100 39 ) )";
-			ElementFactory.makeElements(gui, gui.elements, this, s, Icons.CombustionIndicator.getLocation());
-			return gui;
-		};
+		containerFactory = (player) -> new ContainerBase(player.inventory, this).setTESlotList(inventory.guiAccess, new int[] { 2, 60, 37, 3, 60, 57, 0, 120, 37, 1, 60, 17 });
+		this.setElementString("ENERGYBAR 8 8,  PROGRESS_BAR CRFT_TL CRFT_TT D( UP_PB 90 58 %s )D( J( RBAR 88 44 12 2 )J( RARROW 100 39 ) )", COMBUSTION_INDICATOR_LOCATION);
 	}
 }

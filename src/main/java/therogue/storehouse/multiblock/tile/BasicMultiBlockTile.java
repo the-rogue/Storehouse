@@ -23,7 +23,6 @@ public class BasicMultiBlockTile extends TileEntity implements IMultiBlockTile {
 	
 	@Override
 	public IMultiBlockController getController () {
-		if (world.isRemote) throw new NoControllerException("Trying to get a controller in a client world");
 		if (controller == null && multiblockPos == null) throw new NoControllerException("The TileEntity at: " + this.getPos() + " could not find an IMultiblockController");
 		if (controller == null)
 		{

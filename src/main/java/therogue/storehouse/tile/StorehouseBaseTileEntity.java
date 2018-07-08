@@ -120,8 +120,14 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 		modules.forEach(module -> module.onOtherChange(changedCapability));
 	}
 	
+	@Deprecated // Use Context Sensitive version below
 	@Override
-	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+	public final boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+		return this.hasCapability(capability, facing, ModuleContext.SIDE);
+	}
+	
+	@Override
+	public boolean hasCapability (Capability<?> capability, EnumFacing facing, ModuleContext context) {
 		for (ITileModule module : modules)
 			if (module.hasCapability(capability, facing)) return true;
 		return super.hasCapability(capability, facing);
@@ -140,8 +146,18 @@ public abstract class StorehouseBaseTileEntity extends TileEntity implements IWo
 		return super.getCapability(capability, facing);
 	}
 	
+	@Override
 	public BlockPos getTilePosition () {
 		return this.pos;
+	}
+	
+	@Override
+	public World getTileWorld () {
+		return this.world;
+	}
+	
+	protected void setWorldCreate (World worldIn) {
+		this.world = worldIn;
 	}
 	
 	@Override

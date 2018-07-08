@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -34,16 +33,16 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.LOG;
 import therogue.storehouse.crafting.IMachineRecipe.Result;
 import therogue.storehouse.crafting.IRecipeInventory.IRecipeInventoryConverter;
 import therogue.storehouse.crafting.wrapper.IRecipeWrapper;
 import therogue.storehouse.energy.TileEnergyStorage;
+import therogue.storehouse.tile.ITickableModule;
 import therogue.storehouse.tile.ITile;
-import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
+import therogue.storehouse.tile.TileTickingRegistry;
 
 public class MachineCraftingHandler<T extends ITile> {
 	
@@ -74,7 +73,6 @@ public class MachineCraftingHandler<T extends ITile> {
 		getHandler(crafterClass).register(recipe);
 	}
 	
-	private final List<CraftingManager> CRAFTERS = new ArrayList<>();
 	private List<IMachineRecipe<T>> RECIPES = Lists.newArrayList();
 	
 	private MachineCraftingHandler () {
@@ -82,19 +80,19 @@ public class MachineCraftingHandler<T extends ITile> {
 	
 	public CraftingManager newCrafter (T attachedTile, String inventoryString, String outputString) {
 		CraftingManager cm = new CraftingManager(attachedTile, inventoryString, outputString);
-		CRAFTERS.add(cm);
+		TileTickingRegistry.INSTANCE.registerTickingModule(cm);
 		return cm;
 	}
 	
 	public CraftingManager newCrafter (T attachedTile, String inventoryString, String outputString, TileEnergyStorage energy) {
 		CraftingManager cm = new CraftingManager(attachedTile, inventoryString, outputString, energy);
-		CRAFTERS.add(cm);
+		TileTickingRegistry.INSTANCE.registerTickingModule(cm);
 		return cm;
 	}
 	
 	public CraftingManager newCrafter (T attachedTile, String inventoryString, String outputString, Supplier<Result> canRun, Runnable doRunTick) {
 		CraftingManager cm = new CraftingManager(attachedTile, inventoryString, outputString, canRun, doRunTick);
-		CRAFTERS.add(cm);
+		TileTickingRegistry.INSTANCE.registerTickingModule(cm);
 		return cm;
 	}
 	
@@ -111,17 +109,6 @@ public class MachineCraftingHandler<T extends ITile> {
 		else
 		{
 			LOG.warn("Tried to register a duplicate recipe: " + recipe);
-		}
-	}
-	
-	public static void tickCrafters (TickEvent.ServerTickEvent event) {
-		if (event.phase == TickEvent.Phase.END) return;
-		for (Entry<Class<?>, MachineCraftingHandler<?>> craftinghandler : CRAFTING_HANDLERS.entrySet())
-		{
-			for (MachineCraftingHandler<?>.CraftingManager manager : craftinghandler.getValue().CRAFTERS)
-			{
-				manager.updateCraftingStatus();
-			}
 		}
 	}
 	
@@ -210,13 +197,14 @@ public class MachineCraftingHandler<T extends ITile> {
 		return theInv;
 	}
 	
-	public class CraftingManager implements ICraftingManager<T>, ITileModule {
+	public class CraftingManager implements ICraftingManager<T>, ITickableModule {
 		
 		private final T attachedTile;
 		private IMachineRecipe<T> currentCrafting = null;
 		public int totalCraftingTime = 0;
 		public int craftingTime = 0;
 		private boolean craftingLock = false;
+		private boolean shouldRemove = false;
 		private Supplier<Set<Integer>> orderMattersSlots = () -> Sets.newHashSet();
 		private Supplier<IRecipeInventory> craftingInventory;
 		private Supplier<IRecipeInventory> outputInventory;
@@ -234,8 +222,10 @@ public class MachineCraftingHandler<T extends ITile> {
 		
 		private CraftingManager (T attachedTile, String inventoryString, String outputString, Supplier<Result> canRun, Runnable doRunTick) {
 			this.attachedTile = attachedTile;
-			this.craftingInventory = () -> createInv(attachedTile, inventoryString);
-			this.outputInventory = () -> createInv(attachedTile, outputString);
+			final IRecipeInventory preCraftInv = createInv(attachedTile, inventoryString);
+			this.craftingInventory = () -> preCraftInv;
+			final IRecipeInventory preOutputInv = createInv(attachedTile, outputString);
+			this.outputInventory = () -> preOutputInv;
 			this.canRun = canRun;
 			this.doRunTick = doRunTick;
 		}
@@ -295,7 +285,7 @@ public class MachineCraftingHandler<T extends ITile> {
 			}
 		}
 		
-		private void updateCraftingStatus () {
+		public void update () {
 			if (currentCrafting != null)
 			{
 				Result res = currentCrafting.doTick(this);
@@ -309,6 +299,24 @@ public class MachineCraftingHandler<T extends ITile> {
 					resetCraftingStatus();
 				}
 			}
+		}
+		
+		@Override
+		public boolean stillTicking () {
+			return currentCrafting != null;
+		}
+		
+		/**
+		 * When the tile is removed from the world (i.e. invalidated)
+		 */
+		@Override
+		public void onRemove () {
+			shouldRemove = true;
+		}
+		
+		@Override
+		public boolean shouldRemove () {
+			return shouldRemove;
 		}
 		
 		public boolean craft () {
@@ -326,14 +334,6 @@ public class MachineCraftingHandler<T extends ITile> {
 		@Override
 		public void onOtherChange (Capability<?> changedCapability) {
 			this.checkRecipes();
-		}
-		
-		/**
-		 * When the tile is removed from the world (i.e. invalidated)
-		 */
-		@Override
-		public void onRemove () {
-			CRAFTERS.remove(this);
 		}
 		
 		@Override

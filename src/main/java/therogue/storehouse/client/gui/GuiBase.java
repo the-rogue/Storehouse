@@ -27,7 +27,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.gui.element.ElementBase;
 import therogue.storehouse.container.ContainerBase;
-import therogue.storehouse.inventory.IGuiSupplier;
 
 public class GuiBase extends GuiContainer {
 	
@@ -69,7 +68,7 @@ public class GuiBase extends GuiContainer {
 	public void drawScreen (int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		this.func_191948_b(mouseX, mouseY);
+		this.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
 	@Override
@@ -79,7 +78,7 @@ public class GuiBase extends GuiContainer {
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		this.drawTextureBackgroundRect(i, j, this.xSize, this.ySize, this.texWidth, this.texHeight);
-		inventory.update();
+		inventory.updateProcedure.run();;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) this.guiLeft, (float) this.guiTop, 0.0F);
 		for (Slot s : this.inventorySlots.inventorySlots)
@@ -98,8 +97,8 @@ public class GuiBase extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		int nameWidth = fontRendererObj.getStringWidth(new TextComponentTranslation(name).getUnformattedComponentText());
-		fontRendererObj.drawString(new TextComponentTranslation(name).getFormattedText(), this.xSize / 2
+		int nameWidth = fontRenderer.getStringWidth(new TextComponentTranslation(name).getUnformattedComponentText());
+		fontRenderer.drawString(new TextComponentTranslation(name).getFormattedText(), this.xSize / 2
 				- nameWidth / 2, 4, GuiHelper.GUI_TEXT_COLOUR);
 		GlStateManager.enableAlpha();
 		int x = mouseX - this.guiLeft, y = mouseY - this.guiTop;
@@ -242,6 +241,16 @@ public class GuiBase extends GuiContainer {
 		return pointX >= rectX - 1 && pointX < rectX + rectWidth + 1 && pointY >= rectY - 1 && pointY < rectY + rectHeight + 1;
 	}
 	
+	public GuiBase setXSize (int xSize) {
+		this.xSize = xSize;
+		return this;
+	}
+	
+	public GuiBase setYSize (int ySize) {
+		this.ySize = ySize;
+		return this;
+	}
+	
 	public int getXSize () {
 		return this.xSize;
 	}
@@ -251,6 +260,6 @@ public class GuiBase extends GuiContainer {
 	}
 	
 	public FontRenderer getFontRenderer () {
-		return fontRendererObj;
+		return this.fontRenderer;
 	}
 }

@@ -4,6 +4,7 @@ package therogue.storehouse.client.connectedtextures;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -18,16 +19,19 @@ import gnu.trove.map.custom_hash.TObjectByteCustomHashMap;
 import gnu.trove.map.custom_hash.TObjectLongCustomHashMap;
 import gnu.trove.strategy.IdentityHashingStrategy;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.client.connectedtextures.IConnectedTextureLogic.IConnectionTest;
+import therogue.storehouse.client.connectedtextures.CTBlockRegistry.IConnectedTextureLogic;
 
 /**
  * List of IBlockRenderContext's
@@ -37,16 +41,18 @@ public class ConnectionState {
 	
 	private Map<ConnectedTexturePair, EnumMap<EnumFacing, int[]>> textureIndices;
 	private TObjectLongMap<ConnectedTexturePair> serialized;
+	public final IBlockState state;
 	private IBlockAccess world;
 	private BlockPos pos;
 	public final Map<ConnectedTexturePair, Map<CacheKey, TObjectByteMap<IBlockState>>> textureConnectionCache = new HashMap<>();
 	
-	public ConnectionState (IBlockAccess world, BlockPos pos) {
+	public ConnectionState (IBlockState state, IBlockAccess world, BlockPos pos) {
+		this.state = state;
 		this.world = world;
 		this.pos = pos;
 	}
 	
-	public void buildCache (IBlockState state, Collection<ConnectedTexturePair> textures) {
+	public void buildCache (BlockModelShapes blockStateStore, IBlockState state, Collection<ConnectedTexturePair> textures) {
 		if (textureIndices != null) return;
 		world = new WorldCache(world);
 		textureIndices = Maps.newIdentityHashMap();
@@ -58,17 +64,29 @@ public class ConnectionState {
 			Map<CacheKey, TObjectByteMap<IBlockState>> connectionCache = textureConnectionCache.computeIfAbsent(tex, (key) -> new HashMap<>());
 			for (EnumFacing face : EnumFacing.VALUES)
 			{
-				ConnectedLogic logic = new ConnectedLogic(world, pos, face, tex.connectionLogic, (boolean ignoreStates, IBlockState from,
-						IBlockState to, EnumFacing dir) -> {
-					synchronized (connectionCache)
-					{
-						TObjectByteMap<IBlockState> sidecache = connectionCache.computeIfAbsent(new CacheKey(from, dir), k -> new TObjectByteCustomHashMap<>(new IdentityHashingStrategy<>(), Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, (byte) -1));
-						byte cached = sidecache.get(to);
-						if (cached == -1)
+				ConnectedLogic logic = new ConnectedLogic(blockStateStore, world, pos, face, tex, new IConnectedTextureLogic() {
+					
+					public boolean connects (ConnectedTexturePair texture, IBlockState from, IBakedModel toModel, IBlockState to, EnumFacing dir) {
+						synchronized (connectionCache)
 						{
-							sidecache.put(to, cached = (byte) ((tex.connectionLogic.canConnect() == null ? IConnectionTest.DEFAULT.connects(ignoreStates, from, to, dir) : tex.connectionLogic.canConnect().connects(ignoreStates, from, to, dir)) ? 1 : 0));
+							TObjectByteMap<IBlockState> sidecache = connectionCache.computeIfAbsent(new CacheKey(from, dir), k -> new TObjectByteCustomHashMap<>(new IdentityHashingStrategy<>(), Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, (byte) -1));
+							byte cached = sidecache.get(to);
+							if (cached == -1)
+							{
+								sidecache.put(to, cached = (byte) ((tex.connectionLogic.connects(texture, from, toModel, to, dir)) ? 1 : 0));
+							}
+							return cached == 1;
 						}
-						return cached == 1;
+					}
+					
+					@Override
+					public List<ResourceLocation> getModelLocation () {
+						return tex.connectionLogic.getModelLocation();
+					}
+					
+					@Override
+					public List<ResourceLocation> transformToConnectedTextures (Collection<ResourceLocation> textures) {
+						return tex.connectionLogic.transformToConnectedTextures(textures);
 					}
 				});
 				ctmData.put(face, logic.submapCache);

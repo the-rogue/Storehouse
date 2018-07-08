@@ -40,6 +40,8 @@ public class ContainerBase extends Container {
 	protected List<IInventorySlot> smartTileEntitySlots = new ArrayList<IInventorySlot>();
 	protected List<IInventorySlot> smartInventorySlots = new ArrayList<IInventorySlot>();
 	protected List<Slot> tileEntitySlots = new ArrayList<Slot>();
+	public Runnable updateProcedure = () -> {
+	};
 	
 	public ContainerBase (IInventory playerInv, StorehouseBaseTileEntity teInv) {
 		this(176, 166, playerInv, teInv);
@@ -52,34 +54,52 @@ public class ContainerBase extends Container {
 		int yOffset = ySize - 6;
 		for (int x = 0; x < 9; ++x)
 		{
-			this.addSlot(new LegacySlot(playerInv, x, xOffset + x * 18, yOffset - 18));
+			this.addSlot(new LegacyInventorySlot(playerInv, x, xOffset + x * 18, yOffset - 18));
 		}
 		// Player Inventory, Slot 9-35, Slot IDs 9-35
 		for (int y = 0; y < 3; ++y)
 		{
 			for (int x = 0; x < 9; ++x)
 			{
-				this.addSlot(new LegacySlot(playerInv, x + y * 9 + 9, xOffset + x * 18, yOffset - 18 * 4 - 4 + y * 18));
+				this.addSlot(new LegacyInventorySlot(playerInv, x + y * 9 + 9, xOffset + x * 18, yOffset - 18 * 4 - 4 + y * 18));
 			}
 		}
 	}
 	
 	public IInventorySlot addSlot (IInventorySlot slot) {
-		this.addSlotToContainer(new SlotAdapter(slot));
+		this.addSlotToContainer(new NewSlotAdapter(slot));
 		smartInventorySlots.add(slot);
 		return slot;
 	}
 	
-	public void setTESlotList (IInventoryItemHandler inventory, int[] slotPositions) {
+	public ContainerBase setTESlotList (IInventoryItemHandler inventory, int[] slotPositions) {
 		if (slotPositions.length % 3 != 0) throw new IllegalArgumentException("List of slot positions size is not a multiple of 3");
 		for (int i = 0; i < slotPositions.length / 3; i++)
 		{
 			this.addTESlot(new InventorySlot(inventory, slotPositions[i * 3], slotPositions[i * 3 + 1], slotPositions[i * 3 + 2]));
 		}
+		return this;
+	}
+	
+	public ContainerBase addTESlotBlock (IInventoryItemHandler inventory, int x, int y, int rows, int columns, int startingInvIndx) {
+		return addTESlotBlock(inventory, x, y, rows, columns, startingInvIndx, 0, true);
+	}
+	
+	// 0 spacing for normal spacing
+	public ContainerBase addTESlotBlock (IInventoryItemHandler inventory, int x, int y, int rows, int columns, int startingInvIndx, int spacing, boolean slotsIncreaseAcross) {
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < columns; j++)
+			{
+				int slotNo = startingInvIndx + (slotsIncreaseAcross ? i * columns + j : j * rows + i);
+				this.addTESlot(new InventorySlot(inventory, slotNo, i * (18 + spacing), j * (18 + spacing)));
+			}
+		}
+		return this;
 	}
 	
 	public IInventorySlot addTESlot (IInventorySlot slot) {
-		Slot slotAdapter = new SlotAdapter(slot);
+		Slot slotAdapter = new NewSlotAdapter(slot);
 		this.addSlotToContainer(slotAdapter);
 		tileEntitySlots.add(slotAdapter);
 		smartInventorySlots.add(slot);
@@ -87,7 +107,12 @@ public class ContainerBase extends Container {
 		return slot;
 	}
 	
-	public void update () {
+	public int getTESlotSize () {
+		return tileEntitySlots.size();
+	}
+	
+	public Slot getTESlot (int index) {
+		return tileEntitySlots.get(index);
 	}
 	
 	/**
@@ -95,7 +120,7 @@ public class ContainerBase extends Container {
 	 */
 	@Override
 	public void detectAndSendChanges () {
-		update();
+		updateProcedure.run();
 		for (IContainerListener listener : this.listeners)
 		{
 			if (listener instanceof EntityPlayerMP && GeneralUtils.isServerSide(((EntityPlayerMP) listener).getEntityWorld()))
@@ -103,6 +128,7 @@ public class ContainerBase extends Container {
 				StorehousePacketHandler.INSTANCE.sendTo(teInv.getCGUIPacket(), (EntityPlayerMP) listener);
 			}
 		}
+		smartInventorySlots.forEach(slot -> slot.detectAndSendChanges(this.listeners));
 	}
 	
 	/**

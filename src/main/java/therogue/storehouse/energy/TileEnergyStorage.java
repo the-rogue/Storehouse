@@ -1,17 +1,23 @@
 
 package therogue.storehouse.energy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import therogue.storehouse.tile.ITickableModule;
 import therogue.storehouse.tile.ITile;
-import therogue.storehouse.tile.ITileModule;
 import therogue.storehouse.tile.ModuleContext;
 
-public class TileEnergyStorage extends EnergyStorageAdv implements ITileModule {
+public class TileEnergyStorage extends EnergyStorageAdv implements ITickableModule {
 	
 	private ITile owner;
 	private int RFPerTick = 0;
+	private boolean shouldRemove = false;
+	public final List<BlockPos> sendEnergyFrom = new ArrayList<>();
 	
 	public TileEnergyStorage (ITile owner, int capacity) {
 		super(capacity);
@@ -68,5 +74,28 @@ public class TileEnergyStorage extends EnergyStorageAdv implements ITileModule {
 	@Override
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing, ModuleContext capacity) {
 		return (T) this;
+	}
+	
+	@Override
+	public void update () {
+		sendEnergyFrom.forEach(pos -> EnergyUtils.sendEnergytoAll(this, owner.getTileWorld(), pos));
+	}
+	
+	@Override
+	public boolean stillTicking () {
+		return sendEnergyFrom.size() != 0;
+	}
+	
+	/**
+	 * When the tile is removed from the world (i.e. invalidated)
+	 */
+	@Override
+	public void onRemove () {
+		shouldRemove = true;
+	}
+	
+	@Override
+	public boolean shouldRemove () {
+		return shouldRemove;
 	}
 }

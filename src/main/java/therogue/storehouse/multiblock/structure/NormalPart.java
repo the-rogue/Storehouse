@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
+import therogue.storehouse.multiblock.block.ICapabilityWrapper;
 
 public class NormalPart implements IMultiBlockPart {
 	
@@ -55,7 +56,14 @@ public class NormalPart implements IMultiBlockPart {
 	}
 	
 	@Override
+	public List<ICapabilityWrapper<?>> getCapbilities (IBlockState originalState, int partNo, int x, int y, int z) {
+		return part[x - startPosition.getX()][y - startPosition.getY()][z - startPosition.getZ()].getCapabilities(originalState);
+	}
+	
+	@Override
 	public String toString () {
 		return "Part: " + Arrays.deepToString(part);
 	}
+
+
 }

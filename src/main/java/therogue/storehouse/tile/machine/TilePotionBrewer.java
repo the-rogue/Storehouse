@@ -19,7 +19,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
-import therogue.storehouse.container.GuiItemCapability;
+import therogue.storehouse.client.gui.ElementFactory;
+import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.crafting.IMachineRecipe;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
@@ -28,7 +30,6 @@ import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.IInventoryItemHandler;
 import therogue.storehouse.inventory.InventoryManager;
-import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.StorehouseBaseMachine;
 
 public class TilePotionBrewer extends StorehouseBaseMachine implements ITickable {
@@ -60,6 +61,13 @@ public class TilePotionBrewer extends StorehouseBaseMachine implements ITickable
 			if (BREWING_SLOTS.contains(index) || OUTPUT_SLOTS.contains(index)) return true;
 			return false;
 		});
+		containerFactory = (
+				player) -> new ContainerBase(player.inventory, this).addTESlotBlock(inventory.guiAccess, 28, 19, 3, 4, 6).addTESlotBlock(inventory.guiAccess, 118, 19, 3, 1, 3).addTESlotBlock(inventory.guiAccess, 154, 19, 3, 1, 0);
+		guiFactory = (player) -> {
+			GuiBase gui = new GuiBase(GuiBase.NORMAL_TEXTURE, containerFactory.apply(player), this).setXSize(198).setYSize(186);
+			ElementFactory.makeElements(gui, gui.elements, this, "ENERGYBAR 8 8");
+			return gui;
+		};
 	}
 	
 	public void addInjector (TilePotionInjector e) {
@@ -73,7 +81,7 @@ public class TilePotionBrewer extends StorehouseBaseMachine implements ITickable
 	@Override
 	public void update () {
 		if (injectors.size() == 0) return;
-		IInventoryItemHandler internalView = this.getCapability(GuiItemCapability.CAP, null, ModuleContext.INTERNAL);
+		IInventoryItemHandler internalView = inventory.guiAccess;
 		if (injectors.size() <= injector)
 		{
 			int slots = BREWING_SLOTS.size();

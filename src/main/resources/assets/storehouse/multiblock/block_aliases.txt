@@ -1,0 +1,20 @@
+DB0 minecraft:diamond_block
+CC0 carbon_compressor
+PW0 crafting_block0 multiblock_blocks7
+BU0 burner
+MC0 crafting_block0
+CC1 crafting_block4
+NB0 minecraft:nether_brick
+NR0 minecraft:netherrack
+HC0 minecraft:hardened_clay minecraft:stained_hardened_clay
+FR0 minecraft:fire
+MG0 minecraft:magma
+FN0 crafting_block5
+RG0 crafting_block2
+IB0 minecraft:iron_block
+EJ0 multiblock_blocks0
+IO0 crafting_block0 multiblock_blocks0 multiblock_blocks1 multiblock_blocks7 multiblock_blocks2 multiblock_blocks9
+FN1 minecraft:fence
+SG0 solar_generator_basic
+SG1 solar_generator_advanced
+SG2 solar_generator_ender

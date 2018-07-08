@@ -23,7 +23,7 @@ public class ItemCapabilityWrapper implements ICapabilityWrapper<IItemHandler> {
 	public final boolean canInsert;
 	public final boolean canExtract;
 	
-	public ItemCapabilityWrapper (boolean canInsert, boolean canExtract) {
+	private ItemCapabilityWrapper (boolean canInsert, boolean canExtract) {
 		this.canInsert = canInsert;
 		this.canExtract = canExtract;
 	}

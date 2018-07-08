@@ -27,23 +27,25 @@ public class ElementFluidTank extends ElementBase {
 	public final int x;
 	public final int y;
 	public final IFluidHandler tank;
+	public final int tankNumber;
 	
-	public ElementFluidTank (ResourceLocation location, int x, int y, IFluidHandler tank) {
+	public ElementFluidTank (ResourceLocation location, int x, int y, IFluidHandler tank, int tankNumber) {
 		this.iconLocation = location;
 		this.icon = GuiHelper.getImageAt(iconLocation);
 		this.x = x;
 		this.y = y;
 		this.tank = tank;
+		this.tankNumber = tankNumber;
 	}
 	
 	@Override
 	public void drawElement (int mouseX, int mouseY) {
 		if (icon == null) return;
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		FluidStack contents = tank.getTankProperties()[0].getContents();
+		FluidStack contents = tank.getTankProperties()[tankNumber].getContents();
 		if (contents != null)
 		{
-			int capacity = tank.getTankProperties()[0].getCapacity();
+			int capacity = tank.getTankProperties()[tankNumber].getCapacity();
 			float percentage = (float) contents.amount / (float) capacity;
 			int height = GuiHelper.calculateLength(icon.getHeight() - 2, percentage);
 			GuiHelper.drawFluid(contents, x + 1, y + icon.getHeight() - 1 - height, icon.getWidth() - 2, height);
@@ -60,9 +62,9 @@ public class ElementFluidTank extends ElementBase {
 		{
 			ArrayList<String> textLines = new ArrayList<String>();
 			// TODO Insert Commas
-			tank.getTankProperties()[0].getContents();
-			textLines.add(TextFormatting.GREEN + "" + (tank.getTankProperties()[0].getContents() != null ? tank.getTankProperties()[0].getContents().amount + "" : 0) + " mB /");
-			textLines.add(TextFormatting.GREEN + "" + tank.getTankProperties()[0].getCapacity() + " mB");
+			tank.getTankProperties()[tankNumber].getContents();
+			textLines.add(TextFormatting.GREEN + "" + (tank.getTankProperties()[tankNumber].getContents() != null ? tank.getTankProperties()[tankNumber].getContents().amount + "" : 0) + " mB /");
+			textLines.add(TextFormatting.GREEN + "" + tank.getTankProperties()[tankNumber].getCapacity() + " mB");
 			GuiHelper.drawHoveringText(gui.getFontRenderer(), textLines, 0, 1, 0, gui.width, gui.height, -1, gui.getGuiLeft(), gui.getGuiTop(), true, false);
 			// gui.drawHoveringText(textLines, gui.getXSize(), this.y);
 		}

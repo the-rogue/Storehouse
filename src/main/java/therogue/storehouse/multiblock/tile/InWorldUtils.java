@@ -2,11 +2,8 @@
 package therogue.storehouse.multiblock.tile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -15,19 +12,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import therogue.storehouse.LOG;
-import therogue.storehouse.multiblock.block.ICapabilityWrapper;
-import therogue.storehouse.multiblock.block.IMultiBlockCapabilityBlock;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.multiblock.structure.MultiBlockStructure.StructureTest;
+import therogue.storehouse.multiblock.tile.WorldStates.MultiBlockData;
 
 public class InWorldUtils {
 	
 	public static MultiBlockFormationResult formMultiBlock (IMultiBlockController controller) {
 		World controllerWorld = controller.getPositionWorld();
-		MultiBlockCheckResult result = checkStructure(controllerWorld, controller.getPosition(), controller.getStructure());
-		if (!result.valid) return new MultiBlockFormationResult(false, null);
+		MultiBlockCheckResult result = new MultiBlockCheckResult(false, null, null); // TODO FINISH THIS
+		for (MultiBlockStructure structure : controller.getPossibleStructures())
+		{
+			result = checkStructure(controllerWorld, controller.getPosition(), structure);
+			if (result.valid) break;
+		}
+		if (!result.valid) return new MultiBlockFormationResult(false, null, null);
 		List<WorldStates> worldPositionStates = result.worldPositionsStates;
 		for (WorldStates positionState : worldPositionStates)
 		{
@@ -41,7 +40,7 @@ public class InWorldUtils {
 				}
 			}
 		}
-		return new MultiBlockFormationResult(true, worldPositionStates);
+		return new MultiBlockFormationResult(true, worldPositionStates, result.info);
 	}
 	
 	private static MultiBlockCheckResult checkStructure (World world, BlockPos checkerPos, MultiBlockStructure array) {
@@ -57,7 +56,7 @@ public class InWorldUtils {
 				}
 			}
 		}
-		return new MultiBlockCheckResult(false, null);
+		return new MultiBlockCheckResult(false, null, null);
 	}
 	
 	private static List<BlockPos> getPossibleLocations (IBlockState block, MultiBlockStructure blockarray) {
@@ -86,9 +85,9 @@ public class InWorldUtils {
 		{
 			BlockPos worldPosition = arrayOriginInWorld.add(blocktest.getCurrentPosition().rotate(rotation));
 			IBlockState worldBlockState = world.getBlockState(worldPosition);
-			worldPositionsStates.add(new WorldStates(worldPosition, worldBlockState, blocktest.getMultiBlockState(worldBlockState)));
+			worldPositionsStates.add(new WorldStates(worldPosition, worldBlockState, blocktest.getMultiBlockState(worldBlockState), blocktest.getCapabilites(worldBlockState)));
 		}
-		return new MultiBlockCheckResult(true, worldPositionsStates);
+		return new MultiBlockCheckResult(true, worldPositionsStates, new MultiBlockData(arrayOriginInWorld, rotation));
 	}
 	
 	public static class MultiBlockFormationResult {
@@ -96,37 +95,42 @@ public class InWorldUtils {
 		public final boolean formed;
 		@Nullable
 		public final List<WorldStates> components;
+		@Nullable
+		public final MultiBlockData info;
 		
-		public MultiBlockFormationResult (boolean formed, @Nullable List<WorldStates> components) {
+		public MultiBlockFormationResult (boolean formed, @Nullable List<WorldStates> components, MultiBlockData info) {
 			this.formed = formed;
 			this.components = components;
+			this.info = info;
 		}
-	}
-	
-	public static Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> getWorldMultiblockCapabilities (List<WorldStates> worldPositionStates) {
-		if (worldPositionStates == null)
-		{
-			LOG.error("Could not load capabilities from a null list of world position states");
-			return new HashMap<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>>();
-		}
-		Stream<WorldStates> stream = worldPositionStates.parallelStream().filter(s -> s.nonMultiblockState != null).filter(s -> s.nonMultiblockState.getBlock() instanceof IMultiBlockCapabilityBlock);
-		Map<BlockPos, Map<Capability<?>, ICapabilityWrapper<?>>> capabilities = stream.collect(Collectors.toMap(s -> s.position, s -> ((IMultiBlockCapabilityBlock) s.nonMultiblockState.getBlock()).getCapabilities(s.nonMultiblockState)));
-		return capabilities;
 	}
 	
 	public static void removeMultiBlock (IMultiBlockController controller, List<WorldStates> worldPositionStates, @Nullable BlockPos at) {
 		World controllerWorld = controller.getPositionWorld();
 		BlockPos controllerPos = controller.getPosition();
 		if (worldPositionStates == null) return;
-		Stream<WorldStates> stream = worldPositionStates.parallelStream().filter(s -> s.nonMultiblockState != null).filter(s -> !s.position.equals(controllerPos)).filter(s -> !s.position.equals(at));
-		stream.forEach(s -> controllerWorld.setBlockState(s.position, s.nonMultiblockState));
+		for (WorldStates state : worldPositionStates)
+		{
+			if (!state.position.equals(at) && !state.position.equals(controllerPos))
+			{
+				if (state.nonMultiblockState != null)
+				{
+					controllerWorld.setBlockState(state.position, state.nonMultiblockState);
+				}
+			}
+		}
+		// Stream<WorldStates> stream = worldPositionStates.parallelStream().filter(s -> s.nonMultiblockState != null).filter(s -> !s.position.equals(controllerPos)).filter(s -> !s.position.equals(at));
+		// stream.forEach(s -> controllerWorld.setBlockState(s.position, s.nonMultiblockState));
 	}
 	
 	public static boolean sameStructure (IMultiBlockController controller, List<WorldStates> worldPositionStates) {
-		MultiBlockCheckResult result = checkStructure(controller.getPositionWorld(), controller.getPosition(), controller.getStructure());
-		if (result.valid
-				&& result.worldPositionsStates.stream().map(s -> s.position).collect(Collectors.toList()).equals(worldPositionStates.stream().map(s -> s.position).collect(Collectors.toList())))
-			return true;
+		for (MultiBlockStructure structure : controller.getPossibleStructures())
+		{
+			MultiBlockCheckResult result = checkStructure(controller.getPositionWorld(), controller.getPosition(), structure);
+			if (result.valid
+					&& result.worldPositionsStates.stream().map(s -> s.position).collect(Collectors.toList()).equals(worldPositionStates.stream().map(s -> s.position).collect(Collectors.toList())))
+				return true;
+		}
 		return false;
 	}
 	
@@ -135,10 +139,13 @@ public class InWorldUtils {
 		public final boolean valid;
 		@Nullable
 		public final List<WorldStates> worldPositionsStates;
+		@Nullable
+		public final MultiBlockData info;
 		
-		public MultiBlockCheckResult (boolean valid, @Nullable List<WorldStates> worldPositionsStates) {
+		public MultiBlockCheckResult (boolean valid, @Nullable List<WorldStates> worldPositionsStates, MultiBlockData info) {
 			this.valid = valid;
 			this.worldPositionsStates = worldPositionsStates;
+			this.info = info;
 		}
 	}
 }

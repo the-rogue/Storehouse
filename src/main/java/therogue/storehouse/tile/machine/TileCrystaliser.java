@@ -19,6 +19,9 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.GeneralUtils;
+import therogue.storehouse.client.gui.ElementFactory;
+import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.wrapper.ItemStackWrapper;
 import therogue.storehouse.fluid.TileFluidTank;
@@ -73,6 +76,30 @@ public class TileCrystaliser extends StorehouseBaseMachine implements ITickable 
 			if ((index == 2 || index == 3) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) return true;
 			return false;
 		});
+		containerFactory = (player) -> {
+			ContainerBase container = new ContainerBase(player.inventory, this).setTESlotList(inventory.guiAccess, new int[] { 2, 141, 17, 3, 141, 53, 0, 65, 37, 1, 65, 37 });
+			container.getTESlot(3).slotNumber = container.getTESlot(2).slotNumber;
+			container.updateProcedure = () -> {
+				if (inventory.guiAccess.getStackInSlot(0).isEmpty())
+				{
+					if (container.inventorySlots.contains(container.getTESlot(2))) container.inventorySlots.remove(container.getTESlot(2));
+					if (!container.inventorySlots.contains(container.getTESlot(3))) container.inventorySlots.add(container.getTESlot(3));
+				}
+				else
+				{
+					if (container.inventorySlots.contains(container.getTESlot(3))) container.inventorySlots.remove(container.getTESlot(3));
+					if (!container.inventorySlots.contains(container.getTESlot(2))) container.inventorySlots.add(container.getTESlot(2));
+				}
+			};
+			container.updateProcedure.run();
+			return container;
+		};
+		this.guiFactory = (player) -> {
+			GuiBase gui = new GuiBase(GuiBase.NORMAL_TEXTURE, containerFactory.apply(player), this);
+			String s = "ENERGYBAR 8 8,  FLUID_TANK 105 12, PROGRESS_BAR CRFT_TL CRFT_TT CRYSTALISER_PB 46 18 54 54";
+			ElementFactory.makeElements(gui, gui.elements, this, s);
+			return gui;
+		};
 	}
 	
 	// -------------------------ITickable-----------------------------------------------------------------

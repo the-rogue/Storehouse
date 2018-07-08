@@ -11,7 +11,6 @@
 package therogue.storehouse.tile;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -19,7 +18,6 @@ import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.block.IStorehouseBaseBlock;
 import therogue.storehouse.energy.EnergyUtils;
 import therogue.storehouse.energy.TileEnergyStorage;
-import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 
 public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock implements ITickable {
 	
@@ -28,8 +26,8 @@ public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock imp
 	public final MachineTier tier;
 	protected final TileData FIELDDATA = new TileData();
 	
-	public TileBaseGenerator (IStorehouseBaseBlock block, MultiBlockStructure structure, MachineTier tier, int RFPerTick, int timeModifier) {
-		super(block, structure);
+	public TileBaseGenerator (IStorehouseBaseBlock block, MachineTier tier, int RFPerTick, int timeModifier) {
+		super(block);
 		modules.add(FIELDDATA);
 		this.tier = tier;
 		this.RFPerTick = RFPerTick;
@@ -61,27 +59,10 @@ public abstract class TileBaseGenerator extends StorehouseBaseTileMultiBlock imp
 			{
 				inventory.insertItem(0, inventory.insertItem(1, inventory.extractItem(0, -1, false, ModuleContext.INTERNAL), false, ModuleContext.INTERNAL), false, ModuleContext.INTERNAL);
 			}
-			this.sendEnergyToNeighbours();
-			if (world != null)
-			{
-				this.world.notifyBlockUpdate(this.getPos(), block.getBlock().getDefaultState(), block.getBlock().getDefaultState(), 0);
-			}
 		}
 	}
 	
 	// -------------------------Utility Methods to keep update() short-----------------------------------
-	/**
-	 * Sends energy to neighbouring energy blocks
-	 */
-	protected void sendEnergyToNeighbours () {
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			if (energyStorage.getEnergyStored() <= 0) return;
-			int sentRF = EnergyUtils.sendEnergy(world, getPos(), facing, energyStorage.extractEnergy(energyStorage.getMaxExtract(), true));
-			energyStorage.extractEnergy(sentRF, false);
-		}
-	}
-	
 	protected void sendEnergyToItems (int slot) {
 		if (energyStorage.getEnergyStored() <= 0) return;
 		EnergyUtils.sendItemEnergy(energyStorage, inventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL), slot, energyStorage.getMaxExtract()

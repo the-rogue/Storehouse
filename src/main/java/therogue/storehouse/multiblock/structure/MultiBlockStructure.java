@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import therogue.storehouse.LOG;
+import therogue.storehouse.multiblock.block.ICapabilityWrapper;
 
 public class MultiBlockStructure {
 	
@@ -31,6 +32,11 @@ public class MultiBlockStructure {
 		@Override
 		public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z) {
 			return MultiBlockPartBuilder.ANY_BLOCK.getMultiBlockState(originalState);
+		}
+		
+		@Override
+		public List<ICapabilityWrapper<?>> getCapbilities (IBlockState originalState, int partNo, int x, int y, int z) {
+			return new ArrayList<>();
 		}
 		
 		@Override
@@ -128,8 +134,15 @@ public class MultiBlockStructure {
 		}
 		
 		public IBlockState getMultiBlockState (IBlockState originalState) {
-			if (currentPartNo.size() != 1) throw new IllegalStateException("Cannot be > 1 parts that match the same world configuration, " + "either 2 identical parts were registered, or this class was not used to check the world previously");
+			if (currentPartNo.size() != 1) throw new IllegalStateException("Cannot be > 1 parts that match the same world configuration, "
+					+ "either 2 identical parts were registered, or this class was not used to check the world previously");
 			return part.getMultiBlockState(originalState, currentPartNo.get(0), x, y, z);
+		}
+		
+		public List<ICapabilityWrapper<?>> getCapabilites (IBlockState originalState) {
+			if (currentPartNo.size() != 1) throw new IllegalStateException("Cannot be > 1 parts that match the same world configuration, "
+					+ "either 2 identical parts were registered, or this class was not used to check the world previously");
+			return part.getCapbilities(originalState, currentPartNo.get(0), x, y, z);
 		}
 		
 		public void resetPosition () {

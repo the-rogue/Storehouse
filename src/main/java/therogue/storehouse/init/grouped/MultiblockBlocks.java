@@ -1,41 +1,26 @@
 
 package therogue.storehouse.init.grouped;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.block.StorehouseBaseCapabilityVariantBlock;
-import therogue.storehouse.multiblock.block.EnergyCapabilityWrapper;
-import therogue.storehouse.multiblock.block.FluidCapabilityWrapper;
-import therogue.storehouse.multiblock.block.ICapabilityWrapper;
-import therogue.storehouse.multiblock.block.ItemCapabilityWrapper;
+import therogue.storehouse.block.StorehouseBaseVariantBlock;
 
 public enum MultiblockBlocks {
-	EJECTOR (ItemCapabilityWrapper.EXTRACT),
-	CHUTE (ItemCapabilityWrapper.INSERT),
-	ITEM_IO (ItemCapabilityWrapper.BOTH),
-	TAP (FluidCapabilityWrapper.DRAIN),
-	TANK (FluidCapabilityWrapper.FILL),
-	FLUID_IO (FluidCapabilityWrapper.BOTH),
-	ENERGY_TAP (EnergyCapabilityWrapper.EXTRACT),
-	ENERGY_CONNECTOR (EnergyCapabilityWrapper.RECIEVE),
-	ADVANCED_TAP (ItemCapabilityWrapper.BOTH, FluidCapabilityWrapper.BOTH, EnergyCapabilityWrapper.EXTRACT),
-	ADVANCED_CONNECTOR (ItemCapabilityWrapper.BOTH, FluidCapabilityWrapper.BOTH, EnergyCapabilityWrapper.RECIEVE);
+	EJECTOR,
+	CHUTE,
+	ITEM_IO,
+	TAP,
+	TANK,
+	FLUID_IO,
+	ENERGY_TAP,
+	ENERGY_CONNECTOR,
+	ADVANCED_TAP,
+	ADVANCED_CONNECTOR;
 	
-	public static StorehouseBaseCapabilityVariantBlock crafting_block;
-	public Map<Capability<?>, ICapabilityWrapper<?>> capabilities = new HashMap<Capability<?>, ICapabilityWrapper<?>>();
+	public static StorehouseBaseVariantBlock crafting_block;
 	
-	private MultiblockBlocks (ICapabilityWrapper<?>... capabilities) {
-		for (ICapabilityWrapper<?> c : capabilities)
-		{
-			this.capabilities.put(c.getSupportedCapability(), c);
-		}
+	private MultiblockBlocks () {
 	}
 	
 	public ItemStack createStack () {
@@ -51,10 +36,8 @@ public enum MultiblockBlocks {
 	}
 	
 	public static IStorehouseBaseBlock addMaterials () {
-		List<Map<Capability<?>, ICapabilityWrapper<?>>> capabilites = new ArrayList<Map<Capability<?>, ICapabilityWrapper<?>>>();
-		for (MultiblockBlocks c : MultiblockBlocks.values())
-			capabilites.add(c.capabilities);
-		crafting_block = new StorehouseBaseCapabilityVariantBlock("multiblock_blocks", capabilites);
+		crafting_block = new StorehouseBaseVariantBlock("multiblock_blocks");
+		crafting_block.hasConnectedTextureGroup("cb");
 		for (MultiblockBlocks c : MultiblockBlocks.values())
 			crafting_block.addSubBlock(c.ordinal(), c.name().toLowerCase());
 		return crafting_block;

@@ -1,6 +1,8 @@
 
 package therogue.storehouse.multiblock.tile;
 
+import java.util.List;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -29,10 +31,10 @@ public interface IMultiBlockController extends IMultiBlockTile {
 	
 	public void breakBlock (World worldIn, BlockPos pos, IBlockState state);
 	
-	public MultiBlockStructure getStructure ();
+	public List<MultiBlockStructure> getPossibleStructures ();
 	
 	default boolean hasCapability (BlockPos pos, Capability<?> capability, EnumFacing facing, ModuleContext context) {
-		return getTile().hasCapability(capability, facing);
+		return getTile().hasCapability(capability, facing, context);
 	}
 	
 	default public <T> T getCapability (BlockPos pos, Capability<T> capability, EnumFacing facing, ModuleContext context) {

@@ -22,7 +22,7 @@ public class EnergyCapabilityWrapper implements ICapabilityWrapper<IEnergyStorag
 	public final boolean canRecieve;
 	public final boolean canExtract;
 	
-	public EnergyCapabilityWrapper (boolean canRecieve, boolean canExtract) {
+	private EnergyCapabilityWrapper (boolean canRecieve, boolean canExtract) {
 		this.canRecieve = canRecieve;
 		this.canExtract = canExtract;
 	}

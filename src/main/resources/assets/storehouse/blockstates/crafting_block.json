@@ -62,52 +62,52 @@
 			},
 			"6": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"7": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"8": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"9": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"10": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"11": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"12": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"13": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"14": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			},
 			"15": {
 				"textures": {
-					"all": "storehouse:blocks/machine/iron_casing_down"
+					"all": "storehouse:blocks/machine/iron_casing"
 				}
 			}
 		}

@@ -7,7 +7,8 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
-import therogue.storehouse.multiblock.block.IMultiBlockStateMapper;
+import therogue.storehouse.multiblock.block.ICapabilityWrapper;
+import therogue.storehouse.multiblock.block.IBlockWrapper;
 
 public class MultiBlockPartBuilder {
 	
@@ -27,12 +28,17 @@ public class MultiBlockPartBuilder {
 		public IBlockState getMultiBlockState (IBlockState originalState) {
 			return null;
 		}
+		
+		@Override
+		public List<ICapabilityWrapper<?>> getCapabilities (IBlockState originalState) {
+			return new ArrayList<>();
+		}
 	};
 	/**
 	 * States
 	 */
 	private BlockPos startPos = new BlockPos(0, 0, 0);
-	private IMultiBlockStateMapper currentWrapper;
+	private IBlockWrapper currentWrapper;
 	/**
 	 * Variables
 	 */
@@ -42,7 +48,7 @@ public class MultiBlockPartBuilder {
 	public MultiBlockPartBuilder () {
 	}
 	
-	public MultiBlockPartBuilder (IMultiBlockStateMapper wrapper) {
+	public MultiBlockPartBuilder (IBlockWrapper wrapper) {
 		setWrapper(wrapper);
 	}
 	
@@ -50,11 +56,11 @@ public class MultiBlockPartBuilder {
 		return new MultiBlockPartBuilder();
 	}
 	
-	public static MultiBlockPartBuilder newBuilder (IMultiBlockStateMapper wrapper) {
+	public static MultiBlockPartBuilder newBuilder (IBlockWrapper wrapper) {
 		return new MultiBlockPartBuilder(wrapper);
 	}
 	
-	public MultiBlockPartBuilder setWrapper (IMultiBlockStateMapper wrapper) {
+	public MultiBlockPartBuilder setWrapper (IBlockWrapper wrapper) {
 		if (wrapper == null) throw new NullPointerException("The wrapper passed to setWrapper was null");
 		currentWrapper = wrapper;
 		return this;
@@ -103,7 +109,7 @@ public class MultiBlockPartBuilder {
 	 * Should ONLY be used where the block's default state is used, null for any block in the specified position.
 	 * Adds blocks to the current row, which is in the x direction
 	 */
-	public MultiBlockPartBuilder addBlocksToRow (IMultiBlockStateMapper wrapper, Block... row) {
+	public MultiBlockPartBuilder addBlocksToRow (IBlockWrapper wrapper, Block... row) {
 		IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
 		for (int i = 0; i < row.length; i++)
 		{
@@ -117,7 +123,7 @@ public class MultiBlockPartBuilder {
 	 * Add only one option for each slot specified, null for any block in the specified position.
 	 * Adds blocks to the current row, which is in the x direction
 	 */
-	public MultiBlockPartBuilder addBlocksToRow (IMultiBlockStateMapper wrapper, IBlockState... row) {
+	public MultiBlockPartBuilder addBlocksToRow (IBlockWrapper wrapper, IBlockState... row) {
 		IMultiBlockElement[] elements = new IMultiBlockElement[row.length];
 		for (int i = 0; i < row.length; i++)
 		{

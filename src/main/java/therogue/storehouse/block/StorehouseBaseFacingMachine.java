@@ -23,13 +23,23 @@ import net.minecraftforge.client.model.ModelLoader;
 
 public class StorehouseBaseFacingMachine<T extends TileEntity> extends StorehouseBaseMachine<T> {
 	
-	public StorehouseBaseFacingMachine (String name, BiFunction<World, Integer, T> createTile) {
-		super(name, createTile);
+	public StorehouseBaseFacingMachine (String name, Class<T> tileClass, AxisAlignedBB boundingBox) {
+		super(name, tileClass, boundingBox);
 		this.setDefaultState(this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 	}
 	
-	public StorehouseBaseFacingMachine (String name, BiFunction<World, Integer, T> createTile, AxisAlignedBB boundingBox) {
-		super(name, createTile, boundingBox);
+	public StorehouseBaseFacingMachine (String name, Class<T> tileClass, BiFunction<World, Integer, T> function, AxisAlignedBB boundingBox) {
+		super(name, tileClass, function, boundingBox);
+		this.setDefaultState(this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+	}
+	
+	public StorehouseBaseFacingMachine (String name, Class<T> tileClass, BiFunction<World, Integer, T> function) {
+		super(name, tileClass, function);
+		this.setDefaultState(this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+	}
+	
+	public StorehouseBaseFacingMachine (String name, Class<T> tileClass) {
+		super(name, tileClass);
 		this.setDefaultState(this.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 	}
 	

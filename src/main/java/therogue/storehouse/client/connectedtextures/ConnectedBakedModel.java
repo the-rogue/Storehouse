@@ -21,13 +21,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -41,12 +39,12 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.WeightedBakedModel;
@@ -60,10 +58,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ItemModelMesherForge;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IRegistryDelegate;
+import therogue.storehouse.client.StorehouseModelLoader;
 import therogue.storehouse.client.connectedtextures.ConnectionState.ConnectedTexturePair;
 import therogue.storehouse.client.connectedtextures.ConnectionState.RenderProperty;
 
@@ -188,10 +186,12 @@ public class ConnectedBakedModel implements IBakedModel {
 	private final @Nonnull Overrides overrides = new Overrides();
 	protected final ListMultimap<BlockRenderLayer, BakedQuad> genQuads = MultimapBuilder.enumKeys(BlockRenderLayer.class).arrayListValues().build();
 	protected final Table<BlockRenderLayer, EnumFacing, List<BakedQuad>> faceQuads = Tables.newCustomTable(Maps.newEnumMap(BlockRenderLayer.class), () -> Maps.newEnumMap(EnumFacing.class));
+	protected final BlockModelShapes bakedModelStore;
 	
 	public ConnectedBakedModel (ConnectedModel model, IBakedModel parent) {
 		this.model = model;
 		this.parent = parent;
+		this.bakedModelStore = StorehouseModelLoader.getModelManager().getBlockModelShapes();
 	}
 	
 	public ConnectedModel getModel () {
@@ -202,22 +202,40 @@ public class ConnectedBakedModel implements IBakedModel {
 		return parent;
 	}
 	
+	public List<BakedQuad> getParentQuads (IBlockState state, EnumFacing side) {
+		IBakedModel model = parent;
+		while (model instanceof ConnectedBakedModel)
+		{
+			model = ((ConnectedBakedModel) model).getParent();
+		}
+		return model.getQuads(state, side, 0L);
+	}
+	
 	@Override
 	public List<BakedQuad> getQuads (@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+		if (Arrays.asList(Thread.currentThread().getStackTrace()).parallelStream().anyMatch(stacktrace -> stacktrace.getMethodName().equals("getDamageModel")))
+			return parent.getQuads(state, side, rand);
 		IBakedModel parent = getParent(rand);
 		ConnectedBakedModel baked = this;
 		BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
-		if (Minecraft.getMinecraft().world != null && state instanceof IExtendedBlockState)
+		ConnectionState connectionState = CTBlockRegistry.INSTANCE.getState();
+		boolean isPossibleState = connectionState.state == state;
+		if (Minecraft.getMinecraft().world != null && (state instanceof IExtendedBlockState || isPossibleState) && connectionState.state != null)
 		{
-			IExtendedBlockState ext = (IExtendedBlockState) state;
-			ConnectionState connectionState = ext.getValue(RenderProperty.INSTANCE);
+			IBlockState cleanState = state instanceof IExtendedBlockState ? ((IExtendedBlockState) state).getClean() : state;
+			if (!isPossibleState)
+			{
+				IExtendedBlockState ext = (IExtendedBlockState) state;
+				connectionState = ext.getValue(RenderProperty.INSTANCE);
+			}
 			if (connectionState != null)
 			{
-				connectionState.buildCache(ext.getClean(), model.getConnectedTextures());
+				connectionState.buildCache(bakedModelStore, cleanState, model.getConnectedTextures());
 				TObjectLongMap<ConnectedTexturePair> serialized = connectionState.serialized();
 				try
 				{
-					baked = modelcache.get(new State(ext.getClean(), serialized, parent), () -> createModel(state, model, connectionState, rand));
+					final ConnectionState finalConnectionState = connectionState;
+					baked = modelcache.get(new State(cleanState, serialized, parent), () -> createModel(state, model, finalConnectionState, rand));
 				}
 				catch (ExecutionException e)
 				{
@@ -290,21 +308,8 @@ public class ConnectedBakedModel implements IBakedModel {
 	}
 	
 	@Override
-	public @Nonnull ItemCameraTransforms getItemCameraTransforms () {
-		return ItemCameraTransforms.DEFAULT;
-	}
-	
-	private static @Nonnull TRSRTransformation get (float tx, float ty, float tz, float ax, float ay, float az, float s) {
-		return new TRSRTransformation(new Vector3f(tx / 16, ty / 16, tz
-				/ 16), TRSRTransformation.quatFromXYZDegrees(new Vector3f(ax, ay, az)), new Vector3f(s, s, s), null);
-	}
-	
-	public static final Map<TransformType, TRSRTransformation> TRANSFORMS = ImmutableMap.<TransformType, TRSRTransformation> builder().put(TransformType.GUI, get(0, 0, 0, 30, 45, 0, 0.625f)).put(TransformType.THIRD_PERSON_RIGHT_HAND, get(0, 2.5f, 0, 75, 45, 0, 0.375f)).put(TransformType.THIRD_PERSON_LEFT_HAND, get(0, 2.5f, 0, 75, 45, 0, 0.375f)).put(TransformType.FIRST_PERSON_RIGHT_HAND, get(0, 0, 0, 0, 45, 0, 0.4f)).put(TransformType.FIRST_PERSON_LEFT_HAND, get(0, 0, 0, 0, 225, 0, 0.4f)).put(TransformType.GROUND, get(0, 2, 0, 0, 0, 0, 0.25f)).put(TransformType.FIXED, get(0, 0, 0, 0, 0, 0, 0.5f)).build();
-	public static final TRSRTransformation DEFAULT_TRANSFORM = get(0, 0, 0, 0, 0, 0, 1);
-	
-	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective (TransformType cameraTransformType) {
-		return Pair.of(this, TRANSFORMS.getOrDefault(cameraTransformType, DEFAULT_TRANSFORM).getMatrix());
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective (ItemCameraTransforms.TransformType cameraTransformType) {
+		return Pair.of(this, parent.handlePerspective(cameraTransformType).getRight());
 	}
 	
 	protected static final BlockRenderLayer[] LAYERS = BlockRenderLayer.values();

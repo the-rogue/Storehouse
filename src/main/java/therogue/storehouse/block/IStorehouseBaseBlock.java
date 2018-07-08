@@ -10,6 +10,9 @@
 
 package therogue.storehouse.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -18,6 +21,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 
 public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
 	
@@ -34,9 +38,11 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
 	
 	public Material getblockMaterial ();
 	
+	public default void setup () {
+	}
+	
 	public default void registerModels () {
-		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(getBlock()), 0, new ModelResourceLocation(
-				getBlock().getUnlocalizedName().substring(5)));
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(getBlock()), 0, new ModelResourceLocation(getBlock().getUnlocalizedName().substring(5)));
 	}
 	
 	public default String getUnlocalizedName (ItemStack stack) {
@@ -45,5 +51,9 @@ public interface IStorehouseBaseBlock extends IForgeRegistryEntry<Block> {
 	
 	public default Item getItemBlock () {
 		return new ItemBlock(getBlock()).setRegistryName(getBlock().getRegistryName());
+	}
+	
+	public default List<MultiBlockStructure> getMultiblockStructures () {
+		return new ArrayList<>();
 	}
 }

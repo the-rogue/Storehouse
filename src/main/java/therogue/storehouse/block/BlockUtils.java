@@ -14,7 +14,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockUtils {
@@ -45,6 +47,22 @@ public class BlockUtils {
 	 */
 	public static boolean isUsableByPlayer (TileEntity te, EntityPlayer player) {
 		return te.getWorld().getTileEntity(te.getPos()) != te ? false : player.getDistanceSq((double) te.getPos().getX()
-				+ 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 64.0D;
+				+ 0.5D, (double) te.getPos().getY() + 0.5D, (double) te.getPos().getZ() + 0.5D) <= 65.0D;
+	}
+	
+	public static Rotation rotationInverse (Rotation rotation) {
+		if (rotation == Rotation.CLOCKWISE_90) return Rotation.COUNTERCLOCKWISE_90;
+		if (rotation == Rotation.COUNTERCLOCKWISE_90) return Rotation.CLOCKWISE_90;
+		return rotation;
+	}
+	
+	public static IBlockState getUnwrappedState (IBlockState state) {
+		while (state.getBlock() instanceof IWrappedBlock)
+			state = ((IWrappedBlock) state.getBlock()).unwrap(state);
+		return state;
+	}
+	
+	public static IBlockState getUnwrappedWorldState (IBlockAccess world, BlockPos pos) {
+		return getUnwrappedState(world.getBlockState(pos));
 	}
 }

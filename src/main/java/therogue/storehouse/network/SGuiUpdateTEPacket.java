@@ -70,7 +70,7 @@ public class SGuiUpdateTEPacket implements IMessage {
 		public IMessage onMessage (SGuiUpdateTEPacket message, MessageContext ctx) {
 			if (ctx.netHandler instanceof INetHandlerPlayServer)
 			{
-				EntityPlayerMP fromPlayer = ctx.getServerHandler().playerEntity;
+				EntityPlayerMP fromPlayer = ctx.getServerHandler().player;
 				fromPlayer.getServerWorld().addScheduledTask(new Runnable() {
 					
 					@Override

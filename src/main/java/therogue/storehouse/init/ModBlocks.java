@@ -19,8 +19,6 @@ import therogue.storehouse.block.StorehouseBaseBlock;
 import therogue.storehouse.block.StorehouseBaseFacingMachine;
 import therogue.storehouse.block.StorehouseBaseMachine;
 import therogue.storehouse.block.StorehouseBaseRotatedBlock;
-import therogue.storehouse.client.connectedtextures.CTBlockRegistry;
-import therogue.storehouse.container.GuiHandler;
 import therogue.storehouse.init.grouped.CraftingBlocks;
 import therogue.storehouse.init.grouped.DecorativeBlockContainer;
 import therogue.storehouse.init.grouped.MultiblockBlocks;
@@ -49,7 +47,6 @@ public class ModBlocks {
 	 * Initialises a new array to hold all the blocks
 	 */
 	public static ArrayList<IStorehouseBaseBlock> blocklist = new ArrayList<IStorehouseBaseBlock>();
-	private static final CTBlockRegistry ctRegistry = CTBlockRegistry.INSTANCE;
 	
 	/**
 	 * Adds all the blocks to the array
@@ -75,51 +72,40 @@ public class ModBlocks {
 		/**
 		 * Add Machines
 		 */
-		solar_generator_basic = new StorehouseBaseMachine<TileSolarGeneratorBasic>("solar_generator_basic", (world,
-				meta) -> new TileSolarGeneratorBasic(), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
-		solar_generator_basic.setGUICheckTile(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		solar_generator_advanced = new StorehouseBaseMachine.CT<TileSolarGeneratorAdvanced>("solar_generator_advanced", (world,
-				meta) -> new TileSolarGeneratorAdvanced(), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
-		solar_generator_advanced.setGUICheckTile(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		ctRegistry.registerS(solar_generator_advanced, "blocks/machine/generator/solar/advanced");
-		solar_generator_ender = new StorehouseBaseMachine<TileSolarGeneratorEnder>("solar_generator_ender", (world,
-				meta) -> new TileSolarGeneratorEnder(), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
-		solar_generator_ender.setGUICheckTile(GuiHandler.SOLARGENERATOR).setNotifyTileActivation();
-		combustion_generator_basic = new StorehouseBaseFacingMachine<TileCombustionGeneratorBasic>("combustion_generator_basic", (world,
-				meta) -> new TileCombustionGeneratorBasic());
-		combustion_generator_basic.setGUICheckTile(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
-		combustion_generator_advanced = new StorehouseBaseFacingMachine<TileCombustionGeneratorAdvanced>("combustion_generator_advanced", (world,
-				meta) -> new TileCombustionGeneratorAdvanced());
-		combustion_generator_advanced.setGUICheckTile(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
-		combustion_generator_ender = new StorehouseBaseFacingMachine<TileCombustionGeneratorEnder>("combustion_generator_ender", (world,
-				meta) -> new TileCombustionGeneratorEnder());
-		combustion_generator_ender.setGUICheckTile(GuiHandler.COMBUSTIONGENERATOR).setNotifyTileActivation();
-		liquid_generator_basic = new StorehouseBaseFacingMachine<TileLiquidGeneratorBasic>("liquid_generator_basic", (world,
-				meta) -> new TileLiquidGeneratorBasic());
-		liquid_generator_basic.setGUICheckTile(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
-		liquid_generator_advanced = new StorehouseBaseFacingMachine<TileLiquidGeneratorAdvanced>("liquid_generator_advanced", (world,
-				meta) -> new TileLiquidGeneratorAdvanced());
-		liquid_generator_advanced.setGUICheckTile(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
-		liquid_generator_ender = new StorehouseBaseFacingMachine<TileLiquidGeneratorEnder>("liquid_generator_ender", (world,
-				meta) -> new TileLiquidGeneratorEnder());
-		liquid_generator_ender.setGUICheckTile(GuiHandler.LIQUIDGENERATOR).setNotifyTileActivation().setIsFluidHandler();
-		thermal_press = new StorehouseBaseFacingMachine<TileThermalPress>("thermal_press", (world, meta) -> new TileThermalPress());
-		thermal_press.setGUI(GuiHandler.THERMALPRESS);
-		crystaliser = new StorehouseBaseFacingMachine<TileCrystaliser>("crystaliser", (world, meta) -> new TileCrystaliser());
-		crystaliser.setGUI(GuiHandler.CRYSTALISER).setIsFluidHandler();
-		forge = new StorehouseBaseFacingMachine<TileForge>("forge", (world,
-				meta) -> new TileForge(), new AxisAlignedBB(0.21875D, 0.0D, 0.21875D, 0.78125D, 0.5875D, 0.78125D));
+		solar_generator_basic = new StorehouseBaseMachine<TileSolarGeneratorBasic>("solar_generator_basic", TileSolarGeneratorBasic.class, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
+		solar_generator_basic.setGUICheckTile().setNotifyTileActivation().setHasDefaultMultiBlock();
+		solar_generator_advanced = new StorehouseBaseMachine<TileSolarGeneratorAdvanced>("solar_generator_advanced", TileSolarGeneratorAdvanced.class, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
+		solar_generator_advanced.setGUICheckTile().setNotifyTileActivation().setHasDefaultMultiBlock().hasConnectedTexture();
+		solar_generator_ender = new StorehouseBaseMachine<TileSolarGeneratorEnder>("solar_generator_ender", TileSolarGeneratorEnder.class, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D));
+		solar_generator_ender.setGUICheckTile().setNotifyTileActivation();
+		combustion_generator_basic = new StorehouseBaseFacingMachine<TileCombustionGeneratorBasic>("combustion_generator_basic", TileCombustionGeneratorBasic.class);
+		combustion_generator_basic.setGUICheckTile().setNotifyTileActivation();
+		combustion_generator_advanced = new StorehouseBaseFacingMachine<TileCombustionGeneratorAdvanced>("combustion_generator_advanced", TileCombustionGeneratorAdvanced.class);
+		combustion_generator_advanced.setGUICheckTile().setNotifyTileActivation();
+		combustion_generator_ender = new StorehouseBaseFacingMachine<TileCombustionGeneratorEnder>("combustion_generator_ender", TileCombustionGeneratorEnder.class);
+		combustion_generator_ender.setGUICheckTile().setNotifyTileActivation();
+		liquid_generator_basic = new StorehouseBaseFacingMachine<TileLiquidGeneratorBasic>("liquid_generator_basic", TileLiquidGeneratorBasic.class);
+		liquid_generator_basic.setGUICheckTile().setNotifyTileActivation().setIsFluidHandler();
+		liquid_generator_advanced = new StorehouseBaseFacingMachine<TileLiquidGeneratorAdvanced>("liquid_generator_advanced", TileLiquidGeneratorAdvanced.class);
+		liquid_generator_advanced.setGUICheckTile().setNotifyTileActivation().setIsFluidHandler();
+		liquid_generator_ender = new StorehouseBaseFacingMachine<TileLiquidGeneratorEnder>("liquid_generator_ender", TileLiquidGeneratorEnder.class);
+		liquid_generator_ender.setGUICheckTile().setNotifyTileActivation().setIsFluidHandler();
+		thermal_press = new StorehouseBaseFacingMachine<TileThermalPress>("thermal_press", TileThermalPress.class);
+		thermal_press.setGUI();
+		crystaliser = new StorehouseBaseFacingMachine<TileCrystaliser>("crystaliser", TileCrystaliser.class);
+		crystaliser.setGUI().setIsFluidHandler();
+		forge = new StorehouseBaseFacingMachine<TileForge>("forge", TileForge.class, new AxisAlignedBB(0.21875D, 0.0D, 0.21875D, 0.78125D, 0.5875D, 0.78125D));
 		forge.setNotifyTileActivation();
-		alloy_furnace = new StorehouseBaseFacingMachine<TileAlloyFurnace>("alloy_furnace", (world, meta) -> new TileAlloyFurnace());
-		alloy_furnace.setGUI(GuiHandler.ALLOYFURNACE);
-		burner = new StorehouseBaseFacingMachine<TileBurner>("burner", (world, meta) -> new TileBurner());
-		burner.setGUICheckTile(GuiHandler.BURNER).setNotifyTileActivation();
-		carbonCompressor = new StorehouseBaseFacingMachine<TileCarbonCompressor>("carbon_compressor", (world, meta) -> new TileCarbonCompressor());
-		carbonCompressor.setGUICheckTile(GuiHandler.CARBONCOMPRESSOR).setNotifyTileActivation();
-		potion_brewer = new StorehouseBaseFacingMachine<TilePotionBrewer>("potion_brewer", (world, meta) -> new TilePotionBrewer());
-		potion_brewer.setGUI(GuiHandler.POTION_BREWER);
-		potion_injector = new StorehouseBaseFacingMachine<TilePotionInjector>("potion_injector", (world, meta) -> new TilePotionInjector());
-		potion_injector.setGUI(GuiHandler.POTION_INJECTOR);
+		alloy_furnace = new StorehouseBaseFacingMachine<TileAlloyFurnace>("alloy_furnace", TileAlloyFurnace.class);
+		alloy_furnace.setGUI();
+		burner = new StorehouseBaseFacingMachine<TileBurner>("burner", TileBurner.class);
+		burner.setGUICheckTile().setNotifyTileActivation().setHasDefaultMultiBlock().hasConnectedTextureGroup("cb");
+		carbonCompressor = new StorehouseBaseFacingMachine<TileCarbonCompressor>("carbon_compressor", TileCarbonCompressor.class);
+		carbonCompressor.setGUICheckTile().setNotifyTileActivation().setHasDefaultMultiBlock().hasConnectedTextureGroup("cb");
+		potion_brewer = new StorehouseBaseFacingMachine<TilePotionBrewer>("potion_brewer", TilePotionBrewer.class);
+		potion_brewer.setGUI();
+		potion_injector = new StorehouseBaseFacingMachine<TilePotionInjector>("potion_injector", TilePotionInjector.class);
+		potion_injector.setGUI();
 		blocklist.add(solar_generator_basic);
 		blocklist.add(solar_generator_advanced);
 		blocklist.add(solar_generator_ender);
@@ -143,6 +129,7 @@ public class ModBlocks {
 		/**
 		 * Register Ore Dictionary Names
 		 */
+		blocklist.forEach(block -> block.setup());
 		Ores.Init();
 		CraftingBlocks.Init();
 		MultiblockBlocks.Init();

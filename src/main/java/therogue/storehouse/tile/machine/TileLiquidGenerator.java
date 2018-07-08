@@ -19,6 +19,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.block.IStorehouseBaseBlock;
+import therogue.storehouse.client.gui.ElementFactory;
+import therogue.storehouse.client.gui.GuiBase;
+import therogue.storehouse.client.gui.TierIcons;
+import therogue.storehouse.container.ContainerBase;
 import therogue.storehouse.crafting.IMachineRecipe;
 import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.crafting.MachineCraftingHandler.ICraftingManager;
@@ -28,7 +32,6 @@ import therogue.storehouse.fluid.TileFluidTank;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.inventory.InventoryManager;
 import therogue.storehouse.inventory.ItemStackUtils;
-import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.tile.MachineTier;
 import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.TileBaseGenerator;
@@ -38,7 +41,6 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 	public static final int[] RFPerTicks = { 20, 160, 4800 };
 	public static final int[] TimeModifiers = { 1, 4, 12 };
 	private static final IStorehouseBaseBlock[] BLOCKS = { ModBlocks.liquid_generator_basic, ModBlocks.liquid_generator_advanced, ModBlocks.liquid_generator_ender };
-	private static final MultiBlockStructure[] STRUCTURES = { null, null, null };
 	protected final MachineCraftingHandler<TileLiquidGenerator>.CraftingManager theCrafter;
 	protected TileFluidTank tank = new TileFluidTank(this, 10000) {
 		
@@ -50,7 +52,7 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 	};
 	
 	public TileLiquidGenerator (MachineTier tier) {
-		super(BLOCKS[tier.ordinal()], STRUCTURES[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
+		super(BLOCKS[tier.ordinal()], tier, RFPerTicks[tier.ordinal()], TimeModifiers[tier.ordinal()]);
 		modules.add(tank);
 		this.setInventory(new InventoryManager(this, 4, new Integer[] { 0, 2 }, new Integer[] { 1, 3 }));
 		theCrafter = MachineCraftingHandler.getHandler(TileLiquidGenerator.class).newCrafter(this, "FLD", "ENG", energyStorage);
@@ -62,6 +64,15 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 			if ((index == 2 || index == 3) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) return true;
 			return false;
 		});
+		this.containerFactory = (player) -> new ContainerBase(player.inventory, this).setTESlotList(inventory.guiAccess, new int[] { 0, 30, 17, 1, 66, 17, 2, 141, 17, 3, 141, 53 });
+		this.guiFactory = (player) -> {
+			GuiBase gui = new GuiBase(this.tier.guiLocation, containerFactory.apply(player), this);
+			String s = "ENERGYBAR 8 8 %s,  PROGRESS_BAR ITEM_CHARGE0 ITEM_MAXCHARGE0 RIGHT_PB 51 17 %s,  PROGRESS_BAR CRFT_TL CRFT_TT UP_PB 48 35 %s,  FLUID_TANK 105 12 %s";
+			int iTier = tier.ordinal();
+			Object[] sP = new Object[] { TierIcons.EnergyBar.getLocation(iTier), TierIcons.EnergyIndicator.getLocation(iTier), TierIcons.CombustionIndicator.getLocation(iTier), TierIcons.FluidTank.getLocation(iTier) };
+			ElementFactory.makeElements(gui, gui.elements, this, s, sP);
+			return gui;
+		};
 	}
 	
 	// -------------------------Customisable Generator Methods-------------------------------------------
@@ -70,7 +81,7 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 		super.update();
 		if (GeneralUtils.isServerSide(world))
 		{
-			IItemHandler internalView = this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL);
+			IItemHandler internalView = inventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null, ModuleContext.INTERNAL);
 			if (!internalView.getStackInSlot(2).isEmpty())
 			{
 				ItemStack tankItem = internalView.extractItem(2, -1, true);
@@ -84,12 +95,6 @@ public class TileLiquidGenerator extends TileBaseGenerator {
 				}
 			}
 		}
-	}
-	
-	// ----------------------IMultiBlockController-----------------------------------------------------------------
-	@Override
-	public MultiBlockStructure getStructure () {
-		return null;
 	}
 	
 	// ------------------------PlaceHolder Classes------------------------------------------------------------------

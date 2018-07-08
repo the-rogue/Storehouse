@@ -21,6 +21,15 @@ import net.minecraftforge.items.IItemHandler;
 
 public class EnergyUtils {
 	
+	public static void sendEnergytoAll (IEnergyStorage energyStorage, World world, BlockPos pos) {
+		for (EnumFacing facing : EnumFacing.values())
+		{
+			if (energyStorage.getEnergyStored() <= 0) return;
+			int sentRF = sendEnergy(world, pos, facing, energyStorage.extractEnergy(energyStorage.getEnergyStored(), true));
+			energyStorage.extractEnergy(sentRF, false);
+		}
+	}
+	
 	public static int sendEnergy (World world, BlockPos from, EnumFacing side, int maxRFToGive) {
 		EnumFacing opposite = side.getOpposite();
 		BlockPos pos = from.offset(side);

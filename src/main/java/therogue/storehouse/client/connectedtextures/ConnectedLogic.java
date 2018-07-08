@@ -5,10 +5,14 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import therogue.storehouse.client.connectedtextures.IConnectedTextureLogic.IConnectionTest;
+import therogue.storehouse.block.BlockUtils;
+import therogue.storehouse.client.connectedtextures.CTBlockRegistry.IConnectedTextureLogic;
+import therogue.storehouse.client.connectedtextures.ConnectionState.ConnectedTexturePair;
 
 /**
  * The CTM renderer will draw the block's FACE using by assembling 4 quadrants from the 5 available block
@@ -107,14 +111,14 @@ public class ConnectedLogic {
 	 * 
 	 *         Indeces are in counter-clockwise order starting at bottom left.
 	 */
-	public ConnectedLogic (@Nullable IBlockAccess world, BlockPos pos, EnumFacing side, IConnectedTextureLogic theBlock, IConnectionTest tester) {
+	public ConnectedLogic (BlockModelShapes blockStateStore, @Nullable IBlockAccess world, BlockPos pos, EnumFacing side, ConnectedTexturePair connectedPair, IConnectedTextureLogic tester) {
 		if (world == null)
 		{
 			this.serialized = 0;
 			this.submapCache = new int[] { 18, 19, 17, 16 };
 			return;
 		}
-		IBlockState state = world.getBlockState(pos);
+		IBlockState state = BlockUtils.getUnwrappedWorldState(world, pos);
 		byte connectionMap = 0;
 		int[] submapCache = new int[] { 18, 19, 17, 16 };
 		if (state.shouldSideBeRendered(world, pos, side))
@@ -126,14 +130,17 @@ public class ConnectedLogic {
 				{
 					connectionPos = connectionPos.offset(dirTest);
 				}
-				IBlockState connectedState = world.getBlockState(connectionPos);
-				IBlockState obscuringState = world.getBlockState(connectionPos.add(side.getDirectionVec()));
-				boolean ret = tester.connects(theBlock.ignoreStates(), state, connectedState, side);
+				IBlockState connectedState = BlockUtils.getUnwrappedWorldState(world, connectionPos);
+				IBlockState obscuringState = BlockUtils.getUnwrappedWorldState(world, connectionPos.add(side.getDirectionVec()));
+				IBakedModel connectedModel = blockStateStore.getModelForState(connectedState);
+				IBakedModel obscuringModel = blockStateStore.getModelForState(obscuringState);
+				boolean ret = false;
+				ret = tester.connects(connectedPair, state, connectedModel, connectedState, side);
 				// no block obscuring this face
 				if (obscuringState != null && !connectedState.shouldSideBeRendered(world, connectionPos, side))
 				{
 					// check that we aren't already connected outwards from this side
-					ret &= !tester.connects(theBlock.ignoreStates(), state, obscuringState, side);
+					ret &= !tester.connects(connectedPair, state, obscuringModel, obscuringState, side);
 				}
 				if (ret)
 				{

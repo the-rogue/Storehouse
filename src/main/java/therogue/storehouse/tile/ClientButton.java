@@ -74,7 +74,8 @@ public class ClientButton<T extends Enum<T>> implements IButton<T>, ITileModule 
 	
 	@Override
 	public void pressed () {
-		setOrdinal(mode.ordinal() + 1);
+		if (mode.ordinal() + 1 == enumClass.getEnumConstants().length) setOrdinal(0);
+		else setOrdinal(mode.ordinal() + 1);
 	}
 	
 	@Override

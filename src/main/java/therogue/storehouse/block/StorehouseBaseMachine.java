@@ -19,7 +19,6 @@ import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,20 +29,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import therogue.storehouse.LOG;
 import therogue.storehouse.Storehouse;
-import therogue.storehouse.client.connectedtextures.ConnectionState;
-import therogue.storehouse.client.connectedtextures.ConnectionState.RenderProperty;
+import therogue.storehouse.multiblock.block.MultiBlockCreationHandler;
+import therogue.storehouse.multiblock.structure.MultiBlockStructure;
 import therogue.storehouse.network.StorehousePacketHandler;
 import therogue.storehouse.tile.ModuleContext;
 import therogue.storehouse.tile.StorehouseBaseTileEntity;
@@ -54,19 +53,39 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 	protected AxisAlignedBB AABB;
 	private List<String> shiftInfo = new ArrayList<String>();
 	protected BiFunction<World, Integer, T> createTile;
+	protected List<ResourceLocation> multiBlockLocations = new ArrayList<>();
+	protected List<MultiBlockStructure> multiBlockStructures = new ArrayList<>();
 	protected int guiID = -1;
 	protected Object mod = Storehouse.instance;
 	protected boolean checkTile = false;
 	protected boolean notifyTile = false;
 	protected boolean fluidHandler = false;
 	
-	public StorehouseBaseMachine (String name, BiFunction<World, Integer, T> function) {
-		super(name, 6.0F, 20.0F);
-		this.createTile = function;
+	public StorehouseBaseMachine (String name, Class<T> tileClass) {
+		this(name, tileClass, (AxisAlignedBB) null);
 	}
 	
-	public StorehouseBaseMachine (String name, BiFunction<World, Integer, T> function, AxisAlignedBB boundingBox) {
+	public StorehouseBaseMachine (String name, Class<T> tileClass, AxisAlignedBB boundingBox) {
+		this(name, tileClass, (world, meta) -> {
+			try
+			{
+				return tileClass.newInstance();
+			}
+			catch (InstantiationException | IllegalAccessException e)
+			{
+				LOG.warn("Could not create a new Tile Entity from tileclass: " + tileClass + " in block: " + name);
+				return null;
+			}
+		}, boundingBox);
+	}
+	
+	public StorehouseBaseMachine (String name, Class<T> tileClass, BiFunction<World, Integer, T> function) {
+		this(name, tileClass, function, null);
+	}
+	
+	public StorehouseBaseMachine (String name, Class<T> tileClass, BiFunction<World, Integer, T> function, AxisAlignedBB boundingBox) {
 		super(name, 6.0F, 20.0F);
+		GameRegistry.registerTileEntity(tileClass, this.getRegistryName());
 		this.createTile = function;
 		this.AABB = boundingBox;
 	}
@@ -86,6 +105,10 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 		return this;
 	}
 	
+	public StorehouseBaseMachine<T> setGUI () {
+		return setGUI(0);
+	}
+	
 	public StorehouseBaseMachine<T> setGUI (Object mod, int guiID) {
 		this.guiID = guiID;
 		this.mod = mod;
@@ -98,11 +121,37 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 		return this;
 	}
 	
+	public StorehouseBaseMachine<T> setGUICheckTile () {
+		return setGUICheckTile(0);
+	}
+	
 	public StorehouseBaseMachine<T> setGUICheckTile (Object mod, int guiID) {
 		this.guiID = guiID;
 		this.mod = mod;
 		this.checkTile = true;
 		return this;
+	}
+	
+	public StorehouseBaseMachine<T> setHasDefaultMultiBlock () {
+		this.addMultiBlockStructure(new ResourceLocation(Storehouse.MOD_ID, "multiblock/" + this.getName() + ".txt"));
+		return this;
+	}
+	
+	public StorehouseBaseMachine<T> addMultiBlockStructure (ResourceLocation location) {
+		multiBlockLocations.add(location);
+		return this;
+	}
+	
+	@Override
+	public List<MultiBlockStructure> getMultiblockStructures () {
+		return multiBlockStructures;
+	}
+	
+	@Override
+	public void setup () {
+		multiBlockLocations.forEach(location -> {
+			multiBlockStructures.add(MultiBlockCreationHandler.INSTANCE.getStructureFromFile(location));
+		});
 	}
 	
 	@Override
@@ -253,36 +302,5 @@ public class StorehouseBaseMachine<T extends TileEntity> extends StorehouseBaseB
 	public boolean getUseNeighborBrightness (IBlockState state) {
 		if (AABB != null) return true;
 		return this.useNeighborBrightness;
-	}
-	
-	public static class CT<T extends TileEntity> extends StorehouseBaseMachine<T> {
-		
-		public CT (String name, BiFunction<World, Integer, T> function) {
-			super(name, function);
-		}
-		
-		public CT (String name, BiFunction<World, Integer, T> function, AxisAlignedBB boundingBox) {
-			super(name, function, boundingBox);
-		}
-		
-		/**
-		 * Convert the BlockState into the correct metadata value
-		 */
-		public int getMetaFromState (IBlockState state) {
-			return 0;
-		}
-		
-		@Override
-		public ExtendedBlockState createBlockState () {
-			return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] { ConnectionState.RenderProperty.INSTANCE });
-		}
-		
-		/**
-		 * Can return IExtendedBlockState
-		 */
-		@Override
-		public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
-			return ((IExtendedBlockState) state).withProperty(RenderProperty.INSTANCE, new ConnectionState(world, pos));
-		}
 	}
 }

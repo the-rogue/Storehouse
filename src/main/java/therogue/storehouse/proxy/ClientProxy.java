@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import therogue.storehouse.LOG;
 import therogue.storehouse.client.ForgeTESR;
 import therogue.storehouse.client.StorehouseModelLoader;
+import therogue.storehouse.client.gui.StorehouseElements;
 import therogue.storehouse.client.gui.element.ElementFunctions;
 import therogue.storehouse.tile.machine.TileForge;
 
@@ -46,6 +47,7 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 		LOG.debug("Client Proxy Started Initialisation");
 		ElementFunctions.setup();
+		StorehouseElements.register();
 		LOG.debug("Client Proxy Finished Initialisation");
 	}
 	

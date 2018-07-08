@@ -13,6 +13,7 @@ package therogue.storehouse.client.gui.element;
 import java.util.function.Supplier;
 
 import therogue.storehouse.LOG;
+import therogue.storehouse.client.gui.GuiBase;
 
 public class ElementMode extends ElementBase {
 	
@@ -25,6 +26,15 @@ public class ElementMode extends ElementBase {
 		this.elements = elements;
 		this.current = elements[0];
 		this.modeSupplier = modeSupplier;
+	}
+	
+	@Override
+	public void setGUI (GuiBase gui) {
+		this.gui = gui;
+		for (ElementBase e : elements)
+		{
+			e.setGUI(gui);
+		}
 	}
 	
 	public boolean isVisible () {

@@ -12,16 +12,18 @@ package therogue.storehouse.proxy;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.registries.IForgeRegistry;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.block.IStorehouseBaseBlock;
-import therogue.storehouse.crafting.MachineCraftingHandler;
 import therogue.storehouse.init.ModBlocks;
 import therogue.storehouse.init.ModItems;
-import therogue.storehouse.init.ModMultiBlocks;
+import therogue.storehouse.multiblock.block.MultiBlockCreationHandler;
+import therogue.storehouse.tile.TileTickingRegistry;
 
 public class EventHandlerCommon {
 	
@@ -33,22 +35,24 @@ public class EventHandlerCommon {
 	
 	@SubscribeEvent
 	public void onServerTick (TickEvent.ServerTickEvent event) {
-		MachineCraftingHandler.tickCrafters(event);
+		TileTickingRegistry.INSTANCE.tick(event);
 	}
 	
 	@SubscribeEvent
 	public void registerBlocks (RegistryEvent.Register<Block> event) {
 		event.getRegistry().registerAll(ModBlocks.blocklist.toArray(new Block[0]));
-		event.getRegistry().registerAll(ModMultiBlocks.blocklist.toArray(new Block[0]));
+		MultiBlockCreationHandler.INSTANCE.getCapabilitiesFromFile(new ResourceLocation(Storehouse.MOD_ID, "multiblock/capabilities.txt"));
+		MultiBlockCreationHandler.INSTANCE.getBlockAliasesFromFile(new ResourceLocation(Storehouse.MOD_ID, "multiblock/block_aliases.txt"));
+		event.getRegistry().registerAll(MultiBlockCreationHandler.INSTANCE.getBlockList().toArray(new Block[0]));
 	}
 	
 	@SubscribeEvent
 	public void registerItems (RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> itemRegistry = event.getRegistry();
-		ModBlocks.blocklist.forEach( (IStorehouseBaseBlock block) -> {
+		ModBlocks.blocklist.forEach(block -> {
 			if (block.getItemBlock() != null) itemRegistry.register(block.getItemBlock());
 		});
-		ModMultiBlocks.blocklist.forEach( (IStorehouseBaseBlock block) -> {
+		MultiBlockCreationHandler.INSTANCE.getBlockList().forEach( (IStorehouseBaseBlock block) -> {
 			if (block.getItemBlock() != null) itemRegistry.register(block.getItemBlock());
 		});
 		itemRegistry.registerAll(ModItems.itemlist.toArray(new Item[0]));

@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
+import therogue.storehouse.multiblock.block.ICapabilityWrapper;
 
 public interface IMultiBlockPart {
 	
@@ -13,6 +14,8 @@ public interface IMultiBlockPart {
 	public List<Integer> getPartNos ();
 	
 	public IBlockState getMultiBlockState (IBlockState originalState, int partNo, int x, int y, int z);
+	
+	public List<ICapabilityWrapper<?>> getCapbilities (IBlockState originalState, int partNo, int x, int y, int z);
 	
 	/**
 	 * The position where this block starts inclusive

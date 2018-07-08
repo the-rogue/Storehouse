@@ -38,17 +38,17 @@ public class Recipes {
 		RecipeHelper.registerThermalPressStampRecipe(160, Materials.TIN_PLATE.createStack(), new ItemStackComponent(Resources.TIN_INGOT.createStack()), new ItemStackRemainComponent(Materials.PLATE_TOOL.createStack()));
 		RecipeHelper.registerThermalPressStampRecipe(160, Materials.STEEL_PLATE.createStack(), new ItemStackComponent(Resources.STEEL_INGOT.createStack()), new ItemStackRemainComponent(Materials.PLATE_TOOL.createStack()));
 		InitBurner();
-		MachineRecipe.create(TileCarbonCompressor.class, 1, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(Materials.CARBON.createStack(16)));
+		MachineRecipe.create(TileCarbonCompressor.class, 400, new ItemStackComponent(Items.DIAMOND), new ItemStackComponent(Materials.CARBON.createStack(16)));
 		TileCombustionGenerator.CombustionRecipe.registerRecipes();
 		TileLiquidGenerator.LiquidRecipe.registerRecipes();
 		TilePotionBrewer.PotionRecipe.registerRecipes();
 	}
 	
 	private static void InitBurner () {
-		RecipeHelper.registerBurnerRecipe(600, new ItemStack(Items.DIAMOND), "crop", 32);
-		RecipeHelper.registerBurnerRecipe(300, new ItemStack(Items.DIAMOND), "tree", 16);
-		RecipeHelper.registerBurnerRecipe(300, new ItemStack(Items.DIAMOND), "vine", 16);
-		RecipeHelper.registerBurnerRecipe(150, new ItemStack(Items.DIAMOND), "sugarcane", 8);
-		RecipeHelper.registerBurnerRecipe(300, new ItemStack(Items.DIAMOND), "cactus", 16);
+		RecipeHelper.registerBurnerRecipe(600, Materials.CARBON.createStack(), "crop", 32);
+		RecipeHelper.registerBurnerRecipe(300, Materials.CARBON.createStack(), "tree", 16);
+		RecipeHelper.registerBurnerRecipe(300, Materials.CARBON.createStack(), "vine", 16);
+		RecipeHelper.registerBurnerRecipe(150, Materials.CARBON.createStack(), "sugarcane", 8);
+		RecipeHelper.registerBurnerRecipe(300, Materials.CARBON.createStack(), "cactus", 16);
 	}
 }

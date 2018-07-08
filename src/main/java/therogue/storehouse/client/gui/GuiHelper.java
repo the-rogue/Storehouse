@@ -39,6 +39,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import therogue.storehouse.GeneralUtils;
 import therogue.storehouse.LOG;
+import therogue.storehouse.Storehouse;
 import therogue.storehouse.client.gui.element.ElementBase;
 
 public class GuiHelper {
@@ -331,6 +332,10 @@ public class GuiHelper {
 	public static TextureAtlasSprite convertLocationToSprite (ResourceLocation location) {
 		if (location == null) { return getMissingSprite(); }
 		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+	}
+	
+	public static ResourceLocation makeStorehouseLocation (String withoutDomain) {
+		return new ResourceLocation(Storehouse.RESOURCENAMEPREFIX + withoutDomain);
 	}
 	
 	public static void drawFluid (FluidStack fluid, int x, int y, int width, int height) {
